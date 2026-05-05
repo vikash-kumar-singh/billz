@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_reports"
+        android:icon="@drawable/ic_nav_reports"
+        android:title="@string/reports_tab_reports" />
+    <item
+        android:id="@+id/nav_today"
+        android:icon="@drawable/ic_nav_today"
+        android:title="@string/reports_tab_today" />
+    <item
+        android:id="@+id/nav_counter"
+        android:icon="@drawable/ic_nav_counter"
+        android:title="@string/reports_tab_counter" />
+    <item
+        android:id="@+id/nav_items"
+        android:icon="@drawable/ic_nav_items"
+        android:title="@string/reports_tab_items" />
+    <item
+        android:id="@+id/nav_more"
+        android:icon="@drawable/ic_nav_more"
+        android:title="@string/reports_tab_more" />
+</menu>

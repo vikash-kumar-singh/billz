@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="reports_background">#FFFFFFFF</color>
+    <color name="reports_surface">#FFFFFFFF</color>
+    <color name="reports_text_primary">#FF1B1F24</color>
+    <color name="reports_text_secondary">#FF8A9099</color>
+    <color name="reports_tab_selected">#FF2563EB</color>
+    <color name="reports_tab_unselected">#FF96A0AD</color>
+    <color name="reports_divider">#FFE8EDF3</color>
+    <color name="reports_chip_background">#FFF7F9FC</color>
+    <color name="reports_chip_stroke">#FFE6EBF2</color>
+    <color name="reports_icon_tint">#FF334155</color>
+    <color name="reports_illustration_background">#FFEAF1FF</color>
+    <color name="reports_illustration_primary">#FF2563EB</color>
+    <color name="reports_illustration_secondary">#FFFFD9A6</color>
+    <color name="reports_illustration_accent">#FF1E293B</color>
+    <color name="reports_illustration_soft">#FFD7E3FF</color>
+</resources>

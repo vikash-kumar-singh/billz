@@ -1,0 +1,18 @@
+<resources>
+    <dimen name="fab_margin">48dp</dimen>
+    <dimen name="reports_screen_padding_horizontal">32dp</dimen>
+    <dimen name="reports_screen_padding_top">16dp</dimen>
+    <dimen name="reports_toolbar_height">64dp</dimen>
+    <dimen name="reports_date_row_margin_top">18dp</dimen>
+    <dimen name="reports_date_row_padding_horizontal">18dp</dimen>
+    <dimen name="reports_date_row_padding_vertical">12dp</dimen>
+    <dimen name="reports_empty_icon_size">120dp</dimen>
+    <dimen name="reports_empty_text_margin_top">20dp</dimen>
+    <dimen name="reports_empty_section_horizontal">88dp</dimen>
+    <dimen name="reports_empty_state_max_width">420dp</dimen>
+    <dimen name="reports_bottom_nav_height">80dp</dimen>
+    <dimen name="reports_bottom_nav_label_text">13sp</dimen>
+    <dimen name="reports_bottom_nav_icon_size">24dp</dimen>
+    <dimen name="reports_bottom_nav_padding_top">12dp</dimen>
+    <dimen name="reports_bottom_nav_padding_bottom">10dp</dimen>
+</resources>
