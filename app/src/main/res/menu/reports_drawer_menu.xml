@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_help_chat"
+            android:icon="@android:drawable/stat_notify_chat"
+            android:title="Help Chat" />
+        <item
+            android:id="@+id/nav_inventory"
+            android:icon="@drawable/ic_nav_items"
+            android:title="Inventory Management" />
+        <item
+            android:id="@+id/nav_add_expense"
+            android:icon="@android:drawable/ic_menu_add"
+            android:title="Add Expense" />
+        <item
+            android:id="@+id/nav_receipts"
+            android:icon="@android:drawable/ic_menu_agenda"
+            android:title="Receipts" />
+        <item
+            android:id="@+id/nav_customers"
+            android:icon="@android:drawable/ic_menu_myplaces"
+            android:title="Customers Management" />
+        <item
+            android:id="@+id/nav_staff"
+            android:icon="@android:drawable/ic_menu_gallery"
+            android:title="Staff Management" />
+        <item
+            android:id="@+id/nav_shopfront"
+            android:icon="@android:drawable/ic_menu_view"
+            android:title="ShopFront" />
+        <item
+            android:id="@+id/nav_refer"
+            android:icon="@android:drawable/ic_menu_share"
+            android:title="Refer App" />
+        <item
+            android:id="@+id/nav_returned_receipt"
+            android:icon="@android:drawable/ic_input_get"
+            android:title="Returned Receipt" />
+        <item
+            android:id="@+id/nav_web_backoffice"
+            android:icon="@android:drawable/ic_menu_mapmode"
+            android:title="Web Back Office" />
+        <item
+            android:id="@+id/nav_feedback"
+            android:icon="@android:drawable/ic_menu_directions"
+            android:title="Feedback" />
+        <item
+            android:id="@+id/nav_buy_printer"
+            android:icon="@android:drawable/ic_menu_camera"
+            android:title="Buy Printer" />
+    </group>
+
+    <item android:title="Other apps">
+        <menu>
+            <item
+                android:id="@+id/nav_kitchen_app"
+                android:icon="@android:drawable/ic_menu_call"
+                android:title="Connect Kitchen display App" />
+        </menu>
+    </item>
+
+    <item android:title="Settings">
+        <menu>
+            <item
+                android:id="@+id/nav_language"
+                android:icon="@android:drawable/ic_menu_sort_alphabetically"
+                android:title="Language - English" />
+            <item
+                android:id="@+id/nav_weighing_machine"
+                android:icon="@android:drawable/ic_menu_manage"
+                android:title="Weighing Machine" />
+            <item
+                android:id="@+id/nav_receipt_settings"
+                android:icon="@android:drawable/ic_menu_agenda"
+                android:title="Receipt Settings" />
+            <item
+                android:id="@+id/nav_business_settings"
+                android:icon="@android:drawable/ic_menu_preferences"
+                android:title="Business Settings" />
+            <item
+                android:id="@+id/nav_printer_setup"
+                android:icon="@android:drawable/ic_menu_camera"
+                android:title="Printer Setup" />
+            <item
+                android:id="@+id/nav_logout"
+                android:icon="@android:drawable/ic_lock_power_off"
+                android:title="Logout" />
+        </menu>
+    </item>
+</menu>

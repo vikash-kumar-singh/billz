@@ -17,7 +17,11 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.navigation.NavigationView;
 
 public class ReportsActivity extends AppCompatActivity {
 
@@ -29,7 +33,11 @@ public class ReportsActivity extends AppCompatActivity {
 
     private View emptyStateContainer;
     private View reportsContentPlaceholder;
+    private View moreContentContainer;
+    private View premiumBanner;
+    private View dateSelectorRow;
     private LinearLayout bottomNavigationView;
+    private DrawerLayout drawerLayout;
     private MaterialToolbar toolbar;
     private View[] bottomTabs;
     private ImageView[] bottomTabIcons;
@@ -44,7 +52,11 @@ public class ReportsActivity extends AppCompatActivity {
         View root = findViewById(R.id.reportsRoot);
         emptyStateContainer = findViewById(R.id.emptyStateContainer);
         reportsContentPlaceholder = findViewById(R.id.reportsContentPlaceholder);
+        moreContentContainer = findViewById(R.id.moreContentContainer);
+        premiumBanner = findViewById(R.id.premiumBanner);
+        dateSelectorRow = findViewById(R.id.dateSelectorRow);
         bottomNavigationView = findViewById(R.id.bottomNavigation);
+        drawerLayout = findViewById(R.id.drawerLayout);
         toolbar = findViewById(R.id.toolbarReports);
         bottomTabs = new View[]{
                 findViewById(R.id.tabReports),
@@ -93,7 +105,9 @@ public class ReportsActivity extends AppCompatActivity {
         });
 
         setSupportActionBar(toolbar);
-        toolbar.setNavigationOnClickListener(v -> finish());
+        toolbar.setNavigationOnClickListener(v -> {
+            drawerLayout.openDrawer(GravityCompat.START);
+        });
 
         setupBottomTabs();
         highlightBottomTab(TAB_REPORTS);
@@ -130,13 +144,55 @@ public class ReportsActivity extends AppCompatActivity {
 
     private void highlightBottomTab(int selectedTab) {
         int unselectedColor = ContextCompat.getColor(this, R.color.reports_tab_unselected);
+        int selectedColor = ContextCompat.getColor(this, R.color.white);
 
         for (int i = 0; i < bottomTabs.length; i++) {
             boolean isSelected = i == selectedTab;
             bottomTabs[i].setBackgroundResource(isSelected ? R.drawable.bg_reports_nav_item : 0);
-            bottomTabIcons[i].setColorFilter(isSelected ? ContextCompat.getColor(this, R.color.white) : unselectedColor);
-            bottomTabLabels[i].setTextColor(isSelected ? ContextCompat.getColor(this, R.color.white) : unselectedColor);
+            bottomTabIcons[i].setColorFilter(isSelected ? selectedColor : unselectedColor);
+            bottomTabLabels[i].setTextColor(isSelected ? selectedColor : unselectedColor);
             bottomTabLabels[i].setTypeface(bottomTabLabels[i].getTypeface(), isSelected ? android.graphics.Typeface.BOLD : android.graphics.Typeface.NORMAL);
+        }
+
+        // Handle content visibility based on tab
+        int selectedId = bottomTabs[selectedTab].getId();
+
+        // Reset all views
+        moreContentContainer.setVisibility(View.GONE);
+        emptyStateContainer.setVisibility(View.GONE);
+        reportsContentPlaceholder.setVisibility(View.GONE);
+        dateSelectorRow.setVisibility(View.GONE);
+
+        if (selectedId == R.id.tabMore) {
+            // SHOW Grid + SHOW Premium
+            moreContentContainer.setVisibility(View.VISIBLE);
+            premiumBanner.setVisibility(View.VISIBLE);
+            toolbar.setTitle("More");
+            toolbar.setBackgroundColor(ContextCompat.getColor(this, R.color.reports_tab_selected));
+            toolbar.setTitleTextColor(selectedColor);
+            toolbar.setNavigationIconTint(selectedColor);
+        } else if (selectedId == R.id.tabItems) {
+            // SHOW Grid + HIDE Premium
+            moreContentContainer.setVisibility(View.VISIBLE);
+            premiumBanner.setVisibility(View.GONE);
+            toolbar.setTitle("Items");
+            toolbar.setBackgroundColor(ContextCompat.getColor(this, R.color.reports_tab_selected));
+            toolbar.setTitleTextColor(selectedColor);
+            toolbar.setNavigationIconTint(selectedColor);
+        } else if (selectedId == R.id.tabReports) {
+            // Reports section
+            dateSelectorRow.setVisibility(View.VISIBLE);
+            showEmptyState(true);
+            toolbar.setTitle(getString(R.string.reports_title));
+            toolbar.setBackgroundColor(ContextCompat.getColor(this, R.color.reports_surface));
+            toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.reports_text_primary));
+            toolbar.setNavigationIconTint(ContextCompat.getColor(this, R.color.reports_text_primary));
+        } else {
+            // Placeholder for Today and Counter
+            reportsContentPlaceholder.setVisibility(View.VISIBLE);
+            toolbar.setBackgroundColor(ContextCompat.getColor(this, R.color.reports_surface));
+            toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.reports_text_primary));
+            toolbar.setNavigationIconTint(ContextCompat.getColor(this, R.color.reports_text_primary));
         }
     }
 }

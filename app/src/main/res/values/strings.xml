@@ -20,6 +20,27 @@
     <string name="next">Next</string>
     <string name="previous">Previous</string>
 
+    <!-- More Screen Strings -->
+    <string name="more_premium_title">Try 15-day Free Premium</string>
+    <string name="more_premium_desc">No payment details required. You\'ll move to free plan after trial - No auto payments!</string>
+    <string name="more_see_benefits">See Benefits</string>
+    <string name="more_try_premium">Try Free Premium</string>
+    <string name="more_attendance">Attendance</string>
+    <string name="more_attendance_desc">Attendance Management</string>
+    <string name="more_manage_payroll">Manage Payroll</string>
+    <string name="more_payments">Payments</string>
+    <string name="more_shopfront">Shopfront</string>
+    <string name="more_all_customers">All Customers</string>
+    <string name="more_due_customers">Due Customers</string>
+    <string name="more_expense_income">Expense - Income (This Week)</string>
+    <string name="more_low_stocks">Low Stocks</string>
+    <string name="more_staff_partners">Staff and Partners</string>
+    <string name="more_sms_available">SMS Available</string>
+    <string name="more_items_subitems">Items and Subitems</string>
+    <string name="more_stock_cost">Stock Value Cost Price</string>
+    <string name="more_stock_selling">Stock Value Selling Price</string>
+    <string name="more_new">New</string>
+
     <string name="lorem_ipsum">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
         volutpat, dolor id interdum ullamcorper, risus dolor egestas lectus, sit amet mattis purus

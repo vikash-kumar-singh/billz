@@ -1,287 +1,760 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/reportsRoot"
+    android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/reports_background"
     tools:context=".ReportsActivity">
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineStart"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="@dimen/reports_screen_padding_horizontal" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/reportsRoot"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/reports_background">
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineEnd"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_end="@dimen/reports_screen_padding_horizontal" />
-
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbarReports"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="@color/reports_surface"
-        android:elevation="0dp"
-        android:minHeight="@dimen/reports_toolbar_height"
-        app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
-        app:layout_constraintStart_toStartOf="@id/guidelineStart"
-        app:layout_constraintTop_toTopOf="parent"
-        app:navigationIcon="@drawable/ic_reports_back"
-        app:title="@string/reports_title"
-        app:titleCentered="false"
-        app:titleTextColor="@color/reports_text_primary" />
-
-    <LinearLayout
-        android:id="@+id/dateSelectorRow"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/bg_reports_date_row"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingStart="@dimen/reports_date_row_padding_horizontal"
-        android:paddingTop="@dimen/reports_date_row_padding_vertical"
-        android:paddingEnd="@dimen/reports_date_row_padding_horizontal"
-        android:paddingBottom="@dimen/reports_date_row_padding_vertical"
-        android:layout_marginTop="@dimen/reports_date_row_margin_top"
-        app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
-        app:layout_constraintStart_toStartOf="@id/guidelineStart"
-        app:layout_constraintTop_toBottomOf="@id/toolbarReports">
-
-        <ImageView
-            android:id="@+id/imageCalendar"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:contentDescription="@string/reports_calendar"
-            android:src="@drawable/ic_reports_calendar" />
-
-        <TextView
-            android:id="@+id/textDate"
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidelineStart"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:text="@string/reports_date_today"
-            android:textColor="@color/reports_text_primary"
-            android:textSize="15sp"
-            android:textStyle="bold" />
-    </LinearLayout>
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="@dimen/reports_screen_padding_horizontal" />
 
-    <LinearLayout
-        android:id="@+id/emptyStateContainer"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:paddingStart="@dimen/reports_empty_section_horizontal"
-        android:paddingEnd="@dimen/reports_empty_section_horizontal"
-        app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
-        app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
-        app:layout_constraintStart_toStartOf="@id/guidelineStart"
-        app:layout_constraintTop_toBottomOf="@id/dateSelectorRow"
-        app:layout_constraintVertical_bias="0.42">
-
-        <ImageView
-            android:id="@+id/imageEmptyState"
-            android:layout_width="@dimen/reports_empty_icon_size"
-            android:layout_height="@dimen/reports_empty_icon_size"
-            android:contentDescription="@string/reports_empty_message"
-            android:src="@drawable/ic_reports_empty_state" />
-
-        <TextView
-            android:id="@+id/textEmptyState"
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidelineEnd"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/reports_empty_text_margin_top"
-            android:gravity="center"
-            android:maxWidth="@dimen/reports_empty_state_max_width"
-            android:text="@string/reports_empty_message"
-            android:textAlignment="center"
-            android:textColor="@color/reports_text_secondary"
-            android:textSize="17sp"
-            tools:ignore="TextViewEdits" />
-    </LinearLayout>
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="@dimen/reports_screen_padding_horizontal" />
 
-    <TextView
-        android:id="@+id/reportsContentPlaceholder"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/reports_content_placeholder"
-        android:textColor="@color/reports_text_secondary"
-        android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/dateSelectorRow" />
-
-    <View
-        android:id="@+id/bottomNavDivider"
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:background="@color/reports_divider"
-        app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <LinearLayout
-        android:id="@+id/bottomNavigation"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/reports_bottom_nav_height"
-        android:background="@color/reports_surface"
-        android:baselineAligned="false"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:paddingTop="@dimen/reports_bottom_nav_padding_top"
-        android:paddingBottom="@dimen/reports_bottom_nav_padding_bottom"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbarReports"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/reports_surface"
+            android:elevation="0dp"
+            android:minHeight="@dimen/reports_toolbar_height"
+            app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+            app:layout_constraintStart_toStartOf="@id/guidelineStart"
+            app:layout_constraintTop_toTopOf="parent"
+            app:navigationIcon="@drawable/ic_reports_menu"
+            app:title="@string/reports_title"
+            app:titleCentered="false"
+            app:titleTextColor="@color/reports_text_primary" />
 
         <LinearLayout
-            android:id="@+id/tabReports"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/bg_reports_nav_item"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:id="@+id/dateSelectorRow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_reports_date_row"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="@dimen/reports_date_row_padding_horizontal"
+            android:paddingTop="@dimen/reports_date_row_padding_vertical"
+            android:paddingEnd="@dimen/reports_date_row_padding_horizontal"
+            android:paddingBottom="@dimen/reports_date_row_padding_vertical"
+            android:layout_marginTop="@dimen/reports_date_row_margin_top"
+            app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+            app:layout_constraintStart_toStartOf="@id/guidelineStart"
+            app:layout_constraintTop_toBottomOf="@id/toolbarReports">
 
             <ImageView
-                android:id="@+id/iconReports"
-                android:layout_width="@dimen/reports_bottom_nav_icon_size"
-                android:layout_height="@dimen/reports_bottom_nav_icon_size"
-                android:contentDescription="@string/reports_tab_reports"
-                android:src="@drawable/ic_nav_reports"
-                android:tint="@color/white" />
+                android:id="@+id/imageCalendar"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:contentDescription="@string/reports_calendar"
+                android:src="@drawable/ic_reports_calendar" />
 
             <TextView
-                android:id="@+id/labelReports"
+                android:id="@+id/textDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="@string/reports_tab_reports"
-                android:textColor="@color/white"
-                android:textSize="@dimen/reports_bottom_nav_label_text"
+                android:layout_marginStart="10dp"
+                android:text="@string/reports_date_today"
+                android:textColor="@color/reports_text_primary"
+                android:textSize="15sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/tabToday"
+            android:id="@+id/emptyStateContainer"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:paddingStart="@dimen/reports_empty_section_horizontal"
+            android:paddingEnd="@dimen/reports_empty_section_horizontal"
+            app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
+            app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+            app:layout_constraintStart_toStartOf="@id/guidelineStart"
+            app:layout_constraintTop_toBottomOf="@id/dateSelectorRow"
+            app:layout_constraintVertical_bias="0.42">
 
             <ImageView
-                android:id="@+id/iconToday"
-                android:layout_width="@dimen/reports_bottom_nav_icon_size"
-                android:layout_height="@dimen/reports_bottom_nav_icon_size"
-                android:contentDescription="@string/reports_tab_today"
-                android:src="@drawable/ic_nav_today"
-                android:tint="@color/reports_tab_unselected" />
+                android:id="@+id/imageEmptyState"
+                android:layout_width="@dimen/reports_empty_icon_size"
+                android:layout_height="@dimen/reports_empty_icon_size"
+                android:contentDescription="@string/reports_empty_message"
+                android:src="@drawable/ic_reports_empty_state" />
 
             <TextView
-                android:id="@+id/labelToday"
+                android:id="@+id/textEmptyState"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="@string/reports_tab_today"
-                android:textColor="@color/reports_tab_unselected"
-                android:textSize="@dimen/reports_bottom_nav_label_text" />
+                android:layout_marginTop="@dimen/reports_empty_text_margin_top"
+                android:gravity="center"
+                android:maxWidth="@dimen/reports_empty_state_max_width"
+                android:text="@string/reports_empty_message"
+                android:textAlignment="center"
+                android:textColor="@color/reports_text_secondary"
+                android:textSize="17sp"
+                tools:ignore="TextViewEdits" />
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/reportsContentPlaceholder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/reports_content_placeholder"
+            android:textColor="@color/reports_text_secondary"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/dateSelectorRow" />
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/moreContentContainer"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="#F8FAFC"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbarReports">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="24dp">
+
+                <!-- Premium Banner (Only shown in More section) -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/premiumBanner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="12dp"
+                    app:cardBackgroundColor="#E8F0FE"
+                    app:cardCornerRadius="8dp"
+                    app:cardElevation="0dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="12dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:src="@android:drawable/ic_dialog_info"
+                                app:tint="#2563EB" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:layout_weight="1"
+                                android:text="@string/more_premium_title"
+                                android:textColor="#1E40AF"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="@string/more_premium_desc"
+                            android:textColor="#60A5FA"
+                            android:textSize="12sp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:gravity="end|center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="16dp"
+                                android:text="@string/more_see_benefits"
+                                android:textColor="#2563EB"
+                                android:textSize="13sp"
+                                android:textStyle="bold" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:backgroundTint="#2563EB"
+                                android:minHeight="36dp"
+                                android:text="@string/more_try_premium"
+                                android:textAllCaps="false"
+                                android:textSize="13sp"
+                                app:cornerRadius="4dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!-- Grid of Items -->
+                <GridLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:alignmentMode="alignMargins"
+                    android:columnCount="2"
+                    android:background="#E2E8F0"
+                    android:padding="1dp">
+
+                    <!-- 1. Attendance -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:layout_margin="0.5dp"
+                        android:background="#FFFFFF"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="20dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/more_attendance"
+                            android:textColor="#2563EB"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="@string/more_attendance_desc"
+                            android:textColor="#64748B"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <!-- 2. Manage Payroll -->
+                    <FrameLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:layout_margin="0.5dp"
+                        android:background="#FFFFFF">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="20dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/more_manage_payroll"
+                                android:textColor="#2563EB"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:text="@string/more_payments"
+                                android:textColor="#64748B"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="end|top"
+                            android:layout_margin="4dp"
+                            android:background="#22C55E"
+                            android:paddingHorizontal="6dp"
+                            android:paddingVertical="2dp"
+                            android:text="@string/more_new"
+                            android:textColor="#FFFFFF"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
+                    </FrameLayout>
+
+                    <!-- 3. Shopfront -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:layout_margin="0.5dp"
+                        android:background="#FFFFFF"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="20dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textColor="#2563EB"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="@string/more_shopfront"
+                            android:textColor="#64748B"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <!-- 4. All Customers -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:layout_margin="0.5dp"
+                        android:background="#FFFFFF"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="20dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="327"
+                            android:textColor="#2563EB"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="@string/more_all_customers"
+                            android:textColor="#64748B"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <!-- 5. Due Customers -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:layout_margin="0.5dp"
+                        android:background="#FFFFFF"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="20dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textColor="#22C55E"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="@string/more_due_customers"
+                            android:textColor="#64748B"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <!-- 6. Expense - Income -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:layout_margin="0.5dp"
+                        android:background="#FFFFFF"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="20dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="₹0.00"
+                            android:textColor="#2563EB"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="@string/more_expense_income"
+                            android:textColor="#64748B"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <!-- 7. Low Stocks -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:layout_margin="0.5dp"
+                        android:background="#FFFFFF"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="20dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="1"
+                            android:textColor="#EF4444"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="@string/more_low_stocks"
+                            android:textColor="#64748B"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <!-- 8. Staff and Partners -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:layout_margin="0.5dp"
+                        android:background="#FFFFFF"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="20dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textColor="#2563EB"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="@string/more_staff_partners"
+                            android:textColor="#64748B"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <!-- 9. SMS Available -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:layout_margin="0.5dp"
+                        android:background="#FFFFFF"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="20dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textColor="#2563EB"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="@string/more_sms_available"
+                            android:textColor="#64748B"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <!-- 10. Items and Subitems -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:layout_margin="0.5dp"
+                        android:background="#FFFFFF"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="20dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="45"
+                            android:textColor="#2563EB"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="@string/more_items_subitems"
+                            android:textColor="#64748B"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <!-- 11. Stock Value Cost Price -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:layout_margin="0.5dp"
+                        android:background="#FFFFFF"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="20dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="₹0.00"
+                            android:textColor="#2563EB"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="@string/more_stock_cost"
+                            android:textColor="#64748B"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <!-- 12. Stock Value Selling Price -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:layout_margin="0.5dp"
+                        android:background="#FFFFFF"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="20dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="₹0.00"
+                            android:textColor="#2563EB"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="@string/more_stock_selling"
+                            android:textColor="#64748B"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                </GridLayout>
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
+        <View
+            android:id="@+id/bottomNavDivider"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:background="@color/reports_divider"
+            app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <LinearLayout
-            android:id="@+id/tabCounter"
+            android:id="@+id/bottomNavigation"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:clickable="true"
-            android:focusable="true"
+            android:layout_height="@dimen/reports_bottom_nav_height"
+            android:background="@color/reports_surface"
+            android:baselineAligned="false"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="horizontal"
+            android:paddingTop="@dimen/reports_bottom_nav_padding_top"
+            android:paddingBottom="@dimen/reports_bottom_nav_padding_bottom"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
 
-            <ImageView
-                android:id="@+id/iconCounter"
-                android:layout_width="@dimen/reports_bottom_nav_icon_size"
-                android:layout_height="@dimen/reports_bottom_nav_icon_size"
-                android:contentDescription="@string/reports_tab_counter"
-                android:src="@drawable/ic_nav_counter"
-                android:tint="@color/reports_tab_unselected" />
+            <LinearLayout
+                android:id="@+id/tabReports"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/bg_reports_nav_item"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/labelCounter"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="@string/reports_tab_counter"
-                android:textColor="@color/reports_tab_unselected"
-                android:textSize="@dimen/reports_bottom_nav_label_text" />
+                <ImageView
+                    android:id="@+id/iconReports"
+                    android:layout_width="@dimen/reports_bottom_nav_icon_size"
+                    android:layout_height="@dimen/reports_bottom_nav_icon_size"
+                    android:contentDescription="@string/reports_tab_reports"
+                    android:src="@drawable/ic_nav_reports"
+                    android:tint="@color/white" />
+
+                <TextView
+                    android:id="@+id/labelReports"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/reports_tab_reports"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/reports_bottom_nav_label_text"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/tabToday"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/iconToday"
+                    android:layout_width="@dimen/reports_bottom_nav_icon_size"
+                    android:layout_height="@dimen/reports_bottom_nav_icon_size"
+                    android:contentDescription="@string/reports_tab_today"
+                    android:src="@drawable/ic_nav_today"
+                    android:tint="@color/reports_tab_unselected" />
+
+                <TextView
+                    android:id="@+id/labelToday"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/reports_tab_today"
+                    android:textColor="@color/reports_tab_unselected"
+                    android:textSize="@dimen/reports_bottom_nav_label_text" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/tabCounter"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/iconCounter"
+                    android:layout_width="@dimen/reports_bottom_nav_icon_size"
+                    android:layout_height="@dimen/reports_bottom_nav_icon_size"
+                    android:contentDescription="@string/reports_tab_counter"
+                    android:src="@drawable/ic_nav_counter"
+                    android:tint="@color/reports_tab_unselected" />
+
+                <TextView
+                    android:id="@+id/labelCounter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/reports_tab_counter"
+                    android:textColor="@color/reports_tab_unselected"
+                    android:textSize="@dimen/reports_bottom_nav_label_text" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/tabItems"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/iconItems"
+                    android:layout_width="@dimen/reports_bottom_nav_icon_size"
+                    android:layout_height="@dimen/reports_bottom_nav_icon_size"
+                    android:contentDescription="@string/reports_tab_items"
+                    android:src="@drawable/ic_nav_items"
+                    android:tint="@color/reports_tab_unselected" />
+
+                <TextView
+                    android:id="@+id/labelItems"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/reports_tab_items"
+                    android:textColor="@color/reports_tab_unselected"
+                    android:textSize="@dimen/reports_bottom_nav_label_text" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/tabMore"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/iconMore"
+                    android:layout_width="@dimen/reports_bottom_nav_icon_size"
+                    android:layout_height="@dimen/reports_bottom_nav_icon_size"
+                    android:contentDescription="@string/reports_tab_more"
+                    android:src="@drawable/ic_nav_more"
+                    android:tint="@color/reports_tab_unselected" />
+
+                <TextView
+                    android:id="@+id/labelMore"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/reports_tab_more"
+                    android:textColor="@color/reports_tab_unselected"
+                    android:textSize="@dimen/reports_bottom_nav_label_text" />
+            </LinearLayout>
         </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <LinearLayout
-            android:id="@+id/tabItems"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="center"
-            android:orientation="vertical">
+    <include
+        android:id="@+id/sidebarContent"
+        layout="@layout/layout_drawer_content"
+        android:layout_width="300dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start" />
 
-            <ImageView
-                android:id="@+id/iconItems"
-                android:layout_width="@dimen/reports_bottom_nav_icon_size"
-                android:layout_height="@dimen/reports_bottom_nav_icon_size"
-                android:contentDescription="@string/reports_tab_items"
-                android:src="@drawable/ic_nav_items"
-                android:tint="@color/reports_tab_unselected" />
-
-            <TextView
-                android:id="@+id/labelItems"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="@string/reports_tab_items"
-                android:textColor="@color/reports_tab_unselected"
-                android:textSize="@dimen/reports_bottom_nav_label_text" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/tabMore"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <ImageView
-                android:id="@+id/iconMore"
-                android:layout_width="@dimen/reports_bottom_nav_icon_size"
-                android:layout_height="@dimen/reports_bottom_nav_icon_size"
-                android:contentDescription="@string/reports_tab_more"
-                android:src="@drawable/ic_nav_more"
-                android:tint="@color/reports_tab_unselected" />
-
-            <TextView
-                android:id="@+id/labelMore"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="@string/reports_tab_more"
-                android:textColor="@color/reports_tab_unselected"
-                android:textSize="@dimen/reports_bottom_nav_label_text" />
-        </LinearLayout>
-    </LinearLayout>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.drawerlayout.widget.DrawerLayout>
