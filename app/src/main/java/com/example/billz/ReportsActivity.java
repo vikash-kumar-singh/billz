@@ -22,6 +22,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.navigation.NavigationView;
+import android.content.Intent;
 
 public class ReportsActivity extends AppCompatActivity {
 
@@ -111,6 +112,11 @@ public class ReportsActivity extends AppCompatActivity {
 
         setupBottomTabs();
         highlightBottomTab(TAB_REPORTS);
+
+        findViewById(R.id.nav_inventory).setOnClickListener(v -> {
+            drawerLayout.closeDrawer(GravityCompat.START);
+            startActivity(new Intent(ReportsActivity.this, InventoryManagementActivity.class));
+        });
 
         showEmptyState(true);
     }
