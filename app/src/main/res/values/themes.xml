@@ -6,4 +6,10 @@
     </style>
 
     <style name="Theme.Billz" parent="Base.Theme.Billz" />
+
+    <style name="TransactionTabText" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
 </resources>

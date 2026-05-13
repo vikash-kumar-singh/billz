@@ -123,6 +123,15 @@ public class ReportsActivity extends AppCompatActivity {
             startActivity(new Intent(ReportsActivity.this, CustomerManagementActivity.class));
         });
 
+        findViewById(R.id.nav_add_expense).setOnClickListener(v -> {
+            drawerLayout.closeDrawer(GravityCompat.START);
+            startActivity(new Intent(ReportsActivity.this, CashFlowActivity.class));
+        });
+
+        findViewById(R.id.cardExpenseIncome).setOnClickListener(v -> {
+            startActivity(new Intent(ReportsActivity.this, CashFlowActivity.class));
+        });
+
         findViewById(R.id.cardAllCustomers).setOnClickListener(v -> {
             android.util.Log.d("ReportsActivity", "All Customers card clicked");
             Intent intent = new Intent(ReportsActivity.this, CustomerManagementActivity.class);
