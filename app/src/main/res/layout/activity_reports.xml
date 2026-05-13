@@ -329,11 +329,15 @@
 
                     <!-- 4. All Customers -->
                     <LinearLayout
+                        android:id="@+id/cardAllCustomers"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
                         android:layout_margin="0.5dp"
                         android:background="#FFFFFF"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackground"
                         android:gravity="center"
                         android:orientation="vertical"
                         android:padding="20dp">
@@ -357,11 +361,15 @@
 
                     <!-- 5. Due Customers -->
                     <LinearLayout
+                        android:id="@+id/cardDueCustomers"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
                         android:layout_margin="0.5dp"
                         android:background="#FFFFFF"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackground"
                         android:gravity="center"
                         android:orientation="vertical"
                         android:padding="20dp">

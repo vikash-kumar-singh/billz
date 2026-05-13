@@ -118,6 +118,23 @@ public class ReportsActivity extends AppCompatActivity {
             startActivity(new Intent(ReportsActivity.this, InventoryManagementActivity.class));
         });
 
+        findViewById(R.id.nav_customers).setOnClickListener(v -> {
+            drawerLayout.closeDrawer(GravityCompat.START);
+            startActivity(new Intent(ReportsActivity.this, CustomerManagementActivity.class));
+        });
+
+        findViewById(R.id.cardAllCustomers).setOnClickListener(v -> {
+            android.util.Log.d("ReportsActivity", "All Customers card clicked");
+            Intent intent = new Intent(ReportsActivity.this, CustomerManagementActivity.class);
+            startActivity(intent);
+        });
+
+        findViewById(R.id.cardDueCustomers).setOnClickListener(v -> {
+            android.util.Log.d("ReportsActivity", "Due Customers card clicked");
+            Intent intent = new Intent(ReportsActivity.this, CustomerManagementActivity.class);
+            startActivity(intent);
+        });
+
         showEmptyState(true);
     }
 
