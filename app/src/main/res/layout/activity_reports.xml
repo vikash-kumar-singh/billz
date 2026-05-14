@@ -313,7 +313,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="0"
+                            android:text="@string/dummy_zero"
                             android:textColor="#2563EB"
                             android:textSize="20sp"
                             android:textStyle="bold" />
@@ -345,7 +345,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="327"
+                            android:text="@string/dummy_all_customers_count"
                             android:textColor="#2563EB"
                             android:textSize="20sp"
                             android:textStyle="bold" />
@@ -377,7 +377,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="0"
+                            android:text="@string/dummy_zero"
                             android:textColor="#22C55E"
                             android:textSize="20sp"
                             android:textStyle="bold" />
@@ -409,7 +409,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="₹0.00"
+                            android:text="@string/dummy_currency_zero"
                             android:textColor="#2563EB"
                             android:textSize="20sp"
                             android:textStyle="bold" />
@@ -437,7 +437,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="1"
+                            android:text="@string/dummy_low_stock_count"
                             android:textColor="#EF4444"
                             android:textSize="20sp"
                             android:textStyle="bold" />
@@ -465,7 +465,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="0"
+                            android:text="@string/dummy_zero"
                             android:textColor="#2563EB"
                             android:textSize="20sp"
                             android:textStyle="bold" />
@@ -493,7 +493,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="0"
+                            android:text="@string/dummy_zero"
                             android:textColor="#2563EB"
                             android:textSize="20sp"
                             android:textStyle="bold" />
@@ -521,7 +521,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="45"
+                            android:text="@string/dummy_items_count"
                             android:textColor="#2563EB"
                             android:textSize="20sp"
                             android:textStyle="bold" />
@@ -549,7 +549,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="₹0.00"
+                            android:text="@string/dummy_currency_zero"
                             android:textColor="#2563EB"
                             android:textSize="20sp"
                             android:textStyle="bold" />
@@ -577,7 +577,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="₹0.00"
+                            android:text="@string/dummy_currency_zero"
                             android:textColor="#2563EB"
                             android:textSize="20sp"
                             android:textStyle="bold" />

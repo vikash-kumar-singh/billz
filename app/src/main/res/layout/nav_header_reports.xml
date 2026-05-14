@@ -22,7 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:text="EDIT BUSINESS"
+            android:text="@string/header_edit_business"
             android:textColor="@color/reports_tab_selected"
             android:textSize="12sp"
             android:textStyle="bold" />
@@ -81,7 +81,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="FREE PLAN"
+                android:text="@string/header_free_plan"
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -89,7 +89,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Upgrade to Premium Plan"
+                android:text="@string/header_upgrade_premium"
                 android:textColor="@color/white"
                 android:textSize="12sp" />
         </LinearLayout>
@@ -129,7 +129,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:text="EDIT PROFILE"
+            android:text="@string/header_edit_profile"
             android:textColor="@color/reports_tab_selected"
             android:textSize="11sp"
             android:textStyle="bold" />
@@ -146,7 +146,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:backgroundTint="@color/reports_tab_selected"
-            android:text="SWITCH BUSINESS"
+            android:text="@string/header_switch_business"
             android:textSize="12sp"
             app:cornerRadius="4dp" />
 
@@ -159,7 +159,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:backgroundTint="#4CAF50"
-            android:text="CREATE BUSINESS"
+            android:text="@string/header_create_business"
             android:textSize="12sp"
             app:cornerRadius="4dp" />
     </LinearLayout>
@@ -168,7 +168,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Management"
+        android:text="@string/header_management"
         android:textColor="@color/reports_text_secondary"
         android:textSize="14sp" />
 

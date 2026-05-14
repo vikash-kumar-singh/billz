@@ -20,27 +20,6 @@
     <string name="next">Next</string>
     <string name="previous">Previous</string>
 
-    <!-- More Screen Strings -->
-    <string name="more_premium_title">Try 15-day Free Premium</string>
-    <string name="more_premium_desc">No payment details required. You\'ll move to free plan after trial - No auto payments!</string>
-    <string name="more_see_benefits">See Benefits</string>
-    <string name="more_try_premium">Try Free Premium</string>
-    <string name="more_attendance">Attendance</string>
-    <string name="more_attendance_desc">Attendance Management</string>
-    <string name="more_manage_payroll">Manage Payroll</string>
-    <string name="more_payments">Payments</string>
-    <string name="more_shopfront">Shopfront</string>
-    <string name="more_all_customers">All Customers</string>
-    <string name="more_due_customers">Due Customers</string>
-    <string name="more_expense_income">Expense - Income (This Week)</string>
-    <string name="more_low_stocks">Low Stocks</string>
-    <string name="more_staff_partners">Staff and Partners</string>
-    <string name="more_sms_available">SMS Available</string>
-    <string name="more_items_subitems">Items and Subitems</string>
-    <string name="more_stock_cost">Stock Value Cost Price</string>
-    <string name="more_stock_selling">Stock Value Selling Price</string>
-    <string name="more_new">New</string>
-
     <string name="lorem_ipsum">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
         volutpat, dolor id interdum ullamcorper, risus dolor egestas lectus, sit amet mattis purus
@@ -77,4 +56,163 @@
         libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
+
+    <!-- More Screen -->
+    <string name="more_premium_title">Try 15-day Free Premium</string>
+    <string name="more_premium_desc">No payment details required. You\'ll move to free plan after trial - No auto payments!</string>
+    <string name="more_see_benefits">See Benefits</string>
+    <string name="more_try_premium">Try Free Premium</string>
+    <string name="more_attendance">Attendance</string>
+    <string name="more_attendance_desc">Attendance Management</string>
+    <string name="more_manage_payroll">Manage Payroll</string>
+    <string name="more_payments">Payments</string>
+    <string name="more_shopfront">Shopfront</string>
+    <string name="more_all_customers">All Customers</string>
+    <string name="more_due_customers">Due Customers</string>
+    <string name="more_expense_income">Expense - Income (This Week)</string>
+    <string name="more_low_stocks">Low Stocks</string>
+    <string name="more_staff_partners">Staff and Partners</string>
+    <string name="more_sms_available">SMS Available</string>
+    <string name="more_items_subitems">Items and Subitems</string>
+    <string name="more_stock_cost">Stock Value Cost Price</string>
+    <string name="more_stock_selling">Stock Value Selling Price</string>
+    <string name="more_new">New</string>
+
+    <!-- Cash Flow -->
+    <string name="cash_flow_title">Cash Flow</string>
+    <string name="net_cash_flow">Net Cash Flow</string>
+    <string name="total_income_expense_hint">(Total Income - Total Expense)</string>
+    <string name="income">Income</string>
+    <string name="expense">Expense</string>
+    <string name="no_entries_message">No Expense/Income Entries for</string>
+    <string name="click_to_add_message">Click on + Button to add</string>
+
+    <!-- Categories -->
+    <string name="cat_tax">Tax</string>
+    <string name="cat_fuel">Fuel</string>
+    <string name="cat_food">Food</string>
+    <string name="cat_bill">Bill</string>
+    <string name="cat_transport">Transport</string>
+    <string name="cat_insurance">Insurance</string>
+    <string name="cat_salary">Salary</string>
+    <string name="cat_rent">Rent</string>
+    <string name="cat_repairs">Repairs</string>
+    <string name="cat_commission">Commission</string>
+    <string name="cat_advertising">Advertising</string>
+    <string name="cat_fee">Fee</string>
+    <string name="cat_interest">Interest</string>
+    <string name="cat_loan">Loan</string>
+    <string name="cat_supplies">Supplies</string>
+    <string name="cat_transfer">Transfer</string>
+    <string name="cat_contract">Contract</string>
+    <string name="cat_miscellaneous">Miscellaneous</string>
+    <string name="cat_custom">Custom</string>
+    <string name="cat_profit">Profit</string>
+    <string name="cat_awards">Awards</string>
+    <string name="cat_rental">Rental</string>
+    <string name="cat_sale">Sale</string>
+    <string name="cat_refund">Refund</string>
+    <string name="cat_lottery">Lottery</string>
+    <string name="cat_dividend">Dividend</string>
+    <string name="cat_investment">Investment</string>
+
+    <!-- Add Customer -->
+    <string name="add_customer_title">ADD CUSTOMER</string>
+    <string name="save">Save</string>
+    <string name="customer_details">CUSTOMER DETAILS</string>
+    <string name="mobile_number">Mobile Number</string>
+    <string name="full_name">Full Name</string>
+    <string name="email_address">Email Address</string>
+    <string name="general_details">GENERAL DETAILS</string>
+    <string name="gender">Gender</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="dob">Date of Birth</string>
+    <string name="anniversary">Anniversary</string>
+    <string name="date_placeholder">DD/MM/YYYY</string>
+    <string name="other_details">OTHER DETAILS</string>
+    <string name="gstin">GSTIN</string>
+    <string name="address">Address</string>
+    <string name="notes">Notes</string>
+    <string name="error_fill_fields">Please enter mobile and name</string>
+    <string name="success_save">Customer Saved Successfully</string>
+
+    <!-- Sidebar -->
+    <string name="nav_help_chat">Help Chat</string>
+    <string name="nav_inventory">Inventory Management</string>
+    <string name="nav_add_expense">Add Expense</string>
+    <string name="nav_receipts">Receipts</string>
+    <string name="nav_customers">Customers Management</string>
+    <string name="nav_staff">Staff Management</string>
+    <string name="nav_shopfront">ShopFront</string>
+    <string name="nav_refer">Refer App</string>
+    <string name="nav_returned_receipt">Returned Receipt</string>
+    <string name="nav_web_office">Web Back Office</string>
+    <string name="nav_feedback">Feedback</string>
+    <string name="nav_buy_printer">Buy Printer</string>
+    <string name="nav_other_apps">Other apps</string>
+    <string name="nav_connect_kitchen">Connect Kitchen display App</string>
+    <string name="nav_settings_title">Settings</string>
+    <string name="nav_language">Language</string>
+    <string name="language_display">Language - %1$s</string>
+    <string name="nav_weighing_machine">Weighing Machine</string>
+    <string name="nav_receipt_settings">Receipt Settings</string>
+    <string name="nav_business_settings">Business Settings</string>
+    <string name="nav_printer_setup">Printer Setup</string>
+    <string name="nav_logout">Logout</string>
+
+    <!-- Sidebar Header -->
+    <string name="header_edit_business">EDIT BUSINESS</string>
+    <string name="header_free_plan">FREE PLAN</string>
+    <string name="header_upgrade_premium">Upgrade to Premium Plan</string>
+    <string name="header_owner_suffix">(owner)</string>
+    <string name="header_edit_profile">EDIT PROFILE</string>
+    <string name="header_switch_business">SWITCH BUSINESS</string>
+    <string name="header_create_business">CREATE BUSINESS</string>
+    <string name="header_management">Management</string>
+
+    <!-- Inventory -->
+    <string name="inventory_title">INVENTORY MANAGEMENT</string>
+    <string name="search_hint">Search name, price or tags...</string>
+    <string name="tab_items">ITEMS</string>
+    <string name="tab_category">CATEGORY</string>
+    <string name="tab_modifiers">MODIFIERS</string>
+    <string name="tab_ingredient">INGREDIENT</string>
+    <string name="chip_all">All</string>
+    <string name="chip_low_stock">Low Stock</string>
+    <string name="chip_expired">Expired</string>
+    <string name="no_items_found">No items found</string>
+    <string name="adjust_search_filter">Try adjusting your search or filters</string>
+    <string name="out_of_stock">Out of stock</string>
+    <string name="left_in_stock">%1$d Left In Stock</string>
+    <string name="expired_on">Expired on %1$s</string>
+    <string name="items_count">%1$d Items</string>
+    <string name="available">Available</string>
+    <string name="unit_kg_left">%1$dkg Left</string>
+
+    <!-- Customer Management -->
+    <string name="customers_title">YOUR CUSTOMERS</string>
+    <string name="tab_all_customers">ALL CUSTOMERS</string>
+    <string name="tab_due_customers">DUE CUSTOMERS</string>
+    <string name="no_customers_found">No customers found</string>
+    <string name="search_coming_soon">Search coming soon!</string>
+    <string name="unknown">Unknown</string>
+    <string name="orders_suffix">%1$d ORDERS</string>
+    <string name="just_now">JUST NOW</string>
+
+    <!-- Dummy Inventory Items -->
+    <string name="item_fat_burner">AA Paranormic Fat Burners</string>
+    <string name="item_whey_protein">Absolute Nutrition Whey Protein 1kg</string>
+    <string name="item_oats">Alpino Oats 1kg</string>
+    <string name="item_androbol">Androbol Xterem</string>
+    <string name="item_biozyme">MuscleBlaze Biozyme</string>
+    <string name="cat_supplements">Supplements</string>
+    <string name="cat_oats_grains">Oats &amp; Grains</string>
+
+    <!-- More Grid Placeholder Data -->
+    <string name="dummy_zero">0</string>
+    <string name="dummy_all_customers_count">327</string>
+    <string name="dummy_items_count">45</string>
+    <string name="dummy_low_stock_count">1</string>
+    <string name="dummy_currency_zero">₹0.00</string>
 </resources>

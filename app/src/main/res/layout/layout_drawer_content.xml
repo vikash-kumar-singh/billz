@@ -38,7 +38,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="32dp"
                     android:layout_weight="1"
-                    android:text="Help Chat"
+                    android:text="@string/nav_help_chat"
                     android:textColor="@color/reports_text_primary"
                     android:textSize="14sp" />
             </LinearLayout>
@@ -65,7 +65,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="32dp"
                     android:layout_weight="1"
-                    android:text="Inventory Management"
+                    android:text="@string/nav_inventory"
                     android:textColor="@color/reports_text_primary"
                     android:textSize="14sp" />
                 <TextView
@@ -102,7 +102,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="32dp"
                     android:layout_weight="1"
-                    android:text="Add Expense"
+                    android:text="@string/nav_add_expense"
                     android:textColor="@color/reports_text_primary"
                     android:textSize="14sp" />
             </LinearLayout>
@@ -125,7 +125,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="32dp"
                     android:layout_weight="1"
-                    android:text="Receipts"
+                    android:text="@string/nav_receipts"
                     android:textColor="@color/reports_text_primary"
                     android:textSize="14sp" />
             </LinearLayout>
@@ -152,7 +152,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="32dp"
                     android:layout_weight="1"
-                    android:text="Customers Management"
+                    android:text="@string/nav_customers"
                     android:textColor="@color/reports_text_primary"
                     android:textSize="14sp" />
                 <TextView
@@ -185,7 +185,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="32dp"
                     android:layout_weight="1"
-                    android:text="Staff Management"
+                    android:text="@string/nav_staff"
                     android:textColor="@color/reports_text_primary"
                     android:textSize="14sp" />
                 <TextView
@@ -218,7 +218,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="32dp"
                     android:layout_weight="1"
-                    android:text="ShopFront"
+                    android:text="@string/nav_shopfront"
                     android:textColor="@color/reports_text_primary"
                     android:textSize="14sp" />
                 <TextView
@@ -251,7 +251,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="32dp"
                     android:layout_weight="1"
-                    android:text="Refer App"
+                    android:text="@string/nav_refer"
                     android:textColor="@color/reports_text_primary"
                     android:textSize="14sp" />
             </LinearLayout>
@@ -274,7 +274,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="32dp"
                     android:layout_weight="1"
-                    android:text="Returned Receipt"
+                    android:text="@string/nav_returned_receipt"
                     android:textColor="@color/reports_text_primary"
                     android:textSize="14sp" />
             </LinearLayout>
@@ -297,7 +297,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="32dp"
                     android:layout_weight="1"
-                    android:text="Web Back Office"
+                    android:text="@string/nav_web_office"
                     android:textColor="@color/reports_text_primary"
                     android:textSize="14sp" />
             </LinearLayout>
@@ -320,7 +320,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="32dp"
                     android:layout_weight="1"
-                    android:text="Feedback"
+                    android:text="@string/nav_feedback"
                     android:textColor="@color/reports_text_primary"
                     android:textSize="14sp" />
             </LinearLayout>
@@ -343,7 +343,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="32dp"
                     android:layout_weight="1"
-                    android:text="Buy Printer"
+                    android:text="@string/nav_buy_printer"
                     android:textColor="@color/reports_text_primary"
                     android:textSize="14sp" />
                 <TextView
@@ -352,7 +352,7 @@
                     android:background="#4CAF50"
                     android:paddingHorizontal="6dp"
                     android:paddingVertical="2dp"
-                    android:text="New"
+                    android:text="@string/more_new"
                     android:textColor="@color/white"
                     android:textSize="10sp"
                     android:textStyle="bold" />
@@ -371,7 +371,7 @@
                 android:paddingStart="16dp"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
-                android:text="Other apps"
+                android:text="@string/nav_other_apps"
                 android:textColor="@color/reports_text_secondary"
                 android:textSize="14sp" />
 
@@ -393,7 +393,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="32dp"
                     android:layout_weight="1"
-                    android:text="Connect Kitchen display App"
+                    android:text="@string/nav_connect_kitchen"
                     android:textColor="@color/reports_text_primary"
                     android:textSize="14sp" />
             </LinearLayout>
@@ -411,24 +411,29 @@
                 android:paddingStart="16dp"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
-                android:text="Settings"
+                android:text="@string/nav_settings_title"
                 android:textColor="@color/reports_text_secondary"
                 android:textSize="14sp" />
 
             <!-- Language -->
             <LinearLayout
+                android:id="@+id/nav_language"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:gravity="center_vertical"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackground">
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@android:drawable/ic_menu_sort_alphabetically"
                     app:tint="@color/reports_tab_selected" />
                 <TextView
+                    android:id="@+id/textLanguageName"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="32dp"
@@ -456,7 +461,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="32dp"
                     android:layout_weight="1"
-                    android:text="Weighing Machine"
+                    android:text="@string/nav_weighing_machine"
                     android:textColor="@color/reports_text_primary"
                     android:textSize="14sp" />
                 <TextView
@@ -465,7 +470,7 @@
                     android:background="#4CAF50"
                     android:paddingHorizontal="6dp"
                     android:paddingVertical="2dp"
-                    android:text="New"
+                    android:text="@string/more_new"
                     android:textColor="@color/white"
                     android:textSize="10sp"
                     android:textStyle="bold" />
@@ -489,7 +494,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="32dp"
                     android:layout_weight="1"
-                    android:text="Receipt Settings"
+                    android:text="@string/nav_receipt_settings"
                     android:textColor="@color/reports_text_primary"
                     android:textSize="14sp" />
             </LinearLayout>
@@ -512,7 +517,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="32dp"
                     android:layout_weight="1"
-                    android:text="Business Settings"
+                    android:text="@string/nav_business_settings"
                     android:textColor="@color/reports_text_primary"
                     android:textSize="14sp" />
             </LinearLayout>
@@ -535,7 +540,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="32dp"
                     android:layout_weight="1"
-                    android:text="Printer Setup"
+                    android:text="@string/nav_printer_setup"
                     android:textColor="@color/reports_text_primary"
                     android:textSize="14sp" />
                 <TextView
@@ -568,7 +573,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="32dp"
                     android:layout_weight="1"
-                    android:text="Logout"
+                    android:text="@string/nav_logout"
                     android:textColor="@color/reports_text_primary"
                     android:textSize="14sp" />
             </LinearLayout>

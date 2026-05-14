@@ -24,6 +24,14 @@ import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.navigation.NavigationView;
 import android.content.Intent;
 
+import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import java.util.ArrayList;
+import java.util.List;
+
 public class ReportsActivity extends AppCompatActivity {
 
     private static final int TAB_REPORTS = 0;
@@ -46,6 +54,9 @@ public class ReportsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Apply persisted language before super.onCreate
+        LocaleHelper.applyLocale(LocaleHelper.getPersistedLanguage(this));
+
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_reports);
@@ -123,6 +134,11 @@ public class ReportsActivity extends AppCompatActivity {
             startActivity(new Intent(ReportsActivity.this, CustomerManagementActivity.class));
         });
 
+        findViewById(R.id.nav_language).setOnClickListener(v -> {
+            drawerLayout.closeDrawer(GravityCompat.START);
+            showLanguageDialog();
+        });
+
         findViewById(R.id.nav_add_expense).setOnClickListener(v -> {
             drawerLayout.closeDrawer(GravityCompat.START);
             startActivity(new Intent(ReportsActivity.this, CashFlowActivity.class));
@@ -145,6 +161,41 @@ public class ReportsActivity extends AppCompatActivity {
         });
 
         showEmptyState(true);
+        updateSidebarLanguageText();
+    }
+
+    private void updateSidebarLanguageText() {
+        TextView textLanguage = findViewById(R.id.textLanguageName);
+        if (textLanguage != null) {
+            String code = LocaleHelper.getPersistedLanguage(this);
+            String languageName;
+            
+            switch (code) {
+                case "hi": languageName = "Hindi"; break;
+                case "ar": languageName = "Arabic"; break;
+                case "fr": languageName = "French"; break;
+                case "es": languageName = "Spanish"; break;
+                case "bn": languageName = "Bengali"; break;
+                case "fil": languageName = "Filipino"; break;
+                case "ms": languageName = "Malay"; break;
+                case "pt": languageName = "Portuguese"; break;
+                case "ru": languageName = "Russian"; break;
+                case "kn": languageName = "Kannada"; break;
+                case "te": languageName = "Telugu"; break;
+                case "ta": languageName = "Tamil"; break;
+                case "mr": languageName = "Marathi"; break;
+                case "ja": languageName = "Japanese"; break;
+                case "zh": languageName = "Chinese"; break;
+                case "de": languageName = "German"; break;
+                case "in": languageName = "Indonesian"; break;
+                case "iw": languageName = "Hebrew"; break;
+                case "sw": languageName = "Swahili"; break;
+                case "tr": languageName = "Turkish"; break;
+                default: languageName = "English"; break;
+            }
+            
+            textLanguage.setText(getString(R.string.language_display, languageName));
+        }
     }
 
     @Override
@@ -165,6 +216,51 @@ public class ReportsActivity extends AppCompatActivity {
     public void showEmptyState(boolean isEmpty) {
         emptyStateContainer.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
         reportsContentPlaceholder.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
+    }
+
+    private void showLanguageDialog() {
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_select_language);
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        }
+
+        RecyclerView recyclerView = dialog.findViewById(R.id.recyclerLanguages);
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+
+        List<Language> languages = new ArrayList<>();
+        languages.add(new Language("ENGLISH", "en"));
+        languages.add(new Language("عربي", "ar"));
+        languages.add(new Language("FRANÇAISE", "fr"));
+        languages.add(new Language("ESPAÑOLA", "es"));
+        languages.add(new Language("हिंदी", "hi"));
+        languages.add(new Language("বাঙালি", "bn"));
+        languages.add(new Language("FILIPINO", "fil"));
+        languages.add(new Language("MELAYU", "ms"));
+        languages.add(new Language("PORTUGUESA", "pt"));
+        languages.add(new Language("РУССКИЙ", "ru"));
+        languages.add(new Language("ಕನ್ನಡ", "kn"));
+        languages.add(new Language("తెలుగు", "te"));
+        languages.add(new Language("தமிழ்", "ta"));
+        languages.add(new Language("मराठी", "mr"));
+        languages.add(new Language("日本語", "ja"));
+        languages.add(new Language("中文", "zh"));
+        languages.add(new Language("DEUTSCHE", "de"));
+        languages.add(new Language("BAHASA INDONESIA", "in"));
+        languages.add(new Language("עברית", "iw"));
+        languages.add(new Language("KISWAHILI", "sw"));
+        languages.add(new Language("TÜRKÇE", "tr"));
+
+        LanguageAdapter adapter = new LanguageAdapter(languages, language -> {
+            LocaleHelper.setLocale(this, language.getCode());
+            dialog.dismiss();
+            recreate(); // Recreate to apply changes immediately
+        });
+        recyclerView.setAdapter(adapter);
+        
+        dialog.findViewById(R.id.imageClose).setOnClickListener(v -> dialog.dismiss());
+        dialog.show();
     }
 
     private void setupBottomTabs() {
@@ -199,7 +295,7 @@ public class ReportsActivity extends AppCompatActivity {
             // SHOW Grid + SHOW Premium
             moreContentContainer.setVisibility(View.VISIBLE);
             premiumBanner.setVisibility(View.VISIBLE);
-            toolbar.setTitle("More");
+            toolbar.setTitle(getString(R.string.reports_tab_more));
             toolbar.setBackgroundColor(ContextCompat.getColor(this, R.color.reports_tab_selected));
             toolbar.setTitleTextColor(selectedColor);
             toolbar.setNavigationIconTint(selectedColor);
@@ -207,7 +303,7 @@ public class ReportsActivity extends AppCompatActivity {
             // SHOW Grid + HIDE Premium
             moreContentContainer.setVisibility(View.VISIBLE);
             premiumBanner.setVisibility(View.GONE);
-            toolbar.setTitle("Items");
+            toolbar.setTitle(getString(R.string.reports_tab_items));
             toolbar.setBackgroundColor(ContextCompat.getColor(this, R.color.reports_tab_selected));
             toolbar.setTitleTextColor(selectedColor);
             toolbar.setNavigationIconTint(selectedColor);
@@ -219,8 +315,14 @@ public class ReportsActivity extends AppCompatActivity {
             toolbar.setBackgroundColor(ContextCompat.getColor(this, R.color.reports_surface));
             toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.reports_text_primary));
             toolbar.setNavigationIconTint(ContextCompat.getColor(this, R.color.reports_text_primary));
-        } else {
-            // Placeholder for Today and Counter
+        } else if (selectedId == R.id.tabToday) {
+            toolbar.setTitle(getString(R.string.reports_tab_today));
+            reportsContentPlaceholder.setVisibility(View.VISIBLE);
+            toolbar.setBackgroundColor(ContextCompat.getColor(this, R.color.reports_surface));
+            toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.reports_text_primary));
+            toolbar.setNavigationIconTint(ContextCompat.getColor(this, R.color.reports_text_primary));
+        } else if (selectedId == R.id.tabCounter) {
+            toolbar.setTitle(getString(R.string.reports_tab_counter));
             reportsContentPlaceholder.setVisibility(View.VISIBLE);
             toolbar.setBackgroundColor(ContextCompat.getColor(this, R.color.reports_surface));
             toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.reports_text_primary));
