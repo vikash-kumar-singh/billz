@@ -161,6 +161,51 @@
     <string name="nav_printer_setup">Printer Setup</string>
     <string name="nav_logout">Logout</string>
 
+    <!-- Receipt Settings -->
+    <string name="receipt_settings_title">RECEIPT SETTINGS</string>
+    <string name="business_name_label">Business Name*</string>
+    <string name="show_in_receipt">Show in Receipt</string>
+    <string name="tax_no_label">Tax no. and Title (GSTIN:WDSD1233H23H)</string>
+    <string name="receipt_title_optional">Receipt title (optional)</string>
+    <string name="website_label">Website</string>
+    <string name="business_address_label">Business Address</string>
+    <string name="receipt_title_hint">** Invoice **</string>
+    <string name="phone_number_hint">+918825347516</string>
+    <string name="test_business_name">Test</string>
+
+    <!-- Receipt Options -->
+    <string name="receipt_options_title">Receipt Options</string>
+    <string name="business_logo_label">Business Logo (Preferably black and white for better printing)</string>
+    <string name="show_in_receipt_beta">Show in Receipt (Beta)</string>
+    <string name="logo_disclaimer">* Logo may not print properly in some printers. Please disable this option if your printer prints garbled text instead of your logo.</string>
+    <string name="show_list_price_label">Show list price (MRP/MSRP/Sticker price) in receipt (Graphical print mode only)</string>
+    <string name="show_rate_label">Show rate in receipt</string>
+    <string name="show_total_saved_label">Show total money saved by the customer</string>
+    <string name="show_total_saved_desc">Shows the total amount saved by the customer. Amount saved = list price (MRP/MSRP/Sticker price) minus the final price. Shown only when saved amount is greater than 0</string>
+    <string name="show_cashier_name_label">Show Cashier name on receipt?</string>
+    <string name="show_customer_phone_label">Show customer phone number on receipt</string>
+    <string name="show_customer_address_label">Show customer address on receipt</string>
+    <string name="thank_you_note_label">Thank You Note</string>
+    <string name="thank_you_note_hint">Thank You , Visit Again.</string>
+
+    <string name="use_app_lang_label">Use app language to share/print receipts</string>
+    <string name="show_total_item_count_label">Show Total Item count on receipt</string>
+    <string name="show_change_return_label">Show change return amount on receipt</string>
+    <string name="show_payment_details_label">Show payment details on receipt</string>
+    <string name="show_powered_by_label">Show powered by Zobaze</string>
+    <string name="order_items_by_label">Order items by</string>
+    <string name="order_by_name">Name</string>
+    <string name="order_by_added">Order added</string>
+
+    <string name="template_title">SMS / WhatsApp / Email Template (Subject)</string>
+    <string name="include_in_message">include in the message</string>
+    <string name="template_default">Total Bill Amount is #total</string>
+    <string name="template_desc">is compulsory to add, #TOTAL will replace with the total amount of receipt/invoice.</string>
+
+    <string name="whatsapp_app_title">Select WhatsApp Share App</string>
+    <string name="whatsapp">WhatsApp</string>
+    <string name="whatsapp_business">WhatsApp Business</string>
+
     <!-- Sidebar Header -->
     <string name="header_edit_business">EDIT BUSINESS</string>
     <string name="header_free_plan">FREE PLAN</string>

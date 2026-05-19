@@ -1,6 +1,7 @@
 package com.example.billz;
 
 import android.os.Bundle;
+import android.graphics.Typeface;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,10 +36,6 @@ import java.util.List;
 public class ReportsActivity extends AppCompatActivity {
 
     private static final int TAB_REPORTS = 0;
-    private static final int TAB_TODAY = 1;
-    private static final int TAB_COUNTER = 2;
-    private static final int TAB_ITEMS = 3;
-    private static final int TAB_MORE = 4;
 
     private View emptyStateContainer;
     private View reportsContentPlaceholder;
@@ -142,6 +139,11 @@ public class ReportsActivity extends AppCompatActivity {
         findViewById(R.id.nav_add_expense).setOnClickListener(v -> {
             drawerLayout.closeDrawer(GravityCompat.START);
             startActivity(new Intent(ReportsActivity.this, CashFlowActivity.class));
+        });
+
+        findViewById(R.id.nav_receipt_settings).setOnClickListener(v -> {
+            drawerLayout.closeDrawer(GravityCompat.START);
+            startActivity(new Intent(ReportsActivity.this, ReceiptSettingsActivity.class));
         });
 
         findViewById(R.id.cardExpenseIncome).setOnClickListener(v -> {
@@ -279,7 +281,7 @@ public class ReportsActivity extends AppCompatActivity {
             bottomTabs[i].setBackgroundResource(isSelected ? R.drawable.bg_reports_nav_item : 0);
             bottomTabIcons[i].setColorFilter(isSelected ? selectedColor : unselectedColor);
             bottomTabLabels[i].setTextColor(isSelected ? selectedColor : unselectedColor);
-            bottomTabLabels[i].setTypeface(bottomTabLabels[i].getTypeface(), isSelected ? android.graphics.Typeface.BOLD : android.graphics.Typeface.NORMAL);
+            bottomTabLabels[i].setTypeface(null, isSelected ? Typeface.BOLD : Typeface.NORMAL);
         }
 
         // Handle content visibility based on tab

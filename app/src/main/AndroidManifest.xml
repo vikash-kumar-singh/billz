@@ -51,6 +51,11 @@
             android:exported="false"
             android:theme="@style/Theme.Billz">
         </activity>
+        <activity
+            android:name=".ReceiptSettingsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Billz">
+        </activity>
     </application>
 
 </manifest>

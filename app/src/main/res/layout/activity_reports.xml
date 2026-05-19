@@ -635,7 +635,7 @@
                     android:layout_height="@dimen/reports_bottom_nav_icon_size"
                     android:contentDescription="@string/reports_tab_reports"
                     android:src="@drawable/ic_nav_reports"
-                    android:tint="@color/white" />
+                    app:tint="@color/white" />
 
                 <TextView
                     android:id="@+id/labelReports"
@@ -664,7 +664,7 @@
                     android:layout_height="@dimen/reports_bottom_nav_icon_size"
                     android:contentDescription="@string/reports_tab_today"
                     android:src="@drawable/ic_nav_today"
-                    android:tint="@color/reports_tab_unselected" />
+                    app:tint="@color/reports_tab_unselected" />
 
                 <TextView
                     android:id="@+id/labelToday"
@@ -692,7 +692,7 @@
                     android:layout_height="@dimen/reports_bottom_nav_icon_size"
                     android:contentDescription="@string/reports_tab_counter"
                     android:src="@drawable/ic_nav_counter"
-                    android:tint="@color/reports_tab_unselected" />
+                    app:tint="@color/reports_tab_unselected" />
 
                 <TextView
                     android:id="@+id/labelCounter"
@@ -720,7 +720,7 @@
                     android:layout_height="@dimen/reports_bottom_nav_icon_size"
                     android:contentDescription="@string/reports_tab_items"
                     android:src="@drawable/ic_nav_items"
-                    android:tint="@color/reports_tab_unselected" />
+                    app:tint="@color/reports_tab_unselected" />
 
                 <TextView
                     android:id="@+id/labelItems"
@@ -748,7 +748,7 @@
                     android:layout_height="@dimen/reports_bottom_nav_icon_size"
                     android:contentDescription="@string/reports_tab_more"
                     android:src="@drawable/ic_nav_more"
-                    android:tint="@color/reports_tab_unselected" />
+                    app:tint="@color/reports_tab_unselected" />
 
                 <TextView
                     android:id="@+id/labelMore"
