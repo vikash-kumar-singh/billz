@@ -131,6 +131,11 @@ public class ReportsActivity extends AppCompatActivity {
             startActivity(new Intent(ReportsActivity.this, CustomerManagementActivity.class));
         });
 
+        findViewById(R.id.nav_staff).setOnClickListener(v -> {
+            drawerLayout.closeDrawer(GravityCompat.START);
+            startActivity(new Intent(ReportsActivity.this, AddStaffActivity.class));
+        });
+
         findViewById(R.id.nav_language).setOnClickListener(v -> {
             drawerLayout.closeDrawer(GravityCompat.START);
             showLanguageDialog();
@@ -144,6 +149,11 @@ public class ReportsActivity extends AppCompatActivity {
         findViewById(R.id.nav_receipt_settings).setOnClickListener(v -> {
             drawerLayout.closeDrawer(GravityCompat.START);
             startActivity(new Intent(ReportsActivity.this, ReceiptSettingsActivity.class));
+        });
+
+        findViewById(R.id.nav_business_settings).setOnClickListener(v -> {
+            drawerLayout.closeDrawer(GravityCompat.START);
+            startActivity(new Intent(ReportsActivity.this, BusinessSettingsActivity.class));
         });
 
         findViewById(R.id.cardExpenseIncome).setOnClickListener(v -> {

@@ -161,6 +161,107 @@
     <string name="nav_printer_setup">Printer Setup</string>
     <string name="nav_logout">Logout</string>
 
+    <!-- Business Settings -->
+    <string name="business_settings_title">Business Settings</string>
+    <string name="receipt_id_prefix">Receipt ID Prefix</string>
+    <string name="receipt_id_prefix_value">NC-5086</string>
+    <string name="tax_settings">Tax Settings</string>
+    <string name="tax_settings_desc">%1$d types</string>
+    <string name="discount_settings">Discount Settings</string>
+    <string name="discount_settings_desc">%1$d types</string>
+    <string name="round_off">Round Off</string>
+    <string name="round_off_desc">Automatically Round of Decimal Point</string>
+    <string name="table_management">Table Management</string>
+    <string name="table_management_desc">Replace Park with Table</string>
+    <string name="inventory_health_score">Inventory Health Score</string>
+    <string name="inventory_health_score_desc">Keep it ON, to track all your inventory in one place.</string>
+    <string name="payment_mode_settings">PaymentMode Settings</string>
+    <string name="payment_mode_settings_desc">Cash, Debit Card, Credit Card, Credit, UPI / BHIM, Store Credit, Online, Sample Rate, Exchange</string>
+    <string name="delivery_fee_settings">Delivery Fee Settings</string>
+    <string name="packing_fee_settings">Packing Fee Settings</string>
+    <string name="service_fee_settings">Service Fee Settings</string>
+    <string name="service_fee_settings_desc">%1$d types</string>
+    <string name="others_fee_settings">Others Fee Settings</string>
+    <string name="others_fee_settings_desc">%1$d types</string>
+    <string name="delete_business_reset">Delete Business or Reset</string>
+    <string name="delete_business_reset_desc">Delete Business or Just Reset Items, Customer etc.</string>
+    <string name="placeholder_dash">-</string>
+
+    <!-- Others Fee Settings -->
+    <string name="other_fee_settings_title">OWN OTHER FEE</string>
+    <string name="add_new_other_charge">ADD NEW OTHER CHARGE</string>
+    <string name="add_other_fee_title">ADD OTHER FEE</string>
+    <string name="other_name_label">Other Name</string>
+    <string name="other_value_label">Other Value in ₹</string>
+    <string name="other_value_percent_label">Other Value in %</string>
+
+    <!-- Service Fee Settings -->
+    <string name="service_fee_settings_title">OWN SERVICE FEE</string>
+    <string name="add_new_service_charge">ADD NEW SERVICE CHARGE</string>
+    <string name="add_service_fee_title">ADD SERVICE FEE</string>
+    <string name="service_name_label">Service Name</string>
+    <string name="service_value_label">Service Value in ₹</string>
+    <string name="service_value_percent_label">Service Value in %</string>
+
+    <!-- Packing Fee Settings -->
+    <string name="packing_fee_settings_title">OWN PACKING FEE</string>
+    <string name="add_new_packing_charge">ADD NEW PACKING CHARGE</string>
+    <string name="add_packing_fee_title">ADD PACKING FEE</string>
+    <string name="packing_name_label">Packing Name</string>
+    <string name="packing_value_label">Packing Value in ₹</string>
+    <string name="packing_value_percent_label">Packing Value in %</string>
+
+    <!-- Delivery Fee Settings -->
+    <string name="delivery_fee_settings_title">OWN DELIVERY FEE</string>
+    <string name="add_new_delivery_charge">ADD NEW DELIVERY CHARGE</string>
+    <string name="add_delivery_fee_title">ADD DELIVERY FEE</string>
+    <string name="delivery_name_label">Delivery Name</string>
+    <string name="delivery_value_label">Delivery Value in ₹</string>
+    <string name="delivery_value_percent_label">Delivery Value in %</string>
+    <string name="percentage_label">Percentage (%) ?</string>
+    <string name="default_add_to_bill">Default Add to Bill</string>
+
+    <!-- Payment Settings -->
+    <string name="payment_settings_title">PAYMENT SETTINGS</string>
+    <string name="suggestion_header">Suggestion</string>
+    <string name="add_remove_modes_header">Add / Remove Payment Modes</string>
+    <string name="add_new_payment_mode">ADD NEW PAYMENT MODE</string>
+    <string name="no_config">No Config</string>
+    <string name="enter_payment_mode">Enter Payment Mode</string>
+
+    <!-- Discount Settings -->
+    <string name="discount_settings_title">OWN DISCOUNT</string>
+    <string name="add_new_discount">ADD NEW DISCOUNT</string>
+    <string name="discount_value_percent_format">%1$.0f %%</string>
+    <string name="discount_value_flat_format">₹%1$,.0f</string>
+    <string name="add_discount_title">ADD DISCOUNT</string>
+    <string name="update_discount_title">UPDATE DISCOUNT</string>
+    <string name="discount_name_label">Discount Name</string>
+    <string name="discount_value_label">Discount Value in ₹</string>
+    <string name="discount_value_percent_label">Discount Value in %</string>
+    <string name="hint_discount_name">e.g. DUES</string>
+    <string name="hint_discount_value">0.0</string>
+    <string name="percentage">Percentage (%)</string>
+    <string name="flat_amount">Flat Amount (₹)</string>
+
+    <!-- Tax Settings -->
+    <string name="tax_settings_title">OWN TAX VALUES</string>
+    <string name="add_new_tax_value">ADD NEW TAX VALUE</string>
+    <string name="tax_value_format">%1$.0f %%</string>
+    <string name="add_tax_title">ADD TAX</string>
+    <string name="tax_name_label">Tax Name</string>
+    <string name="tax_value_label">Tax Value (%)</string>
+    <string name="hint_tax_name">e.g. CGST</string>
+    <string name="hint_tax_value">0.0</string>
+
+    <!-- Bill Prefix Dialog -->
+    <string name="bill_prefix_title">BILL PREFIX AND COUNT</string>
+    <string name="bill_prefix_label">PREFIX</string>
+    <string name="bill_no_label">Bill No.</string>
+    <string name="bill_prefix_note">Note: Bill number will be +1 for example , If you have added 1000 in Bill no. text box, the bill will start from 1001</string>
+    <string name="generate_random">GENERATE RANDOM</string>
+    <string name="receipt_id_format">%1$s-%2$d</string>
+
     <!-- Receipt Settings -->
     <string name="receipt_settings_title">RECEIPT SETTINGS</string>
     <string name="business_name_label">Business Name*</string>
@@ -253,6 +354,29 @@
     <string name="item_biozyme">MuscleBlaze Biozyme</string>
     <string name="cat_supplements">Supplements</string>
     <string name="cat_oats_grains">Oats &amp; Grains</string>
+
+    <!-- Add Staff -->
+    <string name="add_staff_title">NEW STAFF</string>
+    <string name="staff_name">Staff Name</string>
+    <string name="staff_email">Email</string>
+    <string name="staff_mobile">Mobile Number</string>
+    <string name="how_to_use_attendance">HOW TO USE ATTENDANCE AND PAYROLL</string>
+    <string name="track_attendance_salary">Track %1$s\'s attendance and salary ?</string>
+    <string name="allow_staff_use_app">Allow %1$s to use the app via roles and permissions below ?</string>
+    <string name="attendance_salary_management">Attendance and Salary Management</string>
+    <string name="calculate_as">calculate_as</string>
+    <string name="monthly">Monthly</string>
+    <string name="day_wise">Day Wise</string>
+    <string name="hourly">Hourly</string>
+    <string name="enter_staff_salary">Enter staff salary</string>
+    <string name="avg_shift_hours">Average shift hours in day</string>
+    <string name="joining_date">Joining Date</string>
+    <string name="allow_self_attendance">Allow self attendance</string>
+    <string name="hint_enter_name">Enter Name</string>
+    <string name="hint_enter_email">Enter Email</string>
+    <string name="hint_enter_mobile">Enter Mobile</string>
+    <string name="hint_zero">0</string>
+    <string name="hint_zero_decimal">0.00</string>
 
     <!-- More Grid Placeholder Data -->
     <string name="dummy_zero">0</string>

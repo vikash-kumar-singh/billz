@@ -52,6 +52,51 @@
             android:theme="@style/Theme.Billz">
         </activity>
         <activity
+            android:name=".AddStaffActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Billz">
+        </activity>
+        <activity
+            android:name=".OtherFeeSettingsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Billz">
+        </activity>
+        <activity
+            android:name=".ServiceFeeSettingsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Billz">
+        </activity>
+        <activity
+            android:name=".PackingFeeSettingsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Billz">
+        </activity>
+        <activity
+            android:name=".DeliveryFeeSettingsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Billz">
+        </activity>
+        <activity
+            android:name=".PaymentSettingsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Billz">
+        </activity>
+        <activity
+            android:name=".DiscountSettingsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Billz">
+        </activity>
+        <activity
+            android:name=".TaxSettingsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Billz">
+        </activity>
+        <activity
+            android:name=".BusinessSettingsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Billz">
+        </activity>
+        <activity
             android:name=".ReceiptSettingsActivity"
             android:exported="false"
             android:theme="@style/Theme.Billz">
