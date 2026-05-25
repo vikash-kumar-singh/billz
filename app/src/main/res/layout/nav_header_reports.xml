@@ -5,7 +5,10 @@
     android:layout_height="wrap_content"
     android:background="@color/white"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
+    android:paddingBottom="16dp"
+    android:paddingTop="48dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -19,9 +22,15 @@
             app:tint="@color/reports_tab_selected" />
 
         <TextView
+            android:id="@+id/btnEditBusiness"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
+            android:layout_marginTop="8dp"
+            android:padding="8dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground"
             android:text="@string/header_edit_business"
             android:textColor="@color/reports_tab_selected"
             android:textSize="12sp"
@@ -142,6 +151,7 @@
         android:orientation="horizontal">
 
         <Button
+            android:id="@+id/btnSwitchBusiness"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -155,6 +165,7 @@
             android:layout_height="0dp" />
 
         <Button
+            android:id="@+id/btnCreateBusiness"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"

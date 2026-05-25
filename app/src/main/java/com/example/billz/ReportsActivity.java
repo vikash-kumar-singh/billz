@@ -24,6 +24,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.navigation.NavigationView;
 import android.content.Intent;
+import android.widget.Toast;
 
 import android.app.Dialog;
 import android.graphics.Color;
@@ -67,6 +68,11 @@ public class ReportsActivity extends AppCompatActivity {
         bottomNavigationView = findViewById(R.id.bottomNavigation);
         drawerLayout = findViewById(R.id.drawerLayout);
         toolbar = findViewById(R.id.toolbarReports);
+        toolbar.setNavigationOnClickListener(v -> {
+            if (drawerLayout != null) {
+                drawerLayout.openDrawer(androidx.core.view.GravityCompat.START);
+            }
+        });
         bottomTabs = new View[]{
                 findViewById(R.id.tabReports),
                 findViewById(R.id.tabToday),
@@ -155,6 +161,25 @@ public class ReportsActivity extends AppCompatActivity {
             drawerLayout.closeDrawer(GravityCompat.START);
             startActivity(new Intent(ReportsActivity.this, BusinessSettingsActivity.class));
         });
+
+        findViewById(R.id.btnEditBusiness).setOnClickListener(v -> {
+            drawerLayout.closeDrawer(GravityCompat.START);
+            showBusinessSelectorDialog();
+        });
+
+        findViewById(R.id.btnSwitchBusiness).setOnClickListener(v -> {
+            drawerLayout.closeDrawer(GravityCompat.START);
+            showBusinessSelectorDialog();
+        });
+
+        findViewById(R.id.btnCreateBusiness).setOnClickListener(v -> {
+            drawerLayout.closeDrawer(GravityCompat.START);
+            startActivity(new Intent(ReportsActivity.this, AddBusinessActivity.class));
+        });
+
+        // Add this if not already there, but let's check nav_header buttons
+        // The buttons in nav_header_reports are usually set up in onCreate if they have IDs.
+        // Let's check nav_header_reports.xml IDs.
 
         findViewById(R.id.cardExpenseIncome).setOnClickListener(v -> {
             startActivity(new Intent(ReportsActivity.this, CashFlowActivity.class));
@@ -272,6 +297,38 @@ public class ReportsActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         
         dialog.findViewById(R.id.imageClose).setOnClickListener(v -> dialog.dismiss());
+        dialog.show();
+    }
+
+    private void showBusinessSelectorDialog() {
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_business_selector);
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        }
+
+        RecyclerView recyclerView = dialog.findViewById(R.id.recyclerBusinesses);
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+
+        List<Business> businesses = new ArrayList<>();
+        businesses.add(new Business("Nutrition Co", "OWNER", false));
+        businesses.add(new Business("PROTEIN HUB -DEOGHAR", "OWNER", true));
+        businesses.add(new Business("The City Gym (Unisex)", "OWNER", false));
+
+        BusinessAdapter adapter = new BusinessAdapter(businesses, business -> {
+            // Handle selection change
+            dialog.dismiss();
+            Toast.makeText(this, "Selected: " + business.getName(), Toast.LENGTH_SHORT).show();
+        });
+        recyclerView.setAdapter(adapter);
+
+        dialog.findViewById(R.id.btnAddBusiness).setOnClickListener(v -> {
+            dialog.dismiss();
+            startActivity(new Intent(this, AddBusinessActivity.class));
+        });
+
+        dialog.findViewById(R.id.btnClose).setOnClickListener(v -> dialog.dismiss());
         dialog.show();
     }
 

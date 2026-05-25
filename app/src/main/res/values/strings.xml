@@ -187,6 +187,15 @@
     <string name="delete_business_reset_desc">Delete Business or Just Reset Items, Customer etc.</string>
     <string name="placeholder_dash">-</string>
 
+    <!-- UPI Config Dialog -->
+    <string name="upi_config_title">UPI CONFIG</string>
+    <string name="upi_id_label">UPI ID, example@upi*</string>
+    <string name="full_name_label">Full Name*</string>
+    <string name="merchant_id_label">Merchant ID / NO.</string>
+    <string name="hint_upi_id">example@upi</string>
+    <string name="hint_full_name">Enter Name</string>
+    <string name="hint_merchant_id">Optional</string>
+
     <!-- Others Fee Settings -->
     <string name="other_fee_settings_title">OWN OTHER FEE</string>
     <string name="add_new_other_charge">ADD NEW OTHER CHARGE</string>
