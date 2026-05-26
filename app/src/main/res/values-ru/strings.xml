@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Биллз</string>
+    <string name="action_settings">Настройки</string>
+    <string name="reports_title">Отчеты</string>
+    <string name="reports_date_today">Сегодня : 29 Апр</string>
+    <string name="reports_empty_message">Нет отчетов за выбранную дату</string>
+    <string name="reports_tab_reports">Отчеты</string>
+    <string name="reports_tab_today">Сегодня</string>
+    <string name="reports_tab_more">Ещё</string>
+</resources>

@@ -1,0 +1,781 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F8FAFC"
+    tools:context=".AddStaffActivity">
+
+    <!-- Custom Toolbar -->
+    <LinearLayout
+        android:id="@+id/toolbarStaff"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="#3F51B5"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="16dp"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:contentDescription="Close"
+            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            app:tint="@color/white" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_weight="1"
+            android:text="NEW STAFF"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:id="@+id/btnSave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Save"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="8dp"
+                android:src="@drawable/ic_circle_check"
+                app:tint="@color/white" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbarStaff">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="40dp">
+
+            <!-- Basic Details Card -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="4dp"
+                app:cardElevation="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="12dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Staff Name"
+                        android:textColor="#64748B"
+                        android:textSize="15sp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_marginTop="8dp"
+                        android:background="#F1F5F9"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="12dp">
+
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:src="@drawable/ic_circle_check"
+                            app:tint="#94A3B8" />
+
+                        <EditText
+                            android:id="@+id/editStaffName"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="8dp"
+                            android:background="@null"
+                            android:hint="Enter Name"
+                            android:inputType="textPersonName"
+                            android:textColor="@color/black"
+                            android:textColorHint="#94A3B8"
+                            android:textSize="15sp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="Email"
+                        android:textColor="#64748B"
+                        android:textSize="15sp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_marginTop="8dp"
+                        android:background="#F1F5F9"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="12dp">
+
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:src="@drawable/ic_circle_check"
+                            app:tint="#94A3B8" />
+
+                        <EditText
+                            android:id="@+id/editStaffEmail"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="8dp"
+                            android:background="@null"
+                            android:hint="Enter Email"
+                            android:inputType="textEmailAddress"
+                            android:textColor="@color/black"
+                            android:textColorHint="#94A3B8"
+                            android:textSize="15sp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="Mobile Number"
+                        android:textColor="#64748B"
+                        android:textSize="15sp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_marginTop="8dp"
+                        android:background="#F1F5F9"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="12dp">
+
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:src="@drawable/ic_circle_check"
+                            app:tint="#94A3B8" />
+
+                        <EditText
+                            android:id="@+id/editStaffMobile"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="8dp"
+                            android:background="@null"
+                            android:hint="Enter Mobile"
+                            android:inputType="phone"
+                            android:textColor="@color/black"
+                            android:textColorHint="#94A3B8"
+                            android:textSize="15sp" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Video Banner for Attendance -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="12dp"
+                android:background="#3F51B5"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="8dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="HOW TO USE ATTENDANCE AND PAYROLL"
+                    android:textColor="@color/white"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@android:drawable/ic_menu_slideshow"
+                    app:tint="@color/white" />
+            </LinearLayout>
+
+            <!-- Attendance Control Card -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="4dp"
+                app:cardElevation="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="12dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <CheckBox
+                            android:id="@+id/checkTrackAttendance"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="#3F51B5"
+                            android:checked="true" />
+
+                        <TextView
+                            android:id="@+id/textTrackAttendance"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_weight="1"
+                            android:text="Track staff\'s attendance and salary ?"
+                            android:textColor="@color/black"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <CheckBox
+                            android:id="@+id/checkAllowAppUse"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="#3F51B5"
+                            android:checked="true" />
+
+                        <TextView
+                            android:id="@+id/textAllowAppUse"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_weight="1"
+                            android:text="Allow staff to use the app via roles and permissions below ?"
+                            android:textColor="@color/black"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="8dp"
+                android:background="#EEEEEE" />
+
+            <!-- Attendance Management Section -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="16dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Attendance and Salary Management"
+                    android:textColor="#3F51B5"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@android:drawable/ic_menu_help"
+                    app:tint="#3F51B5" />
+            </LinearLayout>
+
+            <!-- Calculation Options -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="72dp"
+                android:layout_marginHorizontal="12dp"
+                android:layout_marginTop="12dp"
+                android:orientation="horizontal">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardMonthly"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    app:cardCornerRadius="4dp"
+                    app:cardElevation="2dp">
+                    <LinearLayout
+                        android:id="@+id/tabMonthly"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="#E8F0FE"
+                        android:orientation="vertical"
+                        android:padding="8dp">
+                        <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="calculate_as" android:textColor="#64748B" android:textSize="11sp" />
+                            <ImageView android:id="@+id/imageCheckMonthly" android:layout_width="16dp" android:layout_height="16dp" android:layout_alignParentEnd="true" android:src="@drawable/ic_circle_check" app:tint="#2563EB" />
+                        </RelativeLayout>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Monthly" android:textColor="@color/black" android:textSize="14sp" android:textStyle="bold" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardDayWise"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    app:cardCornerRadius="4dp"
+                    app:cardElevation="1dp">
+                    <LinearLayout
+                        android:id="@+id/tabDayWise"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/white"
+                        android:orientation="vertical"
+                        android:padding="8dp">
+                        <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="calculate_as" android:textColor="#64748B" android:textSize="11sp" />
+                            <ImageView android:id="@+id/imageCheckDayWise" android:layout_width="16dp" android:layout_height="16dp" android:layout_alignParentEnd="true" android:src="@drawable/ic_circle_check" android:visibility="gone" app:tint="#2563EB" />
+                        </RelativeLayout>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Day Wise" android:textColor="@color/black" android:textSize="14sp" android:textStyle="bold" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardHourly"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    app:cardCornerRadius="4dp"
+                    app:cardElevation="1dp">
+                    <LinearLayout
+                        android:id="@+id/tabHourly"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/white"
+                        android:orientation="vertical"
+                        android:padding="8dp">
+                        <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="calculate_as" android:textColor="#64748B" android:textSize="11sp" />
+                            <ImageView android:id="@+id/imageCheckHourly" android:layout_width="16dp" android:layout_height="16dp" android:layout_alignParentEnd="true" android:src="@drawable/ic_circle_check" android:visibility="gone" app:tint="#2563EB" />
+                        </RelativeLayout>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Hourly" android:textColor="@color/black" android:textSize="14sp" android:textStyle="bold" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+            </LinearLayout>
+
+            <!-- Salary Details Card -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="4dp"
+                app:cardElevation="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="12dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Enter staff salary"
+                        android:textColor="#64748B"
+                        android:textSize="15sp" />
+
+                    <EditText
+                        android:id="@+id/editSalary"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_marginTop="8dp"
+                        android:background="#F1F5F9"
+                        android:hint="0.00"
+                        android:inputType="numberDecimal"
+                        android:paddingHorizontal="12dp"
+                        android:textColor="@color/black"
+                        android:textColorHint="#94A3B8" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Average shift hours" android:textColor="#64748B" android:textSize="11sp" />
+                            <EditText android:id="@+id/editShiftHours" android:layout_width="match_parent" android:layout_height="48dp" android:layout_marginTop="8dp" android:background="#F1F5F9" android:hint="0" android:inputType="number" android:paddingHorizontal="8dp" android:textColor="@color/black" android:textColorHint="#94A3B8" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Joining Date" android:textColor="#64748B" android:textSize="11sp" />
+                            <EditText android:id="@+id/editJoiningDate" android:layout_width="match_parent" android:layout_height="48dp" android:layout_marginTop="8dp" android:background="#F1F5F9" android:hint="-" android:focusable="false" android:paddingHorizontal="8dp" android:textColor="@color/black" android:textColorHint="#94A3B8" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <CheckBox
+                        android:id="@+id/checkSelfAttendance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:buttonTint="#3F51B5"
+                        android:text="Allow self attendance"
+                        android:textColor="@color/black"
+                        android:textSize="13sp" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#EEEEEE"
+                android:layout_marginVertical="8dp" />
+
+            <!-- Video Banner for Permissions -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="12dp"
+                android:background="#3F51B5"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="10dp">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="HOW TO USE STAFF PERMISSIONS"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:src="@android:drawable/ic_menu_slideshow"
+                    app:tint="@color/white" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:gravity="center"
+                android:text="Permissions and Roles"
+                android:textColor="#3F51B5"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <!-- Role Selection Grid -->
+            <GridLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:columnCount="2">
+
+                <!-- Partner -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardRolePartner"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="4dp"
+                    app:cardCornerRadius="4dp"
+                    app:cardElevation="1dp">
+                    <LinearLayout
+                        android:id="@+id/tabRolePartner"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="12dp">
+                        <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+                            <ImageView android:layout_width="24dp" android:layout_height="24dp" android:layout_centerHorizontal="true" android:src="@drawable/ic_partner_role" app:tint="@color/black" />
+                            <ImageView android:id="@+id/imageCheckPartner" android:layout_width="16dp" android:layout_height="16dp" android:layout_alignParentEnd="true" android:src="@drawable/ic_circle_check" android:visibility="gone" app:tint="#2563EB" />
+                        </RelativeLayout>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="Partner(Admin)" android:textColor="@color/black" android:textSize="13sp" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!-- Manager -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardRoleManager"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="4dp"
+                    app:cardCornerRadius="4dp"
+                    app:cardElevation="1dp">
+                    <LinearLayout
+                        android:id="@+id/tabRoleManager"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="12dp">
+                        <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+                            <ImageView android:layout_width="24dp" android:layout_height="24dp" android:layout_centerHorizontal="true" android:src="@drawable/ic_manager_role" app:tint="@color/black" />
+                            <ImageView android:id="@+id/imageCheckManager" android:layout_width="16dp" android:layout_height="16dp" android:layout_alignParentEnd="true" android:src="@drawable/ic_circle_check" android:visibility="gone" app:tint="#2563EB" />
+                        </RelativeLayout>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="Manager" android:textColor="@color/black" android:textSize="13sp" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!-- Helper -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardRoleHelper"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="4dp"
+                    app:cardCornerRadius="4dp"
+                    app:cardElevation="2dp">
+                    <LinearLayout
+                        android:id="@+id/tabRoleHelper"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#E8F0FE"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="12dp">
+                        <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+                            <ImageView android:layout_width="24dp" android:layout_height="24dp" android:layout_centerHorizontal="true" android:src="@drawable/ic_helper_role" app:tint="@color/black" />
+                            <ImageView android:id="@+id/imageCheckHelper" android:layout_width="16dp" android:layout_height="16dp" android:layout_alignParentEnd="true" android:src="@drawable/ic_circle_check" app:tint="#2563EB" />
+                        </RelativeLayout>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="Helper" android:textColor="@color/black" android:textSize="13sp" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!-- Custom -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardRoleCustom"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="4dp"
+                    app:cardCornerRadius="4dp"
+                    app:cardElevation="1dp">
+                    <LinearLayout
+                        android:id="@+id/tabRoleCustom"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="12dp">
+                        <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+                            <ImageView android:layout_width="24dp" android:layout_height="24dp" android:layout_centerHorizontal="true" android:src="@drawable/ic_custom_role" app:tint="@color/black" />
+                            <ImageView android:id="@+id/imageCheckCustom" android:layout_width="16dp" android:layout_height="16dp" android:layout_alignParentEnd="true" android:src="@drawable/ic_circle_check" android:visibility="gone" app:tint="#2563EB" />
+                        </RelativeLayout>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="Custom" android:textColor="@color/black" android:textSize="13sp" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+            </GridLayout>
+
+            <!-- Permissions Card Container -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="4dp"
+                app:cardElevation="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <!-- Receipt Management -->
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center" android:text="Receipt Management" android:textColor="#64748B" android:textSize="15sp" android:textStyle="bold" />
+                    <GridLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:columnCount="3">
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical">
+                            <CheckBox android:id="@+id/permCreateReceipt" android:layout_width="wrap_content" android:layout_height="wrap_content" android:buttonTint="#3F51B5" android:checked="true" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="Create Receipt" android:textColor="#9E9E9E" android:textSize="11sp" />
+                        </LinearLayout>
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical">
+                            <CheckBox android:id="@+id/permViewAllReceipt" android:layout_width="wrap_content" android:layout_height="wrap_content" android:buttonTint="#3F51B5" android:checked="true" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="View All Receipt" android:textColor="#9E9E9E" android:textSize="11sp" />
+                        </LinearLayout>
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical">
+                            <CheckBox android:id="@+id/permEditReceipt" android:layout_width="wrap_content" android:layout_height="wrap_content" android:buttonTint="#3F51B5" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="Edit Receipt" android:textColor="#9E9E9E" android:textSize="11sp" />
+                        </LinearLayout>
+                    </GridLayout>
+                    <GridLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:columnCount="2" android:paddingHorizontal="40dp">
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical">
+                            <CheckBox android:id="@+id/permReturnReceipt" android:layout_width="wrap_content" android:layout_height="wrap_content" android:buttonTint="#3F51B5" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="Return Receipt" android:textColor="#9E9E9E" android:textSize="11sp" />
+                        </LinearLayout>
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical">
+                            <CheckBox android:id="@+id/permReceiptAdmin" android:layout_width="wrap_content" android:layout_height="wrap_content" android:buttonTint="#3F51B5" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="Admin" android:textColor="#9E9E9E" android:textSize="11sp" />
+                        </LinearLayout>
+                    </GridLayout>
+
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginVertical="16dp" android:background="#EEEEEE" />
+
+                    <!-- Sales Counter Permissions -->
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center" android:text="Sales Counter Permissions" android:textColor="#64748B" android:textSize="15sp" android:textStyle="bold" />
+                    <GridLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:columnCount="3">
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical">
+                            <CheckBox android:id="@+id/permDiscount" android:layout_width="wrap_content" android:layout_height="wrap_content" android:buttonTint="#3F51B5" android:checked="true" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="Discount" android:textColor="#9E9E9E" android:textSize="11sp" />
+                        </LinearLayout>
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical">
+                            <CheckBox android:id="@+id/permGift" android:layout_width="wrap_content" android:layout_height="wrap_content" android:buttonTint="#3F51B5" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="Gift" android:textColor="#9E9E9E" android:textSize="11sp" />
+                        </LinearLayout>
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical">
+                            <CheckBox android:id="@+id/permFree" android:layout_width="wrap_content" android:layout_height="wrap_content" android:buttonTint="#3F51B5" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="Free" android:textColor="#9E9E9E" android:textSize="11sp" />
+                        </LinearLayout>
+                    </GridLayout>
+                    <GridLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:columnCount="3">
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical">
+                            <CheckBox android:id="@+id/permAddCharges" android:layout_width="wrap_content" android:layout_height="wrap_content" android:buttonTint="#3F51B5" android:checked="true" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="Add Chargers" android:textColor="#9E9E9E" android:textSize="11sp" />
+                        </LinearLayout>
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical">
+                            <CheckBox android:id="@+id/permAddTax" android:layout_width="wrap_content" android:layout_height="wrap_content" android:buttonTint="#3F51B5" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="Add Tax" android:textColor="#9E9E9E" android:textSize="11sp" />
+                        </LinearLayout>
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical">
+                            <CheckBox android:id="@+id/permGiveCredit" android:layout_width="wrap_content" android:layout_height="wrap_content" android:buttonTint="#3F51B5" android:checked="true" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="Give Credit" android:textColor="#9E9E9E" android:textSize="11sp" />
+                        </LinearLayout>
+                    </GridLayout>
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:gravity="center" android:orientation="vertical">
+                        <CheckBox android:id="@+id/permViewRunningTables" android:layout_width="wrap_content" android:layout_height="wrap_content" android:buttonTint="#3F51B5" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="View All Running\nTables" android:textColor="#9E9E9E" android:textSize="11sp" />
+                    </LinearLayout>
+
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginVertical="16dp" android:background="#EEEEEE" />
+
+                    <!-- Inventory Management -->
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center" android:text="Item / Inventory Management" android:textColor="#64748B" android:textSize="15sp" android:textStyle="bold" />
+                    <GridLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:columnCount="4">
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical">
+                            <CheckBox android:id="@+id/permInvViewOnly" android:layout_width="wrap_content" android:layout_height="wrap_content" android:buttonTint="#3F51B5" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="View Only" android:textColor="#9E9E9E" android:textSize="11sp" />
+                        </LinearLayout>
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical">
+                            <CheckBox android:id="@+id/permInvCreate" android:layout_width="wrap_content" android:layout_height="wrap_content" android:buttonTint="#3F51B5" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="Create" android:textColor="#9E9E9E" android:textSize="11sp" />
+                        </LinearLayout>
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical">
+                            <CheckBox android:id="@+id/permInvEdit" android:layout_width="wrap_content" android:layout_height="wrap_content" android:buttonTint="#3F51B5" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="Edit" android:textColor="#9E9E9E" android:textSize="11sp" />
+                        </LinearLayout>
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical">
+                            <CheckBox android:id="@+id/permInvAdmin" android:layout_width="wrap_content" android:layout_height="wrap_content" android:buttonTint="#3F51B5" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="Admin" android:textColor="#9E9E9E" android:textSize="11sp" />
+                        </LinearLayout>
+                    </GridLayout>
+
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginVertical="16dp" android:background="#EEEEEE" />
+
+                    <!-- Staff Management -->
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center" android:text="Staff and Attendance Management" android:textColor="#64748B" android:textSize="15sp" android:textStyle="bold" />
+                    <GridLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:columnCount="4">
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical">
+                            <CheckBox android:id="@+id/permStaffAttendance" android:layout_width="wrap_content" android:layout_height="wrap_content" android:buttonTint="#3F51B5" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="Attendance" android:textColor="#9E9E9E" android:textSize="11sp" />
+                        </LinearLayout>
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical">
+                            <CheckBox android:id="@+id/permStaffPayroll" android:layout_width="wrap_content" android:layout_height="wrap_content" android:buttonTint="#3F51B5" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="Payroll" android:textColor="#9E9E9E" android:textSize="11sp" />
+                        </LinearLayout>
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical">
+                            <CheckBox android:id="@+id/permStaffManagement" android:layout_width="wrap_content" android:layout_height="wrap_content" android:buttonTint="#3F51B5" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="Staff Mgmt" android:textColor="#9E9E9E" android:textSize="11sp" />
+                        </LinearLayout>
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical">
+                            <CheckBox android:id="@+id/permStaffAdmin" android:layout_width="wrap_content" android:layout_height="wrap_content" android:buttonTint="#3F51B5" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="Admin" android:textColor="#9E9E9E" android:textSize="11sp" />
+                        </LinearLayout>
+                    </GridLayout>
+
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginVertical="16dp" android:background="#EEEEEE" />
+
+                    <!-- Customer Management -->
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center" android:text="Customer Management" android:textColor="#64748B" android:textSize="15sp" android:textStyle="bold" />
+                    <GridLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:columnCount="4">
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical">
+                            <CheckBox android:id="@+id/permCustViewOnly" android:layout_width="wrap_content" android:layout_height="wrap_content" android:buttonTint="#3F51B5" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="View Only" android:textColor="#9E9E9E" android:textSize="11sp" />
+                        </LinearLayout>
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical">
+                            <CheckBox android:id="@+id/permCustCreate" android:layout_width="wrap_content" android:layout_height="wrap_content" android:buttonTint="#3F51B5" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="Create" android:textColor="#9E9E9E" android:textSize="11sp" />
+                        </LinearLayout>
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical">
+                            <CheckBox android:id="@+id/permCustEdit" android:layout_width="wrap_content" android:layout_height="wrap_content" android:buttonTint="#3F51B5" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="Edit" android:textColor="#9E9E9E" android:textSize="11sp" />
+                        </LinearLayout>
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical">
+                            <CheckBox android:id="@+id/permCustAdmin" android:layout_width="wrap_content" android:layout_height="wrap_content" android:buttonTint="#3F51B5" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="Admin" android:textColor="#9E9E9E" android:textSize="11sp" />
+                        </LinearLayout>
+                    </GridLayout>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

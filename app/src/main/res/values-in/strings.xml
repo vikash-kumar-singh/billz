@@ -1,0 +1,40 @@
+<resources>
+    <string name="app_name">Billz</string>
+    <string name="action_settings">Pengaturan</string>
+    <string name="reports_title">Laporan</string>
+    <string name="reports_date_today">Hari ini : 29 Apr</string>
+    <string name="reports_empty_message">Tidak ada laporan untuk tanggal yang dipilih</string>
+    <string name="reports_tab_reports">Laporan</string>
+    <string name="reports_tab_today">Hari ini</string>
+    <string name="reports_tab_counter">Konter</string>
+    <string name="reports_tab_items">Item</string>
+    <string name="reports_tab_more">Lainnya</string>
+
+    <!-- More Screen -->
+    <string name="more_attendance">Kehadiran</string>
+    <string name="more_manage_payroll">Kelola Payroll</string>
+    <string name="more_all_customers">Semua Pelanggan</string>
+    <string name="more_due_customers">Pelanggan Jatuh Tempo</string>
+    <string name="more_expense_income">Pengeluaran - Pendapatan</string>
+    <string name="more_low_stocks">Stok Rendah</string>
+    <string name="more_new">Baru</string>
+
+    <!-- Cash Flow -->
+    <string name="cash_flow_title">Arus Kas</string>
+    <string name="net_cash_flow">Arus Kas Bersih</string>
+    <string name="income">Pendapatan</string>
+    <string name="expense">Pengeluaran</string>
+
+    <!-- Inventory -->
+    <string name="inventory_title">MANAJEMEN INVENTARIS</string>
+    <string name="tab_items">ITEM</string>
+    <string name="tab_category">KATEGORI</string>
+
+    <!-- Sidebar -->
+    <string name="nav_inventory">Manajemen Inventaris</string>
+    <string name="nav_add_expense">Tambah Pengeluaran</string>
+    <string name="nav_customers">Manajemen Pelanggan</string>
+    <string name="nav_settings_title">Pengaturan</string>
+    <string name="nav_language">Bahasa</string>
+    <string name="language_display">Bahasa - %1$s</string>
+</resources>

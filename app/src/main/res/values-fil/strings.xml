@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">Billz</string>
+    <string name="action_settings">Settings</string>
+    <string name="reports_title">Mga Report</string>
+    <string name="reports_date_today">Ngayon : 29 Apr</string>
+    <string name="reports_empty_message">Walang mga Report para sa Napiling Petsa</string>
+    <string name="reports_back">Bumalik</string>
+    <string name="reports_calendar">Pumili ng petsa</string>
+    <string name="reports_tab_reports">Mga Report</string>
+    <string name="reports_tab_today">Ngayon</string>
+    <string name="reports_tab_counter">Counter</string>
+    <string name="reports_tab_items">Mga Item</string>
+    <string name="reports_tab_more">Higit Pa</string>
+
+    <string name="more_all_customers">Lahat ng Customer</string>
+    <string name="more_due_customers">May Utang na Customer</string>
+    <string name="more_expense_income">Gastos - Kita</string>
+    <string name="more_new">Bago</string>
+
+    <string name="cash_flow_title">Cash Flow</string>
+    <string name="income">Kita</string>
+    <string name="expense">Gastos</string>
+
+    <string name="inventory_title">PAMAMAHALA NG IMBENTARYO</string>
+    <string name="nav_inventory">Pamamahala ng Imbentaryo</string>
+    <string name="nav_add_expense">Magdagdag ng Gastos</string>
+    <string name="nav_customers">Pamamahala ng Customer</string>
+    <string name="nav_settings_title">Settings</string>
+    <string name="nav_language">Wika</string>
+    <string name="language_display">Wika - %1$s</string>
+</resources>

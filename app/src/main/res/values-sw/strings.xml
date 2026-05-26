@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">Billz</string>
+    <string name="action_settings">Vipimo</string>
+    <string name="reports_title">Ripoti</string>
+    <string name="reports_date_today">Leo : 29 Apr</string>
+    <string name="reports_empty_message">Hakuna Ripoti kwa Tarehe Iliyochaguliwa</string>
+    <string name="reports_tab_reports">Ripoti</string>
+    <string name="reports_tab_today">Leo</string>
+    <string name="reports_tab_counter">Kaunta</string>
+    <string name="reports_tab_items">Vitu</string>
+    <string name="reports_tab_more">Zaidi</string>
+
+    <!-- More Screen -->
+    <string name="more_attendance">Mahudhurio</string>
+    <string name="more_all_customers">Wateja Wote</string>
+    <string name="more_expense_income">Gharama - Mapato</string>
+    <string name="more_new">Mpya</string>
+
+    <!-- Cash Flow -->
+    <string name="cash_flow_title">Mtiririko wa Fedha</string>
+    <string name="income">Mapato</string>
+    <string name="expense">Gharama</string>
+
+    <!-- Sidebar -->
+    <string name="nav_inventory">Usimamizi wa Hesabu</string>
+    <string name="nav_add_expense">Ongeza Gharama</string>
+    <string name="nav_language">Lugha</string>
+    <string name="language_display">Lugha - %1$s</string>
+</resources>

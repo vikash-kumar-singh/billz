@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">Billz</string>
+    <string name="action_settings">Einstellungen</string>
+    <string name="reports_title">Berichte</string>
+    <string name="reports_date_today">Heute : 29. Apr.</string>
+    <string name="reports_empty_message">Keine Berichte für das gewählte Datum</string>
+    <string name="reports_back">Zurück</string>
+    <string name="reports_calendar">Datum wählen</string>
+    <string name="reports_tab_reports">Berichte</string>
+    <string name="reports_tab_today">Heute</string>
+    <string name="reports_tab_counter">Zähler</string>
+    <string name="reports_tab_items">Artikel</string>
+    <string name="reports_tab_more">Mehr</string>
+
+    <string name="more_all_customers">Alle Kunden</string>
+    <string name="more_due_customers">Fällige Kunden</string>
+    <string name="more_expense_income">Ausgabe - Einnahme</string>
+    <string name="more_new">Neu</string>
+
+    <string name="cash_flow_title">Cashflow</string>
+    <string name="income">Einnahme</string>
+    <string name="expense">Ausgabe</string>
+
+    <string name="inventory_title">LAGERVERWALTUNG</string>
+    <string name="nav_inventory">Lagerverwaltung</string>
+    <string name="nav_add_expense">Ausgabe hinzufügen</string>
+    <string name="nav_customers">Kundenverwaltung</string>
+    <string name="nav_settings_title">Einstellungen</string>
+    <string name="nav_language">Sprache</string>
+    <string name="language_display">Sprache - %1$s</string>
+</resources>

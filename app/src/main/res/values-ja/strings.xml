@@ -1,0 +1,178 @@
+<resources>
+    <string name="app_name">ビルズ</string>
+    <string name="action_settings">設定</string>
+    <string name="reports_title">レポート</string>
+    <string name="reports_date_today">今日 : 4月29日</string>
+    <string name="reports_empty_message">選択された日付のレポートはありません</string>
+    <string name="reports_share">レポートを共有</string>
+    <string name="reports_messages">通知</string>
+    <string name="reports_back">戻る</string>
+    <string name="reports_calendar">日付を選択</string>
+    <string name="reports_tab_reports">レポート</string>
+    <string name="reports_tab_today">今日</string>
+    <string name="reports_tab_counter">カウンター</string>
+    <string name="reports_tab_items">アイテム</string>
+    <string name="reports_tab_more">もっと</string>
+    <string name="reports_content_placeholder">レポート内容プレースホルダ</string>
+    <string name="next">次へ</string>
+    <string name="previous">前へ</string>
+
+    <!-- More Screen -->
+    <string name="more_premium_title">15日間の無料プレミアムをお試しください</string>
+    <string name="more_premium_desc">支払詳細は不要です。トライアル後は無料プランに移行します。自動支払いはありません！</string>
+    <string name="more_see_benefits">特典を見る</string>
+    <string name="more_try_premium">無料プレミアムを試す</string>
+    <string name="more_attendance">勤怠</string>
+    <string name="more_attendance_desc">勤怠管理</string>
+    <string name="more_manage_payroll">給与管理</string>
+    <string name="more_payments">支払い</string>
+    <string name="more_shopfront">ショップフロント</string>
+    <string name="more_all_customers">すべての顧客</string>
+    <string name="more_due_customers">未払いの顧客</string>
+    <string name="more_expense_income">経費 - 収入（今週）</string>
+    <string name="more_low_stocks">在庫僅少</string>
+    <string name="more_staff_partners">スタッフとパートナー</string>
+    <string name="more_sms_available">利用可能なSMS</string>
+    <string name="more_items_subitems">アイテムとサブアイテム</string>
+    <string name="more_stock_cost">在庫価値原価</string>
+    <string name="more_stock_selling">在庫価値販売価格</string>
+    <string name="more_new">新規</string>
+
+    <!-- Cash Flow -->
+    <string name="cash_flow_title">キャッシュフロー</string>
+    <string name="net_cash_flow">正味キャッシュフロー</string>
+    <string name="total_income_expense_hint">（総収入 - 総経費）</string>
+    <string name="income">収入</string>
+    <string name="expense">経費</string>
+    <string name="no_entries_message">対象の経費/収入エントリはありません：</string>
+    <string name="click_to_add_message">+ボタンをクリックして追加</string>
+
+    <!-- Categories -->
+    <string name="cat_tax">税金</string>
+    <string name="cat_fuel">燃料</string>
+    <string name="cat_food">食品</string>
+    <string name="cat_bill">請求書</string>
+    <string name="cat_transport">交通費</string>
+    <string name="cat_insurance">保険</string>
+    <string name="cat_salary">給与</string>
+    <string name="cat_rent">賃料</string>
+    <string name="cat_repairs">修理</string>
+    <string name="cat_commission">手数料</string>
+    <string name="cat_advertising">広告</string>
+    <string name="cat_fee">料金</string>
+    <string name="cat_interest">利息</string>
+    <string name="cat_loan">ローン</string>
+    <string name="cat_supplies">備品</string>
+    <string name="cat_transfer">振込</string>
+    <string name="cat_contract">契約</string>
+    <string name="cat_miscellaneous">雑費</string>
+    <string name="cat_custom">カスタム</string>
+    <string name="cat_profit">利益</string>
+    <string name="cat_awards">報酬</string>
+    <string name="cat_rental">賃貸</string>
+    <string name="cat_sale">販売</string>
+    <string name="cat_refund">返金</string>
+    <string name="cat_lottery">宝くじ</string>
+    <string name="cat_dividend">配当</string>
+    <string name="cat_investment">投資</string>
+
+    <!-- Add Customer -->
+    <string name="add_customer_title">顧客を追加</string>
+    <string name="save">保存</string>
+    <string name="customer_details">顧客詳細</string>
+    <string name="mobile_number">携帯電話番号</string>
+    <string name="full_name">フルネーム</string>
+    <string name="email_address">メールアドレス</string>
+    <string name="general_details">一般詳細</string>
+    <string name="gender">性別</string>
+    <string name="male">男性</string>
+    <string name="female">女性</string>
+    <string name="dob">生年月日</string>
+    <string name="anniversary">記念日</string>
+    <string name="date_placeholder">日/月/年</string>
+    <string name="other_details">その他の詳細</string>
+    <string name="gstin">GSTIN</string>
+    <string name="address">住所</string>
+    <string name="notes">メモ</string>
+    <string name="error_fill_fields">携帯番号と氏名を入力してください</string>
+    <string name="success_save">顧客情報を保存しました</string>
+
+    <!-- Sidebar -->
+    <string name="nav_help_chat">ヘルプチャット</string>
+    <string name="nav_inventory">在庫管理</string>
+    <string name="nav_add_expense">経費を追加</string>
+    <string name="nav_receipts">領収書</string>
+    <string name="nav_customers">顧客管理</string>
+    <string name="nav_staff">スタッフ管理</string>
+    <string name="nav_shopfront">ショップフロント</string>
+    <string name="nav_refer">アプリを紹介</string>
+    <string name="nav_returned_receipt">返品領収書</string>
+    <string name="nav_web_office">Webバックオフィス</string>
+    <string name="nav_feedback">フィードバック</string>
+    <string name="nav_buy_printer">プリンターを購入</string>
+    <string name="nav_other_apps">他のアプリ</string>
+    <string name="nav_connect_kitchen">キッチンディスプレイを接続</string>
+    <string name="nav_settings_title">設定</string>
+    <string name="nav_language">言語</string>
+    <string name="language_display">言語 - %1$s</string>
+    <string name="nav_weighing_machine">計量機</string>
+    <string name="nav_receipt_settings">領収書設定</string>
+    <string name="nav_business_settings">ビジネス設定</string>
+    <string name="nav_printer_setup">プリンター設定</string>
+    <string name="nav_logout">ログアウト</string>
+
+    <!-- Sidebar Header -->
+    <string name="header_edit_business">ビジネスを編集</string>
+    <string name="header_free_plan">無料プラン</string>
+    <string name="header_upgrade_premium">プレミアムにアップグレード</string>
+    <string name="header_owner_suffix">（オーナー）</string>
+    <string name="header_edit_profile">プロフィールを編集</string>
+    <string name="header_switch_business">ビジネスを切り替え</string>
+    <string name="header_create_business">ビジネスを作成</string>
+    <string name="header_management">管理</string>
+
+    <!-- Inventory -->
+    <string name="inventory_title">在庫管理</string>
+    <string name="search_hint">名前、価格、タグで検索...</string>
+    <string name="tab_items">アイテム</string>
+    <string name="tab_category">カテゴリ</string>
+    <string name="tab_modifiers">モディファイア</string>
+    <string name="tab_ingredient">材料</string>
+    <string name="chip_all">すべて</string>
+    <string name="chip_low_stock">在庫僅少</string>
+    <string name="chip_expired">期限切れ</string>
+    <string name="no_items_found">アイテムが見つかりません</string>
+    <string name="adjust_search_filter">検索条件を変更してください</string>
+    <string name="out_of_stock">在庫切れ</string>
+    <string name="left_in_stock">残り在庫 %1$d</string>
+    <string name="expired_on">%1$sに期限切れ</string>
+    <string name="items_count">%1$d アイテム</string>
+    <string name="available">利用可能</string>
+    <string name="unit_kg_left">残り %1$dkg</string>
+
+    <!-- Customer Management -->
+    <string name="customers_title">顧客一覧</string>
+    <string name="tab_all_customers">すべての顧客</string>
+    <string name="tab_due_customers">未払いの顧客</string>
+    <string name="no_customers_found">顧客が見つかりません</string>
+    <string name="search_coming_soon">検索機能は近日公開予定！</string>
+    <string name="unknown">不明</string>
+    <string name="orders_suffix">%1$d 注文</string>
+    <string name="just_now">たった今</string>
+
+    <!-- Dummy Items -->
+    <string name="item_fat_burner">AA パラノーミック ファットバーナー</string>
+    <string name="item_whey_protein">ホエイプロテイン 1kg</string>
+    <string name="item_oats">アルピノ オートミール 1kg</string>
+    <string name="item_androbol">アンドロボル エクストリーム</string>
+    <string name="item_biozyme">マッスルブレイズ バイオザイム</string>
+    <string name="cat_supplements">サプリメント</string>
+    <string name="cat_oats_grains">オートミール・穀物</string>
+
+    <!-- More Grid Placeholder Data -->
+    <string name="dummy_zero">0</string>
+    <string name="dummy_all_customers_count">327</string>
+    <string name="dummy_items_count">45</string>
+    <string name="dummy_low_stock_count">1</string>
+    <string name="dummy_currency_zero">¥0</string>
+</resources>

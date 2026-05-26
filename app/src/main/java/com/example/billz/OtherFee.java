@@ -1,0 +1,37 @@
+package com.example.billz;
+
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity(tableName = "other_fees")
+public class OtherFee {
+    @PrimaryKey(autoGenerate = true)
+    private int id;
+
+    private String name;
+    private double value;
+    private boolean isPercentage;
+    private boolean isDefault;
+
+    public OtherFee(String name, double value, boolean isPercentage, boolean isDefault) {
+        this.name = name;
+        this.value = value;
+        this.isPercentage = isPercentage;
+        this.isDefault = isDefault;
+    }
+
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
+
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+
+    public double getValue() { return value; }
+    public void setValue(double value) { this.value = value; }
+
+    public boolean isPercentage() { return isPercentage; }
+    public void setPercentage(boolean percentage) { isPercentage = percentage; }
+
+    public boolean isDefault() { return isDefault; }
+    public void setDefault(boolean aDefault) { isDefault = aDefault; }
+}

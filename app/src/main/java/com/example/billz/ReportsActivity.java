@@ -33,6 +33,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
 
 public class ReportsActivity extends AppCompatActivity {
 
@@ -49,6 +50,7 @@ public class ReportsActivity extends AppCompatActivity {
     private View[] bottomTabs;
     private ImageView[] bottomTabIcons;
     private TextView[] bottomTabLabels;
+    private TextView textHeaderBusinessName, textHeaderPhoneNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +70,10 @@ public class ReportsActivity extends AppCompatActivity {
         bottomNavigationView = findViewById(R.id.bottomNavigation);
         drawerLayout = findViewById(R.id.drawerLayout);
         toolbar = findViewById(R.id.toolbarReports);
+
+        textHeaderBusinessName = findViewById(R.id.textHeaderBusinessName);
+        textHeaderPhoneNumber = findViewById(R.id.textHeaderPhoneNumber);
+
         toolbar.setNavigationOnClickListener(v -> {
             if (drawerLayout != null) {
                 drawerLayout.openDrawer(androidx.core.view.GravityCompat.START);
@@ -201,6 +207,28 @@ public class ReportsActivity extends AppCompatActivity {
         updateSidebarLanguageText();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadBusinessData();
+    }
+
+    private void loadBusinessData() {
+        Executors.newSingleThreadExecutor().execute(() -> {
+            ReceiptSettings settings = AppDatabase.getInstance(this).receiptSettingsDao().getSettings();
+            runOnUiThread(() -> {
+                if (settings != null) {
+                    if (textHeaderBusinessName != null) {
+                        textHeaderBusinessName.setText(settings.getBusinessName());
+                    }
+                    if (textHeaderPhoneNumber != null) {
+                        textHeaderPhoneNumber.setText(settings.getPhoneNumber());
+                    }
+                }
+            });
+        });
+    }
+
     private void updateSidebarLanguageText() {
         TextView textLanguage = findViewById(R.id.textLanguageName);
         if (textLanguage != null) {
@@ -311,17 +339,25 @@ public class ReportsActivity extends AppCompatActivity {
         RecyclerView recyclerView = dialog.findViewById(R.id.recyclerBusinesses);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
 
-        List<Business> businesses = new ArrayList<>();
-        businesses.add(new Business("Nutrition Co", "OWNER", false));
-        businesses.add(new Business("PROTEIN HUB -DEOGHAR", "OWNER", true));
-        businesses.add(new Business("The City Gym (Unisex)", "OWNER", false));
+        Executors.newSingleThreadExecutor().execute(() -> {
+            List<Business> businesses = AppDatabase.getInstance(this).businessDao().getAllBusinesses();
+            runOnUiThread(() -> {
+                if (businesses.isEmpty()) {
+                    // Seed initial data if empty
+                    businesses.add(new Business("Nutrition Co", "+918825347516", "OWNER", true));
+                    businesses.add(new Business("PROTEIN HUB -DEOGHAR", "+917903598844", "OWNER", false));
+                    businesses.add(new Business("The City Gym (Unisex)", "+910000000000", "OWNER", false));
+                }
 
-        BusinessAdapter adapter = new BusinessAdapter(businesses, business -> {
-            // Handle selection change
-            dialog.dismiss();
-            Toast.makeText(this, "Selected: " + business.getName(), Toast.LENGTH_SHORT).show();
+                BusinessAdapter adapter = new BusinessAdapter(businesses, business -> {
+                    dialog.dismiss();
+                    Intent intent = new Intent(this, AddBusinessActivity.class);
+                    intent.putExtra("business_name", business.getName());
+                    startActivity(intent);
+                });
+                recyclerView.setAdapter(adapter);
+            });
         });
-        recyclerView.setAdapter(adapter);
 
         dialog.findViewById(R.id.btnAddBusiness).setOnClickListener(v -> {
             dialog.dismiss();

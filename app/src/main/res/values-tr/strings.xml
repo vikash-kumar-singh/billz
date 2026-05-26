@@ -1,0 +1,178 @@
+<resources>
+    <string name="app_name">Billz</string>
+    <string name="action_settings">Ayarlar</string>
+    <string name="reports_title">Raporlar</string>
+    <string name="reports_date_today">Bugün : 29 Nis</string>
+    <string name="reports_empty_message">Seçilen Tarih İçin Rapor Yok</string>
+    <string name="reports_share">Raporları paylaş</string>
+    <string name="reports_messages">Bildirimler</string>
+    <string name="reports_back">Geri</string>
+    <string name="reports_calendar">Tarih seç</string>
+    <string name="reports_tab_reports">Raporlar</string>
+    <string name="reports_tab_today">Bugün</string>
+    <string name="reports_tab_counter">Sayaç</string>
+    <string name="reports_tab_items">Öğeler</string>
+    <string name="reports_tab_more">Daha Fazla</string>
+    <string name="reports_content_placeholder">Rapor içeriği yer tutucusu</string>
+    <string name="next">İleri</string>
+    <string name="previous">Geri</string>
+
+    <!-- More Screen -->
+    <string name="more_premium_title">15 Günlük Ücretsiz Premium\'u Deneyin</string>
+    <string name="more_premium_desc">Ödeme detayı gerekmez. Denemeden sonra ücretsiz plana geçersiniz - Otomatik ödeme yok!</string>
+    <string name="more_see_benefits">Avantajları Gör</string>
+    <string name="more_try_premium">Ücretsiz Premium Deneyin</string>
+    <string name="more_attendance">Katılım</string>
+    <string name="more_attendance_desc">Katılım Yönetimi</string>
+    <string name="more_manage_payroll">Bordro Yönetimi</string>
+    <string name="more_payments">Ödemeler</string>
+    <string name="more_shopfront">Mağaza Vitrini</string>
+    <string name="more_all_customers">Tüm Müşteriler</string>
+    <string name="more_due_customers">Borçlu Müşteriler</string>
+    <string name="more_expense_income">Gider - Gelir (Bu Hafta)</string>
+    <string name="more_low_stocks">Düşük Stok</string>
+    <string name="more_staff_partners">Personel ve Ortaklar</string>
+    <string name="more_sms_available">Mevcut SMS</string>
+    <string name="more_items_subitems">Öğeler ve Alt Öğeler</string>
+    <string name="more_stock_cost">Stok Değeri Maliyet Fiyatı</string>
+    <string name="more_stock_selling">Stok Değeri Satış Fiyatı</string>
+    <string name="more_new">Yeni</string>
+
+    <!-- Cash Flow -->
+    <string name="cash_flow_title">Nakit Akışı</string>
+    <string name="net_cash_flow">Net Nakit Akışı</string>
+    <string name="total_income_expense_hint">(Toplam Gelir - Toplam Gider)</string>
+    <string name="income">Gelir</string>
+    <string name="expense">Gider</string>
+    <string name="no_entries_message">Şunun için gider/gelir girişi yok:</string>
+    <string name="click_to_add_message">Eklemek için + düğmesine tıklayın</string>
+
+    <!-- Categories -->
+    <string name="cat_tax">Vergi</string>
+    <string name="cat_fuel">Yakıt</string>
+    <string name="cat_food">Gıda</string>
+    <string name="cat_bill">Fatura</string>
+    <string name="cat_transport">Ulaşım</string>
+    <string name="cat_insurance">Sigorta</string>
+    <string name="cat_salary">Maaş</string>
+    <string name="cat_rent">Kira</string>
+    <string name="cat_repairs">Onarım</string>
+    <string name="cat_commission">Komisyon</string>
+    <string name="cat_advertising">Reklam</string>
+    <string name="cat_fee">Ücret</string>
+    <string name="cat_interest">Faiz</string>
+    <string name="cat_loan">Kredi</string>
+    <string name="cat_supplies">Malzemeler</string>
+    <string name="cat_transfer">Transfer</string>
+    <string name="cat_contract">Sözleşme</string>
+    <string name="cat_miscellaneous">Çeşitli</string>
+    <string name="cat_custom">Özel</string>
+    <string name="cat_profit">Kar</string>
+    <string name="cat_awards">Ödüller</string>
+    <string name="cat_rental">Kiralama</string>
+    <string name="cat_sale">Satış</string>
+    <string name="cat_refund">İade</string>
+    <string name="cat_lottery">Piyango</string>
+    <string name="cat_dividend">Temettü</string>
+    <string name="cat_investment">Yatırım</string>
+
+    <!-- Add Customer -->
+    <string name="add_customer_title">MÜŞTERİ EKLE</string>
+    <string name="save">Kaydet</string>
+    <string name="customer_details">MÜŞTERİ DETAYLARI</string>
+    <string name="mobile_number">Mobil Numara</string>
+    <string name="full_name">Tam Ad</string>
+    <string name="email_address">E-posta Adresi</string>
+    <string name="general_details">GENEL DETAYLAR</string>
+    <string name="gender">Cinsiyet</string>
+    <string name="male">Erkek</string>
+    <string name="female">Kadın</string>
+    <string name="dob">Doğum Tarihi</string>
+    <string name="anniversary">Yıldönümü</string>
+    <string name="date_placeholder">GG/AA/YYYY</string>
+    <string name="other_details">DİĞER DETAYLAR</string>
+    <string name="gstin">GSTIN</string>
+    <string name="address">Adres</string>
+    <string name="notes">Notlar</string>
+    <string name="error_fill_fields">Lütfen mobil ve isim girin</string>
+    <string name="success_save">Müşteri Başarıyla Kaydedildi</string>
+
+    <!-- Sidebar -->
+    <string name="nav_help_chat">Yardım Sohbeti</string>
+    <string name="nav_inventory">Envanter Yönetimi</string>
+    <string name="nav_add_expense">Gider Ekle</string>
+    <string name="nav_receipts">Makbuzlar</string>
+    <string name="nav_customers">Müşteri Yönetimi</string>
+    <string name="nav_staff">Personel Yönetimi</string>
+    <string name="nav_shopfront">Mağaza Vitrini</string>
+    <string name="nav_refer">Uygulamayı Öner</string>
+    <string name="nav_returned_receipt">İade Makbuzu</string>
+    <string name="nav_web_office">Web Arka Ofis</string>
+    <string name="nav_feedback">Geri Bildirim</string>
+    <string name="nav_buy_printer">Yazıcı Satın Al</string>
+    <string name="nav_other_apps">Diğer uygulamalar</string>
+    <string name="nav_connect_kitchen">Mutfak ekranı uygulamasını bağla</string>
+    <string name="nav_settings_title">Ayarlar</string>
+    <string name="nav_language">Dil</string>
+    <string name="language_display">Dil - %1$s</string>
+    <string name="nav_weighing_machine">Tartı</string>
+    <string name="nav_receipt_settings">Makbuz Ayarları</string>
+    <string name="nav_business_settings">İşletme Ayarları</string>
+    <string name="nav_printer_setup">Yazıcı Kurulumu</string>
+    <string name="nav_logout">Oturumu Kapat</string>
+
+    <!-- Sidebar Header -->
+    <string name="header_edit_business">İŞLETMEYİ DÜZENLE</string>
+    <string name="header_free_plan">ÜCRETSİZ PLAN</string>
+    <string name="header_upgrade_premium">Premium Plana Yükselt</string>
+    <string name="header_owner_suffix">(sahibi)</string>
+    <string name="header_edit_profile">PROFİLİ DÜZENLE</string>
+    <string name="header_switch_business">İŞLETMEYİ DEĞİŞTİR</string>
+    <string name="header_create_business">İŞLETME OLUŞTUR</string>
+    <string name="header_management">Yönetim</string>
+
+    <!-- Inventory -->
+    <string name="inventory_title">ENVANTER YÖNETİMİ</string>
+    <string name="search_hint">İsim, fiyat veya etiket ara...</string>
+    <string name="tab_items">ÖĞELER</string>
+    <string name="tab_category">KATEGORİ</string>
+    <string name="tab_modifiers">DEĞİŞTİRİCİLER</string>
+    <string name="tab_ingredient">BİLEŞEN</string>
+    <string name="chip_all">Tümü</string>
+    <string name="chip_low_stock">Düşük Stok</string>
+    <string name="chip_expired">Süresi Dolmuş</string>
+    <string name="no_items_found">Öğe bulunamadı</string>
+    <string name="adjust_search_filter">Aramanızı veya filtrelerinizi ayarlamayı deneyin</string>
+    <string name="out_of_stock">Stokta yok</string>
+    <string name="left_in_stock">Stokta %1$d Kaldı</string>
+    <string name="expired_on">%1$s tarihinde süresi doldu</string>
+    <string name="items_count">%1$d Öğe</string>
+    <string name="available">Mevcut</string>
+    <string name="unit_kg_left">%1$dkg Kaldı</string>
+
+    <!-- Customer Management -->
+    <string name="customers_title">MÜŞTERİLERİNİZ</string>
+    <string name="tab_all_customers">TÜM MÜŞTERİLER</string>
+    <string name="tab_due_customers">BORÇLU MÜŞTERİLER</string>
+    <string name="no_customers_found">Müşteri bulunamadı</string>
+    <string name="search_coming_soon">Arama yakında gelecek!</string>
+    <string name="unknown">Bilinmiyor</string>
+    <string name="orders_suffix">%1$d SİPARİŞ</string>
+    <string name="just_now">AZ ÖNCE</string>
+
+    <!-- Dummy Items -->
+    <string name="item_fat_burner">AA Paranormic Yağ Yakıcılar</string>
+    <string name="item_whey_protein">Absolute Nutrition Whey Protein 1kg</string>
+    <string name="item_oats">Alpino Yulaf 1kg</string>
+    <string name="item_androbol">Androbol Xterem</string>
+    <string name="item_biozyme">MuscleBlaze Biozyme</string>
+    <string name="cat_supplements">Takviyeler</string>
+    <string name="cat_oats_grains">Yulaf ve Tahıllar</string>
+
+    <!-- More Grid Placeholder Data -->
+    <string name="dummy_zero">0</string>
+    <string name="dummy_all_customers_count">327</string>
+    <string name="dummy_items_count">45</string>
+    <string name="dummy_low_stock_count">1</string>
+    <string name="dummy_currency_zero">0,00 ₺</string>
+</resources>

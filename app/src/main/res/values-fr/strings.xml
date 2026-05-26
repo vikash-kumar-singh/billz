@@ -1,0 +1,178 @@
+<resources>
+    <string name="app_name">Billz</string>
+    <string name="action_settings">Paramètres</string>
+    <string name="reports_title">Rapports</string>
+    <string name="reports_date_today">Aujourd\'hui : 29 Avr</string>
+    <string name="reports_empty_message">Aucun rapport pour la date sélectionnée</string>
+    <string name="reports_share">Partager rapports</string>
+    <string name="reports_messages">Notifications</string>
+    <string name="reports_back">Retour</string>
+    <string name="reports_calendar">Choisir date</string>
+    <string name="reports_tab_reports">Rapports</string>
+    <string name="reports_tab_today">Aujourd\'hui</string>
+    <string name="reports_tab_counter">Compteur</string>
+    <string name="reports_tab_items">Articles</string>
+    <string name="reports_tab_more">Plus</string>
+    <string name="reports_content_placeholder">Espace contenu rapports</string>
+    <string name="next">Suivant</string>
+    <string name="previous">Précédent</string>
+
+    <!-- More Screen -->
+    <string name="more_premium_title">Essayez le Premium gratuit pendant 15 jours</string>
+    <string name="more_premium_desc">Aucun détail de paiement requis. Vous passerez au forfait gratuit après l\'essai - Aucun paiement automatique !</string>
+    <string name="more_see_benefits">Voir les avantages</string>
+    <string name="more_try_premium">Obtenir le Premium gratuit</string>
+    <string name="more_attendance">Présence</string>
+    <string name="more_attendance_desc">Gestion des présences</string>
+    <string name="more_manage_payroll">Gérer la paie</string>
+    <string name="more_payments">Paiements</string>
+    <string name="more_shopfront">Vitrine</string>
+    <string name="more_all_customers">Tous les clients</string>
+    <string name="more_due_customers">Clients débiteurs</string>
+    <string name="more_expense_income">Dépenses - Revenus (Cette semaine)</string>
+    <string name="more_low_stocks">Stocks bas</string>
+    <string name="more_staff_partners">Personnel et Partenaires</string>
+    <string name="more_sms_available">SMS disponibles</string>
+    <string name="more_items_subitems">Articles et Sous-articles</string>
+    <string name="more_stock_cost">Valeur du stock Prix de revient</string>
+    <string name="more_stock_selling">Valeur du stock Prix de vente</string>
+    <string name="more_new">Nouveau</string>
+
+    <!-- Cash Flow -->
+    <string name="cash_flow_title">Flux de trésorerie</string>
+    <string name="net_cash_flow">Trésorerie nette</string>
+    <string name="total_income_expense_hint">(Revenu total - Dépense totale)</string>
+    <string name="income">Revenu</string>
+    <string name="expense">Dépense</string>
+    <string name="no_entries_message">Aucune entrée de dépense/revenu pour</string>
+    <string name="click_to_add_message">Cliquez sur le bouton + pour ajouter</string>
+
+    <!-- Categories -->
+    <string name="cat_tax">Taxe</string>
+    <string name="cat_fuel">Carburant</string>
+    <string name="cat_food">Nourriture</string>
+    <string name="cat_bill">Facture</string>
+    <string name="cat_transport">Transport</string>
+    <string name="cat_insurance">Assurance</string>
+    <string name="cat_salary">Salaire</string>
+    <string name="cat_rent">Loyer</string>
+    <string name="cat_repairs">Réparations</string>
+    <string name="cat_commission">Commission</string>
+    <string name="cat_advertising">Publicité</string>
+    <string name="cat_fee">Frais</string>
+    <string name="cat_interest">Intérêt</string>
+    <string name="cat_loan">Prêt</string>
+    <string name="cat_supplies">Fournitures</string>
+    <string name="cat_transfer">Transfert</string>
+    <string name="cat_contract">Contrat</string>
+    <string name="cat_miscellaneous">Divers</string>
+    <string name="cat_custom">Personnalisé</string>
+    <string name="cat_profit">Profit</string>
+    <string name="cat_awards">Récompenses</string>
+    <string name="cat_rental">Location</string>
+    <string name="cat_sale">Vente</string>
+    <string name="cat_refund">Remboursement</string>
+    <string name="cat_lottery">Loterie</string>
+    <string name="cat_dividend">Dividende</string>
+    <string name="cat_investment">Investissement</string>
+
+    <!-- Add Customer -->
+    <string name="add_customer_title">AJOUTER CLIENT</string>
+    <string name="save">Enregistrer</string>
+    <string name="customer_details">DÉTAILS DU CLIENT</string>
+    <string name="mobile_number">Numéro de mobile</string>
+    <string name="full_name">Nom complet</string>
+    <string name="email_address">Adresse e-mail</string>
+    <string name="general_details">DÉTAILS GÉNÉRAUX</string>
+    <string name="gender">Genre</string>
+    <string name="male">Homme</string>
+    <string name="female">Femme</string>
+    <string name="dob">Date de naissance</string>
+    <string name="anniversary">Anniversaire</string>
+    <string name="date_placeholder">JJ/MM/AAAA</string>
+    <string name="other_details">AUTRES DÉTAILS</string>
+    <string name="gstin">GSTIN</string>
+    <string name="address">Adresse</string>
+    <string name="notes">Notes</string>
+    <string name="error_fill_fields">Veuillez entrer le mobile et le nom</string>
+    <string name="success_save">Client enregistré avec succès</string>
+
+    <!-- Sidebar -->
+    <string name="nav_help_chat">Chat d\'aide</string>
+    <string name="nav_inventory">Gestion des stocks</string>
+    <string name="nav_add_expense">Ajouter une dépense</string>
+    <string name="nav_receipts">Reçus</string>
+    <string name="nav_customers">Gestion des clients</string>
+    <string name="nav_staff">Gestion du personnel</string>
+    <string name="nav_shopfront">Vitrine</string>
+    <string name="nav_refer">Parrainer l\'application</string>
+    <string name="nav_returned_receipt">Reçu retourné</string>
+    <string name="nav_web_office">Bureau virtuel Web</string>
+    <string name="nav_feedback">Commentaires</string>
+    <string name="nav_buy_printer">Acheter une imprimante</string>
+    <string name="nav_other_apps">Autres applications</string>
+    <string name="nav_connect_kitchen">Connecter l\'application cuisine</string>
+    <string name="nav_settings_title">Paramètres</string>
+    <string name="nav_language">Langue</string>
+    <string name="language_display">Langue - %1$s</string>
+    <string name="nav_weighing_machine">Balance</string>
+    <string name="nav_receipt_settings">Paramètres des reçus</string>
+    <string name="nav_business_settings">Paramètres de l\'entreprise</string>
+    <string name="nav_printer_setup">Configuration imprimante</string>
+    <string name="nav_logout">Déconnexion</string>
+
+    <!-- Sidebar Header -->
+    <string name="header_edit_business">MODIFIER L\'ENTREPRISE</string>
+    <string name="header_free_plan">PLAN GRATUIT</string>
+    <string name="header_upgrade_premium">Passer au Plan Premium</string>
+    <string name="header_owner_suffix">(propriétaire)</string>
+    <string name="header_edit_profile">MODIFIER LE PROFIL</string>
+    <string name="header_switch_business">CHANGER D\'ENTREPRISE</string>
+    <string name="header_create_business">CRÉER UNE ENTREPRISE</string>
+    <string name="header_management">Gestion</string>
+
+    <!-- Inventory -->
+    <string name="inventory_title">GESTION DES STOCKS</string>
+    <string name="search_hint">Rechercher nom, prix ou tags...</string>
+    <string name="tab_items">ARTICLES</string>
+    <string name="tab_category">CATÉGORIE</string>
+    <string name="tab_modifiers">MODIFICATEURS</string>
+    <string name="tab_ingredient">INGRÉDIENT</string>
+    <string name="chip_all">Tout</string>
+    <string name="chip_low_stock">Stock bas</string>
+    <string name="chip_expired">Expiré</string>
+    <string name="no_items_found">Aucun article trouvé</string>
+    <string name="adjust_search_filter">Essayez d\'ajuster votre recherche ou vos filtres</string>
+    <string name="out_of_stock">Rupture de stock</string>
+    <string name="left_in_stock">%1$d restants en stock</string>
+    <string name="expired_on">Expiré le %1$s</string>
+    <string name="items_count">%1$d articles</string>
+    <string name="available">Disponible</string>
+    <string name="unit_kg_left">%1$dkg restants</string>
+
+    <!-- Customer Management -->
+    <string name="customers_title">VOS CLIENTS</string>
+    <string name="tab_all_customers">TOUS LES CLIENTS</string>
+    <string name="tab_due_customers">CLIENTS DÉBITEURS</string>
+    <string name="no_customers_found">Aucun client trouvé</string>
+    <string name="search_coming_soon">Recherche bientôt disponible !</string>
+    <string name="unknown">Inconnu</string>
+    <string name="orders_suffix">%1$d COMMANDES</string>
+    <string name="just_now">À L\'INSTANT</string>
+
+    <!-- Dummy Items -->
+    <string name="item_fat_burner">Brûleurs de graisse AA Paranormic</string>
+    <string name="item_whey_protein">Absolute Nutrition Whey Protein 1kg</string>
+    <string name="item_oats">Alpino Oats 1kg</string>
+    <string name="item_androbol">Androbol Xterem</string>
+    <string name="item_biozyme">MuscleBlaze Biozyme</string>
+    <string name="cat_supplements">Compléments</string>
+    <string name="cat_oats_grains">Avoine et Grains</string>
+
+    <!-- More Grid Placeholder Data -->
+    <string name="dummy_zero">0</string>
+    <string name="dummy_all_customers_count">327</string>
+    <string name="dummy_items_count">45</string>
+    <string name="dummy_low_stock_count">1</string>
+    <string name="dummy_currency_zero">0,00 €</string>
+</resources>

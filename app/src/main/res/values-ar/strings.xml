@@ -1,0 +1,178 @@
+<resources>
+    <string name="app_name">بيلز</string>
+    <string name="action_settings">الإعدادات</string>
+    <string name="reports_title">التقارير</string>
+    <string name="reports_date_today">اليوم : 29 أبريل</string>
+    <string name="reports_empty_message">لا توجد تقارير للتاريخ المحدد</string>
+    <string name="reports_share">مشاركة التقارير</string>
+    <string name="reports_messages">الإشعارات</string>
+    <string name="reports_back">رجوع</string>
+    <string name="reports_calendar">اختر التاريخ</string>
+    <string name="reports_tab_reports">التقارير</string>
+    <string name="reports_tab_today">اليوم</string>
+    <string name="reports_tab_counter">عداد</string>
+    <string name="reports_tab_items">عناصر</string>
+    <string name="reports_tab_more">المزيد</string>
+    <string name="reports_content_placeholder">مكان محتوى التقارير</string>
+    <string name="next">التالي</string>
+    <string name="previous">السابق</string>
+
+    <!-- More Screen -->
+    <string name="more_premium_title">جرب بريميوم مجاني لمدة 15 يومًا</string>
+    <string name="more_premium_desc">لا توجد تفاصيل دفع مطلوبة. ستنتقل إلى الخطة المجانية بعد الفترة التجريبية - لا توجد دفعات تلقائية!</string>
+    <string name="more_see_benefits">رؤية الفوائد</string>
+    <string name="more_try_premium">احصل على بريميوم مجاني</string>
+    <string name="more_attendance">الحضور</string>
+    <string name="more_attendance_desc">إدارة الحضور</string>
+    <string name="more_manage_payroll">إدارة كشوف المرتبات</string>
+    <string name="more_payments">المدفوعات</string>
+    <string name="more_shopfront">واجهة المحل</string>
+    <string name="more_all_customers">كل العملاء</string>
+    <string name="more_due_customers">العملاء المستحقون</string>
+    <string name="more_expense_income">المصاريف - الدخل (هذا الأسبوع)</string>
+    <string name="more_low_stocks">مخزون منخفض</string>
+    <string name="more_staff_partners">الموظفون والشركاء</string>
+    <string name="more_sms_available">رسائل SMS المتاحة</string>
+    <string name="more_items_subitems">العناصر والعناصر الفرعية</string>
+    <string name="more_stock_cost">قيمة المخزون بسعر التكلفة</string>
+    <string name="more_stock_selling">قيمة المخزون بسعر البيع</string>
+    <string name="more_new">جديد</string>
+
+    <!-- Cash Flow -->
+    <string name="cash_flow_title">التدفق النقدي</string>
+    <string name="net_cash_flow">صافي التدفق النقدي</string>
+    <string name="total_income_expense_hint">(إجمالي الدخل - إجمالي المصاريف)</string>
+    <string name="income">دخل</string>
+    <string name="expense">مصروف</string>
+    <string name="no_entries_message">لا توجد قيود مصروفات/دخل لـ</string>
+    <string name="click_to_add_message">انقر فوق الزر + للإضافة</string>
+
+    <!-- Categories -->
+    <string name="cat_tax">ضريبة</string>
+    <string name="cat_fuel">وقود</string>
+    <string name="cat_food">طعام</string>
+    <string name="cat_bill">فاتورة</string>
+    <string name="cat_transport">نقل</string>
+    <string name="cat_insurance">تأمين</string>
+    <string name="cat_salary">راتب</string>
+    <string name="cat_rent">إيجار</string>
+    <string name="cat_repairs">إصلاحات</string>
+    <string name="cat_commission">عمولة</string>
+    <string name="cat_advertising">إعلان</string>
+    <string name="cat_fee">رسوم</string>
+    <string name="cat_interest">فائدة</string>
+    <string name="cat_loan">قرض</string>
+    <string name="cat_supplies">لوازم</string>
+    <string name="cat_transfer">تحويل</string>
+    <string name="cat_contract">عقد</string>
+    <string name="cat_miscellaneous">متنوع</string>
+    <string name="cat_custom">مخصص</string>
+    <string name="cat_profit">ربح</string>
+    <string name="cat_awards">جوائز</string>
+    <string name="cat_rental">إيجار</string>
+    <string name="cat_sale">بيع</string>
+    <string name="cat_refund">استرداد</string>
+    <string name="cat_lottery">يانصيب</string>
+    <string name="cat_dividend">أرباح الأسهم</string>
+    <string name="cat_investment">استثمار</string>
+
+    <!-- Add Customer -->
+    <string name="add_customer_title">إضافة عميل</string>
+    <string name="save">حفظ</string>
+    <string name="customer_details">تفاصيل العميل</string>
+    <string name="mobile_number">رقم الهاتف المحمول</string>
+    <string name="full_name">الاسم الكامل</string>
+    <string name="email_address">عنوان البريد الإلكتروني</string>
+    <string name="general_details">تفاصيل عامة</string>
+    <string name="gender">الجنس</string>
+    <string name="male">ذكر</string>
+    <string name="female">أنثى</string>
+    <string name="dob">تاريخ الميلاد</string>
+    <string name="anniversary">الذكرى السنوية</string>
+    <string name="date_placeholder">يوم/شهر/سنة</string>
+    <string name="other_details">تفاصيل أخرى</string>
+    <string name="gstin">GSTIN</string>
+    <string name="address">العنوان</string>
+    <string name="notes">ملاحظات</string>
+    <string name="error_fill_fields">يرجى إدخال رقم المحمول والاسم</string>
+    <string name="success_save">تم حفظ العميل بنجاح</string>
+
+    <!-- Sidebar -->
+    <string name="nav_help_chat">دردشة المساعدة</string>
+    <string name="nav_inventory">إدارة المخزون</string>
+    <string name="nav_add_expense">إضافة مصروف</string>
+    <string name="nav_receipts">إيصالات</string>
+    <string name="nav_customers">إدارة العملاء</string>
+    <string name="nav_staff">إدارة الموظفين</string>
+    <string name="nav_shopfront">واجهة المحل</string>
+    <string name="nav_refer">إحالة التطبيق</string>
+    <string name="nav_returned_receipt">إيصال مرتجع</string>
+    <string name="nav_web_office">المكتب الخلفي للويب</string>
+    <string name="nav_feedback">تعليقات</string>
+    <string name="nav_buy_printer">شراء طابعة</string>
+    <string name="nav_other_apps">تطبيقات أخرى</string>
+    <string name="nav_connect_kitchen">توصيل تطبيق عرض المطبخ</string>
+    <string name="nav_settings_title">الإعدادات</string>
+    <string name="nav_language">اللغة</string>
+    <string name="language_display">اللغة - %1$s</string>
+    <string name="nav_weighing_machine">آلة الوزن</string>
+    <string name="nav_receipt_settings">إعدادات الإيصال</string>
+    <string name="nav_business_settings">إعدادات العمل</string>
+    <string name="nav_printer_setup">إعداد الطابعة</string>
+    <string name="nav_logout">تسجيل الخروج</string>
+
+    <!-- Sidebar Header -->
+    <string name="header_edit_business">تعديل العمل</string>
+    <string name="header_free_plan">خطة مجانية</string>
+    <string name="header_upgrade_premium">الترقية إلى الخطة المميزة</string>
+    <string name="header_owner_suffix">(مالك)</string>
+    <string name="header_edit_profile">تعديل الملف الشخصي</string>
+    <string name="header_switch_business">تبديل العمل</string>
+    <string name="header_create_business">إنشاء عمل</string>
+    <string name="header_management">إدارة</string>
+
+    <!-- Inventory -->
+    <string name="inventory_title">إدارة المخزون</string>
+    <string name="search_hint">البحث عن الاسم أو السعر أو العلامات...</string>
+    <string name="tab_items">العناصر</string>
+    <string name="tab_category">الفئة</string>
+    <string name="tab_modifiers">المعدلات</string>
+    <string name="tab_ingredient">المكونات</string>
+    <string name="chip_all">الكل</string>
+    <string name="chip_low_stock">مخزون منخفض</string>
+    <string name="chip_expired">منتهي الصلاحية</string>
+    <string name="no_items_found">لم يتم العثور على عناصر</string>
+    <string name="adjust_search_filter">حاول تعديل بحثك أو عوامل التصفية</string>
+    <string name="out_of_stock">غير متوفر بالمخزون</string>
+    <string name="left_in_stock">بقي %1$d في المخزون</string>
+    <string name="expired_on">انتهت الصلاحية في %1$s</string>
+    <string name="items_count">%1$d عناصر</string>
+    <string name="available">متاح</string>
+    <string name="unit_kg_left">بقي %1$d كجم</string>
+
+    <!-- Customer Management -->
+    <string name="customers_title">عملاؤك</string>
+    <string name="tab_all_customers">كل العملاء</string>
+    <string name="tab_due_customers">العملاء المستحقون</string>
+    <string name="no_customers_found">لم يتم العثور على عملاء</string>
+    <string name="search_coming_soon">البحث قادم قريباً!</string>
+    <string name="unknown">غير معروف</string>
+    <string name="orders_suffix">%1$d طلبات</string>
+    <string name="just_now">الآن</string>
+
+    <!-- Dummy Items -->
+    <string name="item_fat_burner">حوارق الدهون AA</string>
+    <string name="item_whey_protein">واي بروتين أبسولوت نيوتريشن 1 كجم</string>
+    <string name="item_oats">ألبينو شوفان 1 كجم</string>
+    <string name="item_androbol">أندرو بول إكستريم</string>
+    <string name="item_biozyme">ماسلبلاز بايوزيم</string>
+    <string name="cat_supplements">المكملات الغذائية</string>
+    <string name="cat_oats_grains">الشوفان والحبوب</string>
+
+    <!-- More Grid Placeholder Data -->
+    <string name="dummy_zero">0</string>
+    <string name="dummy_all_customers_count">327</string>
+    <string name="dummy_items_count">45</string>
+    <string name="dummy_low_stock_count">1</string>
+    <string name="dummy_currency_zero">0.00 ر.س</string>
+</resources>

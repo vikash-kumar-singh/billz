@@ -1,0 +1,189 @@
+<resources>
+    <string name="app_name">बिलज़</string>
+    <string name="action_settings">सेटिंग्स</string>
+    <string name="reports_title">रिपोर्ट्स</string>
+    <string name="reports_date_today">आज : 29 अप्रैल</string>
+    <string name="reports_empty_message">चयनित तिथि के लिए कोई रिपोर्ट नहीं है</string>
+    <string name="reports_share">रिपोर्ट साझा करें</string>
+    <string name="reports_messages">सूचनाएं</string>
+    <string name="reports_back">पीछे</string>
+    <string name="reports_calendar">तिथि चुनें</string>
+    <string name="reports_tab_reports">रिपोर्ट्स</string>
+    <string name="reports_tab_today">आज</string>
+    <string name="reports_tab_counter">काउंटर</string>
+    <string name="reports_tab_items">आइटम्स</string>
+    <string name="reports_tab_more">अधिक</string>
+    <string name="reports_content_placeholder">रिपोर्ट सामग्री प्लेसहोल्डर</string>
+    <string name="first_fragment_label">पहला फ्रैगमेंट</string>
+    <string name="second_fragment_label">दूसरा फ्रैगमेंट</string>
+    <string name="next">आगे</string>
+    <string name="previous">पीछे</string>
+
+    <string name="lorem_ipsum">
+        लोरेम इप्सम डोलर सिट अमेट, कंसेक्टेटुर एडिपिसिंग एलीट। नाम इन स्केलेरिस्क सेम। मौरिस
+        वोल्पुटपाट, डोलर आईडी इंटरडम उल्लामकोर्पर, रिसस डोलर एगेस्टस लेक्टस, सिट अमेट मैटिस पुरस
+        दुई नेक रिसस। मेसेनास नॉन सोडलेस निसी, वेल डिक्टम डोलर। क्लास एप्टेंट टैसिटि सोशियोस्कु एड
+        लिटोरा टॉर्क्वेंट पर कोनुबिया नोस्ट्रा, पर इनसेप्टोस हिमेनायोस। सस्पेंडिस ब्लैंडिट एलिफेंड
+        डैम, वेल रट्रम टेलस वुलपुटेट क्विस। एलिक्वम एगेट लिबरो एलिकुएट, इम्पेरडिट निस्ल ए,
+        ऑर्नारे एक्स। सेड रोंकस एस्ट यूट लिबरो पोर्टा लोबर्टिस। फ्यूस इन डिक्टम टेलस।
+    </string>
+
+    <!-- More Screen -->
+    <string name="more_premium_title">15 दिनों के लिए फ्री प्रीमियम आजमाएं</string>
+    <string name="more_premium_desc">किसी भुगतान विवरण की आवश्यकता नहीं है। आप परीक्षण के बाद फ्री प्लान पर चले जाएंगे - कोई ऑटो भुगतान नहीं!</string>
+    <string name="more_see_benefits">लाभ देखें</string>
+    <string name="more_try_premium">फ्री प्रीमियम प्राप्त करें</string>
+    <string name="more_attendance">उपस्थिति</string>
+    <string name="more_attendance_desc">उपस्थिति प्रबंधन</string>
+    <string name="more_manage_payroll">पेरोल प्रबंधित करें</string>
+    <string name="more_payments">भुगतान</string>
+    <string name="more_shopfront">शॉपफ्रंट</string>
+    <string name="more_all_customers">सभी ग्राहक</string>
+    <string name="more_due_customers">देय ग्राहक</string>
+    <string name="more_expense_income">खर्च - आय</string>
+    <string name="more_low_stocks">कम स्टॉक</string>
+    <string name="more_staff_partners">स्टाफ और पार्टनर्स</string>
+    <string name="more_sms_available">SMS उपलब्ध</string>
+    <string name="more_items_subitems">आइटम्स और सब-आइटम्स</string>
+    <string name="more_stock_cost">स्टॉक मूल्य लागत मूल्य</string>
+    <string name="more_stock_selling">स्टॉक मूल्य विक्रय मूल्य</string>
+    <string name="more_new">नया</string>
+
+    <!-- Cash Flow -->
+    <string name="cash_flow_title">कैश फ्लो</string>
+    <string name="net_cash_flow">नेट कैश फ्लो</string>
+    <string name="total_income_expense_hint">(कुल आय - कुल खर्च)</string>
+    <string name="income">आय</string>
+    <string name="expense">खर्च</string>
+    <string name="no_entries_message">इसके लिए कोई खर्च/आय प्रविष्टियां नहीं हैं</string>
+    <string name="click_to_add_message">जोड़ने के लिए + बटन पर क्लिक करें</string>
+
+    <!-- Categories -->
+    <string name="cat_tax">टैक्स</string>
+    <string name="cat_fuel">ईंधन</string>
+    <string name="cat_food">भोजन</string>
+    <string name="cat_bill">बिल</string>
+    <string name="cat_transport">परिवहन</string>
+    <string name="cat_insurance">बीमा</string>
+    <string name="cat_salary">वेतन</string>
+    <string name="cat_rent">किराया</string>
+    <string name="cat_repairs">मरम्मत</string>
+    <string name="cat_commission">कमीशन</string>
+    <string name="cat_advertising">विज्ञापन</string>
+    <string name="cat_fee">फीस</string>
+    <string name="cat_interest">ब्याज</string>
+    <string name="cat_loan">ऋण</string>
+    <string name="cat_supplies">आपूर्ति</string>
+    <string name="cat_transfer">ट्रांसफर</string>
+    <string name="cat_contract">अनुबंध</string>
+    <string name="cat_miscellaneous">विविध</string>
+    <string name="cat_custom">कस्टम</string>
+    <string name="cat_profit">लाभ</string>
+    <string name="cat_awards">पुरस्कार</string>
+    <string name="cat_rental">किराया</string>
+    <string name="cat_sale">बिक्री</string>
+    <string name="cat_refund">धनवापसी</string>
+    <string name="cat_lottery">लॉटरी</string>
+    <string name="cat_dividend">लाभांश</string>
+    <string name="cat_investment">निवेश</string>
+
+    <!-- Add Customer -->
+    <string name="add_customer_title">ग्राहक जोड़ें</string>
+    <string name="save">सहेजें</string>
+    <string name="customer_details">ग्राहक विवरण</string>
+    <string name="mobile_number">मोबाइल नंबर</string>
+    <string name="full_name">पूरा नाम</string>
+    <string name="email_address">ईमेल पता</string>
+    <string name="general_details">सामान्य विवरण</string>
+    <string name="gender">लिंग</string>
+    <string name="male">पुरुष</string>
+    <string name="female">महिला</string>
+    <string name="dob">जन्म तिथि</string>
+    <string name="anniversary">वर्षगांठ</string>
+    <string name="date_placeholder">दिनांक/माह/वर्ष</string>
+    <string name="other_details">अन्य विवरण</string>
+    <string name="gstin">जीएसटीआईएन</string>
+    <string name="address">पता</string>
+    <string name="notes">नोट्स</string>
+    <string name="error_fill_fields">कृपया मोबाइल और नाम दर्ज करें</string>
+    <string name="success_save">ग्राहक सफलतापूर्वक सहेजा गया</string>
+
+    <!-- Sidebar -->
+    <string name="nav_help_chat">हेल्प चैट</string>
+    <string name="nav_inventory">इन्वेंटरी प्रबंधन</string>
+    <string name="nav_add_expense">खर्च जोड़ें</string>
+    <string name="nav_receipts">रसीदें</string>
+    <string name="nav_customers">ग्राहक प्रबंधन</string>
+    <string name="nav_staff">स्टाफ प्रबंधन</string>
+    <string name="nav_shopfront">शॉपफ्रंट</string>
+    <string name="nav_refer">ऐप रेफर करें</string>
+    <string name="nav_returned_receipt">लौटाई गई रसीद</string>
+    <string name="nav_web_office">वेब बैक ऑफिस</string>
+    <string name="nav_feedback">फीडबैक</string>
+    <string name="nav_buy_printer">प्रिंटर खरीदें</string>
+    <string name="nav_other_apps">अन्य ऐप्स</string>
+    <string name="nav_connect_kitchen">किचन डिस्प्ले ऐप कनेक्ट करें</string>
+    <string name="nav_settings_title">सेटिंग्स</string>
+    <string name="nav_language">भाषा</string>
+    <string name="language_display">भाषा - %1$s</string>
+    <string name="nav_weighing_machine">वेइंग मशीन</string>
+    <string name="nav_receipt_settings">रसीद सेटिंग्स</string>
+    <string name="nav_business_settings">बिजनेस सेटिंग्स</string>
+    <string name="nav_printer_setup">प्रिंटर सेटअप</string>
+    <string name="nav_logout">लॉगआउट</string>
+
+    <!-- Sidebar Header -->
+    <string name="header_edit_business">बिजनेस संपादित करें</string>
+    <string name="header_free_plan">फ्री प्लान</string>
+    <string name="header_upgrade_premium">प्रीमियम प्लान में अपग्रेड करें</string>
+    <string name="header_owner_suffix">(मालिक)</string>
+    <string name="header_edit_profile">प्रोफ़ाइल संपादित करें</string>
+    <string name="header_switch_business">बिजनेस बदलें</string>
+    <string name="header_create_business">बिजनेस बनाएं</string>
+    <string name="header_management">प्रबंधन</string>
+
+    <!-- Inventory -->
+    <string name="inventory_title">इन्वेंटरी प्रबंधन</string>
+    <string name="search_hint">नाम, कीमत या टैग खोजें...</string>
+    <string name="tab_items">आइटम्स</string>
+    <string name="tab_category">श्रेणी</string>
+    <string name="tab_modifiers">संशोधक</string>
+    <string name="tab_ingredient">सामग्री</string>
+    <string name="chip_all">सभी</string>
+    <string name="chip_low_stock">कम स्टॉक</string>
+    <string name="chip_expired">समय सीमा समाप्त</string>
+    <string name="no_items_found">कोई आइटम नहीं मिला</string>
+    <string name="adjust_search_filter">अपनी खोज या फ़िल्टर को समायोजित करने का प्रयास करें</string>
+    <string name="out_of_stock">स्टॉक में नहीं है</string>
+    <string name="left_in_stock">स्टॉक में %1$d बचे हैं</string>
+    <string name="expired_on">%1$s को समाप्त हो गया</string>
+    <string name="items_count">%1$d आइटम</string>
+    <string name="available">उपलब्ध</string>
+    <string name="unit_kg_left">%1$d किग्रा बचा है</string>
+
+    <!-- Customer Management -->
+    <string name="customers_title">आपके ग्राहक</string>
+    <string name="tab_all_customers">सभी ग्राहक</string>
+    <string name="tab_due_customers">देय ग्राहक</string>
+    <string name="no_customers_found">कोई ग्राहक नहीं मिला</string>
+    <string name="search_coming_soon">खोज जल्द आ रही है!</string>
+    <string name="unknown">अज्ञात</string>
+    <string name="orders_suffix">%1$d ऑर्डर</string>
+    <string name="just_now">अभी-अभी</string>
+
+    <!-- Dummy Items -->
+    <string name="item_fat_burner">एए पैरानॉर्मिक फैट बर्नर</string>
+    <string name="item_whey_protein">एब्सोल्यूट न्यूट्रिशन व्हे प्रोटीन 1 किग्रा</string>
+    <string name="item_oats">अल्पिनो ओट्स 1 किग्रा</string>
+    <string name="item_androbol">एंड्रोबोल एक्सट्रीम</string>
+    <string name="item_biozyme">मसलब्लेज़ बायोज़ाइम</string>
+    <string name="cat_supplements">सप्लीमेंट्स</string>
+    <string name="cat_oats_grains">ओट्स और अनाज</string>
+
+    <!-- More Grid Placeholder Data -->
+    <string name="dummy_zero">0</string>
+    <string name="dummy_all_customers_count">327</string>
+    <string name="dummy_items_count">45</string>
+    <string name="dummy_low_stock_count">1</string>
+    <string name="dummy_currency_zero">₹0.00</string>
+</resources>

@@ -1,0 +1,178 @@
+<resources>
+    <string name="app_name">బిల్జ్</string>
+    <string name="action_settings">సెట్టింగ్‌లు</string>
+    <string name="reports_title">నివేదికలు</string>
+    <string name="reports_date_today">ఈరోజు : 29 ఏప్రిల్</string>
+    <string name="reports_empty_message">ఎంచుకున్న తేదీకి నివేదికలు లేవు</string>
+    <string name="reports_share">నివేదికలను పంచుకోండి</string>
+    <string name="reports_messages">నోటిఫికేషన్లు</string>
+    <string name="reports_back">వెనుకకు</string>
+    <string name="reports_calendar">తేదీని ఎంచుకోండి</string>
+    <string name="reports_tab_reports">నివేదికలు</string>
+    <string name="reports_tab_today">ఈరోజు</string>
+    <string name="reports_tab_counter">కౌంటర్</string>
+    <string name="reports_tab_items">ఐటమ్స్</string>
+    <string name="reports_tab_more">మరిన్ని</string>
+    <string name="reports_content_placeholder">నివేదికల కంటెంట్ ప్లేస్‌హోల్డర్</string>
+    <string name="next">తరువాతి</string>
+    <string name="previous">మునుపటి</string>
+
+    <!-- More Screen -->
+    <string name="more_premium_title">15 రోజుల ఉచిత ప్రీమియం ప్రయత్నించండి</string>
+    <string name="more_premium_desc">చెల్లింపు వివరాలు అవసరం లేదు. ట్రయల్ తర్వాత మీరు ఉచిత ప్లాన్‌కు మారతారు - ఆటోమేటిక్ చెల్లింపులు లేవు!</string>
+    <string name="more_see_benefits">ప్రయోజనాలను చూడండి</string>
+    <string name="more_try_premium">ఉచిత ప్రీమియం పొందండి</string>
+    <string name="more_attendance">హాజరు</string>
+    <string name="more_attendance_desc">హాజరు నిర్వహణ</string>
+    <string name="more_manage_payroll">పేరోల్ నిర్వహణ</string>
+    <string name="more_payments">చెల్లింపులు</string>
+    <string name="more_shopfront">షాప్‌ఫ్రంట్</string>
+    <string name="more_all_customers">అందరు కస్టమర్లు</string>
+    <string name="more_due_customers">బాకీ ఉన్న కస్టమర్లు</string>
+    <string name="more_expense_income">ఖర్చు - ఆదాయం (ఈ వారం)</string>
+    <string name="more_low_stocks">తక్కువ స్టాక్</string>
+    <string name="more_staff_partners">సిబ్బంది మరియు భాగస్వాములు</string>
+    <string name="more_sms_available">SMS అందుబాటులో ఉంది</string>
+    <string name="more_items_subitems">ఐటమ్స్ మరియు సబ్-ఐటమ్స్</string>
+    <string name="more_stock_cost">స్టాక్ విలువ కొనుగోలు ధర</string>
+    <string name="more_stock_selling">స్టాక్ విలువ అమ్మకపు ధర</string>
+    <string name="more_new">కొత్తది</string>
+
+    <!-- Cash Flow -->
+    <string name="cash_flow_title">నగదు ప్రవాహం</string>
+    <string name="net_cash_flow">నికర నగదు ప్రవాహం</string>
+    <string name="total_income_expense_hint">(మొత్తం ఆదాయం - మొత్తం ఖర్చు)</string>
+    <string name="income">ఆదాయం</string>
+    <string name="expense">ఖర్చు</string>
+    <string name="no_entries_message">దీనికి ఖర్చు/ఆదాయ నమోదులు లేవు</string>
+    <string name="click_to_add_message">జోడించడానికి + బటన్‌పై క్లిక్ చేయండి</string>
+
+    <!-- Categories -->
+    <string name="cat_tax">పన్ను</string>
+    <string name="cat_fuel">ఇంధనం</string>
+    <string name="cat_food">ఆహారం</string>
+    <string name="cat_bill">బిల్లు</string>
+    <string name="cat_transport">రవాణా</string>
+    <string name="cat_insurance">భీమా</string>
+    <string name="cat_salary">జీతం</string>
+    <string name="cat_rent">అద్దె</string>
+    <string name="cat_repairs">మరమ్మతులు</string>
+    <string name="cat_commission">కమిషన్</string>
+    <string name="cat_advertising">ప్రకటనలు</string>
+    <string name="cat_fee">ఫీజు</string>
+    <string name="cat_interest">వడ్డీ</string>
+    <string name="cat_loan">రుణం</string>
+    <string name="cat_supplies">సరఫరాలు</string>
+    <string name="cat_transfer">బదిలీ</string>
+    <string name="cat_contract">ఒప్పందం</string>
+    <string name="cat_miscellaneous">ఇతరములు</string>
+    <string name="cat_custom">కస్టమ్</string>
+    <string name="cat_profit">లాభం</string>
+    <string name="cat_awards">అవార్డులు</string>
+    <string name="cat_rental">అద్దె</string>
+    <string name="cat_sale">అమ్మకం</string>
+    <string name="cat_refund">రీఫండ్</string>
+    <string name="cat_lottery">లాటరీ</string>
+    <string name="cat_dividend">డివిడెండ్</string>
+    <string name="cat_investment">పెట్టుబడి</string>
+
+    <!-- Add Customer -->
+    <string name="add_customer_title">కస్టమర్‌ను జోడించండి</string>
+    <string name="save">సేవ్</string>
+    <string name="customer_details">కస్టమర్ వివరాలు</string>
+    <string name="mobile_number">మొబైల్ నంబర్</string>
+    <string name="full_name">పూర్తి పేరు</string>
+    <string name="email_address">ఈమెయిల్ చిరునామా</string>
+    <string name="general_details">సాధారణ వివరాలు</string>
+    <string name="gender">లింగం</string>
+    <string name="male">పురుషుడు</string>
+    <string name="female">స్త్రీ</string>
+    <string name="dob">పుట్టిన తేదీ</string>
+    <string name="anniversary">వార్షికోత్సవం</string>
+    <string name="date_placeholder">తేదీ/నెల/సంవత్సరం</string>
+    <string name="other_details">ఇతర వివరాలు</string>
+    <string name="gstin">GSTIN</string>
+    <string name="address">చిరునామా</string>
+    <string name="notes">నోట్స్</string>
+    <string name="error_fill_fields">దయచేసి మొబైల్ మరియు పేరును నమోదు చేయండి</string>
+    <string name="success_save">కస్టమర్ విజయవంతంగా సేవ్ చేయబడ్డారు</string>
+
+    <!-- Sidebar -->
+    <string name="nav_help_chat">సహాయం చాట్</string>
+    <string name="nav_inventory">ఇన్వెంటరీ నిర్వహణ</string>
+    <string name="nav_add_expense">ఖర్చు జోడించండి</string>
+    <string name="nav_receipts">రశీదులు</string>
+    <string name="nav_customers">కస్టమర్ నిర్వహణ</string>
+    <string name="nav_staff">సిబ్బంది నిర్వహణ</string>
+    <string name="nav_shopfront">షాప్‌ఫ్రంట్</string>
+    <string name="nav_refer">యాప్‌ను రిఫర్ చేయండి</string>
+    <string name="nav_returned_receipt">తిరిగి వచ్చిన రశీదు</string>
+    <string name="nav_web_office">వెబ్ బ్యాక్ ఆఫీస్</string>
+    <string name="nav_feedback">ఫీడ్‌బ్యాక్</string>
+    <string name="nav_buy_printer">ప్రింటర్‌ను కొనండి</string>
+    <string name="nav_other_apps">ఇతర యాప్స్</string>
+    <string name="nav_connect_kitchen">కిచెన్ డిస్‌ప్లే యాప్‌ను కనెక్ట్ చేయండి</string>
+    <string name="nav_settings_title">సెట్టింగ్‌లు</string>
+    <string name="nav_language">భాష</string>
+    <string name="language_display">భాష - %1$s</string>
+    <string name="nav_weighing_machine">బరువు యంత్రం</string>
+    <string name="nav_receipt_settings">రశీదు సెట్టింగ్‌లు</string>
+    <string name="nav_business_settings">వ్యాపార సెట్టింగ్‌లు</string>
+    <string name="nav_printer_setup">ప్రింటర్ సెటప్</string>
+    <string name="nav_logout">లాగ్అవుట్</string>
+
+    <!-- Sidebar Header -->
+    <string name="header_edit_business">వ్యాపారాన్ని సవరించండి</string>
+    <string name="header_free_plan">ఉచిత ప్లాన్</string>
+    <string name="header_upgrade_premium">ప్రీమియం ప్లాన్‌కు అప్‌గ్రేడ్ చేయండి</string>
+    <string name="header_owner_suffix">(యజమాని)</string>
+    <string name="header_edit_profile">ప్రొఫైల్‌ను సవరించండి</string>
+    <string name="header_switch_business">వ్యాపారాన్ని మార్చండి</string>
+    <string name="header_create_business">వ్యాపారాన్ని సృష్టించండి</string>
+    <string name="header_management">నిర్వహణ</string>
+
+    <!-- Inventory -->
+    <string name="inventory_title">ఇన్వెంటరీ నిర్వహణ</string>
+    <string name="search_hint">పేరు, ధర లేదా ట్యాగ్‌ల కోసం వెతకండి...</string>
+    <string name="tab_items">ఐటమ్స్</string>
+    <string name="tab_category">కేటగిరీ</string>
+    <string name="tab_modifiers">మోడిఫైయర్స్</string>
+    <string name="tab_ingredient">కావలసిన పదార్థం</string>
+    <string name="chip_all">అన్నీ</string>
+    <string name="chip_low_stock">తక్కువ స్టాక్</string>
+    <string name="chip_expired">గడువు ముగిసింది</string>
+    <string name="no_items_found">ఐటమ్స్ కనుగొనబడలేదు</string>
+    <string name="adjust_search_filter">మీ సెర్చ్ లేదా ఫిల్టర్‌లను సర్దుబాటు చేయడానికి ప్రయత్నించండి</string>
+    <string name="out_of_stock">స్టాక్ లేదు</string>
+    <string name="left_in_stock">%1$d స్టాక్‌లో ఉన్నాయి</string>
+    <string name="expired_on">%1$s న గడువు ముగిసింది</string>
+    <string name="items_count">%1$d ఐటమ్స్</string>
+    <string name="available">అందుబాటులో ఉంది</string>
+    <string name="unit_kg_left">%1$d కిలోలు మిగిలి ఉన్నాయి</string>
+
+    <!-- Customer Management -->
+    <string name="customers_title">మీ కస్టమర్లు</string>
+    <string name="tab_all_customers">అందరు కస్టమర్లు</string>
+    <string name="tab_due_customers">బాకీ ఉన్న కస్టమర్లు</string>
+    <string name="no_customers_found">కస్టమర్లు కనుగొనబడలేదు</string>
+    <string name="search_coming_soon">సెర్చ్ త్వరలో రానుంది!</string>
+    <string name="unknown">తెలియదు</string>
+    <string name="orders_suffix">%1$d ఆర్డర్లు</string>
+    <string name="just_now">ఇప్పుడే</string>
+
+    <!-- Dummy Items -->
+    <string name="item_fat_burner">AA పారానార్మిక్ ఫ్యాట్ బర్నర్స్</string>
+    <string name="item_whey_protein">అబ్సొల్యూట్ న్యూట్రిషన్ వే ప్రోటీన్ 1 కిలో</string>
+    <string name="item_oats">అల్పినో ఓట్స్ 1 కిలో</string>
+    <string name="item_androbol">ఆండ్రోబోల్ ఎక్స్‌ట్రీమ్</string>
+    <string name="item_biozyme">మజిల్ బ్లేజ్ బయోైజమ్</string>
+    <string name="cat_supplements">సప్లిమెంట్స్</string>
+    <string name="cat_oats_grains">ఓట్స్ మరియు ధాన్యాలు</string>
+
+    <!-- More Grid Placeholder Data -->
+    <string name="dummy_zero">0</string>
+    <string name="dummy_all_customers_count">327</string>
+    <string name="dummy_items_count">45</string>
+    <string name="dummy_low_stock_count">1</string>
+    <string name="dummy_currency_zero">₹0.00</string>
+</resources>

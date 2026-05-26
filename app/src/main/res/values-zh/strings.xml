@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Billz</string>
+    <string name="action_settings">设置</string>
+    <string name="reports_title">报告</string>
+    <string name="reports_date_today">今天 : 4月29日</string>
+    <string name="reports_empty_message">所选日期无报告</string>
+    <string name="reports_tab_reports">报告</string>
+    <string name="reports_tab_today">今天</string>
+    <string name="reports_tab_more">更多</string>
+</resources>
