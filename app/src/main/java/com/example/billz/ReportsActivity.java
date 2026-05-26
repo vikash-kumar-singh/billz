@@ -352,7 +352,7 @@ public class ReportsActivity extends AppCompatActivity {
                 BusinessAdapter adapter = new BusinessAdapter(businesses, business -> {
                     dialog.dismiss();
                     Intent intent = new Intent(this, AddBusinessActivity.class);
-                    intent.putExtra("business_name", business.getName());
+                    intent.putExtra("business_id", business.getId());
                     startActivity(intent);
                 });
                 recyclerView.setAdapter(adapter);

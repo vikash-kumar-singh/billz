@@ -6,7 +6,9 @@ import androidx.room.PrimaryKey;
 
 @Entity(tableName = "businesses")
 public class Business {
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
+    private int id;
+    
     @NonNull
     private String name;
     private String phoneNumber;
@@ -19,6 +21,9 @@ public class Business {
         this.role = role;
         this.isSelected = isSelected;
     }
+
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
 
     @NonNull
     public String getName() { return name; }

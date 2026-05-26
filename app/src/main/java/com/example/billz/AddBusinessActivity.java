@@ -28,7 +28,8 @@ public class AddBusinessActivity extends AppCompatActivity {
     private ImageView checkName, checkType, checkCountry, checkTimeZone, checkCurrency, checkNumberSystem, checkDecimalPlaces, checkSeparatorFormat;
     private CheckBox checkAgree;
     private boolean isUpdate = false;
-    private ReceiptSettings currentSettings;
+    private int businessId = -1;
+    private Business currentBusiness;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,9 +73,9 @@ public class AddBusinessActivity extends AppCompatActivity {
 
         checkAgree = findViewById(R.id.checkAgree);
 
-        if (getIntent().hasExtra("business_name")) {
+        if (getIntent().hasExtra("business_id")) {
             isUpdate = true;
-            String name = getIntent().getStringExtra("business_name");
+            businessId = getIntent().getIntExtra("business_id", -1);
             
             toolbar.setTitle("UPDATE");
             btnSave.setText("Update");
@@ -82,20 +83,14 @@ public class AddBusinessActivity extends AppCompatActivity {
             layoutAgree.setVisibility(View.GONE);
             layoutLegal.setVisibility(View.GONE);
 
-            // Fetch current settings from DB
             Executors.newSingleThreadExecutor().execute(() -> {
-                currentSettings = AppDatabase.getInstance(this).receiptSettingsDao().getSettings();
+                currentBusiness = AppDatabase.getInstance(this).businessDao().getById(businessId);
                 runOnUiThread(() -> {
-                    if (currentSettings != null) {
-                        editBusinessName.setText(currentSettings.getBusinessName());
-                        editMobile.setText(currentSettings.getPhoneNumber());
-                    } else {
-                        // Fallback to dummy data if DB is empty
-                        editBusinessName.setText(name);
-                        editMobile.setText("7903598844");
+                    if (currentBusiness != null) {
+                        editBusinessName.setText(currentBusiness.getName());
+                        editMobile.setText(currentBusiness.getPhoneNumber());
                     }
                     
-                    // Set all checkmarks to blue for Update mode
                     int blue = Color.parseColor("#3F51B5");
                     checkName.setColorFilter(blue);
                     checkType.setColorFilter(blue);
@@ -119,29 +114,27 @@ public class AddBusinessActivity extends AppCompatActivity {
     }
 
     private void deleteBusiness() {
-        String name = editBusinessName.getText().toString().trim();
-        if (name.isEmpty()) return;
+        if (businessId == -1) return;
 
         Executors.newSingleThreadExecutor().execute(() -> {
             AppDatabase db = AppDatabase.getInstance(this);
-            db.businessDao().deleteByName(name);
+            if (currentBusiness != null) {
+                db.businessDao().deleteByName(currentBusiness.getName());
+            }
             
-            // Check if any businesses are left
             List<Business> remaining = db.businessDao().getAllBusinesses();
             if (!remaining.isEmpty()) {
-                // Switch to the first remaining business
                 Business switchTarget = remaining.get(0);
                 db.businessDao().deselectAll();
                 db.businessDao().selectBusiness(switchTarget.getName());
                 
-                // Update active ReceiptSettings to reflect the switch
                 ReceiptSettings settings = db.receiptSettingsDao().getSettings();
                 if (settings == null) settings = new ReceiptSettings();
                 settings.setBusinessName(switchTarget.getName());
                 settings.setPhoneNumber(switchTarget.getPhoneNumber());
                 db.receiptSettingsDao().insert(settings);
             }
-
+            
             runOnUiThread(() -> {
                 Toast.makeText(this, "Business Deleted", Toast.LENGTH_SHORT).show();
                 finish();
@@ -164,22 +157,29 @@ public class AddBusinessActivity extends AppCompatActivity {
         }
 
         Executors.newSingleThreadExecutor().execute(() -> {
-            // Update/Insert in Business table
             AppDatabase db = AppDatabase.getInstance(this);
-            if (!isUpdate) {
+            
+            Business businessToSave;
+            if (isUpdate && currentBusiness != null) {
+                businessToSave = currentBusiness;
+                businessToSave.setName(name);
+                businessToSave.setPhoneNumber(mobile);
+            } else {
                 db.businessDao().deselectAll();
+                businessToSave = new Business(name, mobile, "OWNER", true);
             }
-            Business newBusiness = new Business(name, mobile, "OWNER", true);
-            db.businessDao().insert(newBusiness);
+            
+            db.businessDao().insert(businessToSave);
 
-            // Update active ReceiptSettings
-            ReceiptSettings settings = db.receiptSettingsDao().getSettings();
-            if (settings == null) {
-                settings = new ReceiptSettings();
+            if (businessToSave.isSelected()) {
+                ReceiptSettings settings = db.receiptSettingsDao().getSettings();
+                if (settings == null) {
+                    settings = new ReceiptSettings();
+                }
+                settings.setBusinessName(name);
+                settings.setPhoneNumber(mobile);
+                db.receiptSettingsDao().insert(settings);
             }
-            settings.setBusinessName(name);
-            settings.setPhoneNumber(mobile);
-            db.receiptSettingsDao().insert(settings);
 
             runOnUiThread(() -> {
                 String msg = isUpdate ? "Business updated successfully" : "Business created successfully";

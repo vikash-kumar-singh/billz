@@ -27,4 +27,7 @@ public interface BusinessDao {
 
     @Query("DELETE FROM businesses WHERE name = :name")
     void deleteByName(String name);
+
+    @Query("SELECT * FROM businesses WHERE id = :id")
+    Business getById(int id);
 }

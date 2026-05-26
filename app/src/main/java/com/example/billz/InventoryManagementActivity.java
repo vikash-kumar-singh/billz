@@ -1,6 +1,7 @@
 package com.example.billz;
 
 import android.os.Bundle;
+import android.view.View;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -28,7 +29,7 @@ import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 
 public class InventoryManagementActivity extends AppCompatActivity {
@@ -53,9 +54,7 @@ public class InventoryManagementActivity extends AppCompatActivity {
 
         MaterialToolbar toolbar = findViewById(R.id.toolbarInventory);
         setSupportActionBar(toolbar);
-        if (toolbar != null) {
-            toolbar.setNavigationOnClickListener(v -> finish());
-        }
+        toolbar.setNavigationOnClickListener(v -> finish());
 
         View filterScrollView = findViewById(R.id.filterScrollView);
         View imageFilter = findViewById(R.id.imageFilter);
@@ -83,14 +82,14 @@ public class InventoryManagementActivity extends AppCompatActivity {
         });
 
         imageClearSearch.setOnClickListener(v -> {
-            if (!editSearch.getText().toString().isEmpty()) {
+            if (editSearch.getText().length() > 0) {
                 editSearch.setText("");
             } else {
                 // If already empty, close the search bar
                 searchBarContainer.setVisibility(View.GONE);
                 isSearchVisible = false;
                 // Restore original title
-                if (toolbar != null) toolbar.setTitle(R.string.inventory_title);
+                toolbar.setTitle(R.string.inventory_title);
                 hideKeyboard();
             }
         });
@@ -113,18 +112,19 @@ public class InventoryManagementActivity extends AppCompatActivity {
 
         setupFilterChips();
 
-        if (toolbar != null) {
-            ViewCompat.setOnApplyWindowInsetsListener(toolbar.getRootView(), (v, insets) -> {
-                Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-                v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-                return insets;
-            });
-        }
+        View root = findViewById(R.id.toolbarInventory).getRootView();
+        ViewCompat.setOnApplyWindowInsetsListener(root, (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
 
         recyclerView = findViewById(R.id.recyclerInventory);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        findViewById(R.id.fabAdd).setOnClickListener(v -> startActivity(new Intent(InventoryManagementActivity.this, AddCustomerActivity.class)));
+        findViewById(R.id.fabAdd).setOnClickListener(v -> {
+            startActivity(new Intent(InventoryManagementActivity.this, AddCustomerActivity.class));
+        });
 
         itemsList = new ArrayList<>();
         categoriesList = new ArrayList<>();
@@ -137,34 +137,32 @@ public class InventoryManagementActivity extends AppCompatActivity {
         adapter = new InventoryAdapter(currentDisplayList, this);
         recyclerView.setAdapter(adapter);
 
-        if (tabLayout != null) {
-            tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-                @Override
-                public void onTabSelected(TabLayout.Tab tab) {
-                    int position = tab.getPosition();
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                int position = tab.getPosition();
+                
+                if (position == 0) {
+                    filterScrollView.setVisibility(View.VISIBLE);
+                    imageFilter.setVisibility(View.VISIBLE);
+                    updateDisplayList(itemsList);
+                } else {
+                    filterScrollView.setVisibility(View.GONE);
+                    imageFilter.setVisibility(View.GONE);
                     
-                    if (position == 0) {
-                        if (filterScrollView != null) filterScrollView.setVisibility(View.VISIBLE);
-                        if (imageFilter != null) imageFilter.setVisibility(View.VISIBLE);
-                        updateDisplayList(itemsList);
-                    } else {
-                        if (filterScrollView != null) filterScrollView.setVisibility(View.GONE);
-                        if (imageFilter != null) imageFilter.setVisibility(View.GONE);
-                        
-                        if (position == 1) updateDisplayList(categoriesList);
-                        else if (position == 2) updateDisplayList(modifiersList);
-                        else if (position == 3) updateDisplayList(ingredientsList);
-                    }
-                    checkEmptyState();
+                    if (position == 1) updateDisplayList(categoriesList);
+                    else if (position == 2) updateDisplayList(modifiersList);
+                    else if (position == 3) updateDisplayList(ingredientsList);
                 }
+                checkEmptyState();
+            }
 
-                @Override
-                public void onTabUnselected(TabLayout.Tab tab) {}
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {}
 
-                @Override
-                public void onTabReselected(TabLayout.Tab tab) {}
-            });
-        }
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {}
+        });
     }
 
     private void setupFilterChips() {
@@ -177,18 +175,12 @@ public class InventoryManagementActivity extends AppCompatActivity {
             int unselectedBg = Color.parseColor("#E2E8F0");
             int unselectedText = Color.parseColor("#475569");
             
-            if (chipAll != null) {
-                chipAll.setBackgroundTintList(ColorStateList.valueOf(unselectedBg));
-                chipAll.setTextColor(unselectedText);
-            }
-            if (chipLowStock != null) {
-                chipLowStock.setBackgroundTintList(ColorStateList.valueOf(unselectedBg));
-                chipLowStock.setTextColor(unselectedText);
-            }
-            if (chipExpired != null) {
-                chipExpired.setBackgroundTintList(ColorStateList.valueOf(unselectedBg));
-                chipExpired.setTextColor(unselectedText);
-            }
+            chipAll.setBackgroundTintList(ColorStateList.valueOf(unselectedBg));
+            chipAll.setTextColor(unselectedText);
+            chipLowStock.setBackgroundTintList(ColorStateList.valueOf(unselectedBg));
+            chipLowStock.setTextColor(unselectedText);
+            chipExpired.setBackgroundTintList(ColorStateList.valueOf(unselectedBg));
+            chipExpired.setTextColor(unselectedText);
 
             // Highlight selected chip
             TextView selected = (TextView) v;
@@ -205,19 +197,21 @@ public class InventoryManagementActivity extends AppCompatActivity {
             }
         };
 
-        if (chipAll != null) chipAll.setOnClickListener(chipListener);
-        if (chipLowStock != null) chipLowStock.setOnClickListener(chipListener);
-        if (chipExpired != null) chipExpired.setOnClickListener(chipListener);
+        chipAll.setOnClickListener(chipListener);
+        chipLowStock.setOnClickListener(chipListener);
+        chipExpired.setOnClickListener(chipListener);
     }
 
     private void applyFilter(String type) {
         List<InventoryItem> filtered = new ArrayList<>();
         for (InventoryItem item : itemsList) {
             if (type.equals("Low Stock")) {
+                // Show ONLY if quantity > 0 and < 5 (Not out of stock)
                 if (!item.isOutOfStock() && item.getStockQuantity() > 0 && item.getStockQuantity() < 5) {
                     filtered.add(item);
                 }
             } else if (type.equals("Expired")) {
+                // Show if status contains "expired" OR item is out of stock
                 if (item.getStockStatus().toLowerCase().contains("expired") || item.isOutOfStock()) {
                     filtered.add(item);
                 }
@@ -229,8 +223,8 @@ public class InventoryManagementActivity extends AppCompatActivity {
     private void checkEmptyState() {
         if (adapter != null) {
             boolean isEmpty = adapter.getItemCount() == 0;
-            if (emptyStateView != null) emptyStateView.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
-            if (recyclerView != null) recyclerView.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
+            emptyStateView.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
+            recyclerView.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
         }
     }
 
@@ -253,25 +247,58 @@ public class InventoryManagementActivity extends AppCompatActivity {
     }
 
     private void populateDummyData() {
-        List<String> tags1 = new ArrayList<>();
-        Collections.addAll(tags1, "Paranormic Fat", "Carbamide Forte", "Carbamide Forte", "Carbamide", "Black Spider");
-        itemsList.add(new InventoryItem(getString(R.string.item_fat_burner), "₹2,899", getString(R.string.out_of_stock), true, 0, tags1));
+        // Items
+        itemsList.add(new InventoryItem(
+                getString(R.string.item_fat_burner),
+                "₹2,899",
+                getString(R.string.out_of_stock),
+                true,
+                0,
+                Arrays.asList("Paranormic Fat", "Carbamide Forte", "Carbamide Forte", "Carbamide", "Black Spider")
+        ));
+        itemsList.add(new InventoryItem(
+                getString(R.string.item_whey_protein),
+                "₹2,109",
+                getString(R.string.out_of_stock),
+                true,
+                0,
+                Arrays.asList("Whey Protein", "Jungli Pre", "Creatine 250gm")
+        ));
+        itemsList.add(new InventoryItem(
+                getString(R.string.item_oats),
+                "₹499",
+                getString(R.string.left_in_stock, 3),
+                false,
+                3,
+                Arrays.asList("Oats 1kg", "Oats 2.5kg", "Peanut Butter", "Protein Bar", "High Protein", "Muesli 1kg")
+        ));
+        itemsList.add(new InventoryItem(
+                getString(R.string.item_androbol),
+                "₹2,999",
+                getString(R.string.left_in_stock, 6),
+                false,
+                6,
+                Arrays.asList("< 2,999 >")
+        ));
+        itemsList.add(new InventoryItem(
+                getString(R.string.item_biozyme),
+                "₹3,499",
+                getString(R.string.expired_on, "12/2023"),
+                false,
+                10,
+                Arrays.asList("Whey", "Premium")
+        ));
 
-        List<String> tags2 = new ArrayList<>();
-        Collections.addAll(tags2, "Whey Protein", "Jungli Pre", "Creatine 250gm");
-        itemsList.add(new InventoryItem(getString(R.string.item_whey_protein), "₹2,109", getString(R.string.out_of_stock), true, 0, tags2));
+        // Categories
+        categoriesList.add(new InventoryItem(getString(R.string.cat_supplements), "", getString(R.string.items_count, 12), false, 0, Arrays.asList("Health", "Wellness")));
+        categoriesList.add(new InventoryItem(getString(R.string.cat_oats_grains), "", getString(R.string.items_count, 5), false, 0, Arrays.asList("Food", "Breakfast")));
 
-        List<String> tags3 = new ArrayList<>();
-        Collections.addAll(tags3, "Oats 1kg", "Oats 2.5kg", "Peanut Butter", "Protein Bar", "High Protein", "Muesli 1kg");
-        itemsList.add(new InventoryItem(getString(R.string.item_oats), "₹499", getString(R.string.left_in_stock, 3), false, 3, tags3));
+        // Modifiers
+        modifiersList.add(new InventoryItem("Sugar Free", "₹0", getString(R.string.available), false, 0, Arrays.asList("Health Option")));
+        modifiersList.add(new InventoryItem("Extra Scoop", "₹50", getString(R.string.available), false, 0, Arrays.asList("Add-on")));
 
-        itemsList.add(new InventoryItem(getString(R.string.item_androbol), "₹2,999", getString(R.string.left_in_stock, 6), false, 6, Collections.singletonList("< 2,999 >")));
-        itemsList.add(new InventoryItem(getString(R.string.item_biozyme), "₹3,499", getString(R.string.expired_on, "12/2023"), false, 10, Collections.singletonList("Premium")));
-
-        categoriesList.add(new InventoryItem(getString(R.string.cat_supplements), "", getString(R.string.items_count, 12), false, 0, Collections.singletonList("Health")));
-        categoriesList.add(new InventoryItem(getString(R.string.cat_oats_grains), "", getString(R.string.items_count, 5), false, 0, Collections.singletonList("Breakfast")));
-
-        modifiersList.add(new InventoryItem("Sugar Free", "₹0", getString(R.string.available), false, 0, Collections.singletonList("Health Option")));
-        ingredientsList.add(new InventoryItem("Whey Isolate", "", getString(R.string.unit_kg_left, 10), false, 0, Collections.singletonList("Raw Material")));
+        // Ingredients
+        ingredientsList.add(new InventoryItem("Whey Isolate", "", getString(R.string.unit_kg_left, 10), false, 0, Arrays.asList("Raw Material")));
+        ingredientsList.add(new InventoryItem("Cocoa Powder", "", getString(R.string.unit_kg_left, 2), false, 0, Arrays.asList("Flavoring")));
     }
 }
