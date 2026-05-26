@@ -21,6 +21,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import java.util.Calendar;
+import java.util.Locale;
 import java.util.concurrent.Executors;
 
 public class AddStaffActivity extends AppCompatActivity {
@@ -55,11 +56,13 @@ public class AddStaffActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_staff);
 
         View toolbar = findViewById(R.id.toolbarStaff);
-        ViewCompat.setOnApplyWindowInsetsListener(toolbar, (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(0, systemBars.top, 0, 0);
-            return insets;
-        });
+        if (toolbar != null) {
+            ViewCompat.setOnApplyWindowInsetsListener(toolbar, (v, insets) -> {
+                Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+                v.setPadding(0, systemBars.top, 0, 0);
+                return insets;
+            });
+        }
 
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
         findViewById(R.id.btnSave).setOnClickListener(v -> saveStaff());
@@ -248,7 +251,8 @@ public class AddStaffActivity extends AppCompatActivity {
     private void showDatePickerDialog() {
         final Calendar c = Calendar.getInstance();
         new DatePickerDialog(this, (view, year, month, day) -> {
-            editJoiningDate.setText(day + "/" + (month + 1) + "/" + year);
+            String date = String.format(Locale.getDefault(), "%02d/%02d/%d", day, month + 1, year);
+            editJoiningDate.setText(date);
         }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
     }
 

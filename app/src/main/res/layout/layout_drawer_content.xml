@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white">
@@ -31,6 +32,7 @@
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
+                    android:contentDescription="@string/nav_help_chat"
                     android:src="@android:drawable/stat_notify_chat"
                     app:tint="@color/reports_tab_selected" />
                 <TextView
@@ -58,6 +60,7 @@
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
+                    android:contentDescription="@string/nav_inventory"
                     android:src="@drawable/ic_nav_items"
                     app:tint="@color/reports_tab_selected" />
                 <TextView
@@ -75,9 +78,10 @@
                     android:backgroundTint="@color/reports_tab_selected"
                     android:paddingHorizontal="8dp"
                     android:paddingVertical="2dp"
-                    android:text="327"
+                    android:text="@string/dummy_all_customers_count"
                     android:textColor="@color/white"
-                    android:textSize="10sp" />
+                    android:textSize="10sp"
+                    tools:ignore="SmallSp" />
             </LinearLayout>
 
             <!-- Add Expense -->
@@ -95,6 +99,7 @@
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
+                    android:contentDescription="@string/nav_add_expense"
                     android:src="@android:drawable/ic_menu_add"
                     app:tint="@color/reports_tab_selected" />
                 <TextView
@@ -118,6 +123,7 @@
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
+                    android:contentDescription="@string/nav_receipts"
                     android:src="@android:drawable/ic_menu_agenda"
                     app:tint="@color/reports_tab_selected" />
                 <TextView
@@ -145,6 +151,7 @@
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
+                    android:contentDescription="@string/nav_customers"
                     android:src="@android:drawable/ic_menu_myplaces"
                     app:tint="@color/reports_tab_selected" />
                 <TextView
@@ -164,7 +171,8 @@
                     android:paddingVertical="2dp"
                     android:text="470"
                     android:textColor="@color/white"
-                    android:textSize="10sp" />
+                    android:textSize="10sp"
+                    tools:ignore="SmallSp" />
             </LinearLayout>
 
             <!-- Staff Management -->
@@ -182,6 +190,7 @@
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
+                    android:contentDescription="@string/nav_staff"
                     android:src="@android:drawable/ic_menu_gallery"
                     app:tint="@color/reports_tab_selected" />
                 <TextView
@@ -199,9 +208,10 @@
                     android:backgroundTint="@color/reports_tab_selected"
                     android:paddingHorizontal="8dp"
                     android:paddingVertical="2dp"
-                    android:text="0"
+                    android:text="@string/dummy_zero"
                     android:textColor="@color/white"
-                    android:textSize="10sp" />
+                    android:textSize="10sp"
+                    tools:ignore="SmallSp" />
             </LinearLayout>
 
             <!-- ShopFront -->
@@ -215,6 +225,7 @@
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
+                    android:contentDescription="@string/nav_shopfront"
                     android:src="@android:drawable/ic_menu_view"
                     app:tint="@color/reports_tab_selected" />
                 <TextView
@@ -232,9 +243,10 @@
                     android:backgroundTint="@color/reports_tab_selected"
                     android:paddingHorizontal="8dp"
                     android:paddingVertical="2dp"
-                    android:text="0"
+                    android:text="@string/dummy_zero"
                     android:textColor="@color/white"
-                    android:textSize="10sp" />
+                    android:textSize="10sp"
+                    tools:ignore="SmallSp" />
             </LinearLayout>
 
             <!-- Refer App -->
@@ -248,6 +260,7 @@
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
+                    android:contentDescription="@string/nav_refer"
                     android:src="@android:drawable/ic_menu_share"
                     app:tint="@color/reports_tab_selected" />
                 <TextView
@@ -271,6 +284,7 @@
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
+                    android:contentDescription="@string/nav_returned_receipt"
                     android:src="@android:drawable/ic_input_get"
                     app:tint="@color/reports_tab_selected" />
                 <TextView
@@ -294,6 +308,7 @@
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
+                    android:contentDescription="@string/nav_web_office"
                     android:src="@android:drawable/ic_menu_mapmode"
                     app:tint="@color/reports_tab_selected" />
                 <TextView
@@ -317,6 +332,7 @@
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
+                    android:contentDescription="@string/nav_feedback"
                     android:src="@android:drawable/ic_menu_directions"
                     app:tint="@color/reports_tab_selected" />
                 <TextView
@@ -340,6 +356,7 @@
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
+                    android:contentDescription="@string/nav_buy_printer"
                     android:src="@android:drawable/ic_menu_camera"
                     app:tint="@color/reports_tab_selected" />
                 <TextView
@@ -359,7 +376,8 @@
                     android:text="@string/more_new"
                     android:textColor="@color/white"
                     android:textSize="10sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    tools:ignore="SmallSp" />
             </LinearLayout>
 
             <View
@@ -373,6 +391,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingStart="16dp"
+                android:paddingEnd="16dp"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
                 android:text="@string/nav_other_apps"
@@ -390,6 +409,7 @@
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
+                    android:contentDescription="@string/nav_connect_kitchen"
                     android:src="@android:drawable/ic_menu_call"
                     app:tint="@color/reports_tab_selected" />
                 <TextView
@@ -413,6 +433,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingStart="16dp"
+                android:paddingEnd="16dp"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
                 android:text="@string/nav_settings_title"
@@ -434,6 +455,7 @@
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
+                    android:contentDescription="@string/nav_language"
                     android:src="@android:drawable/ic_menu_sort_alphabetically"
                     app:tint="@color/reports_tab_selected" />
                 <TextView
@@ -458,6 +480,7 @@
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
+                    android:contentDescription="@string/nav_weighing_machine"
                     android:src="@android:drawable/ic_menu_manage"
                     app:tint="@color/reports_tab_selected" />
                 <TextView
@@ -477,7 +500,8 @@
                     android:text="@string/more_new"
                     android:textColor="@color/white"
                     android:textSize="10sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    tools:ignore="SmallSp" />
             </LinearLayout>
 
             <!-- Receipt Settings -->
@@ -495,6 +519,7 @@
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
+                    android:contentDescription="@string/nav_receipt_settings"
                     android:src="@android:drawable/ic_menu_agenda"
                     app:tint="@color/reports_tab_selected" />
                 <TextView
@@ -522,6 +547,7 @@
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
+                    android:contentDescription="@string/nav_business_settings"
                     android:src="@android:drawable/ic_menu_preferences"
                     app:tint="@color/reports_tab_selected" />
                 <TextView
@@ -545,6 +571,7 @@
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
+                    android:contentDescription="@string/nav_printer_setup"
                     android:src="@android:drawable/ic_menu_camera"
                     app:tint="@color/reports_tab_selected" />
                 <TextView
@@ -564,7 +591,8 @@
                     android:paddingVertical="2dp"
                     android:text="3"
                     android:textColor="@color/white"
-                    android:textSize="10sp" />
+                    android:textSize="10sp"
+                    tools:ignore="SmallSp" />
             </LinearLayout>
 
             <!-- Logout -->
@@ -578,6 +606,7 @@
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
+                    android:contentDescription="@string/nav_logout"
                     android:src="@android:drawable/ic_lock_power_off"
                     app:tint="@color/reports_tab_selected" />
                 <TextView
