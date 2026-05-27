@@ -18,7 +18,7 @@ public class Staff {
     public int shiftHours;
     public String joiningDate;
     public boolean allowSelfAttendance;
-    
+
     public String role; // Partner, Manager, Helper, Custom
 
     // Receipt Management
@@ -54,6 +54,31 @@ public class Staff {
     public boolean permCustCreate;
     public boolean permCustEdit;
     public boolean permCustAdmin;
+
+    // StoreFront
+    public boolean permManageBanners;
+    public boolean permStoreSettings;
+    public boolean permPublishItems;
+    public boolean permManageOrders;
+
+    // Reports
+    public boolean permReportLowStocks;
+    public boolean permReportExpiredStocks;
+    public boolean permReportProfits;
+    public boolean permReportSales;
+    public boolean permReportPaymentModes;
+    public boolean permReportSoldBy;
+    public boolean permReportTopCustomers;
+    public boolean permReportAdmin;
+
+    // Expense
+    public boolean permAddExpense;
+    public boolean permModifyExpense;
+
+    // Business and Settings
+    public boolean permManageBusiness;
+    public boolean permManageSettings;
+    public boolean permCreateBusiness;
 
     public Staff() {} // Room needs this
 

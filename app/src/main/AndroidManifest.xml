@@ -111,6 +111,16 @@
             android:exported="false"
             android:theme="@style/Theme.Billz">
         </activity>
+        <activity
+            android:name=".StaffManagementActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Billz">
+        </activity>
+        <activity
+            android:name=".AttendanceManagementActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Billz">
+        </activity>
     </application>
 
 </manifest>

@@ -112,10 +112,10 @@ public class InventoryManagementActivity extends AppCompatActivity {
 
         setupFilterChips();
 
-        View root = findViewById(R.id.toolbarInventory).getRootView();
-        ViewCompat.setOnApplyWindowInsetsListener(root, (v, insets) -> {
+        MaterialToolbar toolbarView = findViewById(R.id.toolbarInventory);
+        ViewCompat.setOnApplyWindowInsetsListener(toolbarView, (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            v.setPadding(0, systemBars.top, 0, 0);
             return insets;
         });
 

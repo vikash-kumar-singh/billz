@@ -145,7 +145,7 @@ public class ReportsActivity extends AppCompatActivity {
 
         findViewById(R.id.nav_staff).setOnClickListener(v -> {
             drawerLayout.closeDrawer(GravityCompat.START);
-            startActivity(new Intent(ReportsActivity.this, AddStaffActivity.class));
+            startActivity(new Intent(ReportsActivity.this, StaffManagementActivity.class));
         });
 
         findViewById(R.id.nav_language).setOnClickListener(v -> {
