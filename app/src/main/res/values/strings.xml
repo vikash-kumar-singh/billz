@@ -378,9 +378,11 @@
     <string name="day_wise">Day Wise</string>
     <string name="hourly">Hourly</string>
     <string name="enter_staff_salary">Enter staff salary</string>
+    <string name="enter_staff_salary_name">Enter %1$s Salary</string>
     <string name="avg_shift_hours">Average shift hours in day</string>
     <string name="joining_date">Joining Date</string>
     <string name="allow_self_attendance">Allow self attendance</string>
+    <string name="allow_self_attendance_name">Allow %1$s to mark their own attendance ?</string>
     <string name="hint_enter_name">Enter Name</string>
     <string name="hint_enter_email">Enter Email</string>
     <string name="hint_enter_mobile">Enter Mobile</string>

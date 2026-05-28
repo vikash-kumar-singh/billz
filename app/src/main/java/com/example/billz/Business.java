@@ -14,6 +14,7 @@ public class Business {
     private String phoneNumber;
     private String role;
     private boolean isSelected;
+    private String logoPath;
 
     public Business(@NonNull String name, String phoneNumber, String role, boolean isSelected) {
         this.name = name;
@@ -34,4 +35,6 @@ public class Business {
     public void setRole(String role) { this.role = role; }
     public boolean isSelected() { return isSelected; }
     public void setSelected(boolean selected) { isSelected = selected; }
+    public String getLogoPath() { return logoPath; }
+    public void setLogoPath(String logoPath) { this.logoPath = logoPath; }
 }

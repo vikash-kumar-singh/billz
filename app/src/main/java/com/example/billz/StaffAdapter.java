@@ -19,6 +19,7 @@ public class StaffAdapter extends RecyclerView.Adapter<StaffAdapter.ViewHolder> 
         void onStaffClick(Staff staff);
         void onPermissionsClick(Staff staff);
         void onAttendanceClick(Staff staff);
+        void onPaySlipClick(Staff staff);
     }
 
     public StaffAdapter(List<Staff> staffList, OnStaffClickListener listener) {
@@ -55,6 +56,10 @@ public class StaffAdapter extends RecyclerView.Adapter<StaffAdapter.ViewHolder> 
         holder.btnAttendance.setOnClickListener(v -> {
             if (listener != null) listener.onAttendanceClick(staff);
         });
+
+        holder.btnPaySlip.setOnClickListener(v -> {
+            if (listener != null) listener.onPaySlipClick(staff);
+        });
     }
 
     @Override
@@ -64,7 +69,7 @@ public class StaffAdapter extends RecyclerView.Adapter<StaffAdapter.ViewHolder> 
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView textName, textEmail, textRoleBadge, textInitials;
-        View btnAttendance;
+        View btnAttendance, btnPaySlip;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -73,6 +78,7 @@ public class StaffAdapter extends RecyclerView.Adapter<StaffAdapter.ViewHolder> 
             textRoleBadge = itemView.findViewById(R.id.textStaffRoleBadge);
             textInitials = itemView.findViewById(R.id.textStaffInitials);
             btnAttendance = itemView.findViewById(R.id.btnAttendance);
+            btnPaySlip = itemView.findViewById(R.id.btnPaySlip);
         }
     }
 }

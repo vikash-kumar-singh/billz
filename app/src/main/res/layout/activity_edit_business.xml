@@ -73,6 +73,28 @@
             android:orientation="vertical"
             android:paddingBottom="40dp">
 
+            <!-- Logo Card -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="12dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="2dp"
+                app:strokeColor="#E2E8F0"
+                app:strokeWidth="1dp">
+
+                <ImageView
+                    android:id="@+id/imgBusinessLogo"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_nav_reports"
+                    app:tint="#3F51B5" />
+            </androidx.cardview.widget.CardView>
+
             <!-- Basic Details Card -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"

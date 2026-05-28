@@ -14,12 +14,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/imgLogo"
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardLogo"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:src="@drawable/ic_nav_reports"
-            app:tint="@color/reports_tab_selected" />
+            app:cardCornerRadius="30dp"
+            app:cardElevation="0dp"
+            app:strokeColor="#E2E8F0"
+            app:strokeWidth="0.5dp">
+
+            <ImageView
+                android:id="@+id/imgLogo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_nav_reports"
+                app:tint="@color/reports_tab_selected" />
+        </com.google.android.material.card.MaterialCardView>
 
         <TextView
             android:id="@+id/btnEditBusiness"

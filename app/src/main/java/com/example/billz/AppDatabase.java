@@ -6,7 +6,7 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-@Database(entities = {Customer.class, ReceiptSettings.class, Staff.class, Tax.class, Discount.class, PaymentMode.class, DeliveryFee.class, PackingFee.class, ServiceFee.class, OtherFee.class, UpiConfig.class, Business.class}, version = 32)
+@Database(entities = {Customer.class, ReceiptSettings.class, Staff.class, Tax.class, Discount.class, PaymentMode.class, DeliveryFee.class, PackingFee.class, ServiceFee.class, OtherFee.class, UpiConfig.class, Business.class}, version = 33)
 public abstract class AppDatabase extends RoomDatabase {
     private static AppDatabase instance;
 

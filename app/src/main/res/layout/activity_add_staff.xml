@@ -20,31 +20,30 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="64dp"
-            android:background="@color/white"
-            app:navigationIcon="@drawable/ic_reports_back"
-            app:navigationIconTint="#3F51B5"
+            android:background="#3F51B5"
+            app:navigationIcon="@android:drawable/ic_menu_close_clear_cancel"
+            app:navigationIconTint="@color/white"
             app:title="NEW STAFF"
             app:titleCentered="false"
-            app:titleTextColor="#3F51B5"
+            app:titleTextColor="@color/white"
             app:titleTextAppearance="@style/TextAppearance.MaterialComponents.Headline6">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnSave"
-                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
-                android:layout_marginEnd="16dp"
-                android:backgroundTint="#4CAF50"
-                android:minHeight="0dp"
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="8dp"
+                android:layout_marginEnd="8dp"
                 android:text="Save"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
-                android:textSize="14sp"
+                android:textSize="16sp"
                 android:textStyle="bold"
-                app:cornerRadius="4dp" />
+                app:icon="@drawable/ic_circle_check"
+                app:iconGravity="end"
+                app:iconPadding="4dp"
+                app:iconTint="@color/white" />
 
         </com.google.android.material.appbar.MaterialToolbar>
     </LinearLayout>
@@ -279,31 +278,6 @@
                             android:textSize="14sp"
                             android:textStyle="bold" />
                     </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <com.google.android.material.checkbox.MaterialCheckBox
-                            android:id="@+id/checkSelfAttendance"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            app:buttonTint="#3F51B5" app:useMaterialThemeColors="false"
-                            android:checked="true" />
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:layout_weight="1"
-                            android:text="Allow staff to mark their own attendance ?"
-                            android:textColor="@color/black"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
@@ -432,9 +406,10 @@
                     android:padding="12dp">
 
                     <TextView
+                        android:id="@+id/textSalaryLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Enter staff salary"
+                        android:text="@string/enter_staff_salary"
                         android:textColor="#64748B"
                         android:textSize="15sp" />
 
@@ -451,21 +426,24 @@
                         android:textColorHint="#94A3B8" />
 
                     <LinearLayout
+                        android:id="@+id/layoutShiftAndDate"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:orientation="horizontal">
 
                         <LinearLayout
+                            android:id="@+id/layoutShiftHours"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:orientation="vertical">
-                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Average shift hours" android:textColor="#64748B" android:textSize="11sp" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Average shift hours in day" android:textColor="#64748B" android:textSize="11sp" />
                             <EditText android:id="@+id/editShiftHours" android:layout_width="match_parent" android:layout_height="48dp" android:layout_marginTop="8dp" android:background="#F1F5F9" android:hint="0" android:inputType="number" android:paddingHorizontal="8dp" android:textColor="@color/black" android:textColorHint="#94A3B8" />
                         </LinearLayout>
 
                         <LinearLayout
+                            android:id="@+id/layoutJoiningDate"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="12dp"
@@ -474,6 +452,56 @@
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Joining Date" android:textColor="#64748B" android:textSize="11sp" />
                             <EditText android:id="@+id/editJoiningDate" android:layout_width="match_parent" android:layout_height="48dp" android:layout_marginTop="8dp" android:background="#F1F5F9" android:hint="-" android:focusable="false" android:paddingHorizontal="8dp" android:textColor="@color/black" android:textColorHint="#94A3B8" />
                         </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <com.google.android.material.checkbox.MaterialCheckBox
+                            android:id="@+id/checkSelfAttendance"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.2"
+                            android:checked="true"
+                            android:text="@string/allow_self_attendance"
+                            android:textColor="@color/black"
+                            android:textSize="13sp"
+                            app:buttonTint="#3F51B5"
+                            app:useMaterialThemeColors="false" />
+
+                        <RadioGroup
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_weight="1.8"
+                            android:orientation="horizontal">
+
+                            <RadioButton
+                                android:id="@+id/radioSingle"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:checked="true"
+                                android:text="Single"
+                                android:textColor="@color/black"
+                                android:textSize="13sp"
+                                app:buttonTint="#3F51B5" />
+
+                            <RadioButton
+                                android:id="@+id/radioPunch"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1.5"
+                                android:layout_marginStart="4dp"
+                                android:text="Punch In/Out"
+                                android:textColor="@color/black"
+                                android:textSize="13sp"
+                                app:buttonTint="#3F51B5" />
+                        </RadioGroup>
                     </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -504,7 +532,6 @@
                         android:padding="12dp">
                         <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
                             <ImageView android:layout_width="24dp" android:layout_height="24dp" android:layout_centerHorizontal="true" android:src="@drawable/ic_partner_role" app:tint="@color/black" />
-                            <ImageView android:id="@+id/imageCheckPartner" android:layout_width="16dp" android:layout_height="16dp" android:layout_alignParentEnd="true" android:src="@drawable/ic_circle_check" android:visibility="gone" app:tint="#2563EB" />
                         </RelativeLayout>
                         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="Partner" android:textColor="@color/black" android:textSize="13sp" />
                     </LinearLayout>
@@ -529,7 +556,6 @@
                         android:padding="12dp">
                         <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
                             <ImageView android:layout_width="24dp" android:layout_height="24dp" android:layout_centerHorizontal="true" android:src="@drawable/ic_manager_role" app:tint="@color/black" />
-                            <ImageView android:id="@+id/imageCheckManager" android:layout_width="16dp" android:layout_height="16dp" android:layout_alignParentEnd="true" android:src="@drawable/ic_circle_check" android:visibility="gone" app:tint="#2563EB" />
                         </RelativeLayout>
                         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="Manager" android:textColor="@color/black" android:textSize="13sp" />
                     </LinearLayout>
@@ -554,7 +580,6 @@
                         android:padding="12dp">
                         <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
                             <ImageView android:layout_width="24dp" android:layout_height="24dp" android:layout_centerHorizontal="true" android:src="@drawable/ic_helper_role" app:tint="@color/black" />
-                            <ImageView android:id="@+id/imageCheckHelper" android:layout_width="16dp" android:layout_height="16dp" android:layout_alignParentEnd="true" android:src="@drawable/ic_circle_check" app:tint="#2563EB" />
                         </RelativeLayout>
                         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="Helper" android:textColor="@color/black" android:textSize="13sp" />
                     </LinearLayout>
@@ -579,7 +604,6 @@
                         android:padding="12dp">
                         <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
                             <ImageView android:layout_width="24dp" android:layout_height="24dp" android:layout_centerHorizontal="true" android:src="@drawable/ic_custom_role" app:tint="@color/black" />
-                            <ImageView android:id="@+id/imageCheckCustom" android:layout_width="16dp" android:layout_height="16dp" android:layout_alignParentEnd="true" android:src="@drawable/ic_circle_check" android:visibility="gone" app:tint="#2563EB" />
                         </RelativeLayout>
                         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="Custom" android:textColor="@color/black" android:textSize="13sp" />
                     </LinearLayout>

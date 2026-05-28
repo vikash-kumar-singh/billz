@@ -141,8 +141,10 @@ public class StaffManagementActivity extends AppCompatActivity {
             adapter = new StaffAdapter(list, new StaffAdapter.OnStaffClickListener() {
                 @Override
                 public void onStaffClick(Staff staff) {
-                    // When card is clicked, show the bottom sheet popover as shown in the image
-                    showShareStaffBottomSheet(staff.name, staff.email);
+                    // When card is clicked, open the Add/Update Staff page
+                    Intent intent = new Intent(StaffManagementActivity.this, AddStaffActivity.class);
+                    intent.putExtra("staff_id", staff.id);
+                    addStaffLauncher.launch(intent);
                 }
 
                 @Override
@@ -156,6 +158,13 @@ public class StaffManagementActivity extends AppCompatActivity {
                 @Override
                 public void onAttendanceClick(Staff staff) {
                     Intent intent = new Intent(StaffManagementActivity.this, AttendanceManagementActivity.class);
+                    intent.putExtra("staff_id", staff.id);
+                    startActivity(intent);
+                }
+
+                @Override
+                public void onPaySlipClick(Staff staff) {
+                    Intent intent = new Intent(StaffManagementActivity.this, SalarySlipActivity.class);
                     intent.putExtra("staff_id", staff.id);
                     startActivity(intent);
                 }

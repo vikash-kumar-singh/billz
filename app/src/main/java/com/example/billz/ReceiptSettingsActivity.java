@@ -10,6 +10,8 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
+import java.util.List;
+
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.PickVisualMediaRequest;
@@ -228,6 +230,17 @@ public class ReceiptSettingsActivity extends AppCompatActivity {
 
         new Thread(() -> {
             db.receiptSettingsDao().insert(currentSettings);
+            
+            // Sync logoPath to Business table
+            List<Business> businesses = db.businessDao().getAllBusinesses();
+            for (Business b : businesses) {
+                if (b.isSelected()) {
+                    b.setLogoPath(currentSettings.getBusinessLogoPath());
+                    db.businessDao().insert(b);
+                    break;
+                }
+            }
+
             runOnUiThread(() -> {
                 Toast.makeText(this, "Settings Saved", Toast.LENGTH_SHORT).show();
                 finish();

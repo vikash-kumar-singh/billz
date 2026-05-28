@@ -1,8 +1,10 @@
 package com.example.billz;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -16,6 +18,7 @@ import java.util.concurrent.Executors;
 public class EditBusinessActivity extends AppCompatActivity {
 
     private EditText editBusinessName, editBusinessMobile;
+    private ImageView imgBusinessLogo;
     private ReceiptSettings currentSettings;
 
     @Override
@@ -34,6 +37,7 @@ public class EditBusinessActivity extends AppCompatActivity {
 
         editBusinessName = findViewById(R.id.editBusinessName);
         editBusinessMobile = findViewById(R.id.editBusinessMobile);
+        imgBusinessLogo = findViewById(R.id.imgBusinessLogo);
         
         loadSettings();
 
@@ -50,6 +54,15 @@ public class EditBusinessActivity extends AppCompatActivity {
             runOnUiThread(() -> {
                 editBusinessName.setText(currentSettings.getBusinessName());
                 editBusinessMobile.setText(currentSettings.getPhoneNumber());
+                
+                if (currentSettings.getBusinessLogoPath() != null) {
+                    try {
+                        imgBusinessLogo.setImageURI(Uri.parse(currentSettings.getBusinessLogoPath()));
+                        imgBusinessLogo.setImageTintList(null);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
             });
         });
     }

@@ -51,6 +51,7 @@ public class ReportsActivity extends AppCompatActivity {
     private ImageView[] bottomTabIcons;
     private TextView[] bottomTabLabels;
     private TextView textHeaderBusinessName, textHeaderPhoneNumber;
+    private ImageView imgLogo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +74,7 @@ public class ReportsActivity extends AppCompatActivity {
 
         textHeaderBusinessName = findViewById(R.id.textHeaderBusinessName);
         textHeaderPhoneNumber = findViewById(R.id.textHeaderPhoneNumber);
+        imgLogo = findViewById(R.id.imgLogo);
 
         toolbar.setNavigationOnClickListener(v -> {
             if (drawerLayout != null) {
@@ -223,6 +225,15 @@ public class ReportsActivity extends AppCompatActivity {
                     }
                     if (textHeaderPhoneNumber != null) {
                         textHeaderPhoneNumber.setText(settings.getPhoneNumber());
+                    }
+                    if (imgLogo != null && settings.getBusinessLogoPath() != null) {
+                        try {
+                            imgLogo.setImageURI(android.net.Uri.parse(settings.getBusinessLogoPath()));
+                            // Remove tint if we're showing a real logo
+                            imgLogo.setImageTintList(null);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             });

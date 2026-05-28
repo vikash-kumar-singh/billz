@@ -44,9 +44,8 @@
                     android:id="@+id/imgBusinessLogo"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/ic_nav_reports"
-                    android:padding="8dp" />
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_nav_reports" />
             </androidx.cardview.widget.CardView>
         </FrameLayout>
 

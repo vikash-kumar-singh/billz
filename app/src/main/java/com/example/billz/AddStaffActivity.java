@@ -31,7 +31,7 @@ import java.util.concurrent.Executors;
 public class AddStaffActivity extends AppCompatActivity {
 
     private EditText editStaffName, editStaffEmail, editStaffMobile, editSalary, editShiftHours, editJoiningDate;
-    private TextView textTrackAttendance, textAllowAppUse;
+    private TextView textTrackAttendance, textAllowAppUse, textSalaryLabel;
     private MaterialCheckBox checkTrackAttendance, checkAllowAppUse, checkSelfAttendance;
 
     // Permission Checkboxes
@@ -53,13 +53,12 @@ public class AddStaffActivity extends AppCompatActivity {
     // Business and Settings
     private MaterialCheckBox permManageBusiness, permManageSettings, permCreateBusiness;
 
-    private LinearLayout tabMonthly, tabDayWise, tabHourly;
+    private LinearLayout tabMonthly, tabDayWise, tabHourly, layoutShiftHours;
     private CardView cardMonthly, cardDayWise, cardHourly;
     private ImageView imageCheckMonthly, imageCheckDayWise, imageCheckHourly;
     
     private CardView cardRolePartner, cardRoleManager, cardRoleHelper, cardRoleCustom;
     private LinearLayout tabRolePartner, tabRoleManager, tabRoleHelper, tabRoleCustom;
-    private ImageView imageCheckPartner, imageCheckManager, imageCheckHelper, imageCheckCustom;
 
     private String selectedCalculationType = "Monthly";
     private String selectedRole = "Helper";
@@ -87,6 +86,7 @@ public class AddStaffActivity extends AppCompatActivity {
         
         staffId = getIntent().getIntExtra("staff_id", -1);
         if (staffId != -1) {
+            toolbar.setTitle("UPDATE STAFF");
             loadStaffData();
         } else {
             selectRole("Helper");
@@ -105,6 +105,8 @@ public class AddStaffActivity extends AppCompatActivity {
                     editSalary.setText(String.valueOf(staff.salary));
                     editShiftHours.setText(String.valueOf(staff.shiftHours));
                     editJoiningDate.setText(staff.joiningDate);
+                    
+                    updateLabels(staff.name);
                     
                     checkTrackAttendance.setChecked(staff.trackAttendance);
                     checkAllowAppUse.setChecked(staff.allowAppUse);
@@ -182,6 +184,7 @@ public class AddStaffActivity extends AppCompatActivity {
 
         textTrackAttendance = findViewById(R.id.textTrackAttendance);
         textAllowAppUse = findViewById(R.id.textAllowAppUse);
+        textSalaryLabel = findViewById(R.id.textSalaryLabel);
 
         checkTrackAttendance = findViewById(R.id.checkTrackAttendance);
         checkAllowAppUse = findViewById(R.id.checkAllowAppUse);
@@ -257,6 +260,8 @@ public class AddStaffActivity extends AppCompatActivity {
         imageCheckDayWise = findViewById(R.id.imageCheckDayWise);
         imageCheckHourly = findViewById(R.id.imageCheckHourly);
 
+        layoutShiftHours = findViewById(R.id.layoutShiftHours);
+
         // Roles
         cardRolePartner = findViewById(R.id.cardRolePartner);
         cardRoleManager = findViewById(R.id.cardRoleManager);
@@ -266,10 +271,6 @@ public class AddStaffActivity extends AppCompatActivity {
         tabRoleManager = findViewById(R.id.tabRoleManager);
         tabRoleHelper = findViewById(R.id.tabRoleHelper);
         tabRoleCustom = findViewById(R.id.tabRoleCustom);
-        imageCheckPartner = findViewById(R.id.imageCheckPartner);
-        imageCheckManager = findViewById(R.id.imageCheckManager);
-        imageCheckHelper = findViewById(R.id.imageCheckHelper);
-        imageCheckCustom = findViewById(R.id.imageCheckCustom);
     }
 
     private void setupListeners() {
@@ -288,17 +289,26 @@ public class AddStaffActivity extends AppCompatActivity {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                String name = s.toString().trim();
-                if (name.isEmpty()) name = "staff";
-                textTrackAttendance.setText(getString(R.string.track_attendance_salary, name));
-                textAllowAppUse.setText(getString(R.string.allow_staff_use_app, name));
+                updateLabels(s.toString().trim());
             }
             @Override public void afterTextChanged(Editable s) {}
         });
     }
 
+    private void updateLabels(String name) {
+        String displayName = (name == null || name.isEmpty()) ? "staff" : name;
+        textTrackAttendance.setText(getString(R.string.track_attendance_salary, displayName));
+        textAllowAppUse.setText(getString(R.string.allow_staff_use_app, displayName));
+        textSalaryLabel.setText(getString(R.string.enter_staff_salary_name, displayName));
+    }
+
     private void selectTab(String type) {
         selectedCalculationType = type;
+        
+        if (layoutShiftHours != null) {
+            layoutShiftHours.setVisibility(type.equals("Hourly") ? View.GONE : View.VISIBLE);
+        }
+
         tabMonthly.setBackgroundColor(type.equals("Monthly") ? 0xFFE8F0FE : Color.WHITE);
         tabDayWise.setBackgroundColor(type.equals("Day Wise") ? 0xFFE8F0FE : Color.WHITE);
         tabHourly.setBackgroundColor(type.equals("Hourly") ? 0xFFE8F0FE : Color.WHITE);
@@ -322,10 +332,6 @@ public class AddStaffActivity extends AppCompatActivity {
         cardRoleManager.setCardElevation((role.equals("Manager") ? 4 : 1) * density);
         cardRoleHelper.setCardElevation((role.equals("Helper") ? 4 : 1) * density);
         cardRoleCustom.setCardElevation((role.equals("Custom") ? 4 : 1) * density);
-        imageCheckPartner.setVisibility(role.equals("Partner") ? View.VISIBLE : View.GONE);
-        imageCheckManager.setVisibility(role.equals("Manager") ? View.VISIBLE : View.GONE);
-        imageCheckHelper.setVisibility(role.equals("Helper") ? View.VISIBLE : View.GONE);
-        imageCheckCustom.setVisibility(role.equals("Custom") ? View.VISIBLE : View.GONE);
         applyRolePermissions(role);
     }
 

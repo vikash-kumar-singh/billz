@@ -11,8 +11,10 @@ import com.google.android.material.appbar.MaterialToolbar;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.app.DatePickerDialog;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Locale;
 import java.util.concurrent.Executors;
 
@@ -21,8 +23,9 @@ public class AttendanceManagementActivity extends AppCompatActivity {
     private int staffId;
     private TextView textStaffInfo, textStaffInitials, textCurrentDate;
     private View layoutActions, cardDropdown;
-    private ImageView imageDropdown;
+    private ImageView imageDropdown, btnPrevDate, btnNextDate;
     private boolean isExpanded = false;
+    private Calendar selectedDate = Calendar.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,8 +52,22 @@ public class AttendanceManagementActivity extends AppCompatActivity {
         textCurrentDate = findViewById(R.id.textCurrentDate);
         layoutActions = findViewById(R.id.layoutActions);
         cardDropdown = findViewById(R.id.cardDropdown);
+        btnPrevDate = findViewById(R.id.btnPrevDate);
+        btnNextDate = findViewById(R.id.btnNextDate);
 
-        setCurrentDate();
+        updateDateDisplay();
+        
+        btnPrevDate.setOnClickListener(v -> {
+            selectedDate.add(Calendar.DAY_OF_MONTH, -1);
+            updateDateDisplay();
+        });
+
+        btnNextDate.setOnClickListener(v -> {
+            selectedDate.add(Calendar.DAY_OF_MONTH, 1);
+            updateDateDisplay();
+        });
+
+        findViewById(R.id.cardDateSelector).setOnClickListener(v -> showDatePicker());
         
         // Find the image inside the cardDropdown
         if (cardDropdown instanceof android.view.ViewGroup) {
@@ -66,10 +83,38 @@ public class AttendanceManagementActivity extends AppCompatActivity {
         }
     }
 
-    private void setCurrentDate() {
-        SimpleDateFormat sdf = new SimpleDateFormat("'Today' : dd MMM", Locale.getDefault());
-        String currentDate = sdf.format(new Date());
-        textCurrentDate.setText(currentDate);
+    private void updateDateDisplay() {
+        Calendar today = Calendar.getInstance();
+        SimpleDateFormat sdf;
+        if (selectedDate.get(Calendar.YEAR) == today.get(Calendar.YEAR) &&
+            selectedDate.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR)) {
+            sdf = new SimpleDateFormat("'Today' : dd MMM", Locale.getDefault());
+        } else {
+            sdf = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
+        }
+        textCurrentDate.setText(sdf.format(selectedDate.getTime()));
+    }
+
+    private void showDatePicker() {
+        // Use the spinner style if possible by using a legacy theme or custom style
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this,
+                android.R.style.Theme_Holo_Light_Dialog_MinWidth,
+                (view, year, month, dayOfMonth) -> {
+                    selectedDate.set(Calendar.YEAR, year);
+                    selectedDate.set(Calendar.MONTH, month);
+                    selectedDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                    updateDateDisplay();
+                },
+                selectedDate.get(Calendar.YEAR),
+                selectedDate.get(Calendar.MONTH),
+                selectedDate.get(Calendar.DAY_OF_MONTH));
+        
+        // Hide the year if needed, but the image shows day, month, year.
+        // The Holo theme usually provides the spinner look shown in the image.
+        if (datePickerDialog.getWindow() != null) {
+            datePickerDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        }
+        datePickerDialog.show();
     }
 
     private void toggleActions() {

@@ -1,6 +1,7 @@
 package com.example.billz;
 
 import android.graphics.Color;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,25 +46,40 @@ public class BusinessAdapter extends RecyclerView.Adapter<BusinessAdapter.ViewHo
 
         if (business.isSelected()) {
             holder.cardView.setStrokeColor(Color.parseColor("#3F51B5"));
-            holder.cardView.setStrokeWidth(5); // Clean blue border
-            holder.cardView.setCardBackgroundColor(Color.parseColor("#F1F3FF")); 
+            holder.cardView.setStrokeWidth(0); 
+            holder.cardView.setCardBackgroundColor(Color.parseColor("#3F51B5")); 
             
-            holder.textName.setTextColor(Color.parseColor("#3F51B5"));
-            holder.textRole.setTextColor(Color.parseColor("#7986CB"));
-            holder.imgLogo.setColorFilter(Color.parseColor("#3F51B5"));
+            holder.textName.setTextColor(Color.WHITE);
+            holder.textRole.setTextColor(Color.parseColor("#E0E0E0"));
             
             holder.imgPlaceholder.setVisibility(View.GONE);
             holder.cardLogo.setVisibility(View.VISIBLE);
+            holder.cardLogo.setCardBackgroundColor(Color.WHITE);
+            holder.imgLogo.setImageTintList(null); 
+            
+            if (business.getLogoPath() != null) {
+                holder.imgLogo.setImageURI(Uri.parse(business.getLogoPath()));
+            } else {
+                holder.imgLogo.setImageResource(R.drawable.ic_nav_reports);
+                holder.imgLogo.setColorFilter(Color.parseColor("#3F51B5"));
+            }
         } else {
             holder.cardView.setStrokeColor(Color.parseColor("#CBD5E1")); 
-            holder.cardView.setStrokeWidth(3); // Consistent grey border
+            holder.cardView.setStrokeWidth(2); 
             holder.cardView.setCardBackgroundColor(Color.WHITE);
             
-            holder.textName.setTextColor(Color.BLACK);
+            holder.textName.setTextColor(Color.parseColor("#64748B"));
             holder.textRole.setTextColor(Color.parseColor("#94A3B8"));
-            holder.imgLogo.setColorFilter(Color.parseColor("#3F51B5"));
             
             holder.imgPlaceholder.setVisibility(View.VISIBLE);
+            
+            if (business.getLogoPath() != null) {
+                holder.imgPlaceholder.setImageURI(Uri.parse(business.getLogoPath()));
+                holder.imgPlaceholder.setColorFilter(null);
+            } else {
+                holder.imgPlaceholder.setImageResource(R.drawable.ic_nav_reports);
+                holder.imgPlaceholder.setColorFilter(Color.parseColor("#3F51B5"));
+            }
             holder.cardLogo.setVisibility(View.GONE);
         }
 
