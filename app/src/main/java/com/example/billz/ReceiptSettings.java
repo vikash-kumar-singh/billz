@@ -9,6 +9,7 @@ public class ReceiptSettings {
     private int id = 1;
 
     private String businessName;
+    private String email;
     private String phoneNumber;
     private boolean showPhoneNumber;
     private String businessAddress;
@@ -55,6 +56,9 @@ public class ReceiptSettings {
 
     public String getBusinessName() { return businessName; }
     public void setBusinessName(String businessName) { this.businessName = businessName; }
+
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 
     public String getPhoneNumber() { return phoneNumber; }
     public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }

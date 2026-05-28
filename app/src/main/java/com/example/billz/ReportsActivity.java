@@ -42,7 +42,6 @@ public class ReportsActivity extends AppCompatActivity {
     private View emptyStateContainer;
     private View reportsContentPlaceholder;
     private View moreContentContainer;
-    private View premiumBanner;
     private View dateSelectorRow;
     private LinearLayout bottomNavigationView;
     private DrawerLayout drawerLayout;
@@ -50,7 +49,7 @@ public class ReportsActivity extends AppCompatActivity {
     private View[] bottomTabs;
     private ImageView[] bottomTabIcons;
     private TextView[] bottomTabLabels;
-    private TextView textHeaderBusinessName, textHeaderPhoneNumber;
+    private TextView textHeaderBusinessName, textHeaderPhoneNumber, txtOwnerName, txtOwnerEmail;
     private ImageView imgLogo;
 
     @Override
@@ -66,7 +65,6 @@ public class ReportsActivity extends AppCompatActivity {
         emptyStateContainer = findViewById(R.id.emptyStateContainer);
         reportsContentPlaceholder = findViewById(R.id.reportsContentPlaceholder);
         moreContentContainer = findViewById(R.id.moreContentContainer);
-        premiumBanner = findViewById(R.id.premiumBanner);
         dateSelectorRow = findViewById(R.id.dateSelectorRow);
         bottomNavigationView = findViewById(R.id.bottomNavigation);
         drawerLayout = findViewById(R.id.drawerLayout);
@@ -74,6 +72,8 @@ public class ReportsActivity extends AppCompatActivity {
 
         textHeaderBusinessName = findViewById(R.id.textHeaderBusinessName);
         textHeaderPhoneNumber = findViewById(R.id.textHeaderPhoneNumber);
+        txtOwnerName = findViewById(R.id.txtOwnerName);
+        txtOwnerEmail = findViewById(R.id.txtOwnerEmail);
         imgLogo = findViewById(R.id.imgLogo);
 
         toolbar.setNavigationOnClickListener(v -> {
@@ -185,6 +185,11 @@ public class ReportsActivity extends AppCompatActivity {
             startActivity(new Intent(ReportsActivity.this, AddBusinessActivity.class));
         });
 
+        findViewById(R.id.btnEditProfile).setOnClickListener(v -> {
+            drawerLayout.closeDrawer(GravityCompat.START);
+            startActivity(new Intent(ReportsActivity.this, EditProfileActivity.class));
+        });
+
         // Add this if not already there, but let's check nav_header buttons
         // The buttons in nav_header_reports are usually set up in onCreate if they have IDs.
         // Let's check nav_header_reports.xml IDs.
@@ -225,6 +230,12 @@ public class ReportsActivity extends AppCompatActivity {
                     }
                     if (textHeaderPhoneNumber != null) {
                         textHeaderPhoneNumber.setText(settings.getPhoneNumber());
+                    }
+                    if (txtOwnerName != null) {
+                        txtOwnerName.setText(settings.getBusinessName() + " " + getString(R.string.header_owner_suffix));
+                    }
+                    if (txtOwnerEmail != null) {
+                        txtOwnerEmail.setText(settings.getEmail() != null ? settings.getEmail() : "nutritioncompany.com@gmail.com");
                     }
                     if (imgLogo != null && settings.getBusinessLogoPath() != null) {
                         try {
@@ -408,17 +419,15 @@ public class ReportsActivity extends AppCompatActivity {
         dateSelectorRow.setVisibility(View.GONE);
 
         if (selectedId == R.id.tabMore) {
-            // SHOW Grid + SHOW Premium
+            // SHOW Grid
             moreContentContainer.setVisibility(View.VISIBLE);
-            premiumBanner.setVisibility(View.VISIBLE);
             toolbar.setTitle(getString(R.string.reports_tab_more));
             toolbar.setBackgroundColor(ContextCompat.getColor(this, R.color.reports_tab_selected));
             toolbar.setTitleTextColor(selectedColor);
             toolbar.setNavigationIconTint(selectedColor);
         } else if (selectedId == R.id.tabItems) {
-            // SHOW Grid + HIDE Premium
+            // SHOW Grid
             moreContentContainer.setVisibility(View.VISIBLE);
-            premiumBanner.setVisibility(View.GONE);
             toolbar.setTitle(getString(R.string.reports_tab_items));
             toolbar.setBackgroundColor(ContextCompat.getColor(this, R.color.reports_tab_selected));
             toolbar.setTitleTextColor(selectedColor);

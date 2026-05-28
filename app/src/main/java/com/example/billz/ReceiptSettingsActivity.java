@@ -24,7 +24,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 public class ReceiptSettingsActivity extends AppCompatActivity {
 
-    private EditText etBusinessName, etPhoneNumber, etBusinessAddress, etTaxNo, etWebsite, etReceiptTitle, etThankYouNote, etMessageTemplate;
+    private EditText etBusinessName, etBusinessEmail, etPhoneNumber, etBusinessAddress, etTaxNo, etWebsite, etReceiptTitle, etThankYouNote, etMessageTemplate;
     private CheckBox cbShowPhoneNumber, cbShowBusinessAddress, cbShowTaxNo, cbShowWebsite, cbShowLogo;
     private SwitchCompat switchListPrice, switchShowRate, switchTotalSaved, switchCashierName, switchCustomerPhone, switchCustomerAddress;
     private SwitchCompat switchAppLang, switchTotalItem, switchChangeReturn, switchPaymentDetails, switchPoweredBy;
@@ -78,6 +78,7 @@ public class ReceiptSettingsActivity extends AppCompatActivity {
 
     private void initViews() {
         etBusinessName = findViewById(R.id.etBusinessName);
+        etBusinessEmail = findViewById(R.id.etBusinessEmail);
         etPhoneNumber = findViewById(R.id.etPhoneNumber);
         etBusinessAddress = findViewById(R.id.etBusinessAddress);
         etTaxNo = findViewById(R.id.etTaxNo);
@@ -131,6 +132,7 @@ public class ReceiptSettingsActivity extends AppCompatActivity {
             if (currentSettings != null) {
                 runOnUiThread(() -> {
                     etBusinessName.setText(currentSettings.getBusinessName());
+                    etBusinessEmail.setText(currentSettings.getEmail());
                     etPhoneNumber.setText(currentSettings.getPhoneNumber());
                     cbShowPhoneNumber.setChecked(currentSettings.isShowPhoneNumber());
                     etBusinessAddress.setText(currentSettings.getBusinessAddress());
@@ -199,6 +201,7 @@ public class ReceiptSettingsActivity extends AppCompatActivity {
         }
 
         currentSettings.setBusinessName(businessName);
+        currentSettings.setEmail(etBusinessEmail.getText().toString().trim());
         currentSettings.setPhoneNumber(etPhoneNumber.getText().toString().trim());
         currentSettings.setShowPhoneNumber(cbShowPhoneNumber.isChecked());
         currentSettings.setBusinessAddress(etBusinessAddress.getText().toString().trim());

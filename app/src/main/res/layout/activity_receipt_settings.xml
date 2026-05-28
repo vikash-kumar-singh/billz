@@ -108,6 +108,27 @@
                         android:inputType="textPersonName" />
                     <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#CCCCCC" android:layout_marginBottom="16dp" />
 
+                    <!-- Business Email -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/business_email_label"
+                        android:textColor="@color/reports_text_secondary"
+                        android:textSize="12sp" />
+                    <EditText
+                        android:id="@+id/etBusinessEmail"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:hint="@string/email_address"
+                        android:paddingVertical="8dp"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/reports_text_secondary"
+                        android:textSize="16sp"
+                        android:importantForAutofill="no"
+                        android:inputType="textEmailAddress" />
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#CCCCCC" android:layout_marginBottom="16dp" />
+
                     <!-- Phone Number -->
                     <EditText
                         android:id="@+id/etPhoneNumber"
