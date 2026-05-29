@@ -59,7 +59,7 @@
             android:id="@+id/textHeaderBusinessName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="PROTEIN HUB -DEOGHAR"
+            android:text=""
             android:textColor="@color/reports_tab_selected"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -76,52 +76,9 @@
         android:id="@+id/textHeaderPhoneNumber"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="+917903598844"
+        android:text=""
         android:textColor="@color/reports_tab_selected"
         android:textSize="14sp" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:background="#9C27B0"
-        android:gravity="center_vertical"
-        android:padding="8dp">
-
-        <ImageView
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:src="@android:drawable/btn_star_big_on" />
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/header_free_plan"
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/header_upgrade_premium"
-                android:textColor="@color/white"
-                android:textSize="12sp" />
-        </LinearLayout>
-
-        <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@android:drawable/arrow_down_float"
-            app:tint="@color/white" />
-    </LinearLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -134,11 +91,12 @@
             android:id="@+id/txtOwnerName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Nutrition Co (owner)"
+            android:text=""
             android:textColor="@color/reports_text_primary"
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/txtOwnerEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/txtOwnerName"
@@ -147,10 +105,14 @@
             android:textSize="12sp" />
 
         <TextView
+            android:id="@+id/btnEditProfile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground"
             android:text="@string/header_edit_profile"
             android:textColor="@color/reports_tab_selected"
             android:textSize="11sp"

@@ -127,17 +127,7 @@
             android:theme="@style/Theme.Billz">
         </activity>
         <activity
-            android:name=".AddCategoryActivity"
-            android:exported="false"
-            android:theme="@style/Theme.Billz">
-        </activity>
-        <activity
-            android:name=".CreateModifierActivity"
-            android:exported="false"
-            android:theme="@style/Theme.Billz">
-        </activity>
-        <activity
-            android:name=".AddIngredientActivity"
+            android:name=".EditProfileActivity"
             android:exported="false"
             android:theme="@style/Theme.Billz">
         </activity>
