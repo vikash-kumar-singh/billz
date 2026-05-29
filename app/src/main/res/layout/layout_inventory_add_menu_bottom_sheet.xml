@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#F1F5F9"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:columnCount="2"
+        android:alignmentMode="alignMargins"
+        android:rowOrderPreserved="false">
+
+        <!-- Add Item -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/menuAddItem"
+            android:layout_width="0dp"
+            android:layout_height="140dp"
+            android:layout_columnWeight="1"
+            android:layout_margin="8dp"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="4dp"
+            app:cardElevation="4dp"
+            app:strokeWidth="0dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="Add Item"
+                android:textColor="#3F51B5"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Add Category -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/menuAddCategory"
+            android:layout_width="0dp"
+            android:layout_height="140dp"
+            android:layout_columnWeight="1"
+            android:layout_margin="8dp"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="4dp"
+            app:cardElevation="4dp"
+            app:strokeWidth="0dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="Add Category"
+                android:textColor="#3F51B5"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Add Modifier -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/menuAddModifier"
+            android:layout_width="0dp"
+            android:layout_height="140dp"
+            android:layout_columnWeight="1"
+            android:layout_margin="8dp"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="4dp"
+            app:cardElevation="4dp"
+            app:strokeWidth="0dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="Add Modifier"
+                android:textColor="#3F51B5"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Add Ingredient -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/menuAddIngredient"
+            android:layout_width="0dp"
+            android:layout_height="140dp"
+            android:layout_columnWeight="1"
+            android:layout_margin="8dp"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="4dp"
+            app:cardElevation="4dp"
+            app:strokeWidth="0dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="Add Ingredient"
+                android:textColor="#3F51B5"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </com.google.android.material.card.MaterialCardView>
+    </GridLayout>
+
+    <!-- Bulk Edit -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/menuBulkEdit"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_marginHorizontal="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="4dp"
+        app:cardElevation="4dp"
+        app:strokeWidth="0dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="Bulk Edit"
+            android:textColor="#3F51B5"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </com.google.android.material.card.MaterialCardView>
+
+</LinearLayout>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="12dp">
+
+    <View
+        android:id="@+id/historyLine"
+        android:layout_width="2dp"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="false"
+        android:layout_marginStart="7dp"
+        android:layout_marginTop="16dp"
+        android:background="#94A3B8" />
+
+    <View
+        android:id="@+id/historyIndicator"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_marginTop="8dp"
+        android:background="@android:drawable/presence_online"
+        android:backgroundTint="#8BC34A" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardHistoryContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        app:cardBackgroundColor="#66BB6A"
+        app:cardCornerRadius="4dp"
+        app:cardElevation="4dp"
+        app:strokeWidth="0dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="12dp">
+
+            <TextView
+                android:id="@+id/textHistoryMain"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="10 Added"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textHistoryChange"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:text="=5"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textHistoryDetail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Source manual\njust now"
+                android:textColor="#E8F5E9"
+                android:textSize="12sp" />
+        </RelativeLayout>
+    </com.google.android.material.card.MaterialCardView>
+</RelativeLayout>

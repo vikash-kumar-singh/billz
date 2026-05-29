@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:paddingBottom="24dp">
+
+    <!-- Header -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:paddingHorizontal="8dp">
+
+        <ImageButton
+            android:id="@+id/btnCloseFilter"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_centerVertical="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            app:tint="#3F51B5" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnResetFilter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#EF4444"
+                android:text="RESET"
+                android:textColor="@color/white"
+                app:cornerRadius="4dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnApplyFilter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:backgroundTint="#4CAF50"
+                android:text="APPLY"
+                android:textColor="@color/white"
+                app:cornerRadius="4dp" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#E2E8F0" />
+
+    <!-- Content -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Categories"
+                android:textColor="#334155"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chipGroupCategories"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:chipSpacingHorizontal="8dp"
+                app:chipSpacingVertical="8dp"
+                app:singleSelection="false"
+                app:selectionRequired="false">
+
+                <!-- Sample data as seen in image -->
+                <com.google.android.material.chip.Chip
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Brand All Item"
+                    android:textColor="@color/chip_text_color"
+                    app:chipBackgroundColor="@color/chip_bg_color"
+                    app:chipStrokeColor="#CBD5E1"
+                    app:chipStrokeWidth="1dp" />
+
+                <com.google.android.material.chip.Chip
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Creatine"
+                    android:textColor="@color/chip_text_color"
+                    app:chipBackgroundColor="@color/chip_bg_color"
+                    app:chipStrokeColor="#CBD5E1"
+                    app:chipStrokeWidth="1dp" />
+
+                <com.google.android.material.chip.Chip
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="MASS GAINER"
+                    android:textColor="@color/chip_text_color"
+                    app:chipBackgroundColor="@color/chip_bg_color"
+                    app:chipStrokeColor="#CBD5E1"
+                    app:chipStrokeWidth="1dp" />
+
+                <com.google.android.material.chip.Chip
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sample"
+                    android:textColor="@color/chip_text_color"
+                    app:chipBackgroundColor="@color/chip_bg_color"
+                    app:chipStrokeColor="#CBD5E1"
+                    app:chipStrokeWidth="1dp" />
+
+                <com.google.android.material.chip.Chip
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="DAILY SUPPORT"
+                    android:textColor="@color/chip_text_color"
+                    app:chipBackgroundColor="@color/chip_bg_color"
+                    app:chipStrokeColor="#CBD5E1"
+                    app:chipStrokeWidth="1dp" />
+
+                <com.google.android.material.chip.Chip
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="PRE WORKOUT"
+                    android:textColor="@color/chip_text_color"
+                    app:chipBackgroundColor="@color/chip_bg_color"
+                    app:chipStrokeColor="#CBD5E1"
+                    app:chipStrokeWidth="1dp" />
+
+                <com.google.android.material.chip.Chip
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Stack"
+                    android:textColor="@color/chip_text_color"
+                    app:chipBackgroundColor="@color/chip_bg_color"
+                    app:chipStrokeColor="#CBD5E1"
+                    app:chipStrokeWidth="1dp" />
+
+                <com.google.android.material.chip.Chip
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Compression Tshirt"
+                    android:textColor="@color/chip_text_color"
+                    app:chipBackgroundColor="@color/chip_bg_color"
+                    app:chipStrokeColor="#CBD5E1"
+                    app:chipStrokeWidth="1dp" />
+
+                <com.google.android.material.chip.Chip
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="GYM ACCESSORIES"
+                    android:textColor="@color/chip_text_color"
+                    app:chipBackgroundColor="@color/chip_bg_color"
+                    app:chipStrokeColor="#CBD5E1"
+                    app:chipStrokeWidth="1dp" />
+
+                <com.google.android.material.chip.Chip
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Raw Whey Protein"
+                    android:textColor="@color/chip_text_color"
+                    app:chipBackgroundColor="@color/chip_bg_color"
+                    app:chipStrokeColor="#CBD5E1"
+                    app:chipStrokeWidth="1dp" />
+
+                <com.google.android.material.chip.Chip
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="MUSCLE GAINER"
+                    android:textColor="@color/chip_text_color"
+                    app:chipBackgroundColor="@color/chip_bg_color"
+                    app:chipStrokeColor="#CBD5E1"
+                    app:chipStrokeWidth="1dp" />
+
+                <com.google.android.material.chip.Chip
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Personal Training/ Monthly"
+                    android:textColor="@color/chip_text_color"
+                    app:chipBackgroundColor="@color/chip_bg_color"
+                    app:chipStrokeColor="#CBD5E1"
+                    app:chipStrokeWidth="1dp" />
+
+                <com.google.android.material.chip.Chip
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Fat-Cutter / Burner"
+                    android:textColor="@color/chip_text_color"
+                    app:chipBackgroundColor="@color/chip_bg_color"
+                    app:chipStrokeColor="#CBD5E1"
+                    app:chipStrokeWidth="1dp" />
+
+                <com.google.android.material.chip.Chip
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="PEANUT BUTTER"
+                    android:textColor="@color/chip_text_color"
+                    app:chipBackgroundColor="@color/chip_bg_color"
+                    app:chipStrokeColor="#CBD5E1"
+                    app:chipStrokeWidth="1dp" />
+
+                <com.google.android.material.chip.Chip
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Muscle Gainer"
+                    android:textColor="@color/chip_text_color"
+                    app:chipBackgroundColor="@color/chip_bg_color"
+                    app:chipStrokeColor="#CBD5E1"
+                    app:chipStrokeWidth="1dp" />
+
+                <com.google.android.material.chip.Chip
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="OATs"
+                    android:textColor="@color/chip_text_color"
+                    app:chipBackgroundColor="@color/chip_bg_color"
+                    app:chipStrokeColor="#CBD5E1"
+                    app:chipStrokeWidth="1dp" />
+
+                <com.google.android.material.chip.Chip
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Whey ISOLATE"
+                    android:textColor="@color/chip_text_color"
+                    app:chipBackgroundColor="@color/chip_bg_color"
+                    app:chipStrokeColor="#CBD5E1"
+                    app:chipStrokeWidth="1dp" />
+
+                <com.google.android.material.chip.Chip
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="College"
+                    android:textColor="@color/chip_text_color"
+                    app:chipBackgroundColor="@color/chip_bg_color"
+                    app:chipStrokeColor="#CBD5E1"
+                    app:chipStrokeWidth="1dp" />
+
+                <com.google.android.material.chip.Chip
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Whey Protein 100%"
+                    android:textColor="@color/chip_text_color"
+                    app:chipBackgroundColor="@color/chip_bg_color"
+                    app:chipStrokeColor="#CBD5E1"
+                    app:chipStrokeWidth="1dp" />
+
+                <com.google.android.material.chip.Chip
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="PROTEIN BARS"
+                    android:textColor="@color/chip_text_color"
+                    app:chipBackgroundColor="@color/chip_bg_color"
+                    app:chipStrokeColor="#CBD5E1"
+                    app:chipStrokeWidth="1dp" />
+
+                <com.google.android.material.chip.Chip
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="DRINKS"
+                    android:textColor="@color/chip_text_color"
+                    app:chipBackgroundColor="@color/chip_bg_color"
+                    app:chipStrokeColor="#CBD5E1"
+                    app:chipStrokeWidth="1dp" />
+
+            </com.google.android.material.chip.ChipGroup>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</LinearLayout>
