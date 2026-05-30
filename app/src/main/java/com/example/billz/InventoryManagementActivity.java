@@ -54,6 +54,7 @@ public class InventoryManagementActivity extends AppCompatActivity {
     private ActivityResultLauncher<Intent> addCategoryLauncher;
     private ActivityResultLauncher<Intent> addModifierLauncher;
     private ActivityResultLauncher<Intent> addIngredientLauncher;
+    private ActivityResultLauncher<Intent> addItemLauncher;
 
     private InventoryAdapter.OnItemClickListener itemClickListener = item -> {
         if (item.getType() == 2) { // Modifier
@@ -98,6 +99,15 @@ public class InventoryManagementActivity extends AppCompatActivity {
                 result -> {
                     if (result.getResultCode() == RESULT_OK) {
                         loadIngredientsFromDB();
+                    }
+                }
+        );
+
+        addItemLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK) {
+                        // Refresh items list if needed
                     }
                 }
         );
@@ -472,7 +482,7 @@ public class InventoryManagementActivity extends AppCompatActivity {
 
         view.findViewById(R.id.menuAddItem).setOnClickListener(v -> {
             dialog.dismiss();
-            Toast.makeText(this, "Add Item clicked", Toast.LENGTH_SHORT).show();
+            addItemLauncher.launch(new Intent(this, AddItemActivity.class));
         });
 
         view.findViewById(R.id.menuAddCategory).setOnClickListener(v -> {
