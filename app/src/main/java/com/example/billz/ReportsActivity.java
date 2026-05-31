@@ -22,7 +22,6 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.appbar.MaterialToolbar;
-import com.google.android.material.navigation.NavigationView;
 import android.content.Intent;
 import android.widget.Toast;
 
@@ -49,8 +48,10 @@ public class ReportsActivity extends AppCompatActivity {
     private View[] bottomTabs;
     private ImageView[] bottomTabIcons;
     private TextView[] bottomTabLabels;
-    private TextView textHeaderBusinessName, textHeaderPhoneNumber, txtOwnerName, txtOwnerEmail;
-    private ImageView imgLogo;
+    private TextView textHeaderBusinessName, txtOwnerEmail;
+    private TextView textRoleBadge, textStatusBadge, textPlanBadge, txtUpgradeCTA;
+    private View cardRoleBadge, cardStatusBadge, cardPlanBadge, viewStatusDot;
+    private ImageView imgLogo, imgPlanIcon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,10 +72,18 @@ public class ReportsActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbarReports);
 
         textHeaderBusinessName = findViewById(R.id.textHeaderBusinessName);
-        textHeaderPhoneNumber = findViewById(R.id.textHeaderPhoneNumber);
-        txtOwnerName = findViewById(R.id.txtOwnerName);
         txtOwnerEmail = findViewById(R.id.txtOwnerEmail);
         imgLogo = findViewById(R.id.imgLogo);
+
+        textRoleBadge = findViewById(R.id.textRoleBadge);
+        textStatusBadge = findViewById(R.id.textStatusBadge);
+        textPlanBadge = findViewById(R.id.textPlanBadge);
+        cardRoleBadge = findViewById(R.id.cardRoleBadge);
+        cardStatusBadge = findViewById(R.id.cardStatusBadge);
+        cardPlanBadge = findViewById(R.id.cardPlanBadge);
+        viewStatusDot = findViewById(R.id.viewStatusDot);
+        imgPlanIcon = findViewById(R.id.imgPlanIcon);
+        txtUpgradeCTA = findViewById(R.id.txtUpgradeCTA);
 
         toolbar.setNavigationOnClickListener(v -> {
             if (drawerLayout != null) {
@@ -170,24 +179,54 @@ public class ReportsActivity extends AppCompatActivity {
             startActivity(new Intent(ReportsActivity.this, BusinessSettingsActivity.class));
         });
 
-        findViewById(R.id.btnEditBusiness).setOnClickListener(v -> {
+        findViewById(R.id.nav_edit_profile_item).setOnClickListener(v -> {
+            drawerLayout.closeDrawer(GravityCompat.START);
+            startActivity(new Intent(ReportsActivity.this, EditProfileActivity.class));
+        });
+
+        findViewById(R.id.nav_switch_business).setOnClickListener(v -> {
             drawerLayout.closeDrawer(GravityCompat.START);
             showBusinessSelectorDialog();
         });
 
-        findViewById(R.id.btnSwitchBusiness).setOnClickListener(v -> {
-            drawerLayout.closeDrawer(GravityCompat.START);
-            showBusinessSelectorDialog();
-        });
-
-        findViewById(R.id.btnCreateBusiness).setOnClickListener(v -> {
+        findViewById(R.id.nav_create_business).setOnClickListener(v -> {
             drawerLayout.closeDrawer(GravityCompat.START);
             startActivity(new Intent(ReportsActivity.this, AddBusinessActivity.class));
         });
 
-        findViewById(R.id.btnEditProfile).setOnClickListener(v -> {
+        findViewById(R.id.nav_subscription).setOnClickListener(v -> {
             drawerLayout.closeDrawer(GravityCompat.START);
-            startActivity(new Intent(ReportsActivity.this, EditProfileActivity.class));
+            showSubscriptionUsageDialog();
+        });
+
+        findViewById(R.id.nav_billing_history).setOnClickListener(v -> {
+            drawerLayout.closeDrawer(GravityCompat.START);
+            Toast.makeText(this, "Billing history coming soon", Toast.LENGTH_SHORT).show();
+        });
+
+        findViewById(R.id.nav_help_chat).setOnClickListener(v -> {
+            drawerLayout.closeDrawer(GravityCompat.START);
+            Toast.makeText(this, "Help Chat coming soon", Toast.LENGTH_SHORT).show();
+        });
+
+        findViewById(R.id.nav_feedback).setOnClickListener(v -> {
+            drawerLayout.closeDrawer(GravityCompat.START);
+            Toast.makeText(this, "Feedback coming soon", Toast.LENGTH_SHORT).show();
+        });
+
+        findViewById(R.id.nav_refer).setOnClickListener(v -> {
+            drawerLayout.closeDrawer(GravityCompat.START);
+            Toast.makeText(this, "Refer App coming soon", Toast.LENGTH_SHORT).show();
+        });
+
+        findViewById(R.id.nav_buy_printer).setOnClickListener(v -> {
+            drawerLayout.closeDrawer(GravityCompat.START);
+            Toast.makeText(this, "Buy Printer coming soon", Toast.LENGTH_SHORT).show();
+        });
+
+        findViewById(R.id.nav_logout).setOnClickListener(v -> {
+            drawerLayout.closeDrawer(GravityCompat.START);
+            finish();
         });
 
         // Add this if not already there, but let's check nav_header buttons
@@ -228,15 +267,10 @@ public class ReportsActivity extends AppCompatActivity {
                     if (textHeaderBusinessName != null) {
                         textHeaderBusinessName.setText(settings.getBusinessName());
                     }
-                    if (textHeaderPhoneNumber != null) {
-                        textHeaderPhoneNumber.setText(settings.getPhoneNumber());
-                    }
-                    if (txtOwnerName != null) {
-                        txtOwnerName.setText(settings.getBusinessName() + " " + getString(R.string.header_owner_suffix));
-                    }
                     if (txtOwnerEmail != null) {
                         txtOwnerEmail.setText(settings.getEmail() != null ? settings.getEmail() : "nutritioncompany.com@gmail.com");
                     }
+                    updateBadges(settings);
                     if (imgLogo != null && settings.getBusinessLogoPath() != null) {
                         try {
                             imgLogo.setImageURI(android.net.Uri.parse(settings.getBusinessLogoPath()));
@@ -249,6 +283,101 @@ public class ReportsActivity extends AppCompatActivity {
                 }
             });
         });
+    }
+
+    private void showSubscriptionUsageDialog() {
+        Subscription sub = SubscriptionManager.getInstance(this).getActiveSubscription();
+        if (sub == null) return;
+
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
+        builder.setTitle("Subscription & Usage");
+        
+        UsageManager usage = UsageManager.getInstance(this);
+        String msg = "Plan: " + sub.getPlanType() + "\n" +
+                     "Status: " + sub.getStatus() + "\n\n" +
+                     "Usage:\n" +
+                     "Customers: " + usage.getCustomerCount() + " / 100\n" +
+                     "Products: " + usage.getProductCount() + " / 100\n" +
+                     "Staff: " + usage.getStaffCount() + " / 1";
+        
+        builder.setMessage(msg);
+        builder.setPositiveButton("Upgrade", (dialog, which) -> {
+            SubscriptionManager.getInstance(this).upgradeToPremium();
+            Toast.makeText(this, "Upgraded to Premium!", Toast.LENGTH_SHORT).show();
+            recreate();
+        });
+        builder.setNegativeButton("Close", null);
+        builder.show();
+    }
+
+    private void updateBadges(ReceiptSettings settings) {
+        if (settings == null) return;
+
+        // Apply fade-in animation to badge container
+        View badgeContainer = findViewById(R.id.cardRoleBadge).getParent() instanceof View ? (View) findViewById(R.id.cardRoleBadge).getParent() : null;
+        if (badgeContainer != null) {
+            badgeContainer.setAlpha(0f);
+            badgeContainer.animate().alpha(1f).setDuration(200).start();
+        }
+        cardPlanBadge.setAlpha(0f);
+        cardPlanBadge.animate().alpha(1f).setDuration(200).start();
+
+        // Role Badge
+        String role = settings.getRole() != null ? settings.getRole() : "OWNER";
+        textRoleBadge.setText(role);
+        if ("OWNER".equalsIgnoreCase(role)) {
+            cardRoleBadge.setBackgroundTintList(android.content.res.ColorStateList.valueOf(Color.parseColor("#E8F5E9")));
+            textRoleBadge.setTextColor(Color.parseColor("#2E7D32"));
+        } else if ("MANAGER".equalsIgnoreCase(role)) {
+            cardRoleBadge.setBackgroundTintList(android.content.res.ColorStateList.valueOf(Color.parseColor("#E3F2FD")));
+            textRoleBadge.setTextColor(Color.parseColor("#1565C0"));
+        } else {
+            cardRoleBadge.setBackgroundTintList(android.content.res.ColorStateList.valueOf(Color.parseColor("#FFF3E0")));
+            textRoleBadge.setTextColor(Color.parseColor("#EF6C00"));
+        }
+
+        // Status Badge
+        String status = settings.getStatus() != null ? settings.getStatus() : "ACTIVE";
+        textStatusBadge.setText(status);
+        if ("ACTIVE".equalsIgnoreCase(status)) {
+            cardStatusBadge.setBackgroundTintList(android.content.res.ColorStateList.valueOf(Color.parseColor("#E8F5E9")));
+            textStatusBadge.setTextColor(Color.parseColor("#2E7D32"));
+            viewStatusDot.setBackgroundResource(R.drawable.bg_active_dot);
+        } else if ("EXPIRED".equalsIgnoreCase(status)) {
+            cardStatusBadge.setBackgroundTintList(android.content.res.ColorStateList.valueOf(Color.parseColor("#FFF3E0")));
+            textStatusBadge.setTextColor(Color.parseColor("#EF6C00"));
+            viewStatusDot.setBackgroundResource(R.drawable.bg_expired_dot);
+        } else {
+            cardStatusBadge.setBackgroundTintList(android.content.res.ColorStateList.valueOf(Color.parseColor("#FFEBEE")));
+            textStatusBadge.setTextColor(Color.parseColor("#C62828"));
+            viewStatusDot.setBackgroundResource(R.drawable.bg_suspended_dot);
+        }
+
+        // Plan Badge
+        String plan = settings.getPlanType() != null ? settings.getPlanType() : "FREE";
+        if ("PREMIUM".equalsIgnoreCase(plan)) {
+            textPlanBadge.setText(getString(R.string.plan_premium_label));
+            cardPlanBadge.setBackgroundTintList(android.content.res.ColorStateList.valueOf(Color.parseColor("#FFF8E1")));
+            textPlanBadge.setTextColor(Color.parseColor("#F9A825"));
+            imgPlanIcon.setImageResource(android.R.drawable.btn_star_big_on);
+            imgPlanIcon.setImageTintList(android.content.res.ColorStateList.valueOf(Color.parseColor("#F9A825")));
+        } else if ("ENTERPRISE".equalsIgnoreCase(plan)) {
+            textPlanBadge.setText(getString(R.string.plan_enterprise_label));
+            cardPlanBadge.setBackgroundTintList(android.content.res.ColorStateList.valueOf(Color.parseColor("#EDE7F6")));
+            textPlanBadge.setTextColor(Color.parseColor("#512DA8"));
+            imgPlanIcon.setImageResource(android.R.drawable.ic_menu_help); // Placeholder for diamond
+            imgPlanIcon.setImageTintList(android.content.res.ColorStateList.valueOf(Color.parseColor("#512DA8")));
+        } else {
+            textPlanBadge.setText(getString(R.string.plan_free_label));
+            cardPlanBadge.setBackgroundTintList(android.content.res.ColorStateList.valueOf(Color.parseColor("#F5F5F5")));
+            textPlanBadge.setTextColor(Color.parseColor("#616161"));
+            imgPlanIcon.setVisibility(View.GONE);
+            txtUpgradeCTA.setVisibility(View.VISIBLE);
+        }
+
+        if (!"FREE".equalsIgnoreCase(plan)) {
+            txtUpgradeCTA.setVisibility(View.GONE);
+        }
     }
 
     private void updateSidebarLanguageText() {
