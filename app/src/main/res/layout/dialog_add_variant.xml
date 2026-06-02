@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@color/white">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add New Variant"
+        android:textColor="#3F51B5"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="24dp" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:textColorHint="#64748B"
+        app:hintTextColor="#3F51B5"
+        app:boxStrokeColor="#3F51B5">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editVariantName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Variant Name (e.g. M White)"
+            android:textColor="@color/black"
+            android:inputType="text" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:textColorHint="#64748B"
+        app:hintTextColor="#3F51B5"
+        app:boxStrokeColor="#3F51B5">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editSellingPrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Selling Price*"
+            android:textColor="@color/black"
+            android:inputType="numberDecimal" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:textColorHint="#64748B"
+        app:hintTextColor="#3F51B5"
+        app:boxStrokeColor="#3F51B5">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editCostPrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Cost Price"
+            android:textColor="@color/black"
+            android:inputType="numberDecimal" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:textColorHint="#64748B"
+        app:hintTextColor="#3F51B5"
+        app:boxStrokeColor="#3F51B5">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editStock"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Stock Available"
+            android:textColor="@color/black"
+            android:inputType="number" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnSaveVariant"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:text="SAVE VARIANT"
+        android:textColor="@color/white"
+        android:backgroundTint="#3F51B5"
+        app:cornerRadius="8dp"
+        app:elevation="4dp" />
+
+</LinearLayout>

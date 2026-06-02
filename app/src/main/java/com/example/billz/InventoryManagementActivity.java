@@ -11,6 +11,8 @@ import android.widget.ImageView;
 
 import android.view.inputmethod.InputMethodManager;
 import android.transition.TransitionManager;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.content.res.ColorStateList;
@@ -18,6 +20,8 @@ import android.graphics.Color;
 import android.content.Intent;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -57,7 +61,11 @@ public class InventoryManagementActivity extends AppCompatActivity {
     private ActivityResultLauncher<Intent> addItemLauncher;
 
     private InventoryAdapter.OnItemClickListener itemClickListener = item -> {
-        if (item.getType() == 2) { // Modifier
+        if (item.getType() == 0) { // Item
+            Intent intent = new Intent(this, ManageItemActivity.class);
+            intent.putExtra("item_id", item.getDatabaseId());
+            addItemLauncher.launch(intent);
+        } else if (item.getType() == 2) { // Modifier
             Intent intent = new Intent(this, CreateModifierActivity.class);
             intent.putExtra("modifier_set_id", item.getDatabaseId());
             intent.putExtra("modifier_set_name", item.getName());
@@ -107,7 +115,8 @@ public class InventoryManagementActivity extends AppCompatActivity {
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == RESULT_OK) {
-                        // Refresh items list if needed
+                        loadItemsFromDB();
+                        loadCategoriesFromDB(); // Real-time reflection of category counts
                     }
                 }
         );
@@ -184,6 +193,8 @@ public class InventoryManagementActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerInventory);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        setupSwipeNavigation(tabLayout);
+
         findViewById(R.id.fabAdd).setOnClickListener(v -> {
             showAddMenuBottomSheet();
         });
@@ -196,7 +207,7 @@ public class InventoryManagementActivity extends AppCompatActivity {
         loadCategoriesFromDB();
         loadModifiersFromDB();
         loadIngredientsFromDB();
-        populateDummyData();
+        loadItemsFromDB();
 
         currentDisplayList = new ArrayList<>(itemsList);
         adapter = new InventoryAdapter(currentDisplayList, this, itemClickListener);
@@ -227,6 +238,48 @@ public class InventoryManagementActivity extends AppCompatActivity {
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {}
+        });
+    }
+
+    private void setupSwipeNavigation(TabLayout tabLayout) {
+        GestureDetector gestureDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
+            private static final int SWIPE_THRESHOLD = 100;
+            private static final int SWIPE_VELOCITY_THRESHOLD = 100;
+
+            @Override
+            public boolean onFling(@Nullable MotionEvent e1, @NonNull MotionEvent e2, float velocityX, float velocityY) {
+                if (e1 == null) return false;
+                float diffX = e2.getX() - e1.getX();
+                float diffY = e2.getY() - e1.getY();
+                if (Math.abs(diffX) > Math.abs(diffY)) {
+                    if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+                        int currentTab = tabLayout.getSelectedTabPosition();
+                        if (diffX < 0) {
+                            // Swipe Left gesture (finger moves left): Move to next tab
+                            if (currentTab < tabLayout.getTabCount() - 1) {
+                                TabLayout.Tab nextTab = tabLayout.getTabAt(currentTab + 1);
+                                if (nextTab != null) nextTab.select();
+                            }
+                        } else {
+                            // Swipe Right gesture (finger moves right): Move to previous tab
+                            if (currentTab > 0) {
+                                TabLayout.Tab prevTab = tabLayout.getTabAt(currentTab - 1);
+                                if (prevTab != null) prevTab.select();
+                            }
+                        }
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
+
+        recyclerView.addOnItemTouchListener(new RecyclerView.SimpleOnItemTouchListener() {
+            @Override
+            public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+                gestureDetector.onTouchEvent(e);
+                return false;
+            }
         });
     }
 
@@ -339,24 +392,23 @@ public class InventoryManagementActivity extends AppCompatActivity {
     private void loadCategoriesFromDB() {
         java.util.concurrent.Executors.newSingleThreadExecutor().execute(() -> {
             List<Category> dbCategories = AppDatabase.getInstance(this).categoryDao().getAllCategories();
+            ItemDao itemDao = AppDatabase.getInstance(this).itemDao();
+            
+            List<InventoryItem> newCategoriesList = new ArrayList<>();
+            for (Category cat : dbCategories) {
+                int count = itemDao.getItemCountByCategory(cat.getName());
+                String countText = count + (count == 1 ? " Item" : " Items");
+                
+                InventoryItem item = new InventoryItem(cat.getName(), "", countText, false, 0, new ArrayList<>());
+                if (cat.getImageUri() != null) item.setImageUri(cat.getImageUri());
+                item.setBackgroundColor(cat.getBackgroundColor());
+                item.setType(1); // Category
+                newCategoriesList.add(item);
+            }
+
             runOnUiThread(() -> {
                 categoriesList.clear();
-                for (Category cat : dbCategories) {
-                    InventoryItem item = new InventoryItem(cat.getName(), "", "0 Items", false, 0, new ArrayList<>());
-                    if (cat.getImageUri() != null) item.setImageUri(cat.getImageUri());
-                    item.setBackgroundColor(cat.getBackgroundColor());
-                    item.setType(1); // Category
-                    categoriesList.add(item);
-                }
-                
-                // Add remaining dummy categories
-                InventoryItem cat1 = new InventoryItem(getString(R.string.cat_supplements), "", getString(R.string.items_count, 12), false, 0, Arrays.asList("Health", "Wellness"));
-                cat1.setType(1);
-                categoriesList.add(cat1);
-                
-                InventoryItem cat2 = new InventoryItem(getString(R.string.cat_oats_grains), "", getString(R.string.items_count, 5), false, 0, Arrays.asList("Food", "Breakfast"));
-                cat2.setType(1);
-                categoriesList.add(cat2);
+                categoriesList.addAll(newCategoriesList);
 
                 // Update UI if on category tab
                 TabLayout tabLayout = findViewById(R.id.tabLayoutInventory);
@@ -451,6 +503,55 @@ public class InventoryManagementActivity extends AppCompatActivity {
         dialog.setContentView(view);
 
         com.google.android.material.chip.ChipGroup chipGroup = view.findViewById(R.id.chipGroupCategories);
+        chipGroup.removeAllViews();
+
+        // Color states for chips
+        int[][] states = new int[][] {
+            new int[] { android.R.attr.state_checked }, // checked
+            new int[] { -android.R.attr.state_checked } // unchecked
+        };
+        int[] textColors = new int[] {
+            Color.WHITE,
+            Color.parseColor("#475569")
+        };
+        int[] bgColors = new int[] {
+            Color.parseColor("#3F51B5"),
+            Color.WHITE
+        };
+        ColorStateList textStateList = new ColorStateList(states, textColors);
+        ColorStateList bgStateList = new ColorStateList(states, bgColors);
+
+        // Fetch categories from DB to populate filter chips
+        java.util.concurrent.Executors.newSingleThreadExecutor().execute(() -> {
+            List<Category> categories = AppDatabase.getInstance(this).categoryDao().getAllCategories();
+            
+            runOnUiThread(() -> {
+                // Add "Brand All Item" first
+                com.google.android.material.chip.Chip allChip = new com.google.android.material.chip.Chip(this);
+                allChip.setText("Brand All Item");
+                allChip.setCheckable(true);
+                allChip.setChecked(selectedFilterTags.isEmpty() || selectedFilterTags.contains("Brand All Item"));
+                allChip.setTextColor(textStateList);
+                allChip.setChipBackgroundColor(bgStateList);
+                allChip.setChipStrokeColor(ColorStateList.valueOf(Color.parseColor("#CBD5E1")));
+                allChip.setChipStrokeWidth(getResources().getDisplayMetrics().density * 1);
+                chipGroup.addView(allChip);
+
+                for (Category category : categories) {
+                    com.google.android.material.chip.Chip chip = new com.google.android.material.chip.Chip(this);
+                    chip.setText(category.getName());
+                    chip.setCheckable(true);
+                    chip.setChecked(selectedFilterTags.contains(category.getName()));
+                    
+                    chip.setTextColor(textStateList);
+                    chip.setChipBackgroundColor(bgStateList);
+                    chip.setChipStrokeColor(ColorStateList.valueOf(Color.parseColor("#CBD5E1")));
+                    chip.setChipStrokeWidth(getResources().getDisplayMetrics().density * 1);
+                    
+                    chipGroup.addView(chip);
+                }
+            });
+        });
         
         view.findViewById(R.id.btnCloseFilter).setOnClickListener(v -> dialog.dismiss());
         
@@ -462,11 +563,12 @@ public class InventoryManagementActivity extends AppCompatActivity {
         });
         
         view.findViewById(R.id.btnApplyFilter).setOnClickListener(v -> {
-            List<Integer> checkedIds = chipGroup.getCheckedChipIds();
             selectedFilterTags.clear();
-            for (Integer id : checkedIds) {
-                com.google.android.material.chip.Chip chip = view.findViewById(id);
-                selectedFilterTags.add(chip.getText().toString());
+            for (int i = 0; i < chipGroup.getChildCount(); i++) {
+                com.google.android.material.chip.Chip chip = (com.google.android.material.chip.Chip) chipGroup.getChildAt(i);
+                if (chip.isChecked()) {
+                    selectedFilterTags.add(chip.getText().toString());
+                }
             }
             applyAllFilters();
             dialog.dismiss();
@@ -506,6 +608,42 @@ public class InventoryManagementActivity extends AppCompatActivity {
         });
 
         dialog.show();
+    }
+
+    private void loadItemsFromDB() {
+        java.util.concurrent.Executors.newSingleThreadExecutor().execute(() -> {
+            List<Item> dbItems = AppDatabase.getInstance(this).itemDao().getAllItems();
+            runOnUiThread(() -> {
+                itemsList.clear();
+                for (Item item : dbItems) {
+                    List<String> tags = new ArrayList<>();
+                    if (item.getCategory() != null) tags.add(item.getCategory());
+                    
+                    String stockStatus = item.getStockQuantity() + " Left In Stock";
+                    if (item.getStockQuantity() == 0) stockStatus = "Out of stock";
+                    
+                    InventoryItem uiItem = new InventoryItem(
+                            item.getName(),
+                            "₹" + item.getSellingPrice(),
+                            stockStatus,
+                            item.getStockQuantity() == 0,
+                            item.getStockQuantity(),
+                            tags
+                    );
+                    uiItem.setDatabaseId(item.getId());
+                    itemsList.add(uiItem);
+                }
+                
+                // Keep dummy data if we want to show it alongside real data
+                populateDummyData();
+
+                // Update UI if on items tab
+                TabLayout tabLayout = findViewById(R.id.tabLayoutInventory);
+                if (tabLayout != null && tabLayout.getSelectedTabPosition() == 0) {
+                    updateDisplayList(itemsList);
+                }
+            });
+        });
     }
 
     private void populateDummyData() {

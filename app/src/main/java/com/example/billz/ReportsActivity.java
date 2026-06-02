@@ -38,19 +38,25 @@ import java.util.concurrent.Executors;
 public class ReportsActivity extends AppCompatActivity {
 
     private static final int TAB_REPORTS = 0;
+    private static final int TAB_ITEMS = 3;
 
     private View emptyStateContainer;
     private View reportsContentPlaceholder;
     private View moreContentContainer;
+    private View itemsContentContainer;
     private View dateSelectorRow;
     private LinearLayout bottomNavigationView;
     private DrawerLayout drawerLayout;
     private MaterialToolbar toolbar;
+    private View topBarReports;
     private View[] bottomTabs;
     private ImageView[] bottomTabIcons;
     private TextView[] bottomTabLabels;
     private TextView textHeaderBusinessName, textHeaderPhoneNumber, txtOwnerName, txtOwnerEmail;
     private ImageView imgLogo;
+    
+    private RecyclerView recyclerItemCategories;
+    private int currentTab = TAB_REPORTS;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,10 +71,17 @@ public class ReportsActivity extends AppCompatActivity {
         emptyStateContainer = findViewById(R.id.emptyStateContainer);
         reportsContentPlaceholder = findViewById(R.id.reportsContentPlaceholder);
         moreContentContainer = findViewById(R.id.moreContentContainer);
+        itemsContentContainer = findViewById(R.id.itemsContentContainer);
         dateSelectorRow = findViewById(R.id.dateSelectorRow);
         bottomNavigationView = findViewById(R.id.bottomNavigation);
         drawerLayout = findViewById(R.id.drawerLayout);
+        topBarReports = findViewById(R.id.topBarReports);
         toolbar = findViewById(R.id.toolbarReports);
+
+        recyclerItemCategories = findViewById(R.id.recyclerItemCategories);
+        if (recyclerItemCategories != null) {
+            recyclerItemCategories.setLayoutManager(new androidx.recyclerview.widget.LinearLayoutManager(this));
+        }
 
         textHeaderBusinessName = findViewById(R.id.textHeaderBusinessName);
         textHeaderPhoneNumber = findViewById(R.id.textHeaderPhoneNumber);
@@ -105,12 +118,14 @@ public class ReportsActivity extends AppCompatActivity {
 
         ViewCompat.setOnApplyWindowInsetsListener(root, (view, windowInsets) -> {
             Insets systemBars = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
-            toolbar.setPadding(
-                    toolbar.getPaddingLeft(),
-                    systemBars.top + getResources().getDimensionPixelSize(R.dimen.reports_screen_padding_top),
-                    toolbar.getPaddingRight(),
-                    toolbar.getPaddingBottom()
-            );
+            if (topBarReports != null) {
+                topBarReports.setPadding(
+                        topBarReports.getPaddingLeft(),
+                        systemBars.top,
+                        topBarReports.getPaddingRight(),
+                        topBarReports.getPaddingBottom()
+                );
+            }
             bottomNavigationView.setPadding(
                     bottomNavigationView.getPaddingLeft(),
                     getResources().getDimensionPixelSize(R.dimen.reports_bottom_nav_padding_top),
@@ -218,6 +233,9 @@ public class ReportsActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         loadBusinessData();
+        if (currentTab == TAB_ITEMS) {
+            loadItemCategories();
+        }
     }
 
     private void loadBusinessData() {
@@ -283,21 +301,6 @@ public class ReportsActivity extends AppCompatActivity {
             
             textLanguage.setText(getString(R.string.language_display, languageName));
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.reports_top_app_bar_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int itemId = item.getItemId();
-        if (itemId == R.id.action_share || itemId == R.id.action_messages) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     public void showEmptyState(boolean isEmpty) {
@@ -398,6 +401,9 @@ public class ReportsActivity extends AppCompatActivity {
     }
 
     private void highlightBottomTab(int selectedTab) {
+        this.currentTab = selectedTab;
+        invalidateOptionsMenu();
+
         int unselectedColor = ContextCompat.getColor(this, R.color.reports_tab_unselected);
         int selectedColor = ContextCompat.getColor(this, R.color.white);
 
@@ -414,6 +420,7 @@ public class ReportsActivity extends AppCompatActivity {
 
         // Reset all views
         moreContentContainer.setVisibility(View.GONE);
+        itemsContentContainer.setVisibility(View.GONE);
         emptyStateContainer.setVisibility(View.GONE);
         reportsContentPlaceholder.setVisibility(View.GONE);
         dateSelectorRow.setVisibility(View.GONE);
@@ -422,36 +429,105 @@ public class ReportsActivity extends AppCompatActivity {
             // SHOW Grid
             moreContentContainer.setVisibility(View.VISIBLE);
             toolbar.setTitle(getString(R.string.reports_tab_more));
-            toolbar.setBackgroundColor(ContextCompat.getColor(this, R.color.reports_tab_selected));
+            int bgColor = ContextCompat.getColor(this, R.color.reports_tab_selected);
+            topBarReports.setBackgroundColor(bgColor);
+            toolbar.setBackgroundColor(bgColor);
             toolbar.setTitleTextColor(selectedColor);
             toolbar.setNavigationIconTint(selectedColor);
         } else if (selectedId == R.id.tabItems) {
-            // SHOW Grid
-            moreContentContainer.setVisibility(View.VISIBLE);
+            // SHOW Items screen
+            itemsContentContainer.setVisibility(View.VISIBLE);
             toolbar.setTitle(getString(R.string.reports_tab_items));
-            toolbar.setBackgroundColor(ContextCompat.getColor(this, R.color.reports_tab_selected));
+            int bgColor = ContextCompat.getColor(this, R.color.reports_tab_selected);
+            topBarReports.setBackgroundColor(bgColor);
+            toolbar.setBackgroundColor(bgColor);
             toolbar.setTitleTextColor(selectedColor);
             toolbar.setNavigationIconTint(selectedColor);
+            loadItemCategories();
         } else if (selectedId == R.id.tabReports) {
             // Reports section
             dateSelectorRow.setVisibility(View.VISIBLE);
             showEmptyState(true);
             toolbar.setTitle(getString(R.string.reports_title));
-            toolbar.setBackgroundColor(ContextCompat.getColor(this, R.color.reports_surface));
+            int bgColor = ContextCompat.getColor(this, R.color.reports_surface);
+            topBarReports.setBackgroundColor(bgColor);
+            toolbar.setBackgroundColor(bgColor);
             toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.reports_text_primary));
             toolbar.setNavigationIconTint(ContextCompat.getColor(this, R.color.reports_text_primary));
         } else if (selectedId == R.id.tabToday) {
             toolbar.setTitle(getString(R.string.reports_tab_today));
             reportsContentPlaceholder.setVisibility(View.VISIBLE);
-            toolbar.setBackgroundColor(ContextCompat.getColor(this, R.color.reports_surface));
+            int bgColor = ContextCompat.getColor(this, R.color.reports_surface);
+            topBarReports.setBackgroundColor(bgColor);
+            toolbar.setBackgroundColor(bgColor);
             toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.reports_text_primary));
             toolbar.setNavigationIconTint(ContextCompat.getColor(this, R.color.reports_text_primary));
         } else if (selectedId == R.id.tabCounter) {
             toolbar.setTitle(getString(R.string.reports_tab_counter));
             reportsContentPlaceholder.setVisibility(View.VISIBLE);
-            toolbar.setBackgroundColor(ContextCompat.getColor(this, R.color.reports_surface));
+            int bgColor = ContextCompat.getColor(this, R.color.reports_surface);
+            topBarReports.setBackgroundColor(bgColor);
+            toolbar.setBackgroundColor(bgColor);
             toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.reports_text_primary));
             toolbar.setNavigationIconTint(ContextCompat.getColor(this, R.color.reports_text_primary));
         }
+    }
+
+    private void loadItemCategories() {
+        Executors.newSingleThreadExecutor().execute(() -> {
+            List<Category> dbCategories = AppDatabase.getInstance(this).categoryDao().getAllCategories();
+            ItemDao itemDao = AppDatabase.getInstance(this).itemDao();
+            
+            List<ItemCategoryAdapter.CategoryWithCount> list = new ArrayList<>();
+            for (Category cat : dbCategories) {
+                int count = itemDao.getItemCountByCategory(cat.getName());
+                list.add(new ItemCategoryAdapter.CategoryWithCount(cat.getName(), count));
+            }
+            
+            // Add dummy if none to match image initially
+            if (list.isEmpty()) {
+                list.add(new ItemCategoryAdapter.CategoryWithCount("Brand All Item", 5));
+                list.add(new ItemCategoryAdapter.CategoryWithCount("Compression Tshirt", 1));
+                list.add(new ItemCategoryAdapter.CategoryWithCount("MASS GAINER", 10));
+                list.add(new ItemCategoryAdapter.CategoryWithCount("Creatine", 3));
+                list.add(new ItemCategoryAdapter.CategoryWithCount("College", 1));
+                list.add(new ItemCategoryAdapter.CategoryWithCount("DAILY SUPPORT", 18));
+            }
+
+            runOnUiThread(() -> {
+                if (recyclerItemCategories != null) {
+                    recyclerItemCategories.setAdapter(new ItemCategoryAdapter(list));
+                }
+            });
+        });
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        menu.clear();
+        if (currentTab == TAB_ITEMS) {
+            getMenuInflater().inflate(R.menu.menu_items_tab, menu);
+        } else {
+            getMenuInflater().inflate(R.menu.reports_top_app_bar_menu, menu);
+        }
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int itemId = item.getItemId();
+        if (itemId == R.id.action_share || itemId == R.id.action_messages) {
+            return true;
+        }
+        if (itemId == R.id.action_add_customer) {
+            startActivity(new Intent(this, AddCustomerActivity.class));
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

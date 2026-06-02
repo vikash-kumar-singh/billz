@@ -2,8 +2,10 @@ package com.example.billz;
 
 import android.os.Bundle;
 import android.content.Intent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,10 +24,13 @@ import java.util.List;
 
 public class AddItemActivity extends AppCompatActivity {
 
-    private EditText editItemName;
+    private EditText editItemName, editSellingPriceSimple;
     private TextView btnSimple, btnAdvance, textCategory;
     private View layoutSimpleMode, layoutAdvanceMode;
+    private LinearLayout containerVariants;
     private boolean isSimpleMode = true;
+    private String selectedSellBy = "Unit";
+    private List<View> variantViews = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,11 +49,14 @@ public class AddItemActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(v -> finish());
         
         editItemName = findViewById(R.id.editItemName);
+        editSellingPriceSimple = findViewById(R.id.editSellingPriceSimple);
+        
         textCategory = findViewById(R.id.textCategory);
         btnSimple = findViewById(R.id.btnSimple);
         btnAdvance = findViewById(R.id.btnAdvance);
         layoutSimpleMode = findViewById(R.id.layoutSimpleMode);
         layoutAdvanceMode = findViewById(R.id.layoutAdvanceMode);
+        containerVariants = findViewById(R.id.containerVariants);
 
         btnSimple.setOnClickListener(v -> setMode(true));
         btnAdvance.setOnClickListener(v -> setMode(false));
@@ -56,16 +64,112 @@ public class AddItemActivity extends AppCompatActivity {
         findViewById(R.id.cardCategory).setOnClickListener(v -> showSelectCategoryBottomSheet());
         findViewById(R.id.cardSellByUnit).setOnClickListener(v -> showSellByBottomSheet());
 
-        findViewById(R.id.btnSave).setOnClickListener(v -> {
-            String name = editItemName.getText().toString().trim();
-            if (name.isEmpty()) {
-                Toast.makeText(this, "Please enter item name", Toast.LENGTH_SHORT).show();
-                return;
+        findViewById(R.id.btnAddVariant).setOnClickListener(v -> addNewVariantView());
+        findViewById(R.id.btnSave).setOnClickListener(v -> saveItem());
+
+        // Handle pre-selected category
+        String preselectedCategory = getIntent().getStringExtra("category");
+        if (preselectedCategory != null) {
+            textCategory.setText(preselectedCategory);
+            textCategory.setTextColor(0xFF000000);
+        }
+
+        // Initialize first variant for advance mode
+        addNewVariantView();
+    }
+
+    private void addNewVariantView() {
+        View variantView = LayoutInflater.from(this).inflate(R.layout.item_add_variant, containerVariants, false);
+        variantViews.add(variantView);
+        containerVariants.addView(variantView);
+
+        variantView.findViewById(R.id.btnRemoveVariant).setOnClickListener(v -> {
+            if (variantViews.size() > 1) {
+                variantViews.remove(variantView);
+                containerVariants.removeView(variantView);
+            } else {
+                Toast.makeText(this, "At least one variant is required", Toast.LENGTH_SHORT).show();
             }
-            // For now, just show a success message and finish
-            Toast.makeText(this, "Item Saved Successfully", Toast.LENGTH_SHORT).show();
-            finish();
         });
+    }
+
+    private void saveItem() {
+        String name = editItemName.getText().toString().trim();
+        if (name.isEmpty()) {
+            Toast.makeText(this, "Please enter item name", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String category = textCategory.getText().toString();
+        if (category.equals("Ex: Fruits")) category = "Uncategorized";
+
+        final List<VariantData> variantsToSave = new ArrayList<>();
+
+        if (isSimpleMode) {
+            double sellingPrice = 0;
+            try {
+                sellingPrice = Double.parseDouble(editSellingPriceSimple.getText().toString());
+            } catch (Exception ignored) {}
+            variantsToSave.add(new VariantData("Default", sellingPrice, 0, 0));
+        } else {
+            for (View v : variantViews) {
+                EditText editName = v.findViewById(R.id.editVariantName);
+                EditText editSelling = v.findViewById(R.id.editSellingPriceAdvance);
+                EditText editCost = v.findViewById(R.id.editCostPriceAdvance);
+                EditText editStock = v.findViewById(R.id.editStockAdvance);
+
+                String vName = editName.getText().toString().trim();
+                if (vName.isEmpty()) vName = "Default";
+
+                double selling = 0, cost = 0;
+                int stock = 0;
+                try { selling = Double.parseDouble(editSelling.getText().toString()); } catch (Exception ignored) {}
+                try { cost = Double.parseDouble(editCost.getText().toString()); } catch (Exception ignored) {}
+                try { stock = Integer.parseInt(editStock.getText().toString()); } catch (Exception ignored) {}
+
+                variantsToSave.add(new VariantData(vName, selling, cost, stock));
+            }
+        }
+
+        if (variantsToSave.isEmpty()) {
+            Toast.makeText(this, "No variants to save", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Use the first variant's prices/stock for the base Item record (for legacy list views)
+        VariantData first = variantsToSave.get(0);
+        Item item = new Item(name, category, first.sellingPrice, first.costPrice, first.stockQuantity, first.name, selectedSellBy, !isSimpleMode);
+
+        java.util.concurrent.Executors.newSingleThreadExecutor().execute(() -> {
+            long itemId = AppDatabase.getInstance(this).itemDao().insert(item);
+            
+            for (int i = 0; i < variantsToSave.size(); i++) {
+                VariantData vd = variantsToSave.get(i);
+                Variant variant = new Variant((int)itemId, vd.name, vd.sellingPrice, vd.costPrice, vd.stockQuantity);
+                variant.setSortOrder(i);
+                AppDatabase.getInstance(this).variantDao().insert(variant);
+            }
+
+            runOnUiThread(() -> {
+                Toast.makeText(this, "Item Saved Successfully", Toast.LENGTH_SHORT).show();
+                setResult(RESULT_OK);
+                finish();
+            });
+        });
+    }
+
+    private static class VariantData {
+        String name;
+        double sellingPrice;
+        double costPrice;
+        int stockQuantity;
+
+        VariantData(String name, double sellingPrice, double costPrice, int stockQuantity) {
+            this.name = name;
+            this.sellingPrice = sellingPrice;
+            this.costPrice = costPrice;
+            this.stockQuantity = stockQuantity;
+        }
     }
 
     private void setMode(boolean simple) {
@@ -93,11 +197,13 @@ public class AddItemActivity extends AppCompatActivity {
         dialog.setContentView(view);
 
         view.findViewById(R.id.optionSellByUnit).setOnClickListener(v -> {
+            selectedSellBy = "Unit";
             dialog.dismiss();
             Toast.makeText(this, "Sell By Unit selected", Toast.LENGTH_SHORT).show();
         });
 
         view.findViewById(R.id.optionSellByFraction).setOnClickListener(v -> {
+            selectedSellBy = "Fraction";
             dialog.dismiss();
             Toast.makeText(this, "Sell By Fraction selected", Toast.LENGTH_SHORT).show();
         });

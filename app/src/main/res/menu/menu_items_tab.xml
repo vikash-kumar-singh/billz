@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_toggle_view"
+        android:icon="@drawable/ic_grid_view"
+        android:title="Toggle View"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_add_customer"
+        android:icon="@drawable/ic_person_add"
+        android:title="Add Customer"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_help"
+        android:icon="@drawable/ic_call_support"
+        android:title="Help"
+        app:showAsAction="always" />
+</menu>

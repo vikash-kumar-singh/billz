@@ -16,4 +16,7 @@ public interface CategoryDao {
 
     @Query("DELETE FROM categories WHERE name = :name")
     void deleteByName(String name);
+
+    @Query("SELECT * FROM categories WHERE name = :name LIMIT 1")
+    Category getByName(String name);
 }
