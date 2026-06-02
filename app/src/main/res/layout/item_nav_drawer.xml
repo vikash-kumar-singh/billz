@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:background="?attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingHorizontal="16dp">
+
+    <ImageView
+        android:id="@+id/itemIcon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/ic_nav_items"
+        app:tint="@color/reports_tab_selected" />
+
+    <TextView
+        android:id="@+id/itemTitle"
+        style="@style/TextAppearance.Material3.BodyMedium"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_weight="1"
+        android:text="Menu Item"
+        android:textColor="@color/reports_text_primary" />
+
+    <TextView
+        android:id="@+id/itemBadge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_reports_nav_item"
+        android:backgroundTint="@color/reports_tab_selected"
+        android:paddingHorizontal="8dp"
+        android:paddingVertical="2dp"
+        android:text="0"
+        android:textColor="@color/white"
+        android:textSize="10sp"
+        android:visibility="gone" />
+
+</LinearLayout>

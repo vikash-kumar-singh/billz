@@ -11,6 +11,9 @@ public class ReceiptSettings {
     private String businessName;
     private String email;
     private String phoneNumber;
+    private String role;
+    private String planType;
+    private String status;
     private boolean showPhoneNumber;
     private String businessAddress;
     private boolean showBusinessAddress;
@@ -62,6 +65,15 @@ public class ReceiptSettings {
 
     public String getPhoneNumber() { return phoneNumber; }
     public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
+
+    public String getRole() { return role; }
+    public void setRole(String role) { this.role = role; }
+
+    public String getPlanType() { return planType; }
+    public void setPlanType(String planType) { this.planType = planType; }
+
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
 
     public boolean isShowPhoneNumber() { return showPhoneNumber; }
     public void setShowPhoneNumber(boolean showPhoneNumber) { this.showPhoneNumber = showPhoneNumber; }

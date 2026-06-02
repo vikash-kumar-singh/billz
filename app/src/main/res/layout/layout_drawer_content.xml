@@ -8,588 +8,358 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingBottom="24dp">
 
-        <!-- Header Part (Included from previous header) -->
         <include layout="@layout/nav_header_reports" />
 
-        <!-- Menu Items -->
-        <LinearLayout
+        <!-- SECTION 1 - BUSINESS -->
+        <TextView
+            style="@style/TextAppearance.Material3.LabelMedium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingBottom="16dp">
+            android:paddingHorizontal="16dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="8dp"
+            android:text="BUSINESS"
+            android:textColor="@color/reports_tab_selected"
+            android:textStyle="bold" />
 
-            <!-- Help Chat -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:gravity="center_vertical"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:orientation="horizontal">
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@android:drawable/stat_notify_chat"
-                    app:tint="@color/reports_tab_selected" />
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
-                    android:layout_weight="1"
-                    android:text="@string/nav_help_chat"
-                    android:textColor="@color/reports_text_primary"
-                    android:textSize="14sp" />
-            </LinearLayout>
-
-            <!-- Inventory Management -->
-            <LinearLayout
-                android:id="@+id/nav_inventory"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:gravity="center_vertical"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:orientation="horizontal"
-                android:clickable="true"
-                android:focusable="true"
-                android:background="?attr/selectableItemBackground">
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_nav_items"
-                    app:tint="@color/reports_tab_selected" />
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
-                    android:layout_weight="1"
-                    android:text="@string/nav_inventory"
-                    android:textColor="@color/reports_text_primary"
-                    android:textSize="14sp" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_reports_nav_item"
-                    android:backgroundTint="@color/reports_tab_selected"
-                    android:paddingHorizontal="8dp"
-                    android:paddingVertical="2dp"
-                    android:text="327"
-                    android:textColor="@color/white"
-                    android:textSize="10sp" />
-            </LinearLayout>
-
-            <!-- Add Expense -->
-            <LinearLayout
-                android:id="@+id/nav_add_expense"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:gravity="center_vertical"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:orientation="horizontal"
-                android:clickable="true"
-                android:focusable="true"
-                android:background="?attr/selectableItemBackground">
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@android:drawable/ic_menu_add"
-                    app:tint="@color/reports_tab_selected" />
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
-                    android:layout_weight="1"
-                    android:text="@string/nav_add_expense"
-                    android:textColor="@color/reports_text_primary"
-                    android:textSize="14sp" />
-            </LinearLayout>
-
-            <!-- Receipts -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:gravity="center_vertical"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:orientation="horizontal">
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@android:drawable/ic_menu_agenda"
-                    app:tint="@color/reports_tab_selected" />
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
-                    android:layout_weight="1"
-                    android:text="@string/nav_receipts"
-                    android:textColor="@color/reports_text_primary"
-                    android:textSize="14sp" />
-            </LinearLayout>
-
-            <!-- Customers Management -->
-            <LinearLayout
-                android:id="@+id/nav_customers"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:gravity="center_vertical"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:orientation="horizontal"
-                android:clickable="true"
-                android:focusable="true"
-                android:background="?attr/selectableItemBackground">
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@android:drawable/ic_menu_myplaces"
-                    app:tint="@color/reports_tab_selected" />
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
-                    android:layout_weight="1"
-                    android:text="@string/nav_customers"
-                    android:textColor="@color/reports_text_primary"
-                    android:textSize="14sp" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_reports_nav_item"
-                    android:backgroundTint="@color/reports_tab_selected"
-                    android:paddingHorizontal="8dp"
-                    android:paddingVertical="2dp"
-                    android:text="470"
-                    android:textColor="@color/white"
-                    android:textSize="10sp" />
-            </LinearLayout>
-
-            <!-- Staff Management -->
-            <LinearLayout
-                android:id="@+id/nav_staff"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:gravity="center_vertical"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:orientation="horizontal"
-                android:clickable="true"
-                android:focusable="true"
-                android:background="?attr/selectableItemBackground">
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@android:drawable/ic_menu_gallery"
-                    app:tint="@color/reports_tab_selected" />
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
-                    android:layout_weight="1"
-                    android:text="@string/nav_staff"
-                    android:textColor="@color/reports_text_primary"
-                    android:textSize="14sp" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_reports_nav_item"
-                    android:backgroundTint="@color/reports_tab_selected"
-                    android:paddingHorizontal="8dp"
-                    android:paddingVertical="2dp"
-                    android:text="0"
-                    android:textColor="@color/white"
-                    android:textSize="10sp" />
-            </LinearLayout>
-
-            <!-- ShopFront -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:gravity="center_vertical"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:orientation="horizontal">
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@android:drawable/ic_menu_view"
-                    app:tint="@color/reports_tab_selected" />
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
-                    android:layout_weight="1"
-                    android:text="@string/nav_shopfront"
-                    android:textColor="@color/reports_text_primary"
-                    android:textSize="14sp" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_reports_nav_item"
-                    android:backgroundTint="@color/reports_tab_selected"
-                    android:paddingHorizontal="8dp"
-                    android:paddingVertical="2dp"
-                    android:text="0"
-                    android:textColor="@color/white"
-                    android:textSize="10sp" />
-            </LinearLayout>
-
-            <!-- Refer App -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:gravity="center_vertical"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:orientation="horizontal">
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@android:drawable/ic_menu_share"
-                    app:tint="@color/reports_tab_selected" />
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
-                    android:layout_weight="1"
-                    android:text="@string/nav_refer"
-                    android:textColor="@color/reports_text_primary"
-                    android:textSize="14sp" />
-            </LinearLayout>
-
-            <!-- Returned Receipt -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:gravity="center_vertical"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:orientation="horizontal">
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@android:drawable/ic_input_get"
-                    app:tint="@color/reports_tab_selected" />
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
-                    android:layout_weight="1"
-                    android:text="@string/nav_returned_receipt"
-                    android:textColor="@color/reports_text_primary"
-                    android:textSize="14sp" />
-            </LinearLayout>
-
-            <!-- Web Back Office -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:gravity="center_vertical"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:orientation="horizontal">
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@android:drawable/ic_menu_mapmode"
-                    app:tint="@color/reports_tab_selected" />
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
-                    android:layout_weight="1"
-                    android:text="@string/nav_web_office"
-                    android:textColor="@color/reports_text_primary"
-                    android:textSize="14sp" />
-            </LinearLayout>
-
-            <!-- Feedback -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:gravity="center_vertical"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:orientation="horizontal">
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@android:drawable/ic_menu_directions"
-                    app:tint="@color/reports_tab_selected" />
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
-                    android:layout_weight="1"
-                    android:text="@string/nav_feedback"
-                    android:textColor="@color/reports_text_primary"
-                    android:textSize="14sp" />
-            </LinearLayout>
-
-            <!-- Buy Printer -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:gravity="center_vertical"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:orientation="horizontal">
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@android:drawable/ic_menu_camera"
-                    app:tint="@color/reports_tab_selected" />
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
-                    android:layout_weight="1"
-                    android:text="@string/nav_buy_printer"
-                    android:textColor="@color/reports_text_primary"
-                    android:textSize="14sp" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="#4CAF50"
-                    android:paddingHorizontal="6dp"
-                    android:paddingVertical="2dp"
-                    android:text="@string/more_new"
-                    android:textColor="@color/white"
-                    android:textSize="10sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:background="#EEEEEE" />
-
+        <LinearLayout
+            android:id="@+id/nav_edit_profile_item"
+            style="@style/NavDrawerItemStyle">
+            <ImageView
+                style="@style/NavDrawerIconStyle"
+                android:src="@android:drawable/ic_menu_edit"
+                android:contentDescription="@string/nav_edit_profile" />
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingStart="16dp"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
-                android:text="@string/nav_other_apps"
-                android:textColor="@color/reports_text_secondary"
-                android:textSize="14sp" />
-
-            <!-- Connect Kitchen display App -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:gravity="center_vertical"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:orientation="horizontal">
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@android:drawable/ic_menu_call"
-                    app:tint="@color/reports_tab_selected" />
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
-                    android:layout_weight="1"
-                    android:text="@string/nav_connect_kitchen"
-                    android:textColor="@color/reports_text_primary"
-                    android:textSize="14sp" />
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:background="#EEEEEE" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingStart="16dp"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
-                android:text="@string/nav_settings_title"
-                android:textColor="@color/reports_text_secondary"
-                android:textSize="14sp" />
-
-            <!-- Language -->
-            <LinearLayout
-                android:id="@+id/nav_language"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:gravity="center_vertical"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:orientation="horizontal"
-                android:clickable="true"
-                android:focusable="true"
-                android:background="?attr/selectableItemBackground">
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@android:drawable/ic_menu_sort_alphabetically"
-                    app:tint="@color/reports_tab_selected" />
-                <TextView
-                    android:id="@+id/textLanguageName"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
-                    android:layout_weight="1"
-                    android:text="Language - English"
-                    android:textColor="@color/reports_text_primary"
-                    android:textSize="14sp" />
-            </LinearLayout>
-
-            <!-- Weighing Machine -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:gravity="center_vertical"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:orientation="horizontal">
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@android:drawable/ic_menu_manage"
-                    app:tint="@color/reports_tab_selected" />
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
-                    android:layout_weight="1"
-                    android:text="@string/nav_weighing_machine"
-                    android:textColor="@color/reports_text_primary"
-                    android:textSize="14sp" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="#4CAF50"
-                    android:paddingHorizontal="6dp"
-                    android:paddingVertical="2dp"
-                    android:text="@string/more_new"
-                    android:textColor="@color/white"
-                    android:textSize="10sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-            <!-- Receipt Settings -->
-            <LinearLayout
-                android:id="@+id/nav_receipt_settings"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:gravity="center_vertical"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:orientation="horizontal"
-                android:clickable="true"
-                android:focusable="true"
-                android:background="?attr/selectableItemBackground">
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@android:drawable/ic_menu_agenda"
-                    app:tint="@color/reports_tab_selected" />
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
-                    android:layout_weight="1"
-                    android:text="@string/nav_receipt_settings"
-                    android:textColor="@color/reports_text_primary"
-                    android:textSize="14sp" />
-            </LinearLayout>
-
-            <!-- Business Settings -->
-            <LinearLayout
-                android:id="@+id/nav_business_settings"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:gravity="center_vertical"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:orientation="horizontal"
-                android:clickable="true"
-                android:focusable="true"
-                android:background="?attr/selectableItemBackground">
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@android:drawable/ic_menu_preferences"
-                    app:tint="@color/reports_tab_selected" />
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
-                    android:layout_weight="1"
-                    android:text="@string/nav_business_settings"
-                    android:textColor="@color/reports_text_primary"
-                    android:textSize="14sp" />
-            </LinearLayout>
-
-            <!-- Printer Setup -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:gravity="center_vertical"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:orientation="horizontal">
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@android:drawable/ic_menu_camera"
-                    app:tint="@color/reports_tab_selected" />
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
-                    android:layout_weight="1"
-                    android:text="@string/nav_printer_setup"
-                    android:textColor="@color/reports_text_primary"
-                    android:textSize="14sp" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_reports_nav_item"
-                    android:backgroundTint="@color/reports_tab_selected"
-                    android:paddingHorizontal="8dp"
-                    android:paddingVertical="2dp"
-                    android:text="3"
-                    android:textColor="@color/white"
-                    android:textSize="10sp" />
-            </LinearLayout>
-
-            <!-- Logout -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:gravity="center_vertical"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:orientation="horizontal">
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@android:drawable/ic_lock_power_off"
-                    app:tint="@color/reports_tab_selected" />
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
-                    android:layout_weight="1"
-                    android:text="@string/nav_logout"
-                    android:textColor="@color/reports_text_primary"
-                    android:textSize="14sp" />
-            </LinearLayout>
-
+                style="@style/NavDrawerTextStyle"
+                android:text="@string/nav_edit_profile" />
         </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/nav_switch_business"
+            style="@style/NavDrawerItemStyle">
+            <ImageView
+                style="@style/NavDrawerIconStyle"
+                android:src="@android:drawable/ic_menu_rotate"
+                android:contentDescription="@string/header_switch_business" />
+            <TextView
+                style="@style/NavDrawerTextStyle"
+                android:text="@string/header_switch_business" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/nav_create_business"
+            style="@style/NavDrawerItemStyle">
+            <ImageView
+                style="@style/NavDrawerIconStyle"
+                android:src="@android:drawable/ic_input_add"
+                android:contentDescription="@string/header_create_business" />
+            <TextView
+                style="@style/NavDrawerTextStyle"
+                android:text="@string/header_create_business" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/nav_subscription"
+            style="@style/NavDrawerItemStyle">
+            <ImageView
+                style="@style/NavDrawerIconStyle"
+                android:src="@android:drawable/btn_star_big_on"
+                android:contentDescription="Subscription" />
+            <TextView
+                style="@style/NavDrawerTextStyle"
+                android:text="@string/nav_subscription" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/nav_billing_history"
+            style="@style/NavDrawerItemStyle">
+            <ImageView
+                style="@style/NavDrawerIconStyle"
+                android:src="@android:drawable/ic_menu_agenda"
+                android:contentDescription="Billing History" />
+            <TextView
+                style="@style/NavDrawerTextStyle"
+                android:text="@string/nav_billing_history" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="8dp"
+            android:background="#EEEEEE" />
+
+        <!-- SECTION 2 - OPERATIONS -->
+        <TextView
+            style="@style/TextAppearance.Material3.LabelMedium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="16dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="8dp"
+            android:text="@string/section_operations"
+            android:textColor="@color/reports_tab_selected"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:id="@+id/nav_inventory"
+            style="@style/NavDrawerItemStyle">
+            <ImageView
+                style="@style/NavDrawerIconStyle"
+                android:src="@drawable/ic_nav_items"
+                android:contentDescription="@string/nav_inventory" />
+            <TextView
+                style="@style/NavDrawerTextStyle"
+                android:text="@string/nav_inventory" />
+            <TextView
+                android:id="@+id/badgeInventory"
+                style="@style/NavDrawerBadgeStyle"
+                android:text="327" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/nav_customers"
+            style="@style/NavDrawerItemStyle">
+            <ImageView
+                style="@style/NavDrawerIconStyle"
+                android:src="@android:drawable/ic_menu_myplaces"
+                android:contentDescription="@string/nav_customers" />
+            <TextView
+                style="@style/NavDrawerTextStyle"
+                android:text="@string/nav_customers" />
+            <TextView
+                android:id="@+id/badgeCustomers"
+                style="@style/NavDrawerBadgeStyle"
+                android:text="470" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/nav_staff"
+            style="@style/NavDrawerItemStyle">
+            <ImageView
+                style="@style/NavDrawerIconStyle"
+                android:src="@android:drawable/ic_menu_gallery"
+                android:contentDescription="@string/nav_staff" />
+            <TextView
+                style="@style/NavDrawerTextStyle"
+                android:text="@string/nav_staff" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/nav_add_expense"
+            style="@style/NavDrawerItemStyle">
+            <ImageView
+                style="@style/NavDrawerIconStyle"
+                android:src="@android:drawable/ic_menu_add"
+                android:contentDescription="@string/nav_add_expense" />
+            <TextView
+                style="@style/NavDrawerTextStyle"
+                android:text="@string/nav_add_expense" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/nav_receipts"
+            style="@style/NavDrawerItemStyle">
+            <ImageView
+                style="@style/NavDrawerIconStyle"
+                android:src="@android:drawable/ic_menu_agenda"
+                android:contentDescription="@string/nav_receipts" />
+            <TextView
+                style="@style/NavDrawerTextStyle"
+                android:text="@string/nav_receipts" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/nav_returned_receipt"
+            style="@style/NavDrawerItemStyle">
+            <ImageView
+                style="@style/NavDrawerIconStyle"
+                android:src="@android:drawable/ic_input_get"
+                android:contentDescription="@string/nav_returned_receipt" />
+            <TextView
+                style="@style/NavDrawerTextStyle"
+                android:text="@string/nav_returned_receipt" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="8dp"
+            android:background="#EEEEEE" />
+
+        <!-- SECTION 3 - SETTINGS -->
+        <TextView
+            style="@style/TextAppearance.Material3.LabelMedium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="16dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="8dp"
+            android:text="@string/nav_settings_title"
+            android:textColor="@color/reports_tab_selected"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:id="@+id/nav_business_settings"
+            style="@style/NavDrawerItemStyle">
+            <ImageView
+                style="@style/NavDrawerIconStyle"
+                android:src="@android:drawable/ic_menu_preferences"
+                android:contentDescription="@string/nav_business_settings" />
+            <TextView
+                style="@style/NavDrawerTextStyle"
+                android:text="@string/nav_business_settings" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/nav_receipt_settings"
+            style="@style/NavDrawerItemStyle">
+            <ImageView
+                style="@style/NavDrawerIconStyle"
+                android:src="@android:drawable/ic_menu_agenda"
+                android:contentDescription="@string/nav_receipt_settings" />
+            <TextView
+                style="@style/NavDrawerTextStyle"
+                android:text="@string/nav_receipt_settings" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/nav_printer_setup"
+            style="@style/NavDrawerItemStyle">
+            <ImageView
+                style="@style/NavDrawerIconStyle"
+                android:src="@android:drawable/ic_menu_camera"
+                android:contentDescription="@string/nav_printer_setup" />
+            <TextView
+                style="@style/NavDrawerTextStyle"
+                android:text="@string/nav_printer_setup" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/nav_language"
+            style="@style/NavDrawerItemStyle">
+            <ImageView
+                style="@style/NavDrawerIconStyle"
+                android:src="@android:drawable/ic_menu_sort_alphabetically"
+                android:contentDescription="@string/nav_language" />
+            <TextView
+                android:id="@+id/textLanguageName"
+                style="@style/NavDrawerTextStyle"
+                android:text="Language - English" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="8dp"
+            android:background="#EEEEEE" />
+
+        <!-- SECTION 4 - SUPPORT -->
+        <TextView
+            style="@style/TextAppearance.Material3.LabelMedium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="16dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="8dp"
+            android:text="@string/section_support"
+            android:textColor="@color/reports_tab_selected"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:id="@+id/nav_help_chat"
+            style="@style/NavDrawerItemStyle">
+            <ImageView
+                style="@style/NavDrawerIconStyle"
+                android:src="@android:drawable/stat_notify_chat"
+                android:contentDescription="@string/nav_help_chat" />
+            <TextView
+                style="@style/NavDrawerTextStyle"
+                android:text="@string/nav_help_chat" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/nav_feedback"
+            style="@style/NavDrawerItemStyle">
+            <ImageView
+                style="@style/NavDrawerIconStyle"
+                android:src="@android:drawable/ic_menu_directions"
+                android:contentDescription="@string/nav_feedback" />
+            <TextView
+                style="@style/NavDrawerTextStyle"
+                android:text="@string/nav_feedback" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/nav_refer"
+            style="@style/NavDrawerItemStyle">
+            <ImageView
+                style="@style/NavDrawerIconStyle"
+                android:src="@android:drawable/ic_menu_share"
+                android:contentDescription="@string/nav_refer" />
+            <TextView
+                style="@style/NavDrawerTextStyle"
+                android:text="@string/nav_refer" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="8dp"
+            android:background="#EEEEEE" />
+
+        <!-- SECTION 5 - HARDWARE -->
+        <TextView
+            style="@style/TextAppearance.Material3.LabelMedium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="16dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="8dp"
+            android:text="@string/section_hardware"
+            android:textColor="@color/reports_tab_selected"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:id="@+id/nav_buy_printer"
+            style="@style/NavDrawerItemStyle">
+            <ImageView
+                style="@style/NavDrawerIconStyle"
+                android:src="@android:drawable/ic_menu_camera"
+                android:contentDescription="@string/nav_buy_printer" />
+            <TextView
+                style="@style/NavDrawerTextStyle"
+                android:text="@string/nav_buy_printer" />
+            <TextView
+                style="@style/NavDrawerBadgeStyle"
+                android:backgroundTint="#4CAF50"
+                android:text="@string/more_new" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="8dp"
+            android:background="#EEEEEE" />
+
+        <!-- Logout -->
+        <LinearLayout
+            android:id="@+id/nav_logout"
+            style="@style/NavDrawerItemStyle">
+            <ImageView
+                style="@style/NavDrawerIconStyle"
+                android:src="@android:drawable/ic_lock_power_off" />
+            <TextView
+                style="@style/NavDrawerTextStyle"
+                android:text="@string/nav_logout" />
+        </LinearLayout>
+
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>
