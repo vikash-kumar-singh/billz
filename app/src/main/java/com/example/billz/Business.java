@@ -14,8 +14,6 @@ public class Business {
     private String email;
     private String phoneNumber;
     private String role;
-    private String planType;
-    private String status;
     private boolean isSelected;
     private String logoPath;
 
@@ -24,8 +22,6 @@ public class Business {
         this.phoneNumber = phoneNumber;
         this.role = role;
         this.isSelected = isSelected;
-        this.planType = "FREE";
-        this.status = "ACTIVE";
     }
 
     public int getId() { return id; }
@@ -40,16 +36,8 @@ public class Business {
 
     public String getPhoneNumber() { return phoneNumber; }
     public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
-
     public String getRole() { return role; }
     public void setRole(String role) { this.role = role; }
-
-    public String getPlanType() { return planType; }
-    public void setPlanType(String planType) { this.planType = planType; }
-
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
-
     public boolean isSelected() { return isSelected; }
     public void setSelected(boolean selected) { isSelected = selected; }
     public String getLogoPath() { return logoPath; }

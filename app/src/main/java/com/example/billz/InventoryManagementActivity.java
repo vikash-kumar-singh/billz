@@ -494,6 +494,12 @@ public class InventoryManagementActivity extends AppCompatActivity {
         currentDisplayList.addAll(newList);
         adapter = new InventoryAdapter(currentDisplayList, this, itemClickListener);
         recyclerView.setAdapter(adapter);
+        
+        // Apply existing search query if present
+        if (editSearch != null && !editSearch.getText().toString().isEmpty()) {
+            adapter.filter(editSearch.getText().toString());
+        }
+
         checkEmptyState();
     }
 

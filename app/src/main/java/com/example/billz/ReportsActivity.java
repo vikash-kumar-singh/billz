@@ -6,6 +6,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -23,6 +26,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import android.content.Intent;
 import android.widget.Toast;
 
@@ -38,12 +42,17 @@ import java.util.concurrent.Executors;
 public class ReportsActivity extends AppCompatActivity {
 
     private static final int TAB_REPORTS = 0;
+    private static final int TAB_TODAY = 1;
+    private static final int TAB_COUNTER = 2;
     private static final int TAB_ITEMS = 3;
+    private static final int TAB_MORE = 4;
 
     private View emptyStateContainer;
     private View reportsContentPlaceholder;
     private View moreContentContainer;
     private View itemsContentContainer;
+    private View counterContentContainer;
+    private View counterEmptyStateContainer;
     private View dateSelectorRow;
     private LinearLayout bottomNavigationView;
     private DrawerLayout drawerLayout;
@@ -56,7 +65,16 @@ public class ReportsActivity extends AppCompatActivity {
     private ImageView imgLogo;
     
     private RecyclerView recyclerItemCategories;
+    private RecyclerView recyclerItemList;
+    private RecyclerView recyclerItemGrid;
+    private RecyclerView recyclerCounterItems;
+    private View btnGoToCounter;
+    private Button btnCharge;
+    private TextView labelCounterBadge, textCounterSubtotal, textCounterGrandTotal, textItemCountSummary;
+    private EditText editSearchItems;
     private int currentTab = TAB_REPORTS;
+    private int itemViewMode = 2; // 0: Category, 1: List, 2: Tiles
+    private int itemTileStyle = 0; // 0: Tap to add (No banner), 1: Without category (Banner)
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +90,8 @@ public class ReportsActivity extends AppCompatActivity {
         reportsContentPlaceholder = findViewById(R.id.reportsContentPlaceholder);
         moreContentContainer = findViewById(R.id.moreContentContainer);
         itemsContentContainer = findViewById(R.id.itemsContentContainer);
+        counterContentContainer = findViewById(R.id.counterContentContainer);
+        counterEmptyStateContainer = findViewById(R.id.counterEmptyStateContainer);
         dateSelectorRow = findViewById(R.id.dateSelectorRow);
         bottomNavigationView = findViewById(R.id.bottomNavigation);
         drawerLayout = findViewById(R.id.drawerLayout);
@@ -81,6 +101,63 @@ public class ReportsActivity extends AppCompatActivity {
         recyclerItemCategories = findViewById(R.id.recyclerItemCategories);
         if (recyclerItemCategories != null) {
             recyclerItemCategories.setLayoutManager(new androidx.recyclerview.widget.LinearLayoutManager(this));
+        }
+
+        recyclerItemList = findViewById(R.id.recyclerItemList);
+        if (recyclerItemList != null) {
+            recyclerItemList.setLayoutManager(new androidx.recyclerview.widget.LinearLayoutManager(this));
+        }
+
+        recyclerItemGrid = findViewById(R.id.recyclerItemGrid);
+        if (recyclerItemGrid != null) {
+            recyclerItemGrid.setLayoutManager(new GridLayoutManager(this, 3));
+        }
+
+        recyclerCounterItems = findViewById(R.id.recyclerCounterItems);
+        if (recyclerCounterItems != null) {
+            recyclerCounterItems.setLayoutManager(new androidx.recyclerview.widget.LinearLayoutManager(this));
+        }
+
+        btnGoToCounter = findViewById(R.id.btnGoToCounter);
+        btnCharge = findViewById(R.id.btnCharge);
+        labelCounterBadge = findViewById(R.id.labelCounterBadge); // Need to add ID in XML
+        textCounterSubtotal = findViewById(R.id.textCounterSubtotal);
+        textCounterGrandTotal = findViewById(R.id.textCounterGrandTotal);
+        textItemCountSummary = findViewById(R.id.textItemCountSummary);
+
+        if (btnGoToCounter != null) {
+            btnGoToCounter.setOnClickListener(v -> highlightBottomTab(TAB_COUNTER));
+        }
+
+        View btnAddMoreItems = findViewById(R.id.btnAddMoreItems);
+        if (btnAddMoreItems != null) {
+            btnAddMoreItems.setOnClickListener(v -> highlightBottomTab(TAB_ITEMS));
+        }
+
+        if (counterEmptyStateContainer != null) {
+            counterEmptyStateContainer.findViewById(R.id.btnNewSale).setOnClickListener(v -> highlightBottomTab(TAB_ITEMS));
+            counterEmptyStateContainer.findViewById(R.id.editSearchCounterEmpty).setOnClickListener(v -> highlightBottomTab(TAB_ITEMS));
+            counterEmptyStateContainer.findViewById(R.id.editSearchCounterEmpty).setFocusable(false); // Make it behave like a button
+        }
+
+        findViewById(R.id.btnClearCart).setOnClickListener(v -> {
+            CartManager.getInstance().clearCart();
+        });
+        editSearchItems = findViewById(R.id.editSearchItems);
+
+        if (editSearchItems != null) {
+            editSearchItems.addTextChangedListener(new android.text.TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    filterItems(s.toString());
+                }
+
+                @Override
+                public void afterTextChanged(android.text.Editable s) {}
+            });
         }
 
         textHeaderBusinessName = findViewById(R.id.textHeaderBusinessName);
@@ -227,6 +304,105 @@ public class ReportsActivity extends AppCompatActivity {
 
         showEmptyState(true);
         updateSidebarLanguageText();
+        setupCartManager();
+    }
+
+    private void setupCartManager() {
+        CartManager.getInstance().setListener(this::updateCounterUI);
+        updateCounterUI();
+    }
+
+    private void updateCounterUI() {
+        runOnUiThread(() -> {
+            int count = CartManager.getInstance().getItemCount();
+            if (labelCounterBadge != null) {
+                labelCounterBadge.setVisibility(count > 0 ? View.VISIBLE : View.GONE);
+                labelCounterBadge.setText(String.valueOf(count));
+            }
+            
+            // Refresh items view to update quantity overlays (x1, x2 etc)
+            if (itemViewMode == 1 && recyclerItemList.getAdapter() != null) {
+                recyclerItemList.getAdapter().notifyDataSetChanged();
+            } else if (itemViewMode == 2 && recyclerItemGrid.getAdapter() != null) {
+                recyclerItemGrid.getAdapter().notifyDataSetChanged();
+            }
+
+            if (currentTab == TAB_COUNTER) {
+                if (count > 0) {
+                    counterContentContainer.setVisibility(View.VISIBLE);
+                    counterEmptyStateContainer.setVisibility(View.GONE);
+                    loadCounterItems();
+                    double subtotal = CartManager.getInstance().getSubtotal();
+                    if (textCounterSubtotal != null) textCounterSubtotal.setText(String.valueOf((int)subtotal));
+                    if (textCounterGrandTotal != null) textCounterGrandTotal.setText("₹" + (int)subtotal);
+                    if (btnCharge != null) {
+                        btnCharge.setVisibility(View.VISIBLE);
+                        btnCharge.setText("Charge: ₹" + (int)subtotal);
+                    }
+                    if (textItemCountSummary != null) {
+                        int units = CartManager.getInstance().getTotalUnits();
+                        String itemsText = count == 1 ? " Item" : " Items";
+                        String unitsText = units == 1 ? " Unit" : " Units";
+                        textItemCountSummary.setText(count + itemsText + " | " + units + unitsText);
+                    }
+                } else {
+                    counterContentContainer.setVisibility(View.GONE);
+                    counterEmptyStateContainer.setVisibility(View.VISIBLE);
+                    if (btnCharge != null) btnCharge.setVisibility(View.GONE);
+                }
+            }
+        });
+    }
+
+    private void loadCounterItems() {
+        if (recyclerCounterItems != null) {
+            recyclerCounterItems.setAdapter(new CounterAdapter(CartManager.getInstance().getCartItems(), this::showEditQuantityDialog));
+        }
+    }
+
+    private void showEditQuantityDialog(CartItem cartItem) {
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_edit_quantity);
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        }
+
+        EditText editQuantity = dialog.findViewById(R.id.editQuantity);
+        editQuantity.setText(String.valueOf(cartItem.getQuantity()));
+
+        dialog.findViewById(R.id.btnPlus).setOnClickListener(v -> {
+            try {
+                String val = editQuantity.getText().toString();
+                int q = val.isEmpty() ? 0 : Integer.parseInt(val);
+                editQuantity.setText(String.valueOf(q + 1));
+            } catch (NumberFormatException e) {
+                editQuantity.setText("1");
+            }
+        });
+
+        dialog.findViewById(R.id.btnMinus).setOnClickListener(v -> {
+            try {
+                String val = editQuantity.getText().toString();
+                int q = val.isEmpty() ? 0 : Integer.parseInt(val);
+                if (q > 0) editQuantity.setText(String.valueOf(q - 1));
+            } catch (NumberFormatException e) {
+                editQuantity.setText("0");
+            }
+        });
+
+        dialog.findViewById(R.id.btnUpdateQuantity).setOnClickListener(v -> {
+            try {
+                int q = Integer.parseInt(editQuantity.getText().toString());
+                CartManager.getInstance().updateQuantity(cartItem.getItem().getId(), q);
+                dialog.dismiss();
+            } catch (Exception e) {
+                Toast.makeText(this, "Invalid quantity", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        dialog.findViewById(R.id.btnDialogClose).setOnClickListener(v -> dialog.dismiss());
+        dialog.show();
     }
 
     @Override
@@ -234,7 +410,7 @@ public class ReportsActivity extends AppCompatActivity {
         super.onResume();
         loadBusinessData();
         if (currentTab == TAB_ITEMS) {
-            loadItemCategories();
+            refreshItemsView();
         }
     }
 
@@ -421,11 +597,16 @@ public class ReportsActivity extends AppCompatActivity {
         // Reset all views
         moreContentContainer.setVisibility(View.GONE);
         itemsContentContainer.setVisibility(View.GONE);
+        counterContentContainer.setVisibility(View.GONE);
+        counterEmptyStateContainer.setVisibility(View.GONE);
         emptyStateContainer.setVisibility(View.GONE);
         reportsContentPlaceholder.setVisibility(View.GONE);
         dateSelectorRow.setVisibility(View.GONE);
+        if (btnGoToCounter != null) btnGoToCounter.setVisibility(View.GONE);
+        if (btnCharge != null) btnCharge.setVisibility(View.GONE);
 
         if (selectedId == R.id.tabMore) {
+            // ... (rest of method)
             // SHOW Grid
             moreContentContainer.setVisibility(View.VISIBLE);
             toolbar.setTitle(getString(R.string.reports_tab_more));
@@ -443,7 +624,7 @@ public class ReportsActivity extends AppCompatActivity {
             toolbar.setBackgroundColor(bgColor);
             toolbar.setTitleTextColor(selectedColor);
             toolbar.setNavigationIconTint(selectedColor);
-            loadItemCategories();
+            refreshItemsView();
         } else if (selectedId == R.id.tabReports) {
             // Reports section
             dateSelectorRow.setVisibility(View.VISIBLE);
@@ -464,13 +645,115 @@ public class ReportsActivity extends AppCompatActivity {
             toolbar.setNavigationIconTint(ContextCompat.getColor(this, R.color.reports_text_primary));
         } else if (selectedId == R.id.tabCounter) {
             toolbar.setTitle(getString(R.string.reports_tab_counter));
-            reportsContentPlaceholder.setVisibility(View.VISIBLE);
-            int bgColor = ContextCompat.getColor(this, R.color.reports_surface);
+            int bgColor = ContextCompat.getColor(this, R.color.reports_tab_selected);
             topBarReports.setBackgroundColor(bgColor);
             toolbar.setBackgroundColor(bgColor);
-            toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.reports_text_primary));
-            toolbar.setNavigationIconTint(ContextCompat.getColor(this, R.color.reports_text_primary));
+            toolbar.setTitleTextColor(selectedColor);
+            toolbar.setNavigationIconTint(selectedColor);
+            updateCounterUI();
         }
+    }
+
+    private void refreshItemsView() {
+        recyclerItemCategories.setVisibility(View.GONE);
+        recyclerItemList.setVisibility(View.GONE);
+        recyclerItemGrid.setVisibility(View.GONE);
+
+        switch (itemViewMode) {
+            case 0: // With Category
+                recyclerItemCategories.setVisibility(View.VISIBLE);
+                if (btnGoToCounter != null) btnGoToCounter.setVisibility(View.GONE);
+                loadItemCategories();
+                break;
+            case 1: // Without Category (List)
+                recyclerItemList.setVisibility(View.VISIBLE);
+                if (btnGoToCounter != null) btnGoToCounter.setVisibility(View.VISIBLE);
+                loadItemList();
+                break;
+            case 2: // Tiles (Grid)
+                recyclerItemGrid.setVisibility(View.VISIBLE);
+                if (btnGoToCounter != null) btnGoToCounter.setVisibility(View.VISIBLE);
+                loadItemGrid();
+                break;
+        }
+    }
+
+    private void filterItems(String query) {
+        if (itemViewMode == 0) {
+            if (recyclerItemCategories.getAdapter() instanceof ItemCategoryAdapter) {
+                ((ItemCategoryAdapter) recyclerItemCategories.getAdapter()).filter(query);
+            }
+        } else if (itemViewMode == 1) {
+            if (recyclerItemList.getAdapter() instanceof ProductListAdapter) {
+                ((ProductListAdapter) recyclerItemList.getAdapter()).filter(query);
+            }
+        } else if (itemViewMode == 2) {
+            if (recyclerItemGrid.getAdapter() instanceof ItemGridAdapter) {
+                ((ItemGridAdapter) recyclerItemGrid.getAdapter()).filter(query);
+            }
+        }
+    }
+
+    private void loadItemList() {
+        Executors.newSingleThreadExecutor().execute(() -> {
+            List<Item> dbItems = AppDatabase.getInstance(this).itemDao().getAllItems();
+            
+            // Add dummy data if empty to match the provided image
+            if (dbItems.isEmpty()) {
+                dbItems.add(createDummyItem(-1, "AA", "AA", 2899, 2500, 10, "PARANORMIC FAT"));
+                dbItems.add(createDummyItem(-2, "Absolute Nutrition", "Whey", 2109, 1800, 10, "WHEY PROTEIN 1KG"));
+                dbItems.add(createDummyItem(-3, "Alpino", "Oats", 499, 400, 10, "OATS 1KG"));
+                dbItems.add(createDummyItem(-4, "Androbol Xterem", "Stack", 2999, 2500, 10, "< ₹2,999 >"));
+                dbItems.add(createDummyItem(-5, "Ashwagandha Af 43", "Tablets", 500, 400, 10, "60 TAB"));
+                dbItems.add(createDummyItem(-6, "Asitis Creatine", "Creatine", 549, 450, 10, "UNFLAVRED 250 GM"));
+                dbItems.add(createDummyItem(-7, "Atom", "Isolated", 2349, 2000, 10, "ISOLATED 1KG"));
+                dbItems.add(createDummyItem(-8, "Avvatar Iso Rich", "Whey", 3499, 3000, 10, "1KG"));
+                dbItems.add(createDummyItem(-9, "Avvatar Whey", "Whey", 2099, 1800, 10, "UNFLAVORED 1KG"));
+            }
+
+            runOnUiThread(() -> {
+                if (recyclerItemList != null) {
+                    recyclerItemList.setAdapter(new ProductListAdapter(dbItems));
+                    if (editSearchItems != null && !editSearchItems.getText().toString().isEmpty()) {
+                        filterItems(editSearchItems.getText().toString());
+                    }
+                }
+            });
+        });
+    }
+
+    private void loadItemGrid() {
+        Executors.newSingleThreadExecutor().execute(() -> {
+            List<Item> dbItems = AppDatabase.getInstance(this).itemDao().getAllItems();
+
+            // Add dummy data if empty to match the provided image
+            if (dbItems.isEmpty()) {
+                dbItems.add(createDummyItem(-1, "AA", "AA", 2899, 2500, 10, "PARANORMIC FAT"));
+                dbItems.add(createDummyItem(-2, "Absolute Nutrition", "Whey", 2109, 1800, 10, "WHEY PROTEIN 1KG"));
+                dbItems.add(createDummyItem(-3, "Alpino", "Oats", 499, 400, 10, "OATS 1KG"));
+                dbItems.add(createDummyItem(-4, "Androbol Xterem", "Stack", 2999, 2500, 10, "< ₹2,999 >"));
+                dbItems.add(createDummyItem(-5, "Ashwagandha Af 43", "Tablets", 500, 400, 10, "60 TAB"));
+                dbItems.add(createDummyItem(-6, "Asitis Creatine", "Creatine", 549, 450, 10, "UNFLAVRED 250 GM"));
+                dbItems.add(createDummyItem(-7, "Atom", "Isolated", 2349, 2000, 10, "ISOLATED 1KG"));
+                dbItems.add(createDummyItem(-8, "Avvatar Iso Rich", "Whey", 3499, 3000, 10, "1KG"));
+                dbItems.add(createDummyItem(-9, "Avvatar Whey", "Whey", 2099, 1800, 10, "UNFLAVORED 1KG"));
+            }
+
+            runOnUiThread(() -> {
+                if (recyclerItemGrid != null) {
+                    recyclerItemGrid.setAdapter(new ItemGridAdapter(dbItems, itemTileStyle));
+                    if (editSearchItems != null && !editSearchItems.getText().toString().isEmpty()) {
+                        filterItems(editSearchItems.getText().toString());
+                    }
+                }
+            });
+        });
+    }
+
+    private Item createDummyItem(int id, String name, String category, double selling, double cost, int stock, String variant) {
+        Item item = new Item(name, category, selling, cost, stock, variant, "Unit", false);
+        item.setId(id);
+        return item;
     }
 
     private void loadItemCategories() {
@@ -497,6 +780,9 @@ public class ReportsActivity extends AppCompatActivity {
             runOnUiThread(() -> {
                 if (recyclerItemCategories != null) {
                     recyclerItemCategories.setAdapter(new ItemCategoryAdapter(list));
+                    if (editSearchItems != null && !editSearchItems.getText().toString().isEmpty()) {
+                        filterItems(editSearchItems.getText().toString());
+                    }
                 }
             });
         });
@@ -521,6 +807,10 @@ public class ReportsActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
+        if (itemId == R.id.action_toggle_view) {
+            showItemViewSelector();
+            return true;
+        }
         if (itemId == R.id.action_share || itemId == R.id.action_messages) {
             return true;
         }
@@ -529,5 +819,35 @@ public class ReportsActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showItemViewSelector() {
+        Dialog dialog = new Dialog(this, android.R.style.Theme_Light_NoTitleBar_Fullscreen);
+        View view = getLayoutInflater().inflate(R.layout.layout_item_view_selector, null);
+        dialog.setContentView(view);
+
+        view.findViewById(R.id.btnCloseSelector).setOnClickListener(v -> dialog.dismiss());
+
+        view.findViewById(R.id.optionTiles).setOnClickListener(v -> {
+            itemViewMode = 2; // Tiles
+            itemTileStyle = 0; // Tap to add style
+            refreshItemsView();
+            dialog.dismiss();
+        });
+
+        view.findViewById(R.id.optionList).setOnClickListener(v -> {
+            itemViewMode = 2; // Tiles
+            itemTileStyle = 1; // Without category style (Banner)
+            refreshItemsView();
+            dialog.dismiss();
+        });
+
+        view.findViewById(R.id.optionCategory).setOnClickListener(v -> {
+            itemViewMode = 0; // With Category
+            refreshItemsView();
+            dialog.dismiss();
+        });
+
+        dialog.show();
     }
 }

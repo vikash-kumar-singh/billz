@@ -18,6 +18,7 @@ import java.util.concurrent.Executors;
 public class ItemCategoryAdapter extends RecyclerView.Adapter<ItemCategoryAdapter.ViewHolder> {
 
     private List<CategoryWithCount> categories;
+    private List<CategoryWithCount> categoriesFull;
     private int expandedPosition = -1;
 
     public static class CategoryWithCount {
@@ -32,6 +33,22 @@ public class ItemCategoryAdapter extends RecyclerView.Adapter<ItemCategoryAdapte
 
     public ItemCategoryAdapter(List<CategoryWithCount> categories) {
         this.categories = categories;
+        this.categoriesFull = new ArrayList<>(categories);
+    }
+
+    public void filter(String text) {
+        categories.clear();
+        if (text == null || text.isEmpty()) {
+            categories.addAll(categoriesFull);
+        } else {
+            text = text.toLowerCase();
+            for (CategoryWithCount category : categoriesFull) {
+                if (category.name.toLowerCase().contains(text)) {
+                    categories.add(category);
+                }
+            }
+        }
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -121,9 +138,14 @@ public class ItemCategoryAdapter extends RecyclerView.Adapter<ItemCategoryAdapte
                 holder.layoutNewItem.setVisibility(View.GONE);
                 
                 holder.itemView.setOnClickListener(v -> {
+                    CartManager.getInstance().addItem(item);
+                });
+
+                holder.itemView.setOnLongClickListener(v -> {
                     Intent intent = new Intent(v.getContext(), ManageItemActivity.class);
                     intent.putExtra("item_id", item.getId());
                     v.getContext().startActivity(intent);
+                    return true;
                 });
 
                 holder.textName.setText(item.getName());

@@ -25,42 +25,4 @@
         <item name="android:insetBottom">0dp</item>
         <item name="cornerRadius">4dp</item>
     </style>
-
-    <style name="NavDrawerItemStyle">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">48dp</item>
-        <item name="android:gravity">center_vertical</item>
-        <item name="android:paddingStart">16dp</item>
-        <item name="android:paddingEnd">16dp</item>
-        <item name="android:orientation">horizontal</item>
-        <item name="android:clickable">true</item>
-        <item name="android:focusable">true</item>
-        <item name="android:background">?attr/selectableItemBackground</item>
-    </style>
-
-    <style name="NavDrawerIconStyle">
-        <item name="android:layout_width">24dp</item>
-        <item name="android:layout_height">24dp</item>
-        <item name="android:tint">@color/reports_tab_selected</item>
-    </style>
-
-    <style name="NavDrawerTextStyle" parent="TextAppearance.Material3.BodyMedium">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginStart">24dp</item>
-        <item name="android:layout_weight">1</item>
-        <item name="android:textColor">@color/reports_text_primary</item>
-        <item name="android:textSize">14sp</item>
-    </style>
-
-    <style name="NavDrawerBadgeStyle">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@drawable/bg_reports_nav_item</item>
-        <item name="android:backgroundTint">@color/reports_tab_selected</item>
-        <item name="android:paddingHorizontal">8dp</item>
-        <item name="android:paddingVertical">2dp</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">10sp</item>
-    </style>
 </resources>

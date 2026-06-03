@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#E9ECEF">
+
+    <!-- Browser-style header -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="#3F51B5"
+        android:paddingHorizontal="16dp">
+
+        <ImageView
+            android:id="@+id/btnCloseSelector"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_centerVertical="true"
+            android:padding="4dp"
+            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            app:tint="@color/white" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="View Styles"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:columnCount="2"
+            android:padding="12dp"
+            android:alignmentMode="alignMargins">
+
+            <!-- 1. TILES STYLE (Top Left) -->
+            <LinearLayout
+                android:id="@+id/optionTiles"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:orientation="vertical"
+                android:layout_margin="6dp"
+                android:elevation="4dp"
+                android:background="@color/white"
+                android:clickable="true"
+                android:focusable="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="240dp"
+                    android:orientation="vertical"
+                    android:background="#F3F4F6">
+                    <View android:layout_width="match_parent" android:layout_height="35dp" android:background="#3F51B5"/>
+                    <View android:layout_width="match_parent" android:layout_height="10dp" android:background="#10B981" android:layout_margin="8dp"/>
+                    <GridLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:columnCount="3" android:padding="4dp">
+                        <View android:layout_width="35dp" android:layout_height="35dp" android:background="@drawable/bg_reports_empty_avatar" android:backgroundTint="#2196F3" android:layout_margin="4dp"/>
+                        <View android:layout_width="35dp" android:layout_height="35dp" android:background="@drawable/bg_reports_empty_avatar" android:backgroundTint="#F44336" android:layout_margin="4dp"/>
+                        <View android:layout_width="35dp" android:layout_height="35dp" android:background="@drawable/bg_reports_empty_avatar" android:backgroundTint="#4CAF50" android:layout_margin="4dp"/>
+                        <View android:layout_width="35dp" android:layout_height="35dp" android:background="@drawable/bg_reports_empty_avatar" android:backgroundTint="#FFEB3B" android:layout_margin="4dp"/>
+                        <View android:layout_width="35dp" android:layout_height="35dp" android:background="@drawable/bg_reports_empty_avatar" android:backgroundTint="#9C27B0" android:layout_margin="4dp"/>
+                    </GridLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingVertical="12dp"
+                    android:text="ITEMS TILES TAP TO ADD STYLE"
+                    android:textColor="#3F51B5"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    android:gravity="center" />
+            </LinearLayout>
+
+            <!-- 2. WITHOUT CATEGORY (Top Right) -->
+            <LinearLayout
+                android:id="@+id/optionList"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:orientation="vertical"
+                android:layout_margin="6dp"
+                android:elevation="4dp"
+                android:background="@color/white"
+                android:clickable="true"
+                android:focusable="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="240dp"
+                    android:orientation="vertical"
+                    android:background="#F3F4F6">
+                    <View android:layout_width="match_parent" android:layout_height="35dp" android:background="#3F51B5"/>
+                    <View android:layout_width="match_parent" android:layout_height="10dp" android:background="#10B981" android:layout_margin="8dp"/>
+                    <View android:layout_width="match_parent" android:layout_height="25dp" android:background="@color/white" android:layout_marginHorizontal="8dp" android:layout_marginBottom="6dp"/>
+                    <View android:layout_width="match_parent" android:layout_height="25dp" android:background="@color/white" android:layout_marginHorizontal="8dp" android:layout_marginBottom="6dp"/>
+                    <View android:layout_width="match_parent" android:layout_height="25dp" android:background="@color/white" android:layout_marginHorizontal="8dp"/>
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingVertical="12dp"
+                    android:text="ITEMS TILES WITHOUT CATEGORY"
+                    android:textColor="#3F51B5"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    android:gravity="center" />
+            </LinearLayout>
+
+            <!-- 3. WITH CATEGORY (Bottom Left) -->
+            <LinearLayout
+                android:id="@+id/optionCategory"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:orientation="vertical"
+                android:layout_margin="6dp"
+                android:elevation="4dp"
+                android:background="#3F51B5"
+                android:clickable="true"
+                android:focusable="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="240dp"
+                    android:orientation="vertical"
+                    android:background="#F3F4F6">
+                    <View android:layout_width="match_parent" android:layout_height="35dp" android:background="#3F51B5"/>
+                    <View android:layout_width="match_parent" android:layout_height="15dp" android:background="#E2E8F0" android:layout_margin="6dp"/>
+                    <View android:layout_width="match_parent" android:layout_height="50dp" android:background="#F8FAFC" android:layout_marginHorizontal="6dp" android:layout_marginBottom="6dp"/>
+                    <View android:layout_width="match_parent" android:layout_height="15dp" android:background="#E2E8F0" android:layout_marginHorizontal="6dp"/>
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingVertical="12dp"
+                    android:text="ITEMS TILES WITH CATEGORY"
+                    android:textColor="@color/white"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    android:gravity="center" />
+            </LinearLayout>
+
+        </GridLayout>
+    </ScrollView>
+</LinearLayout>
