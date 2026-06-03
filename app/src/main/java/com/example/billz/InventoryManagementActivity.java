@@ -406,6 +406,17 @@ public class InventoryManagementActivity extends AppCompatActivity {
                 newCategoriesList.add(item);
             }
 
+            // Also check for items with no category or "Uncategorized"
+            int uncategorizedCount = itemDao.getUncategorizedItemCount();
+            
+            if (uncategorizedCount > 0) {
+                String countText = uncategorizedCount + (uncategorizedCount == 1 ? " Item" : " Items");
+                InventoryItem uncategorizedItem = new InventoryItem("Uncategorized", "", countText, false, 0, new ArrayList<>());
+                uncategorizedItem.setType(1); // Category
+                uncategorizedItem.setBackgroundColor(Color.LTGRAY);
+                newCategoriesList.add(uncategorizedItem);
+            }
+
             runOnUiThread(() -> {
                 categoriesList.clear();
                 categoriesList.addAll(newCategoriesList);

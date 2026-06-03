@@ -696,24 +696,35 @@ public class ReportsActivity extends AppCompatActivity {
 
     private void loadItemList() {
         Executors.newSingleThreadExecutor().execute(() -> {
-            List<Item> dbItems = AppDatabase.getInstance(this).itemDao().getAllItems();
+            List<Item> dbItems;
+            if (itemViewMode == 1) {
+                dbItems = AppDatabase.getInstance(this).itemDao().getUncategorizedItems();
+            } else {
+                dbItems = AppDatabase.getInstance(this).itemDao().getAllItems();
+            }
             
             // Add dummy data if empty to match the provided image
             if (dbItems.isEmpty()) {
-                dbItems.add(createDummyItem(-1, "AA", "AA", 2899, 2500, 10, "PARANORMIC FAT"));
-                dbItems.add(createDummyItem(-2, "Absolute Nutrition", "Whey", 2109, 1800, 10, "WHEY PROTEIN 1KG"));
-                dbItems.add(createDummyItem(-3, "Alpino", "Oats", 499, 400, 10, "OATS 1KG"));
-                dbItems.add(createDummyItem(-4, "Androbol Xterem", "Stack", 2999, 2500, 10, "< ₹2,999 >"));
-                dbItems.add(createDummyItem(-5, "Ashwagandha Af 43", "Tablets", 500, 400, 10, "60 TAB"));
-                dbItems.add(createDummyItem(-6, "Asitis Creatine", "Creatine", 549, 450, 10, "UNFLAVRED 250 GM"));
-                dbItems.add(createDummyItem(-7, "Atom", "Isolated", 2349, 2000, 10, "ISOLATED 1KG"));
-                dbItems.add(createDummyItem(-8, "Avvatar Iso Rich", "Whey", 3499, 3000, 10, "1KG"));
-                dbItems.add(createDummyItem(-9, "Avvatar Whey", "Whey", 2099, 1800, 10, "UNFLAVORED 1KG"));
+                if (itemViewMode == 1) {
+                    dbItems.add(createDummyItem(-10, "No Category Item 1", "", 100, 80, 5, "Unit"));
+                    dbItems.add(createDummyItem(-11, "No Category Item 2", null, 200, 150, 2, "Unit"));
+                } else {
+                    dbItems.add(createDummyItem(-1, "AA", "AA", 2899, 2500, 10, "PARANORMIC FAT"));
+                    dbItems.add(createDummyItem(-2, "Absolute Nutrition", "Whey", 2109, 1800, 10, "WHEY PROTEIN 1KG"));
+                    dbItems.add(createDummyItem(-3, "Alpino", "Oats", 499, 400, 10, "OATS 1KG"));
+                    dbItems.add(createDummyItem(-4, "Androbol Xterem", "Stack", 2999, 2500, 10, "< ₹2,999 >"));
+                    dbItems.add(createDummyItem(-5, "Ashwagandha Af 43", "Tablets", 500, 400, 10, "60 TAB"));
+                    dbItems.add(createDummyItem(-6, "Asitis Creatine", "Creatine", 549, 450, 10, "UNFLAVRED 250 GM"));
+                    dbItems.add(createDummyItem(-7, "Atom", "Isolated", 2349, 2000, 10, "ISOLATED 1KG"));
+                    dbItems.add(createDummyItem(-8, "Avvatar Iso Rich", "Whey", 3499, 3000, 10, "1KG"));
+                    dbItems.add(createDummyItem(-9, "Avvatar Whey", "Whey", 2099, 1800, 10, "UNFLAVORED 1KG"));
+                }
             }
 
+            final List<Item> finalItems = dbItems;
             runOnUiThread(() -> {
                 if (recyclerItemList != null) {
-                    recyclerItemList.setAdapter(new ProductListAdapter(dbItems));
+                    recyclerItemList.setAdapter(new ProductListAdapter(finalItems));
                     if (editSearchItems != null && !editSearchItems.getText().toString().isEmpty()) {
                         filterItems(editSearchItems.getText().toString());
                     }
@@ -724,24 +735,35 @@ public class ReportsActivity extends AppCompatActivity {
 
     private void loadItemGrid() {
         Executors.newSingleThreadExecutor().execute(() -> {
-            List<Item> dbItems = AppDatabase.getInstance(this).itemDao().getAllItems();
+            List<Item> dbItems;
+            if (itemTileStyle == 1) {
+                dbItems = AppDatabase.getInstance(this).itemDao().getUncategorizedItems();
+            } else {
+                dbItems = AppDatabase.getInstance(this).itemDao().getAllItems();
+            }
 
             // Add dummy data if empty to match the provided image
             if (dbItems.isEmpty()) {
-                dbItems.add(createDummyItem(-1, "AA", "AA", 2899, 2500, 10, "PARANORMIC FAT"));
-                dbItems.add(createDummyItem(-2, "Absolute Nutrition", "Whey", 2109, 1800, 10, "WHEY PROTEIN 1KG"));
-                dbItems.add(createDummyItem(-3, "Alpino", "Oats", 499, 400, 10, "OATS 1KG"));
-                dbItems.add(createDummyItem(-4, "Androbol Xterem", "Stack", 2999, 2500, 10, "< ₹2,999 >"));
-                dbItems.add(createDummyItem(-5, "Ashwagandha Af 43", "Tablets", 500, 400, 10, "60 TAB"));
-                dbItems.add(createDummyItem(-6, "Asitis Creatine", "Creatine", 549, 450, 10, "UNFLAVRED 250 GM"));
-                dbItems.add(createDummyItem(-7, "Atom", "Isolated", 2349, 2000, 10, "ISOLATED 1KG"));
-                dbItems.add(createDummyItem(-8, "Avvatar Iso Rich", "Whey", 3499, 3000, 10, "1KG"));
-                dbItems.add(createDummyItem(-9, "Avvatar Whey", "Whey", 2099, 1800, 10, "UNFLAVORED 1KG"));
+                if (itemTileStyle == 1) {
+                    dbItems.add(createDummyItem(-10, "No Category Item 1", "", 100, 80, 5, "Unit"));
+                    dbItems.add(createDummyItem(-11, "No Category Item 2", null, 200, 150, 2, "Unit"));
+                } else {
+                    dbItems.add(createDummyItem(-1, "AA", "AA", 2899, 2500, 10, "PARANORMIC FAT"));
+                    dbItems.add(createDummyItem(-2, "Absolute Nutrition", "Whey", 2109, 1800, 10, "WHEY PROTEIN 1KG"));
+                    dbItems.add(createDummyItem(-3, "Alpino", "Oats", 499, 400, 10, "OATS 1KG"));
+                    dbItems.add(createDummyItem(-4, "Androbol Xterem", "Stack", 2999, 2500, 10, "< ₹2,999 >"));
+                    dbItems.add(createDummyItem(-5, "Ashwagandha Af 43", "Tablets", 500, 400, 10, "60 TAB"));
+                    dbItems.add(createDummyItem(-6, "Asitis Creatine", "Creatine", 549, 450, 10, "UNFLAVRED 250 GM"));
+                    dbItems.add(createDummyItem(-7, "Atom", "Isolated", 2349, 2000, 10, "ISOLATED 1KG"));
+                    dbItems.add(createDummyItem(-8, "Avvatar Iso Rich", "Whey", 3499, 3000, 10, "1KG"));
+                    dbItems.add(createDummyItem(-9, "Avvatar Whey", "Whey", 2099, 1800, 10, "UNFLAVORED 1KG"));
+                }
             }
 
+            final List<Item> finalItems = dbItems;
             runOnUiThread(() -> {
                 if (recyclerItemGrid != null) {
-                    recyclerItemGrid.setAdapter(new ItemGridAdapter(dbItems, itemTileStyle));
+                    recyclerItemGrid.setAdapter(new ItemGridAdapter(finalItems, itemTileStyle));
                     if (editSearchItems != null && !editSearchItems.getText().toString().isEmpty()) {
                         filterItems(editSearchItems.getText().toString());
                     }
@@ -765,6 +787,13 @@ public class ReportsActivity extends AppCompatActivity {
             for (Category cat : dbCategories) {
                 int count = itemDao.getItemCountByCategory(cat.getName());
                 list.add(new ItemCategoryAdapter.CategoryWithCount(cat.getName(), count));
+            }
+
+            // Check for uncategorized items
+            int uncategorizedCount = itemDao.getUncategorizedItemCount();
+            
+            if (uncategorizedCount > 0) {
+                list.add(new ItemCategoryAdapter.CategoryWithCount("Uncategorized", uncategorizedCount));
             }
             
             // Add dummy if none to match image initially

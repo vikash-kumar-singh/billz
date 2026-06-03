@@ -27,6 +27,12 @@ public interface ItemDao {
     @Query("SELECT * FROM items WHERE category = :categoryName")
     List<Item> getItemsByCategory(String categoryName);
 
+    @Query("SELECT COUNT(*) FROM items WHERE category IS NULL OR category = '' OR category = 'Uncategorized' OR category = 'No Category'")
+    int getUncategorizedItemCount();
+
+    @Query("SELECT * FROM items WHERE category IS NULL OR category = '' OR category = 'Uncategorized' OR category = 'No Category'")
+    List<Item> getUncategorizedItems();
+
     @Query("DELETE FROM items WHERE id = :id")
     void deleteById(int id);
 }
