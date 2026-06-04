@@ -729,10 +729,66 @@ public class ReportsActivity extends AppCompatActivity {
         Dialog dialog = new Dialog(this, android.R.style.Theme_Light_NoTitleBar_Fullscreen);
         View view = getLayoutInflater().inflate(R.layout.layout_item_view_selector, null);
         dialog.setContentView(view);
+
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().getAttributes().windowAnimations = android.R.style.Animation_Dialog;
+        }
+
+        View layoutTextTiles = view.findViewById(R.id.layoutTextTiles);
+        View layoutTextList = view.findViewById(R.id.layoutTextList);
+        View layoutTextCategory = view.findViewById(R.id.layoutTextCategory);
+        TextView textTiles = view.findViewById(R.id.textTiles);
+        TextView textList = view.findViewById(R.id.textList);
+        TextView textCategory = view.findViewById(R.id.textCategory);
+
+        // Reset Styles
+        layoutTextTiles.setBackgroundColor(Color.WHITE);
+        textTiles.setTextColor(0xFF3F51B5);
+        layoutTextList.setBackgroundColor(Color.WHITE);
+        textList.setTextColor(0xFF3F51B5);
+        layoutTextCategory.setBackgroundColor(Color.WHITE);
+        textCategory.setTextColor(0xFF3F51B5);
+
+        // Apply selected style
+        if (itemViewMode == 2) {
+            if (itemTileStyle == 0) {
+                layoutTextTiles.setBackgroundColor(0xFF3F51B5);
+                textTiles.setTextColor(Color.WHITE);
+            } else {
+                layoutTextList.setBackgroundColor(0xFF3F51B5);
+                textList.setTextColor(Color.WHITE);
+            }
+        } else if (itemViewMode == 0) {
+            layoutTextCategory.setBackgroundColor(0xFF3F51B5);
+            textCategory.setTextColor(Color.WHITE);
+        }
+
         view.findViewById(R.id.btnCloseSelector).setOnClickListener(v -> dialog.dismiss());
-        view.findViewById(R.id.optionTiles).setOnClickListener(v -> { itemViewMode = 2; itemTileStyle = 0; refreshItemsView(); dialog.dismiss(); });
-        view.findViewById(R.id.optionList).setOnClickListener(v -> { itemViewMode = 2; itemTileStyle = 1; refreshItemsView(); dialog.dismiss(); });
-        view.findViewById(R.id.optionCategory).setOnClickListener(v -> { itemViewMode = 0; refreshItemsView(); dialog.dismiss(); });
+
+        view.findViewById(R.id.optionTiles).setOnClickListener(v -> {
+            itemViewMode = 2; // Tiles
+            itemTileStyle = 0; // Tap to add style
+            refreshItemsView();
+            dialog.dismiss();
+        });
+
+        view.findViewById(R.id.optionList).setOnClickListener(v -> {
+            itemViewMode = 2; // Tiles
+            itemTileStyle = 1; // Without category style (Banner)
+            refreshItemsView();
+            dialog.dismiss();
+        });
+
+        view.findViewById(R.id.optionCategory).setOnClickListener(v -> {
+            itemViewMode = 0; // With Category
+            refreshItemsView();
+            dialog.dismiss();
+        });
+
+        // Add smooth transition for cards
+        android.view.animation.Animation slideUp = android.view.animation.AnimationUtils.loadAnimation(this, R.anim.slide_up);
+        view.findViewById(R.id.gridOptions).startAnimation(slideUp);
+
         dialog.show();
     }
 }
