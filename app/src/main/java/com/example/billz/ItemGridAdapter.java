@@ -17,11 +17,17 @@ public class ItemGridAdapter extends RecyclerView.Adapter<ItemGridAdapter.ViewHo
     private List<Item> items;
     private List<Item> itemsFull;
     private int style; // 0: Tap to add, 1: Without Category
+    private OnItemClickListener listener;
 
-    public ItemGridAdapter(List<Item> items, int style) {
+    public interface OnItemClickListener {
+        void onItemClick(Item item, int position);
+    }
+
+    public ItemGridAdapter(List<Item> items, int style, OnItemClickListener listener) {
         this.items = items;
         this.itemsFull = new java.util.ArrayList<>(items);
         this.style = style;
+        this.listener = listener;
     }
 
     public void filter(String text) {
@@ -85,8 +91,7 @@ public class ItemGridAdapter extends RecyclerView.Adapter<ItemGridAdapter.ViewHo
         int qty = 0;
         for (CartItem ci : CartManager.getInstance().getCartItems()) {
             if (ci.getItem().getId() == item.getId()) {
-                qty = ci.getQuantity();
-                break;
+                qty += ci.getQuantity();
             }
         }
 
@@ -106,13 +111,23 @@ public class ItemGridAdapter extends RecyclerView.Adapter<ItemGridAdapter.ViewHo
 
         holder.itemView.setOnClickListener(v -> {
             if (isOutOfStock) return;
-            CartManager.getInstance().addItem(item);
-            notifyItemChanged(position);
+            int currentPos = holder.getAdapterPosition();
+            if (currentPos == RecyclerView.NO_POSITION) return;
+            
+            if (listener != null) {
+                listener.onItemClick(items.get(currentPos), currentPos);
+            } else {
+                CartManager.getInstance().addItem(items.get(currentPos));
+                notifyItemChanged(currentPos);
+            }
         });
 
         holder.itemView.setOnLongClickListener(v -> {
+            int currentPos = holder.getAdapterPosition();
+            if (currentPos == RecyclerView.NO_POSITION) return false;
+            
             Intent intent = new Intent(v.getContext(), ManageItemActivity.class);
-            intent.putExtra("item_id", item.getId());
+            intent.putExtra("item_id", items.get(currentPos).getId());
             v.getContext().startActivity(intent);
             return true;
         });

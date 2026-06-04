@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -22,6 +21,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import androidx.core.view.GravityCompat;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.appbar.MaterialToolbar;
@@ -34,9 +34,11 @@ import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.Executors;
 
 public class ReportsActivity extends AppCompatActivity {
@@ -61,7 +63,7 @@ public class ReportsActivity extends AppCompatActivity {
     private View[] bottomTabs;
     private ImageView[] bottomTabIcons;
     private TextView[] bottomTabLabels;
-    private TextView textHeaderBusinessName, textHeaderPhoneNumber, txtOwnerName, txtOwnerEmail;
+    private TextView textHeaderBusinessName, textHeaderPhoneNumber, txtOwnerName;
     private ImageView imgLogo;
     
     private RecyclerView recyclerItemCategories;
@@ -78,9 +80,7 @@ public class ReportsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // Apply persisted language before super.onCreate
         LocaleHelper.applyLocale(LocaleHelper.getPersistedLanguage(this));
-
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_reports);
@@ -100,12 +100,12 @@ public class ReportsActivity extends AppCompatActivity {
 
         recyclerItemCategories = findViewById(R.id.recyclerItemCategories);
         if (recyclerItemCategories != null) {
-            recyclerItemCategories.setLayoutManager(new androidx.recyclerview.widget.LinearLayoutManager(this));
+            recyclerItemCategories.setLayoutManager(new LinearLayoutManager(this));
         }
 
         recyclerItemList = findViewById(R.id.recyclerItemList);
         if (recyclerItemList != null) {
-            recyclerItemList.setLayoutManager(new androidx.recyclerview.widget.LinearLayoutManager(this));
+            recyclerItemList.setLayoutManager(new LinearLayoutManager(this));
         }
 
         recyclerItemGrid = findViewById(R.id.recyclerItemGrid);
@@ -115,12 +115,12 @@ public class ReportsActivity extends AppCompatActivity {
 
         recyclerCounterItems = findViewById(R.id.recyclerCounterItems);
         if (recyclerCounterItems != null) {
-            recyclerCounterItems.setLayoutManager(new androidx.recyclerview.widget.LinearLayoutManager(this));
+            recyclerCounterItems.setLayoutManager(new LinearLayoutManager(this));
         }
 
         btnGoToCounter = findViewById(R.id.btnGoToCounter);
         btnCharge = findViewById(R.id.btnCharge);
-        labelCounterBadge = findViewById(R.id.labelCounterBadge); // Need to add ID in XML
+        labelCounterBadge = findViewById(R.id.labelCounterBadge);
         textCounterSubtotal = findViewById(R.id.textCounterSubtotal);
         textCounterGrandTotal = findViewById(R.id.textCounterGrandTotal);
         textItemCountSummary = findViewById(R.id.textItemCountSummary);
@@ -137,7 +137,7 @@ public class ReportsActivity extends AppCompatActivity {
         if (counterEmptyStateContainer != null) {
             counterEmptyStateContainer.findViewById(R.id.btnNewSale).setOnClickListener(v -> highlightBottomTab(TAB_ITEMS));
             counterEmptyStateContainer.findViewById(R.id.editSearchCounterEmpty).setOnClickListener(v -> highlightBottomTab(TAB_ITEMS));
-            counterEmptyStateContainer.findViewById(R.id.editSearchCounterEmpty).setFocusable(false); // Make it behave like a button
+            counterEmptyStateContainer.findViewById(R.id.editSearchCounterEmpty).setFocusable(false);
         }
 
         findViewById(R.id.btnClearCart).setOnClickListener(v -> {
@@ -163,14 +163,8 @@ public class ReportsActivity extends AppCompatActivity {
         textHeaderBusinessName = findViewById(R.id.textHeaderBusinessName);
         textHeaderPhoneNumber = findViewById(R.id.textHeaderPhoneNumber);
         txtOwnerName = findViewById(R.id.txtOwnerName);
-        txtOwnerEmail = findViewById(R.id.txtOwnerEmail);
         imgLogo = findViewById(R.id.imgLogo);
 
-        toolbar.setNavigationOnClickListener(v -> {
-            if (drawerLayout != null) {
-                drawerLayout.openDrawer(androidx.core.view.GravityCompat.START);
-            }
-        });
         bottomTabs = new View[]{
                 findViewById(R.id.tabReports),
                 findViewById(R.id.tabToday),
@@ -220,9 +214,10 @@ public class ReportsActivity extends AppCompatActivity {
         });
 
         setSupportActionBar(toolbar);
-        toolbar.setNavigationOnClickListener(v -> {
-            drawerLayout.openDrawer(GravityCompat.START);
-        });
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
 
         setupBottomTabs();
         highlightBottomTab(TAB_REPORTS);
@@ -277,27 +272,16 @@ public class ReportsActivity extends AppCompatActivity {
             startActivity(new Intent(ReportsActivity.this, AddBusinessActivity.class));
         });
 
-        findViewById(R.id.btnEditProfile).setOnClickListener(v -> {
-            drawerLayout.closeDrawer(GravityCompat.START);
-            startActivity(new Intent(ReportsActivity.this, EditProfileActivity.class));
-        });
-
-        // Add this if not already there, but let's check nav_header buttons
-        // The buttons in nav_header_reports are usually set up in onCreate if they have IDs.
-        // Let's check nav_header_reports.xml IDs.
-
         findViewById(R.id.cardExpenseIncome).setOnClickListener(v -> {
             startActivity(new Intent(ReportsActivity.this, CashFlowActivity.class));
         });
 
         findViewById(R.id.cardAllCustomers).setOnClickListener(v -> {
-            android.util.Log.d("ReportsActivity", "All Customers card clicked");
             Intent intent = new Intent(ReportsActivity.this, CustomerManagementActivity.class);
             startActivity(intent);
         });
 
         findViewById(R.id.cardDueCustomers).setOnClickListener(v -> {
-            android.util.Log.d("ReportsActivity", "Due Customers card clicked");
             Intent intent = new Intent(ReportsActivity.this, CustomerManagementActivity.class);
             startActivity(intent);
         });
@@ -320,7 +304,6 @@ public class ReportsActivity extends AppCompatActivity {
                 labelCounterBadge.setText(String.valueOf(count));
             }
             
-            // Refresh items view to update quantity overlays (x1, x2 etc)
             if (itemViewMode == 1 && recyclerItemList.getAdapter() != null) {
                 recyclerItemList.getAdapter().notifyDataSetChanged();
             } else if (itemViewMode == 2 && recyclerItemGrid.getAdapter() != null) {
@@ -334,16 +317,16 @@ public class ReportsActivity extends AppCompatActivity {
                     loadCounterItems();
                     double subtotal = CartManager.getInstance().getSubtotal();
                     if (textCounterSubtotal != null) textCounterSubtotal.setText(String.valueOf((int)subtotal));
-                    if (textCounterGrandTotal != null) textCounterGrandTotal.setText("₹" + (int)subtotal);
+                    if (textCounterGrandTotal != null) textCounterGrandTotal.setText(String.format(Locale.getDefault(), "₹%.0f", subtotal));
                     if (btnCharge != null) {
                         btnCharge.setVisibility(View.VISIBLE);
-                        btnCharge.setText("Charge: ₹" + (int)subtotal);
+                        btnCharge.setText(String.format(Locale.getDefault(), "Charge: ₹%.0f", subtotal));
                     }
                     if (textItemCountSummary != null) {
                         int units = CartManager.getInstance().getTotalUnits();
-                        String itemsText = count == 1 ? " Item" : " Items";
-                        String unitsText = units == 1 ? " Unit" : " Units";
-                        textItemCountSummary.setText(count + itemsText + " | " + units + unitsText);
+                        String itemsStr = count == 1 ? " Item" : " Items";
+                        String unitsStr = units == 1 ? " Unit" : " Units";
+                        textItemCountSummary.setText(String.format(Locale.getDefault(), "%d%s | %d%s", count, itemsStr, units, unitsStr));
                     }
                 } else {
                     counterContentContainer.setVisibility(View.GONE);
@@ -376,9 +359,7 @@ public class ReportsActivity extends AppCompatActivity {
                 String val = editQuantity.getText().toString();
                 int q = val.isEmpty() ? 0 : Integer.parseInt(val);
                 editQuantity.setText(String.valueOf(q + 1));
-            } catch (NumberFormatException e) {
-                editQuantity.setText("1");
-            }
+            } catch (NumberFormatException ignored) {}
         });
 
         dialog.findViewById(R.id.btnMinus).setOnClickListener(v -> {
@@ -386,15 +367,14 @@ public class ReportsActivity extends AppCompatActivity {
                 String val = editQuantity.getText().toString();
                 int q = val.isEmpty() ? 0 : Integer.parseInt(val);
                 if (q > 0) editQuantity.setText(String.valueOf(q - 1));
-            } catch (NumberFormatException e) {
-                editQuantity.setText("0");
-            }
+            } catch (NumberFormatException ignored) {}
         });
 
         dialog.findViewById(R.id.btnUpdateQuantity).setOnClickListener(v -> {
             try {
                 int q = Integer.parseInt(editQuantity.getText().toString());
-                CartManager.getInstance().updateQuantity(cartItem.getItem().getId(), q);
+                int vId = (cartItem.getVariant() != null) ? cartItem.getVariant().getId() : -1;
+                CartManager.getInstance().updateQuantity(cartItem.getItem().getId(), vId, q);
                 dialog.dismiss();
             } catch (Exception e) {
                 Toast.makeText(this, "Invalid quantity", Toast.LENGTH_SHORT).show();
@@ -419,26 +399,14 @@ public class ReportsActivity extends AppCompatActivity {
             ReceiptSettings settings = AppDatabase.getInstance(this).receiptSettingsDao().getSettings();
             runOnUiThread(() -> {
                 if (settings != null) {
-                    if (textHeaderBusinessName != null) {
-                        textHeaderBusinessName.setText(settings.getBusinessName());
-                    }
-                    if (textHeaderPhoneNumber != null) {
-                        textHeaderPhoneNumber.setText(settings.getPhoneNumber());
-                    }
-                    if (txtOwnerName != null) {
-                        txtOwnerName.setText(settings.getBusinessName() + " " + getString(R.string.header_owner_suffix));
-                    }
-                    if (txtOwnerEmail != null) {
-                        txtOwnerEmail.setText(settings.getEmail() != null ? settings.getEmail() : "nutritioncompany.com@gmail.com");
-                    }
+                    if (textHeaderBusinessName != null) textHeaderBusinessName.setText(settings.getBusinessName());
+                    if (textHeaderPhoneNumber != null) textHeaderPhoneNumber.setText(settings.getPhoneNumber());
+                    if (txtOwnerName != null) txtOwnerName.setText(settings.getBusinessName() + " " + getString(R.string.header_owner_suffix));
                     if (imgLogo != null && settings.getBusinessLogoPath() != null) {
                         try {
                             imgLogo.setImageURI(android.net.Uri.parse(settings.getBusinessLogoPath()));
-                            // Remove tint if we're showing a real logo
                             imgLogo.setImageTintList(null);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                        } catch (Exception ignored) {}
                     }
                 }
             });
@@ -491,10 +459,8 @@ public class ReportsActivity extends AppCompatActivity {
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         }
-
         RecyclerView recyclerView = dialog.findViewById(R.id.recyclerLanguages);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-
         List<Language> languages = new ArrayList<>();
         languages.add(new Language("ENGLISH", "en"));
         languages.add(new Language("عربي", "ar"));
@@ -509,7 +475,7 @@ public class ReportsActivity extends AppCompatActivity {
         languages.add(new Language("ಕನ್ನಡ", "kn"));
         languages.add(new Language("తెలుగు", "te"));
         languages.add(new Language("தமிழ்", "ta"));
-        languages.add(new Language("मराठी", "mr"));
+        languages.add(new Language("मরাठी", "mr"));
         languages.add(new Language("日本語", "ja"));
         languages.add(new Language("中文", "zh"));
         languages.add(new Language("DEUTSCHE", "de"));
@@ -517,14 +483,12 @@ public class ReportsActivity extends AppCompatActivity {
         languages.add(new Language("עברית", "iw"));
         languages.add(new Language("KISWAHILI", "sw"));
         languages.add(new Language("TÜRKÇE", "tr"));
-
         LanguageAdapter adapter = new LanguageAdapter(languages, language -> {
             LocaleHelper.setLocale(this, language.getCode());
             dialog.dismiss();
-            recreate(); // Recreate to apply changes immediately
+            recreate();
         });
         recyclerView.setAdapter(adapter);
-        
         dialog.findViewById(R.id.imageClose).setOnClickListener(v -> dialog.dismiss());
         dialog.show();
     }
@@ -536,20 +500,11 @@ public class ReportsActivity extends AppCompatActivity {
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         }
-
         RecyclerView recyclerView = dialog.findViewById(R.id.recyclerBusinesses);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-
         Executors.newSingleThreadExecutor().execute(() -> {
             List<Business> businesses = AppDatabase.getInstance(this).businessDao().getAllBusinesses();
             runOnUiThread(() -> {
-                if (businesses.isEmpty()) {
-                    // Seed initial data if empty
-                    businesses.add(new Business("Nutrition Co", "+918825347516", "OWNER", true));
-                    businesses.add(new Business("PROTEIN HUB -DEOGHAR", "+917903598844", "OWNER", false));
-                    businesses.add(new Business("The City Gym (Unisex)", "+910000000000", "OWNER", false));
-                }
-
                 BusinessAdapter adapter = new BusinessAdapter(businesses, business -> {
                     dialog.dismiss();
                     Intent intent = new Intent(this, AddBusinessActivity.class);
@@ -559,12 +514,10 @@ public class ReportsActivity extends AppCompatActivity {
                 recyclerView.setAdapter(adapter);
             });
         });
-
         dialog.findViewById(R.id.btnAddBusiness).setOnClickListener(v -> {
             dialog.dismiss();
             startActivity(new Intent(this, AddBusinessActivity.class));
         });
-
         dialog.findViewById(R.id.btnClose).setOnClickListener(v -> dialog.dismiss());
         dialog.show();
     }
@@ -591,10 +544,6 @@ public class ReportsActivity extends AppCompatActivity {
             bottomTabLabels[i].setTypeface(null, isSelected ? Typeface.BOLD : Typeface.NORMAL);
         }
 
-        // Handle content visibility based on tab
-        int selectedId = bottomTabs[selectedTab].getId();
-
-        // Reset all views
         moreContentContainer.setVisibility(View.GONE);
         itemsContentContainer.setVisibility(View.GONE);
         counterContentContainer.setVisibility(View.GONE);
@@ -605,9 +554,8 @@ public class ReportsActivity extends AppCompatActivity {
         if (btnGoToCounter != null) btnGoToCounter.setVisibility(View.GONE);
         if (btnCharge != null) btnCharge.setVisibility(View.GONE);
 
+        int selectedId = bottomTabs[selectedTab].getId();
         if (selectedId == R.id.tabMore) {
-            // ... (rest of method)
-            // SHOW Grid
             moreContentContainer.setVisibility(View.VISIBLE);
             toolbar.setTitle(getString(R.string.reports_tab_more));
             int bgColor = ContextCompat.getColor(this, R.color.reports_tab_selected);
@@ -616,7 +564,6 @@ public class ReportsActivity extends AppCompatActivity {
             toolbar.setTitleTextColor(selectedColor);
             toolbar.setNavigationIconTint(selectedColor);
         } else if (selectedId == R.id.tabItems) {
-            // SHOW Items screen
             itemsContentContainer.setVisibility(View.VISIBLE);
             toolbar.setTitle(getString(R.string.reports_tab_items));
             int bgColor = ContextCompat.getColor(this, R.color.reports_tab_selected);
@@ -626,7 +573,6 @@ public class ReportsActivity extends AppCompatActivity {
             toolbar.setNavigationIconTint(selectedColor);
             refreshItemsView();
         } else if (selectedId == R.id.tabReports) {
-            // Reports section
             dateSelectorRow.setVisibility(View.VISIBLE);
             showEmptyState(true);
             toolbar.setTitle(getString(R.string.reports_title));
@@ -660,193 +606,122 @@ public class ReportsActivity extends AppCompatActivity {
         recyclerItemGrid.setVisibility(View.GONE);
 
         switch (itemViewMode) {
-            case 0: // With Category
-                recyclerItemCategories.setVisibility(View.VISIBLE);
-                if (btnGoToCounter != null) btnGoToCounter.setVisibility(View.GONE);
-                loadItemCategories();
-                break;
-            case 1: // Without Category (List)
-                recyclerItemList.setVisibility(View.VISIBLE);
-                if (btnGoToCounter != null) btnGoToCounter.setVisibility(View.VISIBLE);
-                loadItemList();
-                break;
-            case 2: // Tiles (Grid)
-                recyclerItemGrid.setVisibility(View.VISIBLE);
-                if (btnGoToCounter != null) btnGoToCounter.setVisibility(View.VISIBLE);
-                loadItemGrid();
-                break;
+            case 0: recyclerItemCategories.setVisibility(View.VISIBLE); loadItemCategories(); break;
+            case 1: recyclerItemList.setVisibility(View.VISIBLE); loadItemList(); break;
+            case 2: recyclerItemGrid.setVisibility(View.VISIBLE); loadItemGrid(); break;
         }
     }
 
     private void filterItems(String query) {
         if (itemViewMode == 0) {
-            if (recyclerItemCategories.getAdapter() instanceof ItemCategoryAdapter) {
-                ((ItemCategoryAdapter) recyclerItemCategories.getAdapter()).filter(query);
-            }
+            if (recyclerItemCategories.getAdapter() instanceof ItemCategoryAdapter) ((ItemCategoryAdapter) recyclerItemCategories.getAdapter()).filter(query);
         } else if (itemViewMode == 1) {
-            if (recyclerItemList.getAdapter() instanceof ProductListAdapter) {
-                ((ProductListAdapter) recyclerItemList.getAdapter()).filter(query);
-            }
+            if (recyclerItemList.getAdapter() instanceof ProductListAdapter) ((ProductListAdapter) recyclerItemList.getAdapter()).filter(query);
         } else if (itemViewMode == 2) {
-            if (recyclerItemGrid.getAdapter() instanceof ItemGridAdapter) {
-                ((ItemGridAdapter) recyclerItemGrid.getAdapter()).filter(query);
-            }
+            if (recyclerItemGrid.getAdapter() instanceof ItemGridAdapter) ((ItemGridAdapter) recyclerItemGrid.getAdapter()).filter(query);
         }
     }
 
     private void loadItemList() {
         Executors.newSingleThreadExecutor().execute(() -> {
-            List<Item> dbItems;
-            if (itemViewMode == 1) {
-                dbItems = AppDatabase.getInstance(this).itemDao().getUncategorizedItems();
-            } else {
-                dbItems = AppDatabase.getInstance(this).itemDao().getAllItems();
-            }
-            
-            // Add dummy data if empty to match the provided image
-            if (dbItems.isEmpty()) {
-                if (itemViewMode == 1) {
-                    dbItems.add(createDummyItem(-10, "No Category Item 1", "", 100, 80, 5, "Unit"));
-                    dbItems.add(createDummyItem(-11, "No Category Item 2", null, 200, 150, 2, "Unit"));
-                } else {
-                    dbItems.add(createDummyItem(-1, "AA", "AA", 2899, 2500, 10, "PARANORMIC FAT"));
-                    dbItems.add(createDummyItem(-2, "Absolute Nutrition", "Whey", 2109, 1800, 10, "WHEY PROTEIN 1KG"));
-                    dbItems.add(createDummyItem(-3, "Alpino", "Oats", 499, 400, 10, "OATS 1KG"));
-                    dbItems.add(createDummyItem(-4, "Androbol Xterem", "Stack", 2999, 2500, 10, "< ₹2,999 >"));
-                    dbItems.add(createDummyItem(-5, "Ashwagandha Af 43", "Tablets", 500, 400, 10, "60 TAB"));
-                    dbItems.add(createDummyItem(-6, "Asitis Creatine", "Creatine", 549, 450, 10, "UNFLAVRED 250 GM"));
-                    dbItems.add(createDummyItem(-7, "Atom", "Isolated", 2349, 2000, 10, "ISOLATED 1KG"));
-                    dbItems.add(createDummyItem(-8, "Avvatar Iso Rich", "Whey", 3499, 3000, 10, "1KG"));
-                    dbItems.add(createDummyItem(-9, "Avvatar Whey", "Whey", 2099, 1800, 10, "UNFLAVORED 1KG"));
-                }
-            }
-
-            final List<Item> finalItems = dbItems;
-            runOnUiThread(() -> {
-                if (recyclerItemList != null) {
-                    recyclerItemList.setAdapter(new ProductListAdapter(finalItems));
-                    if (editSearchItems != null && !editSearchItems.getText().toString().isEmpty()) {
-                        filterItems(editSearchItems.getText().toString());
-                    }
-                }
-            });
+            List<Item> dbItems = AppDatabase.getInstance(this).itemDao().getAllItems();
+            runOnUiThread(() -> { if (recyclerItemList != null) recyclerItemList.setAdapter(new ProductListAdapter(dbItems)); });
         });
     }
 
     private void loadItemGrid() {
         Executors.newSingleThreadExecutor().execute(() -> {
             List<Item> dbItems;
-            if (itemTileStyle == 1) {
-                dbItems = AppDatabase.getInstance(this).itemDao().getUncategorizedItems();
-            } else {
-                dbItems = AppDatabase.getInstance(this).itemDao().getAllItems();
-            }
-
-            // Add dummy data if empty to match the provided image
-            if (dbItems.isEmpty()) {
-                if (itemTileStyle == 1) {
-                    dbItems.add(createDummyItem(-10, "No Category Item 1", "", 100, 80, 5, "Unit"));
-                    dbItems.add(createDummyItem(-11, "No Category Item 2", null, 200, 150, 2, "Unit"));
-                } else {
-                    dbItems.add(createDummyItem(-1, "AA", "AA", 2899, 2500, 10, "PARANORMIC FAT"));
-                    dbItems.add(createDummyItem(-2, "Absolute Nutrition", "Whey", 2109, 1800, 10, "WHEY PROTEIN 1KG"));
-                    dbItems.add(createDummyItem(-3, "Alpino", "Oats", 499, 400, 10, "OATS 1KG"));
-                    dbItems.add(createDummyItem(-4, "Androbol Xterem", "Stack", 2999, 2500, 10, "< ₹2,999 >"));
-                    dbItems.add(createDummyItem(-5, "Ashwagandha Af 43", "Tablets", 500, 400, 10, "60 TAB"));
-                    dbItems.add(createDummyItem(-6, "Asitis Creatine", "Creatine", 549, 450, 10, "UNFLAVRED 250 GM"));
-                    dbItems.add(createDummyItem(-7, "Atom", "Isolated", 2349, 2000, 10, "ISOLATED 1KG"));
-                    dbItems.add(createDummyItem(-8, "Avvatar Iso Rich", "Whey", 3499, 3000, 10, "1KG"));
-                    dbItems.add(createDummyItem(-9, "Avvatar Whey", "Whey", 2099, 1800, 10, "UNFLAVORED 1KG"));
-                }
-            }
-
+            if (itemTileStyle == 1) dbItems = AppDatabase.getInstance(this).itemDao().getUncategorizedItems();
+            else dbItems = AppDatabase.getInstance(this).itemDao().getAllItems();
             final List<Item> finalItems = dbItems;
             runOnUiThread(() -> {
                 if (recyclerItemGrid != null) {
-                    recyclerItemGrid.setAdapter(new ItemGridAdapter(finalItems, itemTileStyle));
-                    if (editSearchItems != null && !editSearchItems.getText().toString().isEmpty()) {
-                        filterItems(editSearchItems.getText().toString());
-                    }
+                    recyclerItemGrid.setAdapter(new ItemGridAdapter(finalItems, itemTileStyle, (item, pos) -> {
+                        if (item.isAdvanceMode()) showVariantSelectorDialog(item);
+                        else { CartManager.getInstance().addItem(item); updateCounterUI(); }
+                    }));
                 }
             });
         });
     }
 
-    private Item createDummyItem(int id, String name, String category, double selling, double cost, int stock, String variant) {
-        Item item = new Item(name, category, selling, cost, stock, variant, "Unit", false);
-        item.setId(id);
-        return item;
+    private void showVariantSelectorDialog(Item item) {
+        BottomSheetDialog bottomSheet = new BottomSheetDialog(this);
+        View view = getLayoutInflater().inflate(R.layout.layout_variant_selector_bottom_sheet, null);
+        bottomSheet.setContentView(view);
+
+        TextView textItemNameHeader = view.findViewById(R.id.textItemNameHeader);
+        textItemNameHeader.setText(item.getName().toUpperCase());
+
+        view.findViewById(R.id.btnEditItem).setOnClickListener(v -> {
+            bottomSheet.dismiss();
+            Intent intent = new Intent(this, ManageItemActivity.class);
+            intent.putExtra("item_id", item.getId());
+            startActivity(intent);
+        });
+
+        view.findViewById(R.id.btnSelectDone).setOnClickListener(v -> bottomSheet.dismiss());
+
+        RecyclerView rv = view.findViewById(R.id.recyclerVariantSelector);
+        rv.setLayoutManager(new LinearLayoutManager(this));
+
+        Executors.newSingleThreadExecutor().execute(() -> {
+            List<Variant> variants = AppDatabase.getInstance(this).variantDao().getVariantsForItem(item.getId());
+            runOnUiThread(() -> {
+                if (variants.isEmpty()) {
+                    CartManager.getInstance().addItem(item);
+                    bottomSheet.dismiss();
+                    updateCounterUI();
+                    return;
+                }
+
+                VariantSelectorAdapter adapter = new VariantSelectorAdapter(variants, CartManager.getInstance().getCartItems(), (variant, quantity) -> {
+                    CartManager.getInstance().setVariantQuantity(item, variant, quantity);
+                });
+                rv.setAdapter(adapter);
+            });
+        });
+
+        bottomSheet.show();
     }
 
     private void loadItemCategories() {
         Executors.newSingleThreadExecutor().execute(() -> {
             List<Category> dbCategories = AppDatabase.getInstance(this).categoryDao().getAllCategories();
             ItemDao itemDao = AppDatabase.getInstance(this).itemDao();
-            
             List<ItemCategoryAdapter.CategoryWithCount> list = new ArrayList<>();
             for (Category cat : dbCategories) {
                 int count = itemDao.getItemCountByCategory(cat.getName());
                 list.add(new ItemCategoryAdapter.CategoryWithCount(cat.getName(), count));
             }
-
-            // Check for uncategorized items
-            int uncategorizedCount = itemDao.getUncategorizedItemCount();
-            
-            if (uncategorizedCount > 0) {
-                list.add(new ItemCategoryAdapter.CategoryWithCount("Uncategorized", uncategorizedCount));
-            }
-            
-            // Add dummy if none to match image initially
-            if (list.isEmpty()) {
-                list.add(new ItemCategoryAdapter.CategoryWithCount("Brand All Item", 5));
-                list.add(new ItemCategoryAdapter.CategoryWithCount("Compression Tshirt", 1));
-                list.add(new ItemCategoryAdapter.CategoryWithCount("MASS GAINER", 10));
-                list.add(new ItemCategoryAdapter.CategoryWithCount("Creatine", 3));
-                list.add(new ItemCategoryAdapter.CategoryWithCount("College", 1));
-                list.add(new ItemCategoryAdapter.CategoryWithCount("DAILY SUPPORT", 18));
-            }
-
-            runOnUiThread(() -> {
-                if (recyclerItemCategories != null) {
-                    recyclerItemCategories.setAdapter(new ItemCategoryAdapter(list));
-                    if (editSearchItems != null && !editSearchItems.getText().toString().isEmpty()) {
-                        filterItems(editSearchItems.getText().toString());
-                    }
-                }
-            });
+            int unc = itemDao.getUncategorizedItemCount();
+            if (unc > 0) list.add(new ItemCategoryAdapter.CategoryWithCount("Uncategorized", unc));
+            runOnUiThread(() -> { if (recyclerItemCategories != null) recyclerItemCategories.setAdapter(new ItemCategoryAdapter(list)); });
         });
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         menu.clear();
-        if (currentTab == TAB_ITEMS) {
-            getMenuInflater().inflate(R.menu.menu_items_tab, menu);
-        } else {
-            getMenuInflater().inflate(R.menu.reports_top_app_bar_menu, menu);
-        }
+        if (currentTab == TAB_ITEMS) getMenuInflater().inflate(R.menu.menu_items_tab, menu);
+        else getMenuInflater().inflate(R.menu.reports_top_app_bar_menu, menu);
         return super.onPrepareOptionsMenu(menu);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        return true;
-    }
+    @Override public boolean onCreateOptionsMenu(Menu menu) { return true; }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int itemId = item.getItemId();
-        if (itemId == R.id.action_toggle_view) {
-            showItemViewSelector();
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            if (drawerLayout != null) {
+                drawerLayout.openDrawer(GravityCompat.START);
+            }
             return true;
         }
-        if (itemId == R.id.action_share || itemId == R.id.action_messages) {
-            return true;
-        }
-        if (itemId == R.id.action_add_customer) {
-            startActivity(new Intent(this, AddCustomerActivity.class));
-            return true;
-        }
+        if (id == R.id.action_toggle_view) { showItemViewSelector(); return true; }
+        if (id == R.id.action_add_customer) { startActivity(new Intent(this, AddCustomerActivity.class)); return true; }
         return super.onOptionsItemSelected(item);
     }
 
@@ -854,29 +729,10 @@ public class ReportsActivity extends AppCompatActivity {
         Dialog dialog = new Dialog(this, android.R.style.Theme_Light_NoTitleBar_Fullscreen);
         View view = getLayoutInflater().inflate(R.layout.layout_item_view_selector, null);
         dialog.setContentView(view);
-
         view.findViewById(R.id.btnCloseSelector).setOnClickListener(v -> dialog.dismiss());
-
-        view.findViewById(R.id.optionTiles).setOnClickListener(v -> {
-            itemViewMode = 2; // Tiles
-            itemTileStyle = 0; // Tap to add style
-            refreshItemsView();
-            dialog.dismiss();
-        });
-
-        view.findViewById(R.id.optionList).setOnClickListener(v -> {
-            itemViewMode = 2; // Tiles
-            itemTileStyle = 1; // Without category style (Banner)
-            refreshItemsView();
-            dialog.dismiss();
-        });
-
-        view.findViewById(R.id.optionCategory).setOnClickListener(v -> {
-            itemViewMode = 0; // With Category
-            refreshItemsView();
-            dialog.dismiss();
-        });
-
+        view.findViewById(R.id.optionTiles).setOnClickListener(v -> { itemViewMode = 2; itemTileStyle = 0; refreshItemsView(); dialog.dismiss(); });
+        view.findViewById(R.id.optionList).setOnClickListener(v -> { itemViewMode = 2; itemTileStyle = 1; refreshItemsView(); dialog.dismiss(); });
+        view.findViewById(R.id.optionCategory).setOnClickListener(v -> { itemViewMode = 0; refreshItemsView(); dialog.dismiss(); });
         dialog.show();
     }
 }

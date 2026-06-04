@@ -22,29 +22,71 @@ public class CartManager {
     }
 
     public void addItem(Item item) {
+        addItem(item, null);
+    }
+
+    public void addItem(Item item, Variant variant) {
         for (CartItem ci : cartItems) {
-            if (ci.getItem().getId() == item.getId()) {
+            boolean sameItem = ci.getItem().getId() == item.getId();
+            boolean sameVariant = (variant == null && ci.getVariant() == null) || 
+                                 (variant != null && ci.getVariant() != null && variant.getId() == ci.getVariant().getId());
+            
+            if (sameItem && sameVariant) {
                 ci.addQuantity(1);
                 notifyChanged();
                 return;
             }
         }
-        cartItems.add(new CartItem(item, 1));
+        cartItems.add(new CartItem(item, variant, 1));
         notifyChanged();
     }
 
     public void updateQuantity(int itemId, int quantity) {
+        updateQuantity(itemId, -1, quantity);
+    }
+
+    public void updateQuantity(int itemId, int variantId, int quantity) {
         for (int i = 0; i < cartItems.size(); i++) {
-            if (cartItems.get(i).getItem().getId() == itemId) {
+            CartItem ci = cartItems.get(i);
+            boolean sameItem = ci.getItem().getId() == itemId;
+            boolean sameVariant = (variantId == -1 && ci.getVariant() == null) || 
+                                 (ci.getVariant() != null && ci.getVariant().getId() == variantId);
+
+            if (sameItem && sameVariant) {
                 if (quantity <= 0) {
                     cartItems.remove(i);
                 } else {
-                    cartItems.get(i).setQuantity(quantity);
+                    ci.setQuantity(quantity);
                 }
                 notifyChanged();
                 return;
             }
         }
+    }
+
+    public void setVariantQuantity(Item item, Variant variant, int quantity) {
+        int variantId = (variant != null) ? variant.getId() : -1;
+        boolean found = false;
+        for (int i = 0; i < cartItems.size(); i++) {
+            CartItem ci = cartItems.get(i);
+            boolean sameItem = ci.getItem().getId() == item.getId();
+            boolean sameVariant = (variantId == -1 && ci.getVariant() == null) || 
+                                 (ci.getVariant() != null && ci.getVariant().getId() == variantId);
+
+            if (sameItem && sameVariant) {
+                if (quantity <= 0) {
+                    cartItems.remove(i);
+                } else {
+                    ci.setQuantity(quantity);
+                }
+                found = true;
+                break;
+            }
+        }
+        if (!found && quantity > 0) {
+            cartItems.add(new CartItem(item, variant, quantity));
+        }
+        notifyChanged();
     }
 
     public List<CartItem> getCartItems() {

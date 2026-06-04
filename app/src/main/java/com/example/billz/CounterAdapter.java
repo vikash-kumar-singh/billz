@@ -33,7 +33,7 @@ public class CounterAdapter extends RecyclerView.Adapter<CounterAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         CartItem cartItem = items.get(position);
         Item item = cartItem.getItem();
-        
+
         String variant = item.getVariantName();
         holder.textName.setText((variant != null && !variant.equals("Default") ? variant + " " : "") + item.getName());
         holder.textDetails.setText(cartItem.getQuantity() + " x " + (int)item.getSellingPrice());
