@@ -21,31 +21,42 @@ public class CartManager {
         return instance;
     }
 
-    public void addItem(Item item) {
-        addItem(item, null);
+    public boolean addItem(Item item) {
+        return addItem(item, null);
     }
 
-    public void addItem(Item item, Variant variant) {
+    public boolean addItem(Item item, Variant variant) {
+        int maxStock = (variant != null) ? variant.getStockQuantity() : item.getStockQuantity();
+
         for (CartItem ci : cartItems) {
             boolean sameItem = ci.getItem().getId() == item.getId();
             boolean sameVariant = (variant == null && ci.getVariant() == null) || 
                                  (variant != null && ci.getVariant() != null && variant.getId() == ci.getVariant().getId());
             
             if (sameItem && sameVariant) {
-                ci.addQuantity(1);
-                notifyChanged();
-                return;
+                if (ci.getQuantity() + 1 <= maxStock) {
+                    ci.addQuantity(1);
+                    notifyChanged();
+                    return true;
+                } else {
+                    return false;
+                }
             }
         }
-        cartItems.add(new CartItem(item, variant, 1));
-        notifyChanged();
+
+        if (1 <= maxStock) {
+            cartItems.add(new CartItem(item, variant, 1));
+            notifyChanged();
+            return true;
+        }
+        return false;
     }
 
     public void updateQuantity(int itemId, int quantity) {
         updateQuantity(itemId, -1, quantity);
     }
 
-    public void updateQuantity(int itemId, int variantId, int quantity) {
+    public boolean updateQuantity(int itemId, int variantId, int quantity) {
         for (int i = 0; i < cartItems.size(); i++) {
             CartItem ci = cartItems.get(i);
             boolean sameItem = ci.getItem().getId() == itemId;
@@ -55,17 +66,33 @@ public class CartManager {
             if (sameItem && sameVariant) {
                 if (quantity <= 0) {
                     cartItems.remove(i);
+                    notifyChanged();
+                    return true;
                 } else {
-                    ci.setQuantity(quantity);
+                    int maxStock = (ci.getVariant() != null) ? ci.getVariant().getStockQuantity() : ci.getItem().getStockQuantity();
+                    if (quantity <= maxStock) {
+                        ci.setQuantity(quantity);
+                        notifyChanged();
+                        return true;
+                    } else {
+                        // Cap at max stock
+                        ci.setQuantity(maxStock);
+                        notifyChanged();
+                        return false;
+                    }
                 }
-                notifyChanged();
-                return;
             }
         }
+        return false;
     }
 
-    public void setVariantQuantity(Item item, Variant variant, int quantity) {
+    public boolean setVariantQuantity(Item item, Variant variant, int quantity) {
         int variantId = (variant != null) ? variant.getId() : -1;
+        int maxStock = (variant != null) ? variant.getStockQuantity() : item.getStockQuantity();
+        
+        // Cap quantity at max stock
+        if (quantity > maxStock) quantity = maxStock;
+
         boolean found = false;
         for (int i = 0; i < cartItems.size(); i++) {
             CartItem ci = cartItems.get(i);
@@ -87,6 +114,7 @@ public class CartManager {
             cartItems.add(new CartItem(item, variant, quantity));
         }
         notifyChanged();
+        return quantity < maxStock || quantity == 0; // return false if we hit the limit
     }
 
     public List<CartItem> getCartItems() {

@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -77,6 +78,13 @@ public class ReportsActivity extends AppCompatActivity {
     private int currentTab = TAB_REPORTS;
     private int itemViewMode = 2; // 0: Category, 1: List, 2: Tiles
     private int itemTileStyle = 0; // 0: Tap to add (No banner), 1: Without category (Banner)
+    private Tax selectedTax;
+    private Discount selectedDiscount;
+    private OtherFee selectedOtherCharge;
+    private DeliveryFee selectedDeliveryCharge;
+    private PackingFee selectedPackingCharge;
+    private ServiceFee selectedServiceCharge;
+    private TextView btnAddTax, btnAddDiscount, btnAddOtherCharges;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,6 +132,21 @@ public class ReportsActivity extends AppCompatActivity {
         textCounterSubtotal = findViewById(R.id.textCounterSubtotal);
         textCounterGrandTotal = findViewById(R.id.textCounterGrandTotal);
         textItemCountSummary = findViewById(R.id.textItemCountSummary);
+        btnAddTax = findViewById(R.id.btnAddTax);
+        btnAddDiscount = findViewById(R.id.btnAddDiscount);
+        btnAddOtherCharges = findViewById(R.id.btnAddOtherCharges);
+
+        if (btnAddTax != null) {
+            btnAddTax.setOnClickListener(v -> showSelectTaxDialog());
+        }
+
+        if (btnAddDiscount != null) {
+            btnAddDiscount.setOnClickListener(v -> showSelectDiscountDialog());
+        }
+
+        if (btnAddOtherCharges != null) {
+            btnAddOtherCharges.setOnClickListener(v -> showChargeTypeSelector());
+        }
 
         if (btnGoToCounter != null) {
             btnGoToCounter.setOnClickListener(v -> highlightBottomTab(TAB_COUNTER));
@@ -316,11 +339,73 @@ public class ReportsActivity extends AppCompatActivity {
                     counterEmptyStateContainer.setVisibility(View.GONE);
                     loadCounterItems();
                     double subtotal = CartManager.getInstance().getSubtotal();
+                    double taxAmount = 0;
+                    if (selectedTax != null) {
+                        taxAmount = subtotal * (selectedTax.getValue() / 100.0);
+                        if (btnAddTax != null) {
+                            btnAddTax.setText(String.format(Locale.getDefault(), "Tax: %s(%.0f%%)", selectedTax.getName(), selectedTax.getValue()));
+                        }
+                    } else {
+                        if (btnAddTax != null) btnAddTax.setText("Add Tax");
+                    }
+
+                    double discountAmount = 0;
+                    if (selectedDiscount != null) {
+                        if (selectedDiscount.isPercentage()) {
+                            discountAmount = subtotal * (selectedDiscount.getValue() / 100.0);
+                        } else {
+                            discountAmount = selectedDiscount.getValue();
+                        }
+                        if (btnAddDiscount != null) {
+                            String symbol = selectedDiscount.isPercentage() ? "%" : "₹";
+                            btnAddDiscount.setText(String.format(Locale.getDefault(), "Disc: %s(%s%.0f)", selectedDiscount.getName(), symbol, selectedDiscount.getValue()));
+                        }
+                    } else {
+                        if (btnAddDiscount != null) btnAddDiscount.setText("Add Discount");
+                    }
+
+                    double otherAmount = 0;
+                    StringBuilder chargesDesc = new StringBuilder();
+                    
+                    if (selectedDeliveryCharge != null) {
+                        double val = selectedDeliveryCharge.isPercentage() ? (subtotal * selectedDeliveryCharge.getValue() / 100.0) : selectedDeliveryCharge.getValue();
+                        otherAmount += val;
+                        chargesDesc.append("Delivery:").append(String.format(Locale.getDefault(), "%.0f", selectedDeliveryCharge.getValue())).append(selectedDeliveryCharge.isPercentage() ? "% " : "₹ ");
+                    }
+                    
+                    if (selectedPackingCharge != null) {
+                        double val = selectedPackingCharge.isPercentage() ? (subtotal * selectedPackingCharge.getValue() / 100.0) : selectedPackingCharge.getValue();
+                        otherAmount += val;
+                        chargesDesc.append("Packing:").append(String.format(Locale.getDefault(), "%.0f", selectedPackingCharge.getValue())).append(selectedPackingCharge.isPercentage() ? "% " : "₹ ");
+                    }
+                    
+                    if (selectedServiceCharge != null) {
+                        double val = selectedServiceCharge.isPercentage() ? (subtotal * selectedServiceCharge.getValue() / 100.0) : selectedServiceCharge.getValue();
+                        otherAmount += val;
+                        chargesDesc.append("Service:").append(String.format(Locale.getDefault(), "%.0f", selectedServiceCharge.getValue())).append(selectedServiceCharge.isPercentage() ? "% " : "₹ ");
+                    }
+
+                    if (selectedOtherCharge != null) {
+                        double val = selectedOtherCharge.isPercentage() ? (subtotal * selectedOtherCharge.getValue() / 100.0) : selectedOtherCharge.getValue();
+                        otherAmount += val;
+                        chargesDesc.append("Other:").append(String.format(Locale.getDefault(), "%.0f", selectedOtherCharge.getValue())).append(selectedOtherCharge.isPercentage() ? "% " : "₹ ");
+                    }
+
+                    if (btnAddOtherCharges != null) {
+                        if (chargesDesc.length() > 0) {
+                            btnAddOtherCharges.setText(chargesDesc.toString().trim());
+                        } else {
+                            btnAddOtherCharges.setText("Add Other Charges");
+                        }
+                    }
+
+                    double grandTotal = subtotal + taxAmount - discountAmount + otherAmount;
+
                     if (textCounterSubtotal != null) textCounterSubtotal.setText(String.valueOf((int)subtotal));
-                    if (textCounterGrandTotal != null) textCounterGrandTotal.setText(String.format(Locale.getDefault(), "₹%.0f", subtotal));
+                    if (textCounterGrandTotal != null) textCounterGrandTotal.setText(String.format(Locale.getDefault(), "₹%.0f", grandTotal));
                     if (btnCharge != null) {
                         btnCharge.setVisibility(View.VISIBLE);
-                        btnCharge.setText(String.format(Locale.getDefault(), "Charge: ₹%.0f", subtotal));
+                        btnCharge.setText(String.format(Locale.getDefault(), "Charge: ₹%.0f", grandTotal));
                     }
                     if (textItemCountSummary != null) {
                         int units = CartManager.getInstance().getTotalUnits();
@@ -358,7 +443,12 @@ public class ReportsActivity extends AppCompatActivity {
             try {
                 String val = editQuantity.getText().toString();
                 int q = val.isEmpty() ? 0 : Integer.parseInt(val);
-                editQuantity.setText(String.valueOf(q + 1));
+                int maxStock = (cartItem.getVariant() != null) ? cartItem.getVariant().getStockQuantity() : cartItem.getItem().getStockQuantity();
+                if (q + 1 <= maxStock) {
+                    editQuantity.setText(String.valueOf(q + 1));
+                } else {
+                    Toast.makeText(this, "Maximum stock reached", Toast.LENGTH_SHORT).show();
+                }
             } catch (NumberFormatException ignored) {}
         });
 
@@ -373,6 +463,11 @@ public class ReportsActivity extends AppCompatActivity {
         dialog.findViewById(R.id.btnUpdateQuantity).setOnClickListener(v -> {
             try {
                 int q = Integer.parseInt(editQuantity.getText().toString());
+                int maxStock = (cartItem.getVariant() != null) ? cartItem.getVariant().getStockQuantity() : cartItem.getItem().getStockQuantity();
+                if (q > maxStock) {
+                    Toast.makeText(this, "Only " + maxStock + " units available in stock", Toast.LENGTH_SHORT).show();
+                    q = maxStock;
+                }
                 int vId = (cartItem.getVariant() != null) ? cartItem.getVariant().getId() : -1;
                 CartManager.getInstance().updateQuantity(cartItem.getItem().getId(), vId, q);
                 dialog.dismiss();
@@ -638,8 +733,15 @@ public class ReportsActivity extends AppCompatActivity {
             runOnUiThread(() -> {
                 if (recyclerItemGrid != null) {
                     recyclerItemGrid.setAdapter(new ItemGridAdapter(finalItems, itemTileStyle, (item, pos) -> {
-                        if (item.isAdvanceMode()) showVariantSelectorDialog(item);
-                        else { CartManager.getInstance().addItem(item); updateCounterUI(); }
+                        if (item.isAdvanceMode()) {
+                            showVariantSelectorDialog(item);
+                        } else {
+                            if (CartManager.getInstance().addItem(item)) {
+                                updateCounterUI();
+                            } else {
+                                Toast.makeText(this, "Not enough stock available", Toast.LENGTH_SHORT).show();
+                            }
+                        }
                     }));
                 }
             });
@@ -670,14 +772,19 @@ public class ReportsActivity extends AppCompatActivity {
             List<Variant> variants = AppDatabase.getInstance(this).variantDao().getVariantsForItem(item.getId());
             runOnUiThread(() -> {
                 if (variants.isEmpty()) {
-                    CartManager.getInstance().addItem(item);
-                    bottomSheet.dismiss();
-                    updateCounterUI();
+                    if (CartManager.getInstance().addItem(item)) {
+                        bottomSheet.dismiss();
+                        updateCounterUI();
+                    } else {
+                        Toast.makeText(this, "Not enough stock available", Toast.LENGTH_SHORT).show();
+                    }
                     return;
                 }
 
                 VariantSelectorAdapter adapter = new VariantSelectorAdapter(variants, CartManager.getInstance().getCartItems(), (variant, quantity) -> {
-                    CartManager.getInstance().setVariantQuantity(item, variant, quantity);
+                    if (!CartManager.getInstance().setVariantQuantity(item, variant, quantity)) {
+                        Toast.makeText(this, "Only " + variant.getStockQuantity() + " units available in stock", Toast.LENGTH_SHORT).show();
+                    }
                 });
                 rv.setAdapter(adapter);
             });
@@ -723,6 +830,389 @@ public class ReportsActivity extends AppCompatActivity {
         if (id == R.id.action_toggle_view) { showItemViewSelector(); return true; }
         if (id == R.id.action_add_customer) { startActivity(new Intent(this, AddCustomerActivity.class)); return true; }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showChargeTypeSelector() {
+        BottomSheetDialog bottomSheet = new BottomSheetDialog(this);
+        View view = getLayoutInflater().inflate(R.layout.layout_charge_type_selector, null);
+        bottomSheet.setContentView(view);
+
+        view.findViewById(R.id.optionDelivery).setOnClickListener(v -> {
+            bottomSheet.dismiss();
+            showSelectDeliveryDialog();
+        });
+
+        view.findViewById(R.id.optionPacking).setOnClickListener(v -> {
+            bottomSheet.dismiss();
+            showSelectPackingDialog();
+        });
+
+        view.findViewById(R.id.optionService).setOnClickListener(v -> {
+            bottomSheet.dismiss();
+            showSelectServiceDialog();
+        });
+
+        view.findViewById(R.id.optionOther).setOnClickListener(v -> {
+            bottomSheet.dismiss();
+            showSelectOtherDialog();
+        });
+
+        view.findViewById(R.id.btnClose).setOnClickListener(v -> bottomSheet.dismiss());
+        bottomSheet.show();
+    }
+
+    private void showSelectDeliveryDialog() {
+        BottomSheetDialog bottomSheet = new BottomSheetDialog(this);
+        View view = getLayoutInflater().inflate(R.layout.layout_select_other_charge_dialog, null);
+        bottomSheet.setContentView(view);
+
+        TextView title = view.findViewById(R.id.textChargeTitle);
+        title.setText("SELECT DELIVERY CHARGE");
+        
+        EditText editValue = view.findViewById(R.id.editOtherValue);
+        CheckBox checkPercentage = view.findViewById(R.id.checkPercentage);
+        RecyclerView rv = view.findViewById(R.id.recyclerOthers);
+        rv.setLayoutManager(new GridLayoutManager(this, 2));
+
+        if (selectedDeliveryCharge != null) {
+            editValue.setText(String.format(Locale.getDefault(), "%.1f", selectedDeliveryCharge.getValue()));
+            checkPercentage.setChecked(selectedDeliveryCharge.isPercentage());
+        }
+
+        Executors.newSingleThreadExecutor().execute(() -> {
+            List<DeliveryFee> list = AppDatabase.getInstance(this).deliveryFeeDao().getAllDeliveryFees();
+            runOnUiThread(() -> {
+                DeliverySelectionAdapter adapter = new DeliverySelectionAdapter(list, fee -> {
+                    selectedDeliveryCharge = fee;
+                    editValue.setText(String.format(Locale.getDefault(), "%.1f", fee.getValue()));
+                    checkPercentage.setChecked(fee.isPercentage());
+                    if (rv.getAdapter() != null) ((DeliverySelectionAdapter) rv.getAdapter()).setSelectedId(fee.getId());
+                });
+                if (selectedDeliveryCharge != null) adapter.setSelectedId(selectedDeliveryCharge.getId());
+                rv.setAdapter(adapter);
+            });
+        });
+
+        view.findViewById(R.id.btnCancel).setOnClickListener(v -> bottomSheet.dismiss());
+        view.findViewById(R.id.btnSave).setOnClickListener(v -> {
+            String val = editValue.getText().toString().trim();
+            if (!val.isEmpty()) {
+                double chargeVal = Double.parseDouble(val);
+                if (selectedDeliveryCharge == null || chargeVal != selectedDeliveryCharge.getValue() || checkPercentage.isChecked() != selectedDeliveryCharge.isPercentage()) {
+                    selectedDeliveryCharge = new DeliveryFee("Custom Delivery", chargeVal, checkPercentage.isChecked(), false);
+                }
+                updateCounterUI();
+                bottomSheet.dismiss();
+            } else {
+                selectedDeliveryCharge = null;
+                updateCounterUI();
+                bottomSheet.dismiss();
+            }
+        });
+        bottomSheet.show();
+    }
+
+    private void showSelectPackingDialog() {
+        BottomSheetDialog bottomSheet = new BottomSheetDialog(this);
+        View view = getLayoutInflater().inflate(R.layout.layout_select_other_charge_dialog, null);
+        bottomSheet.setContentView(view);
+        
+        TextView title = view.findViewById(R.id.textChargeTitle);
+        title.setText("SELECT PACKING CHARGE");
+
+        EditText editValue = view.findViewById(R.id.editOtherValue);
+        CheckBox checkPercentage = view.findViewById(R.id.checkPercentage);
+        RecyclerView rv = view.findViewById(R.id.recyclerOthers);
+        rv.setLayoutManager(new GridLayoutManager(this, 2));
+
+        if (selectedPackingCharge != null) {
+            editValue.setText(String.format(Locale.getDefault(), "%.1f", selectedPackingCharge.getValue()));
+            checkPercentage.setChecked(selectedPackingCharge.isPercentage());
+        }
+
+        Executors.newSingleThreadExecutor().execute(() -> {
+            List<PackingFee> list = AppDatabase.getInstance(this).packingFeeDao().getAllPackingFees();
+            runOnUiThread(() -> {
+                PackingSelectionAdapter adapter = new PackingSelectionAdapter(list, fee -> {
+                    selectedPackingCharge = fee;
+                    editValue.setText(String.format(Locale.getDefault(), "%.1f", fee.getValue()));
+                    checkPercentage.setChecked(fee.isPercentage());
+                    if (rv.getAdapter() != null) ((PackingSelectionAdapter) rv.getAdapter()).setSelectedId(fee.getId());
+                });
+                if (selectedPackingCharge != null) adapter.setSelectedId(selectedPackingCharge.getId());
+                rv.setAdapter(adapter);
+            });
+        });
+
+        view.findViewById(R.id.btnCancel).setOnClickListener(v -> bottomSheet.dismiss());
+        view.findViewById(R.id.btnSave).setOnClickListener(v -> {
+            String val = editValue.getText().toString().trim();
+            if (!val.isEmpty()) {
+                double chargeVal = Double.parseDouble(val);
+                if (selectedPackingCharge == null || chargeVal != selectedPackingCharge.getValue() || checkPercentage.isChecked() != selectedPackingCharge.isPercentage()) {
+                    selectedPackingCharge = new PackingFee("Custom Packing", chargeVal, checkPercentage.isChecked(), false);
+                }
+                updateCounterUI();
+                bottomSheet.dismiss();
+            } else {
+                selectedPackingCharge = null;
+                updateCounterUI();
+                bottomSheet.dismiss();
+            }
+        });
+        bottomSheet.show();
+    }
+
+    private void showSelectServiceDialog() {
+        BottomSheetDialog bottomSheet = new BottomSheetDialog(this);
+        View view = getLayoutInflater().inflate(R.layout.layout_select_other_charge_dialog, null);
+        bottomSheet.setContentView(view);
+        
+        TextView title = view.findViewById(R.id.textChargeTitle);
+        title.setText("SELECT SERVICE CHARGE");
+
+        EditText editValue = view.findViewById(R.id.editOtherValue);
+        CheckBox checkPercentage = view.findViewById(R.id.checkPercentage);
+        RecyclerView rv = view.findViewById(R.id.recyclerOthers);
+        rv.setLayoutManager(new GridLayoutManager(this, 2));
+
+        if (selectedServiceCharge != null) {
+            editValue.setText(String.format(Locale.getDefault(), "%.1f", selectedServiceCharge.getValue()));
+            checkPercentage.setChecked(selectedServiceCharge.isPercentage());
+        }
+
+        Executors.newSingleThreadExecutor().execute(() -> {
+            List<ServiceFee> list = AppDatabase.getInstance(this).serviceFeeDao().getAllServiceFees();
+            runOnUiThread(() -> {
+                ServiceSelectionAdapter adapter = new ServiceSelectionAdapter(list, fee -> {
+                    selectedServiceCharge = fee;
+                    editValue.setText(String.format(Locale.getDefault(), "%.1f", fee.getValue()));
+                    checkPercentage.setChecked(fee.isPercentage());
+                    if (rv.getAdapter() != null) ((ServiceSelectionAdapter) rv.getAdapter()).setSelectedId(fee.getId());
+                });
+                if (selectedServiceCharge != null) adapter.setSelectedId(selectedServiceCharge.getId());
+                rv.setAdapter(adapter);
+            });
+        });
+
+        view.findViewById(R.id.btnCancel).setOnClickListener(v -> bottomSheet.dismiss());
+        view.findViewById(R.id.btnSave).setOnClickListener(v -> {
+            String val = editValue.getText().toString().trim();
+            if (!val.isEmpty()) {
+                double chargeVal = Double.parseDouble(val);
+                if (selectedServiceCharge == null || chargeVal != selectedServiceCharge.getValue() || checkPercentage.isChecked() != selectedServiceCharge.isPercentage()) {
+                    selectedServiceCharge = new ServiceFee("Custom Service", chargeVal, checkPercentage.isChecked(), false);
+                }
+                updateCounterUI();
+                bottomSheet.dismiss();
+            } else {
+                selectedServiceCharge = null;
+                updateCounterUI();
+                bottomSheet.dismiss();
+            }
+        });
+        bottomSheet.show();
+    }
+
+    private void showSelectOtherDialog() {
+        BottomSheetDialog bottomSheet = new BottomSheetDialog(this);
+        View view = getLayoutInflater().inflate(R.layout.layout_select_other_charge_dialog, null);
+        bottomSheet.setContentView(view);
+
+        TextView title = view.findViewById(R.id.textChargeTitle);
+        title.setText("SELECT OTHER CHARGE");
+
+        EditText editOtherValue = view.findViewById(R.id.editOtherValue);
+        CheckBox checkPercentage = view.findViewById(R.id.checkPercentage);
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerOthers);
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+
+        if (selectedOtherCharge != null) {
+            editOtherValue.setText(String.format(Locale.getDefault(), "%.1f", selectedOtherCharge.getValue()));
+            checkPercentage.setChecked(selectedOtherCharge.isPercentage());
+        }
+
+        Executors.newSingleThreadExecutor().execute(() -> {
+            List<OtherFee> others = AppDatabase.getInstance(this).otherFeeDao().getAllOtherFees();
+            if (others.isEmpty()) {
+                AppDatabase.getInstance(this).otherFeeDao().insert(new OtherFee("PREVIOUS DUES", 100, false, false));
+                AppDatabase.getInstance(this).otherFeeDao().insert(new OtherFee("DELIVERY CHARGES", 0, false, false));
+                AppDatabase.getInstance(this).otherFeeDao().insert(new OtherFee("BUS CHARGE", 100, false, false));
+                AppDatabase.getInstance(this).otherFeeDao().insert(new OtherFee("TRANSPORTATION", 0, false, false));
+                others = AppDatabase.getInstance(this).otherFeeDao().getAllOtherFees();
+            }
+
+            final List<OtherFee> finalOthers = others;
+            runOnUiThread(() -> {
+                OtherSelectionAdapter adapter = new OtherSelectionAdapter(finalOthers, other -> {
+                    selectedOtherCharge = other;
+                    editOtherValue.setText(String.format(Locale.getDefault(), "%.1f", other.getValue()));
+                    checkPercentage.setChecked(other.isPercentage());
+                    if (recyclerView.getAdapter() != null) {
+                        ((OtherSelectionAdapter) recyclerView.getAdapter()).setSelectedId(other.getId());
+                    }
+                });
+                if (selectedOtherCharge != null) adapter.setSelectedId(selectedOtherCharge.getId());
+                recyclerView.setAdapter(adapter);
+            });
+        });
+
+        view.findViewById(R.id.btnCancel).setOnClickListener(v -> bottomSheet.dismiss());
+        view.findViewById(R.id.btnSave).setOnClickListener(v -> {
+            String val = editOtherValue.getText().toString().trim();
+            if (!val.isEmpty()) {
+                double chargeVal = Double.parseDouble(val);
+                // If the value in the box is different from the selected tile, treat it as a Custom Charge
+                if (selectedOtherCharge == null || chargeVal != selectedOtherCharge.getValue() || checkPercentage.isChecked() != selectedOtherCharge.isPercentage()) {
+                    selectedOtherCharge = new OtherFee("Custom", chargeVal, checkPercentage.isChecked(), false);
+                }
+                updateCounterUI();
+                bottomSheet.dismiss();
+            } else {
+                selectedOtherCharge = null;
+                updateCounterUI();
+                bottomSheet.dismiss();
+            }
+        });
+
+        view.findViewById(R.id.btnAddNewOther).setOnClickListener(v -> {
+            bottomSheet.dismiss();
+            startActivity(new Intent(this, OtherFeeSettingsActivity.class));
+        });
+
+        bottomSheet.show();
+    }
+
+    private void showSelectDiscountDialog() {
+        BottomSheetDialog bottomSheet = new BottomSheetDialog(this);
+        View view = getLayoutInflater().inflate(R.layout.layout_select_discount_dialog, null);
+        bottomSheet.setContentView(view);
+
+        EditText editDiscountValue = view.findViewById(R.id.editDiscountValue);
+        CheckBox checkPercentage = view.findViewById(R.id.checkPercentage);
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerDiscounts);
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+
+        if (selectedDiscount != null) {
+            editDiscountValue.setText(String.format(Locale.getDefault(), "%.1f", selectedDiscount.getValue()));
+            checkPercentage.setChecked(selectedDiscount.isPercentage());
+        }
+
+        Executors.newSingleThreadExecutor().execute(() -> {
+            List<Discount> discounts = AppDatabase.getInstance(this).discountDao().getAllDiscounts();
+            if (discounts.isEmpty()) {
+                AppDatabase.getInstance(this).discountDao().insert(new Discount("DUES", 40, false, false));
+                AppDatabase.getInstance(this).discountDao().insert(new Discount("PREVIOUS", 250, false, false));
+                AppDatabase.getInstance(this).discountDao().insert(new Discount("ONLINE", 780, false, false));
+                AppDatabase.getInstance(this).discountDao().insert(new Discount("RETURN GRIPPER", 250, false, false));
+                discounts = AppDatabase.getInstance(this).discountDao().getAllDiscounts();
+            }
+
+            final List<Discount> finalDiscounts = discounts;
+            runOnUiThread(() -> {
+                DiscountSelectionAdapter adapter = new DiscountSelectionAdapter(finalDiscounts, discount -> {
+                    selectedDiscount = discount;
+                    editDiscountValue.setText(String.format(Locale.getDefault(), "%.1f", discount.getValue()));
+                    checkPercentage.setChecked(discount.isPercentage());
+                    if (recyclerView.getAdapter() != null) {
+                        ((DiscountSelectionAdapter) recyclerView.getAdapter()).setSelectedId(discount.getId());
+                    }
+                });
+                if (selectedDiscount != null) adapter.setSelectedId(selectedDiscount.getId());
+                recyclerView.setAdapter(adapter);
+            });
+        });
+
+        view.findViewById(R.id.btnCancel).setOnClickListener(v -> bottomSheet.dismiss());
+        view.findViewById(R.id.btnSave).setOnClickListener(v -> {
+            String val = editDiscountValue.getText().toString().trim();
+            if (!val.isEmpty()) {
+                double discVal = Double.parseDouble(val);
+                if (selectedDiscount == null) {
+                    selectedDiscount = new Discount("Custom Discount", discVal, checkPercentage.isChecked(), false);
+                } else {
+                    selectedDiscount.setValue(discVal);
+                    selectedDiscount.setPercentage(checkPercentage.isChecked());
+                }
+                updateCounterUI();
+                bottomSheet.dismiss();
+            } else {
+                selectedDiscount = null;
+                updateCounterUI();
+                bottomSheet.dismiss();
+            }
+        });
+
+        view.findViewById(R.id.btnAddNewDiscount).setOnClickListener(v -> {
+            bottomSheet.dismiss();
+            startActivity(new Intent(this, DiscountSettingsActivity.class));
+        });
+
+        bottomSheet.show();
+    }
+
+    private void showSelectTaxDialog() {
+        BottomSheetDialog bottomSheet = new BottomSheetDialog(this);
+        View view = getLayoutInflater().inflate(R.layout.layout_select_tax_dialog, null);
+        bottomSheet.setContentView(view);
+
+        EditText editTaxValue = view.findViewById(R.id.editTaxValue);
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerTaxes);
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+
+        if (selectedTax != null) {
+            editTaxValue.setText(String.format(Locale.getDefault(), "%.1f", selectedTax.getValue()));
+        }
+
+        Executors.newSingleThreadExecutor().execute(() -> {
+            List<Tax> taxes = AppDatabase.getInstance(this).taxDao().getAllTaxes();
+            if (taxes.isEmpty()) {
+                AppDatabase.getInstance(this).taxDao().insert(new Tax("CGST on sales", 9.0, false));
+                AppDatabase.getInstance(this).taxDao().insert(new Tax("SGST+CGST", 18.0, false));
+                AppDatabase.getInstance(this).taxDao().insert(new Tax("SGST on sales", 9.0, false));
+                AppDatabase.getInstance(this).taxDao().insert(new Tax("TRANSPORTATION", 50.0, false));
+                taxes = AppDatabase.getInstance(this).taxDao().getAllTaxes();
+            }
+
+            final List<Tax> finalTaxes = taxes;
+            runOnUiThread(() -> {
+                TaxSelectionAdapter adapter = new TaxSelectionAdapter(finalTaxes, tax -> {
+                    selectedTax = tax;
+                    editTaxValue.setText(String.format(Locale.getDefault(), "%.1f", tax.getValue()));
+                    if (recyclerView.getAdapter() != null) {
+                        ((TaxSelectionAdapter) recyclerView.getAdapter()).setSelectedId(tax.getId());
+                    }
+                });
+                if (selectedTax != null) adapter.setSelectedId(selectedTax.getId());
+                recyclerView.setAdapter(adapter);
+            });
+        });
+
+        view.findViewById(R.id.btnCancel).setOnClickListener(v -> bottomSheet.dismiss());
+        view.findViewById(R.id.btnSave).setOnClickListener(v -> {
+            String val = editTaxValue.getText().toString().trim();
+            if (!val.isEmpty()) {
+                double taxVal = Double.parseDouble(val);
+                if (selectedTax == null) {
+                    selectedTax = new Tax("Custom Tax", taxVal, false);
+                } else {
+                    selectedTax.setValue(taxVal);
+                }
+                updateCounterUI();
+                bottomSheet.dismiss();
+            } else {
+                selectedTax = null;
+                updateCounterUI();
+                bottomSheet.dismiss();
+            }
+        });
+
+        view.findViewById(R.id.btnAddNewTax).setOnClickListener(v -> {
+            bottomSheet.dismiss();
+            startActivity(new Intent(this, TaxSettingsActivity.class));
+        });
+
+        bottomSheet.show();
     }
 
     private void showItemViewSelector() {

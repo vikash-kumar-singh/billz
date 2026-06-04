@@ -117,8 +117,11 @@ public class ItemGridAdapter extends RecyclerView.Adapter<ItemGridAdapter.ViewHo
             if (listener != null) {
                 listener.onItemClick(items.get(currentPos), currentPos);
             } else {
-                CartManager.getInstance().addItem(items.get(currentPos));
-                notifyItemChanged(currentPos);
+                if (CartManager.getInstance().addItem(items.get(currentPos))) {
+                    notifyItemChanged(currentPos);
+                } else {
+                    android.widget.Toast.makeText(v.getContext(), "Not enough stock available", android.widget.Toast.LENGTH_SHORT).show();
+                }
             }
         });
 

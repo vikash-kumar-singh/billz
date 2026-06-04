@@ -96,7 +96,7 @@ public class OtherFeeSettingsActivity extends AppCompatActivity {
         View btnSave = dialog.findViewById(R.id.btnSaveOther);
         View btnDelete = dialog.findViewById(R.id.btnDeleteOther);
 
-        checkIsPercentage.setOnCheckedChangeListener((buttonView, isChecked) -> 
+        checkIsPercentage.setOnCheckedChangeListener((buttonView, isChecked) ->
             labelValue.setText(getString(isChecked ? R.string.other_value_percent_label : R.string.other_value_label)));
 
         if (fee != null) {

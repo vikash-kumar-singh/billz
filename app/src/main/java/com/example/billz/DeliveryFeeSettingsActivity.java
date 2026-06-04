@@ -96,7 +96,7 @@ public class DeliveryFeeSettingsActivity extends AppCompatActivity {
         View btnSave = dialog.findViewById(R.id.btnSaveDelivery);
         View btnDelete = dialog.findViewById(R.id.btnDeleteDelivery);
 
-        checkIsPercentage.setOnCheckedChangeListener((buttonView, isChecked) -> 
+        checkIsPercentage.setOnCheckedChangeListener((buttonView, isChecked) ->
             labelValue.setText(getString(isChecked ? R.string.delivery_value_percent_label : R.string.delivery_value_label)));
 
         if (fee != null) {

@@ -65,8 +65,12 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
         holder.btnPlus.setOnClickListener(v -> {
             int current = 0;
             try { current = Integer.parseInt(holder.editQuantity.getText().toString()); } catch (Exception e) {}
-            CartManager.getInstance().updateQuantity(item.getId(), current + 1);
-            notifyItemChanged(position);
+            if (current + 1 <= item.getStockQuantity()) {
+                CartManager.getInstance().updateQuantity(item.getId(), current + 1);
+                notifyItemChanged(position);
+            } else {
+                android.widget.Toast.makeText(v.getContext(), "Maximum stock reached", android.widget.Toast.LENGTH_SHORT).show();
+            }
         });
 
         holder.btnMinus.setOnClickListener(v -> {

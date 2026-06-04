@@ -96,7 +96,7 @@ public class ServiceFeeSettingsActivity extends AppCompatActivity {
         View btnSave = dialog.findViewById(R.id.btnSaveService);
         View btnDelete = dialog.findViewById(R.id.btnDeleteService);
 
-        checkIsPercentage.setOnCheckedChangeListener((buttonView, isChecked) -> 
+        checkIsPercentage.setOnCheckedChangeListener((buttonView, isChecked) ->
             labelValue.setText(getString(isChecked ? R.string.service_value_percent_label : R.string.service_value_label)));
 
         if (fee != null) {
