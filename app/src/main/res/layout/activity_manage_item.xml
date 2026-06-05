@@ -5,7 +5,7 @@
     android:id="@+id/manageItemRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F8FAFC"
+    android:background="#F3F4F6"
     android:orientation="vertical">
 
     <!-- Top Bar -->
@@ -32,15 +32,15 @@
             <TextView
                 android:id="@+id/btnDelete"
                 android:layout_width="wrap_content"
-                android:layout_height="40dp"
+                android:layout_height="36dp"
                 android:layout_marginStart="16dp"
                 android:background="@drawable/bg_reports_nav_item"
                 android:backgroundTint="#EF4444"
                 android:gravity="center"
-                android:paddingHorizontal="24dp"
+                android:paddingHorizontal="16dp"
                 android:text="DELETE"
                 android:textColor="@color/white"
-                android:textSize="14sp"
+                android:textSize="12sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -53,11 +53,15 @@
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_heart_outline"
-                app:tint="#3F51B5" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSave"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SAVE"
+                android:backgroundTint="#4CAF50"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                app:cornerRadius="4dp" />
         </LinearLayout>
     </FrameLayout>
 
@@ -85,7 +89,7 @@
             app:tint="@color/white" />
     </LinearLayout>
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -93,97 +97,96 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="12dp">
+            android:paddingBottom="40dp">
 
-            <!-- Item Name -->
-            <LinearLayout
+            <!-- Item Name Card -->
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:padding="16dp">
-
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_circle_check"
-                    app:tint="#3F51B5" />
+                android:layout_marginHorizontal="12dp"
+                android:layout_marginTop="12dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="4dp"
+                app:cardElevation="1dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:padding="12dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Item Name *"
-                        android:textColor="#94A3B8"
+                        android:textColor="#64748B"
                         android:textSize="12sp" />
 
-                    <EditText
-                        android:id="@+id/editItemName"
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@null"
-                        android:text="GODWEAR"
-                        android:textColor="#1E293B"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:inputType="text"
-                        android:importantForAutofill="no" />
+                        android:layout_height="48dp"
+                        android:layout_marginTop="4dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
+                            android:src="@drawable/ic_circle_check"
+                            app:tint="#BDBDBD" />
+
+                        <EditText
+                            android:id="@+id/editItemName"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="8dp"
+                            android:background="@null"
+                            android:hint="Ex: Apple"
+                            android:inputType="text"
+                            android:textColor="@color/black"
+                            android:textColorHint="#94A3B8"
+                            android:textSize="16sp" />
+                    </LinearLayout>
                 </LinearLayout>
-            </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#F1F5F9" />
-
-            <!-- Category -->
-            <LinearLayout
+            <!-- Category Card -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/layoutCategorySelector"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:padding="16dp">
-
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_circle_check"
-                    app:tint="#3F51B5" />
+                android:layout_marginHorizontal="12dp"
+                android:layout_marginTop="12dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="4dp"
+                app:cardElevation="1dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground">
 
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:padding="12dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Category: *"
-                        android:textColor="#94A3B8"
+                        android:textColor="#64748B"
                         android:textSize="12sp" />
 
                     <LinearLayout
-                        android:id="@+id/layoutCategorySelector"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="48dp"
+                        android:layout_marginTop="4dp"
                         android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:background="?attr/selectableItemBackground">
+                        android:orientation="horizontal">
 
                         <com.google.android.material.card.MaterialCardView
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
                             app:cardCornerRadius="4dp"
                             app:cardElevation="0dp">
                             <ImageView
@@ -197,10 +200,11 @@
                         <TextView
                             android:id="@+id/textCategory"
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="12dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="8dp"
                             android:layout_weight="1"
-                            android:text="Compression Tshirt"
+                            android:gravity="center_vertical"
+                            android:text="Ex: Fruits"
                             android:textColor="#1E293B"
                             android:textSize="16sp" />
 
@@ -211,69 +215,178 @@
                             app:tint="#3F51B5" />
                     </LinearLayout>
                 </LinearLayout>
-            </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#F1F5F9" />
-
-            <!-- Sell by Unit -->
-            <LinearLayout
+            <!-- Sell by Unit Card -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/layoutSellBySelector"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:padding="16dp">
+                android:layout_marginHorizontal="12dp"
+                android:layout_marginTop="12dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="4dp"
+                app:cardElevation="1dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground">
 
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_circle_check"
-                    app:tint="#3F51B5" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="12dp">
+
+                    <ImageView
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:src="@drawable/ic_circle_check"
+                        app:tint="#3F51B5" />
+
+                    <TextView
+                        android:id="@+id/textSellBy"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:text="Sell by Unit"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_arrow_drop_down"
+                        app:tint="#3F51B5" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Toggle Buttons -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginHorizontal="12dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/bg_toggle_group"
+                android:orientation="horizontal"
+                android:padding="1dp">
 
                 <TextView
-                    android:id="@+id/textSellBy"
+                    android:id="@+id/btnSimple"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="Sell by Unit"
-                    android:textColor="#1E293B"
+                    android:background="@drawable/bg_toggle_left_selected"
+                    android:gravity="center"
+                    android:text="Simple"
+                    android:textColor="@color/white"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_arrow_drop_down"
-                    app:tint="#3F51B5" />
+                <TextView
+                    android:id="@+id/btnAdvance"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_toggle_unselected"
+                    android:gravity="center"
+                    android:text="Advance"
+                    android:textColor="#3F51B5"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="12dp" />
-
-            <!-- Variants List -->
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerVariants"
+            <!-- Simple Mode Content -->
+            <LinearLayout
+                android:id="@+id/layoutSimpleMode"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:nestedScrollingEnabled="false"
-                tools:listitem="@layout/item_manage_variant" />
+                android:orientation="vertical"
+                android:visibility="visible">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnAddVariant"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                <!-- Selling Price Card -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="12dp"
+                    android:layout_marginTop="12dp"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="4dp"
+                    app:cardElevation="1dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="12dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Selling Price *"
+                            android:textColor="#64748B"
+                            android:textSize="12sp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="48dp"
+                            android:layout_marginTop="4dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:src="@drawable/ic_circle_check"
+                                app:tint="#BDBDBD" />
+
+                            <EditText
+                                android:id="@+id/editSellingPriceSimple"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginStart="8dp"
+                                android:background="@null"
+                                android:hint="0.00"
+                                android:inputType="numberDecimal"
+                                android:textColor="@color/black"
+                                android:textColorHint="#94A3B8"
+                                android:textSize="16sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+            </LinearLayout>
+
+            <!-- Advance Mode Content -->
+            <LinearLayout
+                android:id="@+id/layoutAdvanceMode"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="+ ADD VARIANT"
-                android:textColor="#3F51B5"
-                app:cornerRadius="4dp"
-                app:strokeColor="#3F51B5" />
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:id="@+id/containerVariants"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:animateLayoutChanges="true" />
+
+                <!-- Add Variant Button -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnAddVariant"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="12dp"
+                    android:layout_marginTop="16dp"
+                    android:text="+ ADD VARIANT"
+                    android:textColor="#3F51B5"
+                    app:cornerRadius="4dp"
+                    app:strokeColor="#3F51B5" />
+            </LinearLayout>
 
         </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 </LinearLayout>
