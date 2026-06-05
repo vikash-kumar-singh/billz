@@ -234,11 +234,14 @@ public class ReceiptSettingsActivity extends AppCompatActivity {
         new Thread(() -> {
             db.receiptSettingsDao().insert(currentSettings);
             
-            // Sync logoPath to Business table
+            // Sync details to the currently selected Business record
             List<Business> businesses = db.businessDao().getAllBusinesses();
             for (Business b : businesses) {
                 if (b.isSelected()) {
                     b.setLogoPath(currentSettings.getBusinessLogoPath());
+                    b.setEmail(currentSettings.getEmail());
+                    b.setPhoneNumber(currentSettings.getPhoneNumber());
+                    b.setName(currentSettings.getBusinessName());
                     db.businessDao().insert(b);
                     break;
                 }

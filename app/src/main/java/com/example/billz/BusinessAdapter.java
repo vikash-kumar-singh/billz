@@ -48,39 +48,24 @@ public class BusinessAdapter extends RecyclerView.Adapter<BusinessAdapter.ViewHo
             holder.cardView.setStrokeColor(Color.parseColor("#3F51B5"));
             holder.cardView.setStrokeWidth(0); 
             holder.cardView.setCardBackgroundColor(Color.parseColor("#3F51B5")); 
-            
             holder.textName.setTextColor(Color.WHITE);
             holder.textRole.setTextColor(Color.parseColor("#E0E0E0"));
-            
-            holder.imgPlaceholder.setVisibility(View.GONE);
-            holder.cardLogo.setVisibility(View.VISIBLE);
-            holder.cardLogo.setCardBackgroundColor(Color.WHITE);
-            holder.imgLogo.setImageTintList(null); 
-            
-            if (business.getLogoPath() != null) {
-                holder.imgLogo.setImageURI(Uri.parse(business.getLogoPath()));
-            } else {
-                holder.imgLogo.setImageResource(R.drawable.ic_nav_reports);
-                holder.imgLogo.setColorFilter(Color.parseColor("#3F51B5"));
-            }
+            holder.cardLogoContainer.setCardBackgroundColor(Color.WHITE);
         } else {
             holder.cardView.setStrokeColor(Color.parseColor("#CBD5E1")); 
             holder.cardView.setStrokeWidth(2); 
             holder.cardView.setCardBackgroundColor(Color.WHITE);
-            
             holder.textName.setTextColor(Color.parseColor("#64748B"));
             holder.textRole.setTextColor(Color.parseColor("#94A3B8"));
-            
-            holder.imgPlaceholder.setVisibility(View.VISIBLE);
-            
-            if (business.getLogoPath() != null) {
-                holder.imgPlaceholder.setImageURI(Uri.parse(business.getLogoPath()));
-                holder.imgPlaceholder.setColorFilter(null);
-            } else {
-                holder.imgPlaceholder.setImageResource(R.drawable.ic_nav_reports);
-                holder.imgPlaceholder.setColorFilter(Color.parseColor("#3F51B5"));
-            }
-            holder.cardLogo.setVisibility(View.GONE);
+            holder.cardLogoContainer.setCardBackgroundColor(Color.parseColor("#F1F5F9"));
+        }
+
+        if (business.getLogoPath() != null) {
+            holder.imgLogo.setImageURI(Uri.parse(business.getLogoPath()));
+            holder.imgLogo.setColorFilter(null);
+        } else {
+            holder.imgLogo.setImageResource(R.drawable.ic_nav_reports);
+            holder.imgLogo.setColorFilter(Color.parseColor("#3F51B5"));
         }
 
         holder.itemView.setOnClickListener(v -> listener.onBusinessClick(business));
@@ -93,20 +78,16 @@ public class BusinessAdapter extends RecyclerView.Adapter<BusinessAdapter.ViewHo
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView textName, textRole;
-        ImageView imgPlaceholder, imgLogo;
-        CardView cardLogo;
-        MaterialCardView cardView;
-        LinearLayout layoutItem;
+        ImageView imgLogo;
+        MaterialCardView cardView, cardLogoContainer;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             cardView = (MaterialCardView) itemView;
             textName = itemView.findViewById(R.id.textBusinessName);
             textRole = itemView.findViewById(R.id.textBusinessRole);
-            imgPlaceholder = itemView.findViewById(R.id.imgPlaceholder);
             imgLogo = itemView.findViewById(R.id.imgBusinessLogo);
-            cardLogo = itemView.findViewById(R.id.cardLogo);
-            layoutItem = itemView.findViewById(R.id.layoutBusinessItem);
+            cardLogoContainer = itemView.findViewById(R.id.cardLogoContainer);
         }
     }
 }

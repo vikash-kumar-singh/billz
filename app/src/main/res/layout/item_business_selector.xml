@@ -20,34 +20,21 @@
         android:paddingVertical="24dp"
         android:paddingHorizontal="8dp">
 
-        <FrameLayout
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardLogoContainer"
             android:layout_width="56dp"
-            android:layout_height="56dp">
+            android:layout_height="56dp"
+            app:cardCornerRadius="28dp"
+            app:cardElevation="0dp"
+            app:strokeWidth="0dp">
 
-            <!-- For unselected items (Placeholder) -->
             <ImageView
-                android:id="@+id/imgPlaceholder"
+                android:id="@+id/imgBusinessLogo"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@android:drawable/ic_menu_gallery"
-                app:tint="#3F51B5" />
-
-            <!-- For selected items (Circular logo) -->
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardLogo"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:cardCornerRadius="28dp"
-                app:cardElevation="0dp"
-                android:visibility="gone">
-                <ImageView
-                    android:id="@+id/imgBusinessLogo"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/ic_nav_reports" />
-            </androidx.cardview.widget.CardView>
-        </FrameLayout>
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_nav_reports" />
+        </com.google.android.material.card.MaterialCardView>
 
         <TextView
             android:id="@+id/textBusinessName"

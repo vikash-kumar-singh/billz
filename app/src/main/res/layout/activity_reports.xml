@@ -226,6 +226,14 @@
                             android:textSize="14sp" />
                     </RelativeLayout>
 
+                    <!-- Dynamic Breakdown Container -->
+                    <LinearLayout
+                        android:id="@+id/layoutBreakdownContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone" />
+
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"

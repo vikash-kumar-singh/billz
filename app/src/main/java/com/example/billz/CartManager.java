@@ -91,7 +91,8 @@ public class CartManager {
         int maxStock = (variant != null) ? variant.getStockQuantity() : item.getStockQuantity();
         
         // Cap quantity at max stock
-        if (quantity > maxStock) quantity = maxStock;
+        int finalQuantity = quantity;
+        if (finalQuantity > maxStock) finalQuantity = maxStock;
 
         boolean found = false;
         for (int i = 0; i < cartItems.size(); i++) {
@@ -101,20 +102,20 @@ public class CartManager {
                                  (ci.getVariant() != null && ci.getVariant().getId() == variantId);
 
             if (sameItem && sameVariant) {
-                if (quantity <= 0) {
+                if (finalQuantity <= 0) {
                     cartItems.remove(i);
                 } else {
-                    ci.setQuantity(quantity);
+                    ci.setQuantity(finalQuantity);
                 }
                 found = true;
                 break;
             }
         }
-        if (!found && quantity > 0) {
-            cartItems.add(new CartItem(item, variant, quantity));
+        if (!found && finalQuantity > 0) {
+            cartItems.add(new CartItem(item, variant, finalQuantity));
         }
         notifyChanged();
-        return quantity < maxStock || quantity == 0; // return false if we hit the limit
+        return finalQuantity < maxStock || finalQuantity == 0; // return false if we hit the limit
     }
 
     public List<CartItem> getCartItems() {

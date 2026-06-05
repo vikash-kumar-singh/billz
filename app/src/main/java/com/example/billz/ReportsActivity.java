@@ -11,6 +11,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -64,7 +65,7 @@ public class ReportsActivity extends AppCompatActivity {
     private View[] bottomTabs;
     private ImageView[] bottomTabIcons;
     private TextView[] bottomTabLabels;
-    private TextView textHeaderBusinessName, textHeaderPhoneNumber, txtOwnerName;
+    private TextView textHeaderBusinessName, textHeaderPhoneNumber, txtOwnerName, txtOwnerEmail;
     private ImageView imgLogo;
     
     private RecyclerView recyclerItemCategories;
@@ -84,6 +85,8 @@ public class ReportsActivity extends AppCompatActivity {
     private DeliveryFee selectedDeliveryCharge;
     private PackingFee selectedPackingCharge;
     private ServiceFee selectedServiceCharge;
+    private boolean isRoundOffEnabled = true;
+    private LinearLayout layoutBreakdownContainer;
     private TextView btnAddTax, btnAddDiscount, btnAddOtherCharges;
 
     @Override
@@ -132,6 +135,7 @@ public class ReportsActivity extends AppCompatActivity {
         textCounterSubtotal = findViewById(R.id.textCounterSubtotal);
         textCounterGrandTotal = findViewById(R.id.textCounterGrandTotal);
         textItemCountSummary = findViewById(R.id.textItemCountSummary);
+        layoutBreakdownContainer = findViewById(R.id.layoutBreakdownContainer);
         btnAddTax = findViewById(R.id.btnAddTax);
         btnAddDiscount = findViewById(R.id.btnAddDiscount);
         btnAddOtherCharges = findViewById(R.id.btnAddOtherCharges);
@@ -186,6 +190,7 @@ public class ReportsActivity extends AppCompatActivity {
         textHeaderBusinessName = findViewById(R.id.textHeaderBusinessName);
         textHeaderPhoneNumber = findViewById(R.id.textHeaderPhoneNumber);
         txtOwnerName = findViewById(R.id.txtOwnerName);
+        txtOwnerEmail = findViewById(R.id.txtOwnerEmail);
         imgLogo = findViewById(R.id.imgLogo);
 
         bottomTabs = new View[]{
@@ -338,74 +343,89 @@ public class ReportsActivity extends AppCompatActivity {
                     counterContentContainer.setVisibility(View.VISIBLE);
                     counterEmptyStateContainer.setVisibility(View.GONE);
                     loadCounterItems();
+                    
                     double subtotal = CartManager.getInstance().getSubtotal();
-                    double taxAmount = 0;
+                    if (textCounterSubtotal != null) textCounterSubtotal.setText(String.format(Locale.getDefault(), "%,.2f", subtotal));
+
+                    if (layoutBreakdownContainer != null) {
+                        layoutBreakdownContainer.removeAllViews();
+                        layoutBreakdownContainer.setVisibility(View.GONE);
+                    }
+
+                    double totalAdditions = 0;
+
+                    // 1. Tax
                     if (selectedTax != null) {
-                        taxAmount = subtotal * (selectedTax.getValue() / 100.0);
-                        if (btnAddTax != null) {
-                            btnAddTax.setText(String.format(Locale.getDefault(), "Tax: %s(%.0f%%)", selectedTax.getName(), selectedTax.getValue()));
-                        }
+                        double taxAmount = subtotal * (selectedTax.getValue() / 100.0);
+                        totalAdditions += taxAmount;
+                        String desc = String.format(Locale.getDefault(), "%s - (%.0f%% of ₹%,.0f)", selectedTax.getName(), selectedTax.getValue(), subtotal);
+                        addBreakdownRow(desc, taxAmount, false);
+                        if (btnAddTax != null) btnAddTax.setText(String.format(Locale.getDefault(), "Tax: %s(%.0f%%)", selectedTax.getName(), selectedTax.getValue()));
                     } else {
                         if (btnAddTax != null) btnAddTax.setText("Add Tax");
                     }
 
+                    // 2. Discount
                     double discountAmount = 0;
                     if (selectedDiscount != null) {
-                        if (selectedDiscount.isPercentage()) {
-                            discountAmount = subtotal * (selectedDiscount.getValue() / 100.0);
-                        } else {
-                            discountAmount = selectedDiscount.getValue();
-                        }
-                        if (btnAddDiscount != null) {
-                            String symbol = selectedDiscount.isPercentage() ? "%" : "₹";
-                            btnAddDiscount.setText(String.format(Locale.getDefault(), "Disc: %s(%s%.0f)", selectedDiscount.getName(), symbol, selectedDiscount.getValue()));
-                        }
+                        discountAmount = selectedDiscount.isPercentage() ? (subtotal * selectedDiscount.getValue() / 100.0) : selectedDiscount.getValue();
+                        totalAdditions -= discountAmount;
+                        String symbol = selectedDiscount.isPercentage() ? "%" : "₹";
+                        String desc = String.format(Locale.getDefault(), "%s - (%s%.0f)", selectedDiscount.getName(), symbol, selectedDiscount.getValue());
+                        addBreakdownRow(desc, -discountAmount, false);
+                        if (btnAddDiscount != null) btnAddDiscount.setText(String.format(Locale.getDefault(), "Disc: %s(%s%.0f)", selectedDiscount.getName(), symbol, selectedDiscount.getValue()));
                     } else {
                         if (btnAddDiscount != null) btnAddDiscount.setText("Add Discount");
                     }
 
-                    double otherAmount = 0;
-                    StringBuilder chargesDesc = new StringBuilder();
-                    
+                    // 3. Extra Charges
+                    StringBuilder chargesSummary = new StringBuilder();
                     if (selectedDeliveryCharge != null) {
                         double val = selectedDeliveryCharge.isPercentage() ? (subtotal * selectedDeliveryCharge.getValue() / 100.0) : selectedDeliveryCharge.getValue();
-                        otherAmount += val;
-                        chargesDesc.append("Delivery:").append(String.format(Locale.getDefault(), "%.0f", selectedDeliveryCharge.getValue())).append(selectedDeliveryCharge.isPercentage() ? "% " : "₹ ");
+                        totalAdditions += val;
+                        addBreakdownRow("Delivery Charge", val, false);
+                        chargesSummary.append("Delivery ");
                     }
-                    
                     if (selectedPackingCharge != null) {
                         double val = selectedPackingCharge.isPercentage() ? (subtotal * selectedPackingCharge.getValue() / 100.0) : selectedPackingCharge.getValue();
-                        otherAmount += val;
-                        chargesDesc.append("Packing:").append(String.format(Locale.getDefault(), "%.0f", selectedPackingCharge.getValue())).append(selectedPackingCharge.isPercentage() ? "% " : "₹ ");
+                        totalAdditions += val;
+                        addBreakdownRow("Packing Charge", val, false);
+                        chargesSummary.append("Packing ");
                     }
-                    
                     if (selectedServiceCharge != null) {
                         double val = selectedServiceCharge.isPercentage() ? (subtotal * selectedServiceCharge.getValue() / 100.0) : selectedServiceCharge.getValue();
-                        otherAmount += val;
-                        chargesDesc.append("Service:").append(String.format(Locale.getDefault(), "%.0f", selectedServiceCharge.getValue())).append(selectedServiceCharge.isPercentage() ? "% " : "₹ ");
+                        totalAdditions += val;
+                        addBreakdownRow("Service Charge", val, false);
+                        chargesSummary.append("Service ");
                     }
-
                     if (selectedOtherCharge != null) {
                         double val = selectedOtherCharge.isPercentage() ? (subtotal * selectedOtherCharge.getValue() / 100.0) : selectedOtherCharge.getValue();
-                        otherAmount += val;
-                        chargesDesc.append("Other:").append(String.format(Locale.getDefault(), "%.0f", selectedOtherCharge.getValue())).append(selectedOtherCharge.isPercentage() ? "% " : "₹ ");
+                        totalAdditions += val;
+                        addBreakdownRow(selectedOtherCharge.getName(), val, false);
+                        chargesSummary.append("Other ");
                     }
 
                     if (btnAddOtherCharges != null) {
-                        if (chargesDesc.length() > 0) {
-                            btnAddOtherCharges.setText(chargesDesc.toString().trim());
-                        } else {
-                            btnAddOtherCharges.setText("Add Other Charges");
+                        btnAddOtherCharges.setText(!chargesSummary.toString().isEmpty() ? chargesSummary.toString().trim() : "Add Other Charges");
+                    }
+
+                    double intermediateTotal = subtotal + totalAdditions;
+                    double finalGrandTotal = intermediateTotal;
+
+                    // 4. Round Off
+                    if (isRoundOffEnabled) {
+                        double rounded = Math.round(intermediateTotal);
+                        double diff = rounded - intermediateTotal;
+                        if (Math.abs(diff) > 0.001) {
+                            addBreakdownRow("Round Off (Click here to Remove)", diff, true);
+                            finalGrandTotal = rounded;
                         }
                     }
 
-                    double grandTotal = subtotal + taxAmount - discountAmount + otherAmount;
-
-                    if (textCounterSubtotal != null) textCounterSubtotal.setText(String.valueOf((int)subtotal));
-                    if (textCounterGrandTotal != null) textCounterGrandTotal.setText(String.format(Locale.getDefault(), "₹%.0f", grandTotal));
+                    if (textCounterGrandTotal != null) textCounterGrandTotal.setText(String.format(Locale.getDefault(), "₹%,.0f", finalGrandTotal));
                     if (btnCharge != null) {
                         btnCharge.setVisibility(View.VISIBLE);
-                        btnCharge.setText(String.format(Locale.getDefault(), "Charge: ₹%.0f", grandTotal));
+                        btnCharge.setText(String.format(Locale.getDefault(), "Charge: ₹%,.0f", finalGrandTotal));
                     }
                     if (textItemCountSummary != null) {
                         int units = CartManager.getInstance().getTotalUnits();
@@ -417,9 +437,54 @@ public class ReportsActivity extends AppCompatActivity {
                     counterContentContainer.setVisibility(View.GONE);
                     counterEmptyStateContainer.setVisibility(View.VISIBLE);
                     if (btnCharge != null) btnCharge.setVisibility(View.GONE);
+                    if (btnAddTax != null) btnAddTax.setText("Add Tax");
+                    if (btnAddDiscount != null) btnAddDiscount.setText("Add Discount");
+                    if (btnAddOtherCharges != null) btnAddOtherCharges.setText("Add Other Charges");
                 }
             }
         });
+    }
+
+    private void addBreakdownRow(String label, double value, boolean isRoundOff) {
+        if (layoutBreakdownContainer == null) return;
+        layoutBreakdownContainer.setVisibility(View.VISIBLE);
+
+        RelativeLayout row = new RelativeLayout(this);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, 
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.topMargin = (int) (4 * getResources().getDisplayMetrics().density);
+        row.setLayoutParams(params);
+
+        TextView textLabel = new TextView(this);
+        textLabel.setText(label);
+        textLabel.setTextColor(isRoundOff ? 0xFF94A3B8 : 0xFF64748B);
+        textLabel.setTextSize(12);
+        RelativeLayout.LayoutParams labelParams = new RelativeLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT, 
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        labelParams.addRule(RelativeLayout.ALIGN_PARENT_START);
+        
+        if (isRoundOff) {
+            row.setOnClickListener(v -> {
+                isRoundOffEnabled = false;
+                updateCounterUI();
+            });
+        }
+
+        TextView textValue = new TextView(this);
+        String prefix = value >= 0 ? "" : "-";
+        textValue.setText(String.format(Locale.getDefault(), "%s%.2f", prefix, Math.abs(value)));
+        textValue.setTextColor(0xFF1E293B);
+        textValue.setTextSize(12);
+        RelativeLayout.LayoutParams valueParams = new RelativeLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT, 
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        valueParams.addRule(RelativeLayout.ALIGN_PARENT_END);
+
+        row.addView(textLabel, labelParams);
+        row.addView(textValue, valueParams);
+        layoutBreakdownContainer.addView(row);
     }
 
     private void loadCounterItems() {
@@ -492,16 +557,32 @@ public class ReportsActivity extends AppCompatActivity {
     private void loadBusinessData() {
         Executors.newSingleThreadExecutor().execute(() -> {
             ReceiptSettings settings = AppDatabase.getInstance(this).receiptSettingsDao().getSettings();
+            
             runOnUiThread(() -> {
                 if (settings != null) {
                     if (textHeaderBusinessName != null) textHeaderBusinessName.setText(settings.getBusinessName());
                     if (textHeaderPhoneNumber != null) textHeaderPhoneNumber.setText(settings.getPhoneNumber());
                     if (txtOwnerName != null) txtOwnerName.setText(settings.getBusinessName() + " " + getString(R.string.header_owner_suffix));
-                    if (imgLogo != null && settings.getBusinessLogoPath() != null) {
-                        try {
-                            imgLogo.setImageURI(android.net.Uri.parse(settings.getBusinessLogoPath()));
-                            imgLogo.setImageTintList(null);
-                        } catch (Exception ignored) {}
+                    
+                    TextView txtOwnerEmail = findViewById(R.id.txtOwnerEmail);
+                    if (txtOwnerEmail != null) {
+                        txtOwnerEmail.setText(settings.getEmail() != null && !settings.getEmail().isEmpty() 
+                            ? settings.getEmail() : "nutritioncompany.com@gmail.com");
+                    }
+                    
+                    if (imgLogo != null) {
+                        if (settings.getBusinessLogoPath() != null && !settings.getBusinessLogoPath().isEmpty()) {
+                            try {
+                                imgLogo.setImageURI(android.net.Uri.parse(settings.getBusinessLogoPath()));
+                                imgLogo.setImageTintList(null);
+                            } catch (Exception ignored) {
+                                imgLogo.setImageResource(R.drawable.ic_nav_reports);
+                                imgLogo.setImageTintList(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(this, R.color.reports_tab_selected)));
+                            }
+                        } else {
+                            imgLogo.setImageResource(R.drawable.ic_nav_reports);
+                            imgLogo.setImageTintList(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(this, R.color.reports_tab_selected)));
+                        }
                     }
                 }
             });
@@ -601,10 +682,30 @@ public class ReportsActivity extends AppCompatActivity {
             List<Business> businesses = AppDatabase.getInstance(this).businessDao().getAllBusinesses();
             runOnUiThread(() -> {
                 BusinessAdapter adapter = new BusinessAdapter(businesses, business -> {
-                    dialog.dismiss();
-                    Intent intent = new Intent(this, AddBusinessActivity.class);
-                    intent.putExtra("business_id", business.getId());
-                    startActivity(intent);
+                    Executors.newSingleThreadExecutor().execute(() -> {
+                        // Perform the switch
+                        AppDatabase db = AppDatabase.getInstance(this);
+                        db.businessDao().deselectAll();
+                        db.businessDao().selectBusiness(business.getId());
+                        
+                        // Sync with ReceiptSettings (ID 1)
+                        ReceiptSettings settings = db.receiptSettingsDao().getSettings();
+                        if (settings == null) {
+                            settings = new ReceiptSettings();
+                            settings.setId(1);
+                        }
+                        settings.setBusinessName(business.getName());
+                        settings.setPhoneNumber(business.getPhoneNumber());
+                        settings.setEmail(business.getEmail());
+                        settings.setBusinessLogoPath(business.getLogoPath());
+                        db.receiptSettingsDao().insert(settings);
+
+                        runOnUiThread(() -> {
+                            dialog.dismiss();
+                            loadBusinessData();
+                            Toast.makeText(this, "Switched to " + business.getName(), Toast.LENGTH_SHORT).show();
+                        });
+                    });
                 });
                 recyclerView.setAdapter(adapter);
             });

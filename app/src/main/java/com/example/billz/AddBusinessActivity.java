@@ -118,20 +118,23 @@ public class AddBusinessActivity extends AppCompatActivity {
 
         Executors.newSingleThreadExecutor().execute(() -> {
             AppDatabase db = AppDatabase.getInstance(this);
-            if (currentBusiness != null) {
-                db.businessDao().deleteByName(currentBusiness.getName());
-            }
+            db.businessDao().deleteById(businessId);
             
             List<Business> remaining = db.businessDao().getAllBusinesses();
             if (!remaining.isEmpty()) {
                 Business switchTarget = remaining.get(0);
                 db.businessDao().deselectAll();
-                db.businessDao().selectBusiness(switchTarget.getName());
+                db.businessDao().selectBusiness(switchTarget.getId());
                 
                 ReceiptSettings settings = db.receiptSettingsDao().getSettings();
-                if (settings == null) settings = new ReceiptSettings();
+                if (settings == null) {
+                    settings = new ReceiptSettings();
+                    settings.setId(1);
+                }
                 settings.setBusinessName(switchTarget.getName());
                 settings.setPhoneNumber(switchTarget.getPhoneNumber());
+                settings.setEmail(switchTarget.getEmail());
+                settings.setBusinessLogoPath(switchTarget.getLogoPath());
                 db.receiptSettingsDao().insert(settings);
             }
             

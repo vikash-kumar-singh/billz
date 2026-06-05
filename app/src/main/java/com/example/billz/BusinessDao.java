@@ -22,11 +22,14 @@ public interface BusinessDao {
     @Query("UPDATE businesses SET isSelected = 0")
     void deselectAll();
 
-    @Query("UPDATE businesses SET isSelected = 1 WHERE name = :name")
-    void selectBusiness(String name);
+    @Query("UPDATE businesses SET isSelected = 1 WHERE id = :id")
+    void selectBusiness(int id);
 
-    @Query("DELETE FROM businesses WHERE name = :name")
-    void deleteByName(String name);
+    @Query("SELECT * FROM businesses WHERE isSelected = 1 LIMIT 1")
+    Business getSelectedBusiness();
+
+    @Query("DELETE FROM businesses WHERE id = :id")
+    void deleteById(int id);
 
     @Query("SELECT * FROM businesses WHERE id = :id")
     Business getById(int id);
