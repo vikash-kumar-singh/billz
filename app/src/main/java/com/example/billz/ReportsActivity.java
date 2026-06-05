@@ -868,6 +868,9 @@ public class ReportsActivity extends AppCompatActivity {
 
         TextView title = view.findViewById(R.id.textChargeTitle);
         title.setText("SELECT DELIVERY CHARGE");
+
+        TextView btnAddNew = view.findViewById(R.id.btnAddNewOther);
+        btnAddNew.setText("ADD NEW DELIVERY FEE");
         
         EditText editValue = view.findViewById(R.id.editOtherValue);
         CheckBox checkPercentage = view.findViewById(R.id.checkPercentage);
@@ -909,6 +912,12 @@ public class ReportsActivity extends AppCompatActivity {
                 bottomSheet.dismiss();
             }
         });
+
+        view.findViewById(R.id.btnAddNewOther).setOnClickListener(v -> {
+            bottomSheet.dismiss();
+            startActivity(new Intent(this, DeliveryFeeSettingsActivity.class));
+        });
+
         bottomSheet.show();
     }
 
@@ -919,6 +928,9 @@ public class ReportsActivity extends AppCompatActivity {
         
         TextView title = view.findViewById(R.id.textChargeTitle);
         title.setText("SELECT PACKING CHARGE");
+
+        TextView btnAddNew = view.findViewById(R.id.btnAddNewOther);
+        btnAddNew.setText("ADD NEW PACKING FEE");
 
         EditText editValue = view.findViewById(R.id.editOtherValue);
         CheckBox checkPercentage = view.findViewById(R.id.checkPercentage);
@@ -960,6 +972,12 @@ public class ReportsActivity extends AppCompatActivity {
                 bottomSheet.dismiss();
             }
         });
+
+        view.findViewById(R.id.btnAddNewOther).setOnClickListener(v -> {
+            bottomSheet.dismiss();
+            startActivity(new Intent(this, PackingFeeSettingsActivity.class));
+        });
+
         bottomSheet.show();
     }
 
@@ -970,6 +988,9 @@ public class ReportsActivity extends AppCompatActivity {
         
         TextView title = view.findViewById(R.id.textChargeTitle);
         title.setText("SELECT SERVICE CHARGE");
+
+        TextView btnAddNew = view.findViewById(R.id.btnAddNewOther);
+        btnAddNew.setText("ADD NEW SERVICE FEE");
 
         EditText editValue = view.findViewById(R.id.editOtherValue);
         CheckBox checkPercentage = view.findViewById(R.id.checkPercentage);
@@ -1011,6 +1032,12 @@ public class ReportsActivity extends AppCompatActivity {
                 bottomSheet.dismiss();
             }
         });
+
+        view.findViewById(R.id.btnAddNewOther).setOnClickListener(v -> {
+            bottomSheet.dismiss();
+            startActivity(new Intent(this, ServiceFeeSettingsActivity.class));
+        });
+
         bottomSheet.show();
     }
 
@@ -1021,6 +1048,9 @@ public class ReportsActivity extends AppCompatActivity {
 
         TextView title = view.findViewById(R.id.textChargeTitle);
         title.setText("SELECT OTHER CHARGE");
+
+        TextView btnAddNew = view.findViewById(R.id.btnAddNewOther);
+        btnAddNew.setText("ADD NEW OTHER FEE");
 
         EditText editOtherValue = view.findViewById(R.id.editOtherValue);
         CheckBox checkPercentage = view.findViewById(R.id.checkPercentage);
