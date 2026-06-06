@@ -152,6 +152,10 @@ public class ReportsActivity extends AppCompatActivity {
             btnAddOtherCharges.setOnClickListener(v -> showChargeTypeSelector());
         }
 
+        if (btnCharge != null) {
+            btnCharge.setOnClickListener(v -> showCheckoutDialog());
+        }
+
         if (btnGoToCounter != null) {
             btnGoToCounter.setOnClickListener(v -> highlightBottomTab(TAB_COUNTER));
         }
@@ -273,6 +277,11 @@ public class ReportsActivity extends AppCompatActivity {
         findViewById(R.id.nav_add_expense).setOnClickListener(v -> {
             drawerLayout.closeDrawer(GravityCompat.START);
             startActivity(new Intent(ReportsActivity.this, CashFlowActivity.class));
+        });
+
+        findViewById(R.id.nav_receipts).setOnClickListener(v -> {
+            drawerLayout.closeDrawer(GravityCompat.START);
+            startActivity(new Intent(ReportsActivity.this, ReceiptsActivity.class));
         });
 
         findViewById(R.id.nav_receipt_settings).setOnClickListener(v -> {
@@ -426,6 +435,7 @@ public class ReportsActivity extends AppCompatActivity {
                     if (btnCharge != null) {
                         btnCharge.setVisibility(View.VISIBLE);
                         btnCharge.setText(String.format(Locale.getDefault(), "Charge: ₹%,.0f", finalGrandTotal));
+                        btnCharge.setOnClickListener(v -> showCheckoutDialog());
                     }
                     if (textItemCountSummary != null) {
                         int units = CartManager.getInstance().getTotalUnits();
@@ -931,6 +941,138 @@ public class ReportsActivity extends AppCompatActivity {
         if (id == R.id.action_toggle_view) { showItemViewSelector(); return true; }
         if (id == R.id.action_add_customer) { startActivity(new Intent(this, AddCustomerActivity.class)); return true; }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showCheckoutDialog() {
+        BottomSheetDialog bottomSheet = new BottomSheetDialog(this);
+        View view = getLayoutInflater().inflate(R.layout.layout_checkout_bottom_sheet, null);
+        bottomSheet.setContentView(view);
+
+        EditText editMobile = view.findViewById(R.id.editCustomerMobile);
+        EditText editName = view.findViewById(R.id.editCustomerName);
+        EditText editEmail = view.findViewById(R.id.editCustomerEmail);
+        EditText editAddress = view.findViewById(R.id.editCustomerAddress);
+        View btnExpand = view.findViewById(R.id.btnExpandCustomer);
+        ViewGroup layoutFields = view.findViewById(R.id.layoutCustomerFields);
+        
+        // Initial state
+        editEmail.setVisibility(View.GONE);
+        editAddress.setVisibility(View.GONE);
+        
+        btnExpand.setOnClickListener(v -> {
+            android.transition.TransitionManager.beginDelayedTransition(layoutFields);
+            boolean isVisible = editEmail.getVisibility() == View.VISIBLE;
+            editEmail.setVisibility(isVisible ? View.GONE : View.VISIBLE);
+            editAddress.setVisibility(isVisible ? View.GONE : View.VISIBLE);
+            ((ImageView)btnExpand).setImageResource(isVisible ? android.R.drawable.arrow_down_float : android.R.drawable.arrow_up_float);
+        });
+
+        view.findViewById(R.id.btnSearchCustomer).setOnClickListener(v -> {
+            String mobile = editMobile.getText().toString().trim();
+            if (mobile.isEmpty()) return;
+            
+            Executors.newSingleThreadExecutor().execute(() -> {
+                Customer customer = AppDatabase.getInstance(this).customerDao().getCustomerByMobile(mobile);
+                runOnUiThread(() -> {
+                    if (customer != null) {
+                        editName.setText(customer.getName());
+                        editEmail.setText(customer.getEmail());
+                        editAddress.setText(customer.getAddress());
+                        // Automatically expand if hidden
+                        if (editEmail.getVisibility() == View.GONE) {
+                            editEmail.setVisibility(View.VISIBLE);
+                            editAddress.setVisibility(View.VISIBLE);
+                            ((ImageView)btnExpand).setImageResource(android.R.drawable.arrow_up_float);
+                        }
+                    } else {
+                        Toast.makeText(this, "Customer not found", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            });
+        });
+
+        RecyclerView rv = view.findViewById(R.id.recyclerPaymentModes);
+        rv.setLayoutManager(new GridLayoutManager(this, 2));
+
+        Executors.newSingleThreadExecutor().execute(() -> {
+            List<PaymentMode> modes = AppDatabase.getInstance(this).paymentModeDao().getAllPaymentModes();
+            if (modes.isEmpty()) {
+                AppDatabase.getInstance(this).paymentModeDao().insert(new PaymentMode("Cash", true, false));
+                AppDatabase.getInstance(this).paymentModeDao().insert(new PaymentMode("Debit Card", true, false));
+                AppDatabase.getInstance(this).paymentModeDao().insert(new PaymentMode("Credit Card", true, false));
+                AppDatabase.getInstance(this).paymentModeDao().insert(new PaymentMode("Credit", true, false));
+                AppDatabase.getInstance(this).paymentModeDao().insert(new PaymentMode("UPI", true, true));
+                AppDatabase.getInstance(this).paymentModeDao().insert(new PaymentMode("Store Credit", true, false));
+                AppDatabase.getInstance(this).paymentModeDao().insert(new PaymentMode("Online", true, false));
+                AppDatabase.getInstance(this).paymentModeDao().insert(new PaymentMode("Sample Rate", true, false));
+                AppDatabase.getInstance(this).paymentModeDao().insert(new PaymentMode("Exchange", true, false));
+                AppDatabase.getInstance(this).paymentModeDao().insert(new PaymentMode("Google Pay", true, false));
+                modes = AppDatabase.getInstance(this).paymentModeDao().getAllPaymentModes();
+            }
+
+            final List<PaymentMode> finalModes = modes;
+            runOnUiThread(() -> {
+                CheckoutPaymentAdapter adapter = new CheckoutPaymentAdapter(finalModes, new CheckoutPaymentAdapter.OnPaymentModeClickListener() {
+                    @Override
+                    public void onPaymentClick(PaymentMode mode) {
+                        String custName = editName.getText().toString().trim();
+                        double subtotal = CartManager.getInstance().getSubtotal();
+                        double tax = selectedTax != null ? subtotal * (selectedTax.getValue() / 100.0) : 0;
+                        double disc = 0;
+                        if (selectedDiscount != null) {
+                            disc = selectedDiscount.isPercentage() ? (subtotal * selectedDiscount.getValue() / 100.0) : selectedDiscount.getValue();
+                        }
+                        double extra = 0;
+                        if (selectedDeliveryCharge != null) extra += selectedDeliveryCharge.isPercentage() ? (subtotal * selectedDeliveryCharge.getValue() / 100.0) : selectedDeliveryCharge.getValue();
+                        if (selectedPackingCharge != null) extra += selectedPackingCharge.isPercentage() ? (subtotal * selectedPackingCharge.getValue() / 100.0) : selectedPackingCharge.getValue();
+                        if (selectedServiceCharge != null) extra += selectedServiceCharge.isPercentage() ? (subtotal * selectedServiceCharge.getValue() / 100.0) : selectedServiceCharge.getValue();
+                        if (selectedOtherCharge != null) extra += selectedOtherCharge.isPercentage() ? (subtotal * selectedOtherCharge.getValue() / 100.0) : selectedOtherCharge.getValue();
+                        
+                        double finalTotal = subtotal + tax - disc + extra;
+                        if (isRoundOffEnabled) finalTotal = Math.round(finalTotal);
+
+                        final double totalToSave = finalTotal;
+                        final int itemsToSave = CartManager.getInstance().getItemCount();
+
+                        Executors.newSingleThreadExecutor().execute(() -> {
+                            AppDatabase db = AppDatabase.getInstance(ReportsActivity.this);
+                            ReceiptSettings settings = db.receiptSettingsDao().getSettings();
+                            if (settings == null) {
+                                settings = new ReceiptSettings();
+                                db.receiptSettingsDao().insert(settings);
+                            }
+                            
+                            int billNo = settings.getCurrentBillNo() + 1;
+                            settings.setCurrentBillNo(billNo);
+                            db.receiptSettingsDao().update(settings);
+
+                            Business activeBus = db.businessDao().getSelectedBusiness();
+                            int bId = activeBus != null ? activeBus.getId() : 0;
+
+                            String rNo = settings.getReceiptIdPrefix() + "-" + billNo;
+                            Receipt receipt = new Receipt(rNo, custName, mode.getName(), totalToSave, itemsToSave, System.currentTimeMillis(), bId);
+                            db.receiptDao().insert(receipt);
+
+                            runOnUiThread(() -> {
+                                Toast.makeText(ReportsActivity.this, "Payment: " + mode.getName() + " - Saved as " + rNo, Toast.LENGTH_SHORT).show();
+                                bottomSheet.dismiss();
+                                CartManager.getInstance().clearCart();
+                                highlightBottomTab(TAB_REPORTS);
+                            });
+                        });
+                    }
+
+                    @Override
+                    public void onAddNewClick() {
+                        bottomSheet.dismiss();
+                        startActivity(new Intent(ReportsActivity.this, PaymentSettingsActivity.class));
+                    }
+                });
+                rv.setAdapter(adapter);
+            });
+        });
+
+        bottomSheet.show();
     }
 
     private void showChargeTypeSelector() {

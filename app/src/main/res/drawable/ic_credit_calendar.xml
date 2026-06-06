@@ -1,0 +1,25 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+    <!-- Calendar grid -->
+    <path
+        android:fillColor="#546E7A"
+        android:pathData="M36,6v-2h-4v2h-16v-2h-4v2h-4c-2.2,0 -4,1.8 -4,4v28c0,2.2 1.8,4 4,4h32c2.2,0 4,-1.8 4,-4v-28c0,-2.2 -1.8,-4 -4,-4h-4zM40,38h-32v-24h32v24z" />
+    <path
+        android:fillColor="#E1F5FE"
+        android:pathData="M8,14h32v24h-32z" />
+    <!-- Blue top bar -->
+    <path
+        android:fillColor="#3F51B5"
+        android:pathData="M8,14h32v6h-32z" />
+    <!-- Bill/Money at bottom -->
+    <path
+        android:fillColor="#4CAF50"
+        android:pathData="M24,28h18v14h-18z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M33,35m-2,0a2,2 0,1 1,4 0a2,2 0,1 1,-4 0"
+        android:fillAlpha="0.5"/>
+</vector>

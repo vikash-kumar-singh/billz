@@ -13,4 +13,7 @@ public interface CustomerDao {
 
     @Query("SELECT * FROM customers ORDER BY id DESC")
     List<Customer> getAllCustomers();
+
+    @Query("SELECT * FROM customers WHERE mobile = :mobile LIMIT 1")
+    Customer getCustomerByMobile(String mobile);
 }
