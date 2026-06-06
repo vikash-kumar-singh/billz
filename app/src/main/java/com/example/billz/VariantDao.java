@@ -24,4 +24,7 @@ public interface VariantDao {
 
     @Query("DELETE FROM variants WHERE itemId = :itemId")
     void deleteVariantsForItem(int itemId);
+
+    @Query("SELECT * FROM variants WHERE id = :id")
+    Variant getById(int id);
 }

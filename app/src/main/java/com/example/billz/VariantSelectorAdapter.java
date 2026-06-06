@@ -81,7 +81,7 @@ public class VariantSelectorAdapter extends RecyclerView.Adapter<VariantSelector
                 notifyItemChanged(position);
                 listener.onQuantityChanged(variant, newQty);
             } else {
-                android.widget.Toast.makeText(v.getContext(), "Maximum stock reached", android.widget.Toast.LENGTH_SHORT).show();
+                android.widget.Toast.makeText(v.getContext(), "Maximum stock reached: " + variant.getStockQuantity(), android.widget.Toast.LENGTH_SHORT).show();
             }
         });
 

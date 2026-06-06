@@ -17,6 +17,7 @@ public class CartItem {
     }
 
     public Item getItem() { return item; }
+    public void setItem(Item item) { this.item = item; }
     public Variant getVariant() { return variant; }
     public void setVariant(Variant variant) { this.variant = variant; }
     public int getQuantity() { return quantity; }

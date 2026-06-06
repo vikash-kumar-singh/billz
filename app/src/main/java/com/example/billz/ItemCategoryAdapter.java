@@ -17,9 +17,9 @@ import java.util.concurrent.Executors;
 
 public class ItemCategoryAdapter extends RecyclerView.Adapter<ItemCategoryAdapter.ViewHolder> {
 
-    private List<CategoryWithCount> categories;
-    private List<CategoryWithCount> categoriesFull;
-    private int expandedPosition = -1;
+    public interface OnItemClickListener {
+        void onItemClick(Item item);
+    }
 
     public static class CategoryWithCount {
         String name;
@@ -31,9 +31,15 @@ public class ItemCategoryAdapter extends RecyclerView.Adapter<ItemCategoryAdapte
         }
     }
 
-    public ItemCategoryAdapter(List<CategoryWithCount> categories) {
+    private List<CategoryWithCount> categories;
+    private List<CategoryWithCount> categoriesFull;
+    private int expandedPosition = -1;
+    private OnItemClickListener itemClickListener;
+
+    public ItemCategoryAdapter(List<CategoryWithCount> categories, OnItemClickListener listener) {
         this.categories = categories;
         this.categoriesFull = new ArrayList<>(categories);
+        this.itemClickListener = listener;
     }
 
     public void filter(String text) {
@@ -89,7 +95,7 @@ public class ItemCategoryAdapter extends RecyclerView.Adapter<ItemCategoryAdapte
             
             holder.itemView.post(() -> {
                 holder.recyclerProducts.setLayoutManager(new GridLayoutManager(holder.itemView.getContext(), 3));
-                holder.recyclerProducts.setAdapter(new ProductAdapter(items, categoryName));
+                holder.recyclerProducts.setAdapter(new ProductAdapter(items, categoryName, itemClickListener));
             });
         });
     }
@@ -118,10 +124,12 @@ public class ItemCategoryAdapter extends RecyclerView.Adapter<ItemCategoryAdapte
     private static class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
         private List<Item> items;
         private String categoryName;
+        private OnItemClickListener clickListener;
 
-        ProductAdapter(List<Item> items, String categoryName) {
+        ProductAdapter(List<Item> items, String categoryName, OnItemClickListener clickListener) {
             this.items = items;
             this.categoryName = categoryName;
+            this.clickListener = clickListener;
         }
 
         @NonNull
@@ -138,7 +146,9 @@ public class ItemCategoryAdapter extends RecyclerView.Adapter<ItemCategoryAdapte
                 holder.layoutNewItem.setVisibility(View.GONE);
                 
                 holder.itemView.setOnClickListener(v -> {
-                    CartManager.getInstance().addItem(item);
+                    if (clickListener != null) {
+                        clickListener.onItemClick(item);
+                    }
                 });
 
                 holder.itemView.setOnLongClickListener(v -> {

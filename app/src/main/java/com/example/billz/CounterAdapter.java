@@ -33,10 +33,19 @@ public class CounterAdapter extends RecyclerView.Adapter<CounterAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         CartItem cartItem = items.get(position);
         Item item = cartItem.getItem();
+        Variant variant = cartItem.getVariant();
 
-        String variant = item.getVariantName();
-        holder.textName.setText((variant != null && !variant.equals("Default") ? variant + " " : "") + item.getName());
-        holder.textDetails.setText(cartItem.getQuantity() + " x " + (int)item.getSellingPrice());
+        // Use Variant object's name if available, fallback to Item's variantName field
+        String vName = (variant != null) ? variant.getName() : item.getVariantName();
+        
+        String variantPrefix = "";
+        if (vName != null && !vName.isEmpty() && !vName.equalsIgnoreCase("Default") && !vName.equalsIgnoreCase("NO VARIANT")) {
+            variantPrefix = vName + " ";
+        }
+        holder.textName.setText(variantPrefix + item.getName());
+        
+        double price = (variant != null) ? variant.getSellingPrice() : item.getSellingPrice();
+        holder.textDetails.setText(cartItem.getQuantity() + " x " + (int)price);
         holder.textTotal.setText(String.valueOf((int)cartItem.getTotalPrice()));
 
         holder.btnEdit.setOnClickListener(v -> {

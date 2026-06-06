@@ -28,6 +28,12 @@ public class CartManager {
     public boolean addItem(Item item, Variant variant) {
         int maxStock = (variant != null) ? variant.getStockQuantity() : item.getStockQuantity();
 
+        // Safety check for total stock if in Advance mode but adding without variant
+        if (variant == null && item.isAdvanceMode()) {
+            // This case shouldn't happen with the new selector logic, but we enforce it for safety
+            return false;
+        }
+
         for (CartItem ci : cartItems) {
             boolean sameItem = ci.getItem().getId() == item.getId();
             boolean sameVariant = (variant == null && ci.getVariant() == null) || 
@@ -90,9 +96,23 @@ public class CartManager {
         int variantId = (variant != null) ? variant.getId() : -1;
         int maxStock = (variant != null) ? variant.getStockQuantity() : item.getStockQuantity();
         
-        // Cap quantity at max stock
+        boolean capped = false;
         int finalQuantity = quantity;
-        if (finalQuantity > maxStock) finalQuantity = maxStock;
+        if (finalQuantity > maxStock) {
+            finalQuantity = maxStock;
+            capped = true;
+        }
+
+        // Cleanup: If the item is in Advance mode, remove any existing "null variant" entries
+        if (item.isAdvanceMode()) {
+            for (int i = 0; i < cartItems.size(); i++) {
+                CartItem ci = cartItems.get(i);
+                if (ci.getItem().getId() == item.getId() && ci.getVariant() == null) {
+                    cartItems.remove(i);
+                    i--;
+                }
+            }
+        }
 
         boolean found = false;
         for (int i = 0; i < cartItems.size(); i++) {
@@ -115,7 +135,7 @@ public class CartManager {
             cartItems.add(new CartItem(item, variant, finalQuantity));
         }
         notifyChanged();
-        return finalQuantity < maxStock || finalQuantity == 0; // return false if we hit the limit
+        return !capped;
     }
 
     public List<CartItem> getCartItems() {
@@ -145,6 +165,45 @@ public class CartManager {
 
     public void setListener(OnCartChangedListener listener) {
         this.listener = listener;
+    }
+
+    public void refreshItems(AppDatabase db) {
+        for (CartItem ci : cartItems) {
+            // Refresh Item
+            Item freshItem = db.itemDao().getById(ci.getItem().getId());
+            if (freshItem != null) {
+                // Keep the last selected variant name on the Item object for grid sync
+                freshItem.setVariantName(ci.getItem().getVariantName());
+                ci.setItem(freshItem);
+            }
+            
+            // Refresh Variant (Try ID match first, then Name match if IDs were rebuilt)
+            if (ci.getVariant() != null) {
+                Variant freshVariant = db.variantDao().getById(ci.getVariant().getId());
+                if (freshVariant == null) {
+                    // Try finding by name for the same item
+                    List<Variant> itemVariants = db.variantDao().getVariantsForItem(ci.getItem().getId());
+                    for (Variant v : itemVariants) {
+                        if (v.getName().equalsIgnoreCase(ci.getVariant().getName())) {
+                            freshVariant = v;
+                            break;
+                        }
+                    }
+                }
+
+                if (freshVariant != null) {
+                    ci.setVariant(freshVariant);
+                }
+            } else if (ci.getItem().isAdvanceMode()) {
+                // If item is now Advance but cart has no variant, try to pick the first one as default
+                List<Variant> itemVariants = db.variantDao().getVariantsForItem(ci.getItem().getId());
+                if (!itemVariants.isEmpty()) {
+                    ci.setVariant(itemVariants.get(0));
+                    ci.getItem().setVariantName(itemVariants.get(0).getName());
+                }
+            }
+        }
+        notifyChanged();
     }
 
     private void notifyChanged() {

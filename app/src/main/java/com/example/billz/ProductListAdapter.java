@@ -56,32 +56,55 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
         int qty = 0;
         for (CartItem ci : CartManager.getInstance().getCartItems()) {
             if (ci.getItem().getId() == item.getId()) {
-                qty = ci.getQuantity();
-                break;
+                qty += ci.getQuantity();
             }
         }
         holder.editQuantity.setText(String.valueOf(qty));
 
+        // If Advance Mode, the inline buttons should probably trigger variant selector 
+        // or be disabled/hidden if they don't make sense for multi-variants.
+        // For consistency with Grid view, let's make them trigger variant selector if Advance.
+        
         holder.btnPlus.setOnClickListener(v -> {
-            int current = 0;
-            try { current = Integer.parseInt(holder.editQuantity.getText().toString()); } catch (Exception e) {}
-            if (current + 1 <= item.getStockQuantity()) {
-                CartManager.getInstance().updateQuantity(item.getId(), current + 1);
-                notifyItemChanged(position);
+            if (item.isAdvanceMode()) {
+                // Trigger variant selector via a callback or event?
+                // For now, let's just use the grid's logic if possible.
+                // But ProductListAdapter is separate.
+                // Best to have a listener.
+                if (listener != null) listener.onPlusClick(item, position);
             } else {
-                android.widget.Toast.makeText(v.getContext(), "Maximum stock reached", android.widget.Toast.LENGTH_SHORT).show();
+                int current = 0;
+                try { current = Integer.parseInt(holder.editQuantity.getText().toString()); } catch (Exception e) {}
+                if (current + 1 <= item.getStockQuantity()) {
+                    if (CartManager.getInstance().addItem(item)) {
+                        notifyItemChanged(position);
+                    }
+                } else {
+                    android.widget.Toast.makeText(v.getContext(), "Maximum stock reached", android.widget.Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
         holder.btnMinus.setOnClickListener(v -> {
-            int current = 0;
-            try { current = Integer.parseInt(holder.editQuantity.getText().toString()); } catch (Exception e) {}
-            if (current > 0) {
-                CartManager.getInstance().updateQuantity(item.getId(), current - 1);
-                notifyItemChanged(position);
+            if (item.isAdvanceMode()) {
+                if (listener != null) listener.onMinusClick(item, position);
+            } else {
+                int current = 0;
+                try { current = Integer.parseInt(holder.editQuantity.getText().toString()); } catch (Exception e) {}
+                if (current > 0) {
+                    CartManager.getInstance().updateQuantity(item.getId(), current - 1);
+                    notifyItemChanged(position);
+                }
             }
         });
     }
+
+    private OnProductActionListener listener;
+    public interface OnProductActionListener {
+        void onPlusClick(Item item, int position);
+        void onMinusClick(Item item, int position);
+    }
+    public void setListener(OnProductActionListener listener) { this.listener = listener; }
 
     @Override
     public int getItemCount() {

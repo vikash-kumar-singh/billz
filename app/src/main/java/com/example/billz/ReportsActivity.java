@@ -251,6 +251,7 @@ public class ReportsActivity extends AppCompatActivity {
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
+        setupCartManager();
         setupBottomTabs();
         highlightBottomTab(TAB_REPORTS);
 
@@ -499,7 +500,13 @@ public class ReportsActivity extends AppCompatActivity {
 
     private void loadCounterItems() {
         if (recyclerCounterItems != null) {
-            recyclerCounterItems.setAdapter(new CounterAdapter(CartManager.getInstance().getCartItems(), this::showEditQuantityDialog));
+            recyclerCounterItems.setAdapter(new CounterAdapter(CartManager.getInstance().getCartItems(), cartItem -> {
+                if (cartItem.getItem().isAdvanceMode()) {
+                    showVariantSelectorDialog(cartItem.getItem());
+                } else {
+                    showEditQuantityDialog(cartItem);
+                }
+            }));
         }
     }
 
@@ -559,9 +566,14 @@ public class ReportsActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         loadBusinessData();
-        if (currentTab == TAB_ITEMS) {
-            refreshItemsView();
-        }
+        
+        Executors.newSingleThreadExecutor().execute(() -> {
+            CartManager.getInstance().refreshItems(AppDatabase.getInstance(this));
+            runOnUiThread(() -> {
+                if (currentTab == TAB_COUNTER) updateCounterUI();
+                if (currentTab == TAB_ITEMS) refreshItemsView();
+            });
+        });
     }
 
     private void loadBusinessData() {
@@ -831,7 +843,33 @@ public class ReportsActivity extends AppCompatActivity {
     private void loadItemList() {
         Executors.newSingleThreadExecutor().execute(() -> {
             List<Item> dbItems = AppDatabase.getInstance(this).itemDao().getAllItems();
-            runOnUiThread(() -> { if (recyclerItemList != null) recyclerItemList.setAdapter(new ProductListAdapter(dbItems)); });
+            runOnUiThread(() -> {
+                if (recyclerItemList != null) {
+                    ProductListAdapter adapter = new ProductListAdapter(dbItems);
+                    adapter.setListener(new ProductListAdapter.OnProductActionListener() {
+                        @Override
+                        public void onPlusClick(Item item, int position) {
+                            if (item.isAdvanceMode()) {
+                                showVariantSelectorDialog(item);
+                            } else {
+                                // Simple mode handled in adapter, but we can centralize
+                                if (CartManager.getInstance().addItem(item)) {
+                                    adapter.notifyItemChanged(position);
+                                    updateCounterUI();
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onMinusClick(Item item, int position) {
+                            if (item.isAdvanceMode()) {
+                                showVariantSelectorDialog(item);
+                            }
+                        }
+                    });
+                    recyclerItemList.setAdapter(adapter);
+                }
+            });
         });
     }
 
@@ -893,8 +931,17 @@ public class ReportsActivity extends AppCompatActivity {
                 }
 
                 VariantSelectorAdapter adapter = new VariantSelectorAdapter(variants, CartManager.getInstance().getCartItems(), (variant, quantity) -> {
+                    // Update the "blue line" variant name on the item tile immediately
+                    item.setVariantName(variant.getName());
+                    item.setSellingPrice(variant.getSellingPrice());
+                    
                     if (!CartManager.getInstance().setVariantQuantity(item, variant, quantity)) {
-                        Toast.makeText(this, "Only " + variant.getStockQuantity() + " units available in stock", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Maximum stock reached: " + variant.getStockQuantity(), Toast.LENGTH_SHORT).show();
+                    }
+                    
+                    // Refresh the grid to show updated "blue line" and quantity overlay
+                    if (recyclerItemGrid != null && recyclerItemGrid.getAdapter() != null) {
+                        recyclerItemGrid.getAdapter().notifyDataSetChanged();
                     }
                 });
                 rv.setAdapter(adapter);
@@ -915,7 +962,21 @@ public class ReportsActivity extends AppCompatActivity {
             }
             int unc = itemDao.getUncategorizedItemCount();
             if (unc > 0) list.add(new ItemCategoryAdapter.CategoryWithCount("Uncategorized", unc));
-            runOnUiThread(() -> { if (recyclerItemCategories != null) recyclerItemCategories.setAdapter(new ItemCategoryAdapter(list)); });
+            runOnUiThread(() -> {
+                if (recyclerItemCategories != null) {
+                    recyclerItemCategories.setAdapter(new ItemCategoryAdapter(list, item -> {
+                        if (item.isAdvanceMode()) {
+                            showVariantSelectorDialog(item);
+                        } else {
+                            if (CartManager.getInstance().addItem(item)) {
+                                updateCounterUI();
+                            } else {
+                                Toast.makeText(this, "Not enough stock available", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }));
+                }
+            });
         });
     }
 
