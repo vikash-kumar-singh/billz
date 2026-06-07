@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "451728978854",
+    "project_id": "billz-pos-18db2",
+    "storage_bucket": "billz-pos-18db2.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:451728978854:android:67c61dabdaf6162de91567",
+        "android_client_info": {
+          "package_name": "com.example.billz"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAm47EtIbb914O-5B3_2iffDkYUH_TMmD0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
