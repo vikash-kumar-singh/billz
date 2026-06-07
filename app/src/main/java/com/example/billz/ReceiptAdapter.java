@@ -1,5 +1,6 @@
 package com.example.billz;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,6 +41,12 @@ public class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ViewHold
         holder.textReceiptStats.setText(items + dateTimeFormat.format(new Date(receipt.getTimestamp())));
         
         holder.textReceiptAmount.setText(String.format(Locale.getDefault(), "₹%,.0f", receipt.getTotalAmount()));
+
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(v.getContext(), ReceiptPreviewActivity.class);
+            intent.putExtra("receipt_id", receipt.getId());
+            v.getContext().startActivity(intent);
+        });
     }
 
     @Override

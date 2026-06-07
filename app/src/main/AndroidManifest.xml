@@ -161,6 +161,26 @@
             android:exported="false"
             android:theme="@style/Theme.Billz">
         </activity>
+        <activity
+            android:name=".ReceiptDetailsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Billz">
+        </activity>
+        <activity
+            android:name=".ReceiptPreviewActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Billz">
+        </activity>
+        <activity
+            android:name=".EditReceiptActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Billz">
+        </activity>
+        <activity
+            android:name=".ReturnedReceiptsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Billz">
+        </activity>
     </application>
 
 </manifest>

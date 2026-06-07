@@ -14,6 +14,7 @@ public class Receipt {
     private int itemCount;
     private long timestamp;
     private int businessId;
+    private boolean isReturned;
 
     public Receipt(String receiptNo, String customerName, String paymentMode, double totalAmount, int itemCount, long timestamp, int businessId) {
         this.receiptNo = receiptNo;
@@ -41,4 +42,6 @@ public class Receipt {
     public void setTimestamp(long timestamp) { this.timestamp = timestamp; }
     public int getBusinessId() { return businessId; }
     public void setBusinessId(int businessId) { this.businessId = businessId; }
+    public boolean isReturned() { return isReturned; }
+    public void setReturned(boolean returned) { isReturned = returned; }
 }

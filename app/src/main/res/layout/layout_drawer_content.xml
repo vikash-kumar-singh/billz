@@ -266,12 +266,16 @@
 
             <!-- Returned Receipt -->
             <LinearLayout
+                android:id="@+id/nav_returned_receipt"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:gravity="center_vertical"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackground">
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
@@ -312,12 +316,16 @@
 
             <!-- Feedback -->
             <LinearLayout
+                android:id="@+id/nav_feedback"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:gravity="center_vertical"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackground">
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"

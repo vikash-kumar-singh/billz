@@ -285,6 +285,16 @@ public class ReportsActivity extends AppCompatActivity {
             startActivity(new Intent(ReportsActivity.this, ReceiptsActivity.class));
         });
 
+        findViewById(R.id.nav_returned_receipt).setOnClickListener(v -> {
+            drawerLayout.closeDrawer(GravityCompat.START);
+            startActivity(new Intent(ReportsActivity.this, ReturnedReceiptsActivity.class));
+        });
+
+        findViewById(R.id.nav_feedback).setOnClickListener(v -> {
+            drawerLayout.closeDrawer(GravityCompat.START);
+            Toast.makeText(this, "Feedback module coming soon", Toast.LENGTH_SHORT).show();
+        });
+
         findViewById(R.id.nav_receipt_settings).setOnClickListener(v -> {
             drawerLayout.closeDrawer(GravityCompat.START);
             startActivity(new Intent(ReportsActivity.this, ReceiptSettingsActivity.class));
@@ -1112,13 +1122,29 @@ public class ReportsActivity extends AppCompatActivity {
 
                             String rNo = settings.getReceiptIdPrefix() + "-" + billNo;
                             Receipt receipt = new Receipt(rNo, custName, mode.getName(), totalToSave, itemsToSave, System.currentTimeMillis(), bId);
-                            db.receiptDao().insert(receipt);
+                            long insertedId = db.receiptDao().insert(receipt);
+
+                            // Save individual items
+                            List<CartItem> cartItems = CartManager.getInstance().getCartItems();
+                            List<ReceiptItem> receiptItems = new ArrayList<>();
+                            for (CartItem ci : cartItems) {
+                                String vName = ci.getVariant() != null ? ci.getVariant().getName() : "";
+                                receiptItems.add(new ReceiptItem((int)insertedId, ci.getItem().getName(), vName, 
+                                        ci.getVariant() != null ? ci.getVariant().getSellingPrice() : ci.getItem().getSellingPrice(), 
+                                        ci.getQuantity()));
+                            }
+                            db.receiptItemDao().insertAll(receiptItems);
 
                             runOnUiThread(() -> {
                                 Toast.makeText(ReportsActivity.this, "Payment: " + mode.getName() + " - Saved as " + rNo, Toast.LENGTH_SHORT).show();
                                 bottomSheet.dismiss();
                                 CartManager.getInstance().clearCart();
                                 highlightBottomTab(TAB_REPORTS);
+                                
+                                // Open Details
+                                Intent intent = new Intent(ReportsActivity.this, ReceiptDetailsActivity.class);
+                                intent.putExtra("receipt_id", (int) insertedId);
+                                startActivity(intent);
                             });
                         });
                     }
