@@ -151,6 +151,69 @@
                         android:textColorHint="#94A3B8"
                         android:textSize="15sp" />
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="Business Address"
+                        android:textColor="#64748B"
+                        android:textSize="15sp" />
+
+                    <EditText
+                        android:id="@+id/editBusinessAddress"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_marginTop="8dp"
+                        android:background="#F1F5F9"
+                        android:hint="Enter Address"
+                        android:paddingHorizontal="12dp"
+                        android:inputType="textPostalAddress"
+                        android:textColor="@color/black"
+                        android:textColorHint="#94A3B8"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="Business Category"
+                        android:textColor="#64748B"
+                        android:textSize="15sp" />
+
+                    <EditText
+                        android:id="@+id/editBusinessCategory"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_marginTop="8dp"
+                        android:background="#F1F5F9"
+                        android:hint="Enter Category"
+                        android:paddingHorizontal="12dp"
+                        android:inputType="text"
+                        android:textColor="@color/black"
+                        android:textColorHint="#94A3B8"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="Owner Email"
+                        android:textColor="#64748B"
+                        android:textSize="15sp" />
+
+                    <EditText
+                        android:id="@+id/editBusinessEmail"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_marginTop="8dp"
+                        android:background="#F1F5F9"
+                        android:hint="Enter Email"
+                        android:paddingHorizontal="12dp"
+                        android:inputType="textEmailAddress"
+                        android:textColor="@color/black"
+                        android:textColorHint="#94A3B8"
+                        android:textSize="15sp" />
+
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 

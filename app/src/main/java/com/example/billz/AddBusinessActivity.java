@@ -182,6 +182,12 @@ public class AddBusinessActivity extends AppCompatActivity {
                 settings.setBusinessName(name);
                 settings.setPhoneNumber(mobile);
                 db.receiptSettingsDao().insert(settings);
+
+                // Sync with Firestore
+                java.util.Map<String, Object> data = new java.util.HashMap<>();
+                data.put("businessName", name);
+                data.put("mobile", mobile);
+                new BusinessProfileRepository(this).saveBusinessProfile(data, null);
             }
 
             runOnUiThread(() -> {

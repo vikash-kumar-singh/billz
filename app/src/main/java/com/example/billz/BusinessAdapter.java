@@ -42,7 +42,13 @@ public class BusinessAdapter extends RecyclerView.Adapter<BusinessAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Business business = businessList.get(position);
         holder.textName.setText(business.getName());
-        holder.textRole.setText(business.getRole());
+        
+        // Display: Business Name Category Plan
+        String category = (business.getCategory() != null && !business.getCategory().isEmpty()) ? business.getCategory() : "No Category";
+        String plan = (business.getPlan() != null && !business.getPlan().isEmpty()) ? business.getPlan() : "FREE";
+        
+        String info = category + " • " + plan;
+        holder.textRole.setText(info);
 
         if (business.isSelected()) {
             holder.cardView.setStrokeColor(Color.parseColor("#3F51B5"));

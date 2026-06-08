@@ -17,9 +17,8 @@ import java.util.concurrent.Executors;
 
 public class EditBusinessActivity extends AppCompatActivity {
 
-    private EditText editBusinessName, editBusinessMobile;
-    private ImageView imgBusinessLogo;
-    private ReceiptSettings currentSettings;
+    private EditText editBusinessName, editBusinessMobile, editBusinessAddress, editBusinessCategory, editBusinessEmail;
+    private BusinessProfileRepository profileRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,54 +36,90 @@ public class EditBusinessActivity extends AppCompatActivity {
 
         editBusinessName = findViewById(R.id.editBusinessName);
         editBusinessMobile = findViewById(R.id.editBusinessMobile);
-        imgBusinessLogo = findViewById(R.id.imgBusinessLogo);
+        editBusinessAddress = findViewById(R.id.editBusinessAddress);
+        editBusinessCategory = findViewById(R.id.editBusinessCategory);
+        editBusinessEmail = findViewById(R.id.editBusinessEmail);
+
+        profileRepository = new BusinessProfileRepository(this);
         
-        loadSettings();
+        loadBusinessProfile();
 
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
-        findViewById(R.id.btnSave).setOnClickListener(v -> saveSettings());
+        findViewById(R.id.btnSave).setOnClickListener(v -> saveProfile());
     }
 
-    private void loadSettings() {
-        Executors.newSingleThreadExecutor().execute(() -> {
-            currentSettings = AppDatabase.getInstance(this).receiptSettingsDao().getSettings();
-            if (currentSettings == null) {
-                currentSettings = new ReceiptSettings();
+    private void loadBusinessProfile() {
+        // Show immediate cached data
+        BusinessProfile cached = profileRepository.getCachedProfile();
+        populateFields(cached);
+
+        // Load latest from Firestore
+        profileRepository.loadBusinessProfile(new BusinessProfileRepository.ProfileCallback() {
+            @Override
+            public void onProfileLoaded(BusinessProfile profile) {
+                runOnUiThread(() -> populateFields(profile));
             }
-            runOnUiThread(() -> {
-                editBusinessName.setText(currentSettings.getBusinessName());
-                editBusinessMobile.setText(currentSettings.getPhoneNumber());
-                
-                if (currentSettings.getBusinessLogoPath() != null) {
-                    try {
-                        imgBusinessLogo.setImageURI(Uri.parse(currentSettings.getBusinessLogoPath()));
-                        imgBusinessLogo.setImageTintList(null);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
+
+            @Override
+            public void onError(String message) {
+                Toast.makeText(EditBusinessActivity.this, "Failed to load profile: " + message, Toast.LENGTH_SHORT).show();
+            }
         });
     }
 
-    private void saveSettings() {
+    private void populateFields(BusinessProfile profile) {
+        if (profile == null) return;
+        android.util.Log.d("SETUP", "EDIT_BUSINESS_LOADED");
+        android.util.Log.d("SETUP", "BUSINESS_NAME = " + profile.getBusinessName());
+
+        if (profile.getBusinessName() != null && !profile.getBusinessName().isEmpty())
+            editBusinessName.setText(profile.getBusinessName());
+        
+        if (profile.getMobile() != null && !profile.getMobile().isEmpty())
+            editBusinessMobile.setText(profile.getMobile());
+
+        if (profile.getAddress() != null && !profile.getAddress().isEmpty())
+            editBusinessAddress.setText(profile.getAddress());
+
+        if (profile.getCategory() != null && !profile.getCategory().isEmpty())
+            editBusinessCategory.setText(profile.getCategory());
+
+        if (profile.getEmail() != null && !profile.getEmail().isEmpty())
+            editBusinessEmail.setText(profile.getEmail());
+    }
+
+    private void saveProfile() {
         String name = editBusinessName.getText().toString().trim();
         String mobile = editBusinessMobile.getText().toString().trim();
+        String address = editBusinessAddress.getText().toString().trim();
+        String category = editBusinessCategory.getText().toString().trim();
+        String email = editBusinessEmail.getText().toString().trim();
         
         if (name.isEmpty()) {
-            Toast.makeText(this, "Business Name is required", Toast.LENGTH_SHORT).show();
+            editBusinessName.setError("Business name is required");
             return;
         }
 
-        currentSettings.setBusinessName(name);
-        currentSettings.setPhoneNumber(mobile);
+        java.util.Map<String, Object> data = new java.util.HashMap<>();
+        data.put("businessName", name);
+        data.put("mobile", mobile);
+        data.put("address", address);
+        data.put("category", category);
+        data.put("email", email);
 
-        Executors.newSingleThreadExecutor().execute(() -> {
-            AppDatabase.getInstance(this).receiptSettingsDao().insert(currentSettings);
-            runOnUiThread(() -> {
-                Toast.makeText(this, "Business saved successfully", Toast.LENGTH_SHORT).show();
-                finish();
-            });
+        profileRepository.saveBusinessProfile(data, new BusinessProfileRepository.ProfileCallback() {
+            @Override
+            public void onProfileLoaded(BusinessProfile profile) {
+                runOnUiThread(() -> {
+                    Toast.makeText(EditBusinessActivity.this, "Profile updated successfully", Toast.LENGTH_SHORT).show();
+                    finish();
+                });
+            }
+
+            @Override
+            public void onError(String message) {
+                runOnUiThread(() -> Toast.makeText(EditBusinessActivity.this, "Update failed: " + message, Toast.LENGTH_SHORT).show());
+            }
         });
     }
 }

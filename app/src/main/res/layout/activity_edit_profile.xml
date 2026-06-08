@@ -71,7 +71,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/full_name"
+                    android:text="Business Name"
                     android:textColor="#64748B"
                     android:textSize="12sp" />
 
@@ -80,7 +80,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@null"
-                    android:hint="@string/hint_enter_name"
+                    android:hint="Enter Business Name"
                     android:inputType="textPersonName"
                     android:paddingVertical="8dp"
                     android:textColor="@color/black"

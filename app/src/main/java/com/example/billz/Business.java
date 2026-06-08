@@ -16,6 +16,9 @@ public class Business {
     private String role;
     private boolean isSelected;
     private String logoPath;
+    private String category;
+    private String status;
+    private String plan;
 
     public Business(@NonNull String name, String phoneNumber, String role, boolean isSelected) {
         this.name = name;
@@ -42,4 +45,13 @@ public class Business {
     public void setSelected(boolean selected) { isSelected = selected; }
     public String getLogoPath() { return logoPath; }
     public void setLogoPath(String logoPath) { this.logoPath = logoPath; }
+
+    public String getCategory() { return category; }
+    public void setCategory(String category) { this.category = category; }
+
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
+
+    public String getPlan() { return plan; }
+    public void setPlan(String plan) { this.plan = plan; }
 }

@@ -19,7 +19,7 @@ import java.util.concurrent.Executors;
 public class EditProfileActivity extends AppCompatActivity {
 
     private EditText editName, editEmail;
-    private ReceiptSettings settings;
+    private BusinessProfileRepository profileRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,20 +41,31 @@ public class EditProfileActivity extends AppCompatActivity {
 
         toolbar.setNavigationOnClickListener(v -> finish());
 
+        profileRepository = new BusinessProfileRepository(this);
         loadProfileData();
 
         btnSave.setOnClickListener(v -> saveProfileData());
     }
 
     private void loadProfileData() {
-        Executors.newSingleThreadExecutor().execute(() -> {
-            settings = AppDatabase.getInstance(this).receiptSettingsDao().getSettings();
-            runOnUiThread(() -> {
-                if (settings != null) {
-                    editName.setText(settings.getBusinessName());
-                    editEmail.setText(settings.getEmail());
-                }
-            });
+        BusinessProfile cached = profileRepository.getCachedProfile();
+        editName.setText(cached.getBusinessName());
+        editEmail.setText(cached.getEmail());
+
+        profileRepository.loadBusinessProfile(new BusinessProfileRepository.ProfileCallback() {
+            @Override
+            public void onProfileLoaded(BusinessProfile profile) {
+                android.util.Log.d("SETUP", "EDIT_PROFILE_LOADED");
+                runOnUiThread(() -> {
+                    editName.setText(profile.getBusinessName());
+                    editEmail.setText(profile.getEmail());
+                });
+            }
+
+            @Override
+            public void onError(String message) {
+                Toast.makeText(EditProfileActivity.this, "Load failed: " + message, Toast.LENGTH_SHORT).show();
+            }
         });
     }
 
@@ -67,19 +78,23 @@ public class EditProfileActivity extends AppCompatActivity {
             return;
         }
 
-        Executors.newSingleThreadExecutor().execute(() -> {
-            AppDatabase db = AppDatabase.getInstance(this);
-            if (settings == null) {
-                settings = new ReceiptSettings();
-            }
-            settings.setBusinessName(name);
-            settings.setEmail(email);
-            db.receiptSettingsDao().insert(settings);
+        java.util.Map<String, Object> data = new java.util.HashMap<>();
+        data.put("businessName", name);
+        data.put("email", email);
 
-            runOnUiThread(() -> {
-                Toast.makeText(this, "Profile Updated", Toast.LENGTH_SHORT).show();
-                finish();
-            });
+        profileRepository.saveBusinessProfile(data, new BusinessProfileRepository.ProfileCallback() {
+            @Override
+            public void onProfileLoaded(BusinessProfile profile) {
+                runOnUiThread(() -> {
+                    Toast.makeText(EditProfileActivity.this, "Profile Updated", Toast.LENGTH_SHORT).show();
+                    finish();
+                });
+            }
+
+            @Override
+            public void onError(String message) {
+                runOnUiThread(() -> Toast.makeText(EditProfileActivity.this, "Update failed: " + message, Toast.LENGTH_SHORT).show());
+            }
         });
     }
 }

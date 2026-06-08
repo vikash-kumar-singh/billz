@@ -84,7 +84,7 @@ public class RegisterActivity extends AppCompatActivity {
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         String uid = FirebaseHelper.getCurrentUid();
-                        saveUserProfile(uid, name, businessName, email, mobile);
+                        saveUserProfile(uid, businessName, email, mobile);
                     } else {
                         findViewById(R.id.btnRegister).setEnabled(true);
                         Toast.makeText(RegisterActivity.this, "Registration failed: " + task.getException().getMessage(),
@@ -93,10 +93,9 @@ public class RegisterActivity extends AppCompatActivity {
                 });
     }
 
-    private void saveUserProfile(String uid, String name, String businessName, String email, String mobile) {
+    private void saveUserProfile(String uid, String businessName, String email, String mobile) {
         Map<String, Object> user = new HashMap<>();
         user.put("uid", uid);
-        user.put("name", name);
         user.put("businessName", businessName);
         user.put("email", email);
         user.put("mobile", mobile);
