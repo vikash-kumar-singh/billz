@@ -14,6 +14,14 @@ public class PreferenceManager {
     private static final String KEY_BUSINESS_EMAIL = "business_email";
     private static final String KEY_BUSINESS_MOBILE = "business_mobile";
     private static final String KEY_BUSINESS_PLAN = "business_plan";
+    private static final String KEY_BUSINESS_ROLE = "business_role";
+    private static final String KEY_BUSINESS_STATUS = "business_status";
+    private static final String KEY_COUNTRY = "business_country";
+    private static final String KEY_TIMEZONE = "business_timezone";
+    private static final String KEY_BUSINESS_TYPE = "business_type";
+    private static final String KEY_CURRENCY = "business_currency";
+    private static final String KEY_NUMBER_SYSTEM = "business_number_system";
+    private static final String KEY_DECIMAL_PLACES = "business_decimal_places";
 
     private final SharedPreferences sharedPreferences;
     private final SharedPreferences.Editor editor;
@@ -102,6 +110,78 @@ public class PreferenceManager {
 
     public String getBusinessPlan() {
         return sharedPreferences.getString(KEY_BUSINESS_PLAN, "FREE");
+    }
+
+    public void setBusinessRole(String role) {
+        editor.putString(KEY_BUSINESS_ROLE, role);
+        editor.apply();
+    }
+
+    public String getBusinessRole() {
+        return sharedPreferences.getString(KEY_BUSINESS_ROLE, "OWNER");
+    }
+
+    public void setBusinessStatus(String status) {
+        editor.putString(KEY_BUSINESS_STATUS, status);
+        editor.apply();
+    }
+
+    public String getBusinessStatus() {
+        return sharedPreferences.getString(KEY_BUSINESS_STATUS, "ACTIVE");
+    }
+
+    public void setCountry(String country) {
+        editor.putString(KEY_COUNTRY, country);
+        editor.apply();
+    }
+
+    public String getCountry() {
+        return sharedPreferences.getString(KEY_COUNTRY, "India");
+    }
+
+    public void setTimezone(String timezone) {
+        editor.putString(KEY_TIMEZONE, timezone);
+        editor.apply();
+    }
+
+    public String getTimezone() {
+        return sharedPreferences.getString(KEY_TIMEZONE, "Asia/Kolkata");
+    }
+
+    public void setBusinessType(String type) {
+        editor.putString(KEY_BUSINESS_TYPE, type);
+        editor.apply();
+    }
+
+    public String getBusinessType() {
+        return sharedPreferences.getString(KEY_BUSINESS_TYPE, "Retail");
+    }
+
+    public void setCurrency(String currency) {
+        editor.putString(KEY_CURRENCY, currency);
+        editor.apply();
+    }
+
+    public String getCurrency() {
+        return sharedPreferences.getString(KEY_CURRENCY, "INR");
+    }
+
+    public void setNumberSystem(String system) {
+        editor.putString(KEY_NUMBER_SYSTEM, system);
+        editor.apply();
+    }
+
+    public String getNumberSystem() {
+        return sharedPreferences.getString(KEY_NUMBER_SYSTEM, "Indian");
+    }
+
+    public void setDecimalPlaces(int places) {
+        editor.putInt(KEY_DECIMAL_PLACES, places);
+        editor.apply();
+    }
+
+    public int getDecimalPlaces() {
+        return sharedPreferences.getInt(KEY_DECIMAL_PLACES, 2);
     }
 
     public void clear() {

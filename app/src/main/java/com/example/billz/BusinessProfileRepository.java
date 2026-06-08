@@ -94,6 +94,14 @@ public class BusinessProfileRepository {
         preferenceManager.setBusinessEmail(profile.getEmail());
         preferenceManager.setBusinessMobile(profile.getMobile());
         preferenceManager.setBusinessPlan(profile.getPlan());
+        preferenceManager.setBusinessRole(profile.getRole());
+        preferenceManager.setBusinessStatus(profile.getStatus());
+        preferenceManager.setCountry(profile.getCountry());
+        preferenceManager.setTimezone(profile.getTimezone());
+        preferenceManager.setBusinessType(profile.getBusinessType());
+        preferenceManager.setCurrency(profile.getCurrency());
+        preferenceManager.setNumberSystem(profile.getNumberSystem());
+        preferenceManager.setDecimalPlaces(profile.getDecimalPlaces());
     }
 
     public BusinessProfile getCachedProfile() {
@@ -104,6 +112,14 @@ public class BusinessProfileRepository {
         profile.setEmail(preferenceManager.getBusinessEmail());
         profile.setMobile(preferenceManager.getBusinessMobile());
         profile.setPlan(preferenceManager.getBusinessPlan());
+        profile.setRole(preferenceManager.getBusinessRole());
+        profile.setStatus(preferenceManager.getBusinessStatus());
+        profile.setCountry(preferenceManager.getCountry());
+        profile.setTimezone(preferenceManager.getTimezone());
+        profile.setBusinessType(preferenceManager.getBusinessType());
+        profile.setCurrency(preferenceManager.getCurrency());
+        profile.setNumberSystem(preferenceManager.getNumberSystem());
+        profile.setDecimalPlaces(preferenceManager.getDecimalPlaces());
         return profile;
     }
 }

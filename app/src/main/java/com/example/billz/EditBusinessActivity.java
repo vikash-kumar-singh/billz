@@ -1,10 +1,13 @@
 package com.example.billz;
 
-import android.net.Uri;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
-import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -13,11 +16,19 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import java.util.concurrent.Executors;
+import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class EditBusinessActivity extends AppCompatActivity {
 
-    private EditText editBusinessName, editBusinessMobile, editBusinessAddress, editBusinessCategory, editBusinessEmail;
+    private static final String TAG = "EditBusiness";
+
+    private EditText editName, editAddress, editCategory, editMobile, editEmail;
+    private AutoCompleteTextView autoCountry, autoTimezone, autoBusinessType, autoCurrency, autoNumberSystem, autoDecimalPlaces;
+    private TextView textPlan, textRole, textStatus;
     private BusinessProfileRepository profileRepository;
 
     @Override
@@ -27,99 +38,192 @@ public class EditBusinessActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_edit_business);
 
-        View toolbar = findViewById(R.id.toolbarEditBusiness);
+        initViews();
+        setupDropdowns();
+        
+        profileRepository = new BusinessProfileRepository(this);
+        loadProfile();
+
+        findViewById(R.id.btnUpdateBottom).setOnClickListener(v -> saveProfile());
+        findViewById(R.id.btnDeleteBusiness).setOnClickListener(v -> showDeleteConfirmation());
+        
+        MaterialToolbar toolbar = findViewById(R.id.toolbarEditBusiness);
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(v -> finish());
+
         ViewCompat.setOnApplyWindowInsetsListener(toolbar, (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(0, systemBars.top, 0, 0);
+            v.setPadding(v.getPaddingLeft(), systemBars.top, v.getPaddingRight(), v.getPaddingBottom());
             return insets;
         });
-
-        editBusinessName = findViewById(R.id.editBusinessName);
-        editBusinessMobile = findViewById(R.id.editBusinessMobile);
-        editBusinessAddress = findViewById(R.id.editBusinessAddress);
-        editBusinessCategory = findViewById(R.id.editBusinessCategory);
-        editBusinessEmail = findViewById(R.id.editBusinessEmail);
-
-        profileRepository = new BusinessProfileRepository(this);
-        
-        loadBusinessProfile();
-
-        findViewById(R.id.btnBack).setOnClickListener(v -> finish());
-        findViewById(R.id.btnSave).setOnClickListener(v -> saveProfile());
     }
 
-    private void loadBusinessProfile() {
-        // Show immediate cached data
-        BusinessProfile cached = profileRepository.getCachedProfile();
-        populateFields(cached);
+    private void initViews() {
+        editName = findViewById(R.id.editBusinessName);
+        editAddress = findViewById(R.id.editBusinessAddress);
+        editCategory = findViewById(R.id.editBusinessCategory);
+        editMobile = findViewById(R.id.editBusinessMobile);
+        editEmail = findViewById(R.id.editBusinessEmail);
 
-        // Load latest from Firestore
+        autoCountry = findViewById(R.id.autoCountry);
+        autoTimezone = findViewById(R.id.autoTimezone);
+        autoBusinessType = findViewById(R.id.autoBusinessType);
+        autoCurrency = findViewById(R.id.autoCurrency);
+        autoNumberSystem = findViewById(R.id.autoNumberSystem);
+        autoDecimalPlaces = findViewById(R.id.autoDecimalPlaces);
+
+        textPlan = findViewById(R.id.textPlan);
+        textRole = findViewById(R.id.textRole);
+        textStatus = findViewById(R.id.textStatus);
+    }
+
+    private void setupDropdowns() {
+        String[] countries = {"India", "USA", "UAE", "UK", "Australia"};
+        String[] timezones = {"Asia/Kolkata", "UTC", "GMT", "America/New_York", "Europe/London"};
+        String[] businessTypes = {"Retail", "Wholesale", "Service", "Restaurant", "Medical", "Gym", "Electronics", "Other"};
+        String[] currencies = {"INR", "USD", "AED", "EUR", "GBP"};
+        String[] numberSystems = {"Indian", "International"};
+        String[] decimals = {"0", "1", "2", "3"};
+
+        autoCountry.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, countries));
+        autoTimezone.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, timezones));
+        autoBusinessType.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, businessTypes));
+        autoCurrency.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, currencies));
+        autoNumberSystem.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, numberSystems));
+        autoDecimalPlaces.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, decimals));
+    }
+
+    private void loadProfile() {
+        Log.d(TAG, "PROFILE_LOAD_STARTED");
+        
+        // Load cached first
+        BusinessProfile cached = profileRepository.getCachedProfile();
+        populateUI(cached);
+
         profileRepository.loadBusinessProfile(new BusinessProfileRepository.ProfileCallback() {
             @Override
             public void onProfileLoaded(BusinessProfile profile) {
-                runOnUiThread(() -> populateFields(profile));
+                Log.d(TAG, "PROFILE_LOAD_SUCCESS");
+                Log.d(TAG, "BUSINESS_NAME_LOADED = " + profile.getBusinessName());
+                runOnUiThread(() -> populateUI(profile));
             }
 
             @Override
             public void onError(String message) {
-                Toast.makeText(EditBusinessActivity.this, "Failed to load profile: " + message, Toast.LENGTH_SHORT).show();
+                Log.e(TAG, "PROFILE_LOAD_FAILED: " + message);
+                Toast.makeText(EditBusinessActivity.this, "Error: " + message, Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void populateFields(BusinessProfile profile) {
+    private void populateUI(BusinessProfile profile) {
         if (profile == null) return;
-        android.util.Log.d("SETUP", "EDIT_BUSINESS_LOADED");
-        android.util.Log.d("SETUP", "BUSINESS_NAME = " + profile.getBusinessName());
 
-        if (profile.getBusinessName() != null && !profile.getBusinessName().isEmpty())
-            editBusinessName.setText(profile.getBusinessName());
-        
-        if (profile.getMobile() != null && !profile.getMobile().isEmpty())
-            editBusinessMobile.setText(profile.getMobile());
+        editName.setText(profile.getBusinessName());
+        editAddress.setText(profile.getAddress());
+        editCategory.setText(profile.getCategory());
+        editMobile.setText(profile.getMobile());
+        editEmail.setText(profile.getEmail());
 
-        if (profile.getAddress() != null && !profile.getAddress().isEmpty())
-            editBusinessAddress.setText(profile.getAddress());
+        autoCountry.setText(profile.getCountry() != null ? profile.getCountry() : "India", false);
+        autoTimezone.setText(profile.getTimezone() != null ? profile.getTimezone() : "Asia/Kolkata", false);
+        autoBusinessType.setText(profile.getBusinessType() != null ? profile.getBusinessType() : "Retail", false);
+        autoCurrency.setText(profile.getCurrency() != null ? profile.getCurrency() : "INR", false);
+        autoNumberSystem.setText(profile.getNumberSystem() != null ? profile.getNumberSystem() : "Indian", false);
+        autoDecimalPlaces.setText(String.valueOf(profile.getDecimalPlaces()), false);
 
-        if (profile.getCategory() != null && !profile.getCategory().isEmpty())
-            editBusinessCategory.setText(profile.getCategory());
-
-        if (profile.getEmail() != null && !profile.getEmail().isEmpty())
-            editBusinessEmail.setText(profile.getEmail());
+        textPlan.setText(profile.getPlan() != null ? profile.getPlan() : "FREE");
+        textRole.setText(profile.getRole() != null ? profile.getRole() : "OWNER");
+        textStatus.setText(profile.getStatus() != null ? profile.getStatus() : "ACTIVE");
     }
 
     private void saveProfile() {
-        String name = editBusinessName.getText().toString().trim();
-        String mobile = editBusinessMobile.getText().toString().trim();
-        String address = editBusinessAddress.getText().toString().trim();
-        String category = editBusinessCategory.getText().toString().trim();
-        String email = editBusinessEmail.getText().toString().trim();
-        
+        String name = editName.getText().toString().trim();
         if (name.isEmpty()) {
-            editBusinessName.setError("Business name is required");
+            editName.setError("Business Name is required");
             return;
         }
 
-        java.util.Map<String, Object> data = new java.util.HashMap<>();
+        Map<String, Object> data = new HashMap<>();
         data.put("businessName", name);
-        data.put("mobile", mobile);
-        data.put("address", address);
-        data.put("category", category);
-        data.put("email", email);
+        data.put("address", editAddress.getText().toString().trim());
+        data.put("category", editCategory.getText().toString().trim());
+        data.put("mobile", editMobile.getText().toString().trim());
+        data.put("email", editEmail.getText().toString().trim());
+        data.put("country", autoCountry.getText().toString());
+        data.put("timezone", autoTimezone.getText().toString());
+        data.put("businessType", autoBusinessType.getText().toString());
+        data.put("currency", autoCurrency.getText().toString());
+        data.put("numberSystem", autoNumberSystem.getText().toString());
+        
+        try {
+            data.put("decimalPlaces", Integer.parseInt(autoDecimalPlaces.getText().toString()));
+        } catch (Exception e) {
+            data.put("decimalPlaces", 2);
+        }
+
+        findViewById(R.id.btnUpdateBottom).setEnabled(false);
 
         profileRepository.saveBusinessProfile(data, new BusinessProfileRepository.ProfileCallback() {
             @Override
             public void onProfileLoaded(BusinessProfile profile) {
                 runOnUiThread(() -> {
-                    Toast.makeText(EditBusinessActivity.this, "Profile updated successfully", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditBusinessActivity.this, "Business profile updated", Toast.LENGTH_SHORT).show();
                     finish();
                 });
             }
 
             @Override
             public void onError(String message) {
-                runOnUiThread(() -> Toast.makeText(EditBusinessActivity.this, "Update failed: " + message, Toast.LENGTH_SHORT).show());
+                runOnUiThread(() -> {
+                    findViewById(R.id.btnUpdateBottom).setEnabled(true);
+                    Toast.makeText(EditBusinessActivity.this, "Update failed: " + message, Toast.LENGTH_SHORT).show();
+                });
             }
         });
+    }
+
+    private void showDeleteConfirmation() {
+        new MaterialAlertDialogBuilder(this)
+                .setTitle("Delete Business")
+                .setMessage("Are you sure you want to delete this business? This action cannot be undone.")
+                .setPositiveButton("DELETE", (dialog, which) -> deleteBusiness())
+                .setNegativeButton("CANCEL", null)
+                .show();
+    }
+
+    private void deleteBusiness() {
+        String uid = FirebaseHelper.getCurrentUid();
+        if (uid == null) return;
+
+        findViewById(R.id.btnDeleteBusiness).setEnabled(false);
+
+        // Delete from Firestore
+        com.google.firebase.firestore.DocumentReference doc = FirebaseHelper.getUserDoc();
+        if (doc == null) return;
+        
+        doc.delete()
+                .addOnSuccessListener(aVoid -> {
+                    // Clear local cache
+                    new PreferenceManager(this).clear();
+                    
+                    // Clear Room
+                    java.util.concurrent.Executors.newSingleThreadExecutor().execute(() -> {
+                        AppDatabase.getInstance(this).clearAllTables();
+                        
+                        runOnUiThread(() -> {
+                            Toast.makeText(this, "Business deleted and session cleared", Toast.LENGTH_LONG).show();
+                            // Redirect to Splash or Login
+                            Intent intent = new Intent(this, SplashActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                            finish();
+                        });
+                    });
+                })
+                .addOnFailureListener(e -> {
+                    findViewById(R.id.btnDeleteBusiness).setEnabled(true);
+                    Toast.makeText(this, "Delete failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
     }
 }

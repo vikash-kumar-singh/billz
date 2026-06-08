@@ -330,7 +330,12 @@ public class ReportsActivity extends AppCompatActivity {
 
         findViewById(R.id.btnEditBusiness).setOnClickListener(v -> {
             drawerLayout.closeDrawer(GravityCompat.START);
-            showBusinessSelectorDialog();
+            startActivity(new Intent(ReportsActivity.this, EditBusinessActivity.class));
+        });
+
+        findViewById(R.id.btnEditProfile).setOnClickListener(v -> {
+            drawerLayout.closeDrawer(GravityCompat.START);
+            startActivity(new Intent(ReportsActivity.this, EditBusinessActivity.class));
         });
 
         findViewById(R.id.btnSwitchBusiness).setOnClickListener(v -> {

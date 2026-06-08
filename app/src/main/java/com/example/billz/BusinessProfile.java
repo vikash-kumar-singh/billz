@@ -10,6 +10,12 @@ public class BusinessProfile {
     private String status;
     private String role;
     private String uid;
+    private String country;
+    private String timezone;
+    private String businessType;
+    private String currency;
+    private String numberSystem;
+    private int decimalPlaces;
     private boolean setupCompleted;
 
     public BusinessProfile() {}
@@ -40,6 +46,24 @@ public class BusinessProfile {
 
     public String getUid() { return uid; }
     public void setUid(String uid) { this.uid = uid; }
+
+    public String getCountry() { return country; }
+    public void setCountry(String country) { this.country = country; }
+
+    public String getTimezone() { return timezone; }
+    public void setTimezone(String timezone) { this.timezone = timezone; }
+
+    public String getBusinessType() { return businessType; }
+    public void setBusinessType(String businessType) { this.businessType = businessType; }
+
+    public String getCurrency() { return currency; }
+    public void setCurrency(String currency) { this.currency = currency; }
+
+    public String getNumberSystem() { return numberSystem; }
+    public void setNumberSystem(String numberSystem) { this.numberSystem = numberSystem; }
+
+    public int getDecimalPlaces() { return decimalPlaces; }
+    public void setDecimalPlaces(int decimalPlaces) { this.decimalPlaces = decimalPlaces; }
 
     public boolean isSetupCompleted() { return setupCompleted; }
     public void setSetupCompleted(boolean setupCompleted) { this.setupCompleted = setupCompleted; }
