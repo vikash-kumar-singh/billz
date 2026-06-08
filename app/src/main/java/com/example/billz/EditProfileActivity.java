@@ -18,7 +18,7 @@ import java.util.concurrent.Executors;
 
 public class EditProfileActivity extends AppCompatActivity {
 
-    private EditText editName, editEmail;
+    private EditText editName, editEmail, editMobile;
     private BusinessProfileRepository profileRepository;
 
     @Override
@@ -28,72 +28,79 @@ public class EditProfileActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_edit_profile);
 
-        MaterialToolbar toolbar = findViewById(R.id.toolbarEditProfile);
         editName = findViewById(R.id.editName);
         editEmail = findViewById(R.id.editEmail);
-        MaterialButton btnSave = findViewById(R.id.btnSave);
+        editMobile = findViewById(R.id.editMobile);
+        View btnUpdate = findViewById(R.id.btnUpdate);
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.toolbarLayout), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(0, systemBars.top, 0, 0);
-            return insets;
-        });
-
-        toolbar.setNavigationOnClickListener(v -> finish());
+        // Email is not editable as per business mail requirement
+        editEmail.setEnabled(false);
+        editEmail.setFocusable(false);
+        editEmail.setClickable(false);
 
         profileRepository = new BusinessProfileRepository(this);
         loadProfileData();
 
-        btnSave.setOnClickListener(v -> saveProfileData());
+        btnUpdate.setOnClickListener(v -> saveProfileData());
     }
 
     private void loadProfileData() {
+        // 1. Show immediate cached data for better UX
         BusinessProfile cached = profileRepository.getCachedProfile();
-        editName.setText(cached.getBusinessName());
-        editEmail.setText(cached.getEmail());
+        populateFields(cached);
 
+        // 2. Load latest from Firestore to ensure accuracy
         profileRepository.loadBusinessProfile(new BusinessProfileRepository.ProfileCallback() {
             @Override
             public void onProfileLoaded(BusinessProfile profile) {
-                android.util.Log.d("SETUP", "EDIT_PROFILE_LOADED");
-                runOnUiThread(() -> {
-                    editName.setText(profile.getBusinessName());
-                    editEmail.setText(profile.getEmail());
-                });
+                runOnUiThread(() -> populateFields(profile));
             }
 
             @Override
             public void onError(String message) {
-                Toast.makeText(EditProfileActivity.this, "Load failed: " + message, Toast.LENGTH_SHORT).show();
+                Toast.makeText(EditProfileActivity.this, "Failed to sync: " + message, Toast.LENGTH_SHORT).show();
             }
         });
     }
 
+    private void populateFields(BusinessProfile profile) {
+        if (profile == null) return;
+        editName.setText(profile.getBusinessName());
+        editEmail.setText(profile.getEmail());
+        editMobile.setText(profile.getMobile());
+    }
+
     private void saveProfileData() {
         String name = editName.getText().toString().trim();
-        String email = editEmail.getText().toString().trim();
+        String mobile = editMobile.getText().toString().trim();
 
         if (name.isEmpty()) {
-            Toast.makeText(this, "Please enter name", Toast.LENGTH_SHORT).show();
+            editName.setError("Name is required");
             return;
         }
 
+        // Prepare update map (Email is excluded to keep it constant)
         java.util.Map<String, Object> data = new java.util.HashMap<>();
         data.put("businessName", name);
-        data.put("email", email);
+        data.put("mobile", mobile);
+
+        findViewById(R.id.btnUpdate).setEnabled(false);
 
         profileRepository.saveBusinessProfile(data, new BusinessProfileRepository.ProfileCallback() {
             @Override
             public void onProfileLoaded(BusinessProfile profile) {
                 runOnUiThread(() -> {
-                    Toast.makeText(EditProfileActivity.this, "Profile Updated", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditProfileActivity.this, "Profile updated successfully", Toast.LENGTH_SHORT).show();
                     finish();
                 });
             }
 
             @Override
             public void onError(String message) {
-                runOnUiThread(() -> Toast.makeText(EditProfileActivity.this, "Update failed: " + message, Toast.LENGTH_SHORT).show());
+                runOnUiThread(() -> {
+                    findViewById(R.id.btnUpdate).setEnabled(true);
+                    Toast.makeText(EditProfileActivity.this, "Update failed: " + message, Toast.LENGTH_SHORT).show();
+                });
             }
         });
     }
