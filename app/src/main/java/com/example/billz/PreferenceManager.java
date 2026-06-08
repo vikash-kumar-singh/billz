@@ -8,6 +8,12 @@ public class PreferenceManager {
     private static final String KEY_IS_FIRST_LAUNCH = "is_first_launch";
     private static final String KEY_BUSINESS_SETUP_COMPLETED = "business_setup_completed";
     private static final String KEY_SELECTED_LANGUAGE = "selected_language";
+    private static final String KEY_BUSINESS_NAME = "business_name";
+    private static final String KEY_BUSINESS_ADDRESS = "business_address";
+    private static final String KEY_BUSINESS_CATEGORY = "business_category";
+    private static final String KEY_BUSINESS_EMAIL = "business_email";
+    private static final String KEY_BUSINESS_MOBILE = "business_mobile";
+    private static final String KEY_BUSINESS_PLAN = "business_plan";
 
     private final SharedPreferences sharedPreferences;
     private final SharedPreferences.Editor editor;
@@ -42,6 +48,60 @@ public class PreferenceManager {
 
     public String getSelectedLanguage() {
         return sharedPreferences.getString(KEY_SELECTED_LANGUAGE, null);
+    }
+
+    public void setBusinessName(String name) {
+        editor.putString(KEY_BUSINESS_NAME, name);
+        editor.apply();
+    }
+
+    public String getBusinessName() {
+        return sharedPreferences.getString(KEY_BUSINESS_NAME, "");
+    }
+
+    public void setBusinessAddress(String address) {
+        editor.putString(KEY_BUSINESS_ADDRESS, address);
+        editor.apply();
+    }
+
+    public String getBusinessAddress() {
+        return sharedPreferences.getString(KEY_BUSINESS_ADDRESS, "");
+    }
+
+    public void setBusinessCategory(String category) {
+        editor.putString(KEY_BUSINESS_CATEGORY, category);
+        editor.apply();
+    }
+
+    public String getBusinessCategory() {
+        return sharedPreferences.getString(KEY_BUSINESS_CATEGORY, "");
+    }
+
+    public void setBusinessEmail(String email) {
+        editor.putString(KEY_BUSINESS_EMAIL, email);
+        editor.apply();
+    }
+
+    public String getBusinessEmail() {
+        return sharedPreferences.getString(KEY_BUSINESS_EMAIL, "");
+    }
+
+    public void setBusinessMobile(String mobile) {
+        editor.putString(KEY_BUSINESS_MOBILE, mobile);
+        editor.apply();
+    }
+
+    public String getBusinessMobile() {
+        return sharedPreferences.getString(KEY_BUSINESS_MOBILE, "");
+    }
+
+    public void setBusinessPlan(String plan) {
+        editor.putString(KEY_BUSINESS_PLAN, plan);
+        editor.apply();
+    }
+
+    public String getBusinessPlan() {
+        return sharedPreferences.getString(KEY_BUSINESS_PLAN, "FREE");
     }
 
     public void clear() {

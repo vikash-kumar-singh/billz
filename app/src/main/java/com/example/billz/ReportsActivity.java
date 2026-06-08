@@ -672,20 +672,33 @@ public class ReportsActivity extends AppCompatActivity {
             return;
         }
 
+        // First, load from local cache for immediate UI update
+        refreshProfileUI();
+
+        // Then, sync from Firestore using the Repository
+        new BusinessProfileRepository(this).loadBusinessProfile(new BusinessProfileRepository.ProfileCallback() {
+            @Override
+            public void onProfileLoaded(BusinessProfile profile) {
+                android.util.Log.d("SETUP", "BUSINESS_PROFILE_LOADED");
+                android.util.Log.d("SETUP", "BUSINESS_NAME = " + profile.getBusinessName());
+                runOnUiThread(() -> {
+                    refreshProfileUI();
+                    syncProfileToLocalBusinessTable(profile);
+                });
+            }
+
+            @Override
+            public void onError(String message) {
+                Log.e("ReportsActivity", "PROFILE_LOAD_FAILED: " + message);
+            }
+        });
+
         Executors.newSingleThreadExecutor().execute(() -> {
             ReceiptSettings settings = AppDatabase.getInstance(this).receiptSettingsDao().getSettings();
             
             runOnUiThread(() -> {
                 if (settings != null) {
-                    if (textHeaderBusinessName != null) textHeaderBusinessName.setText(settings.getBusinessName());
                     if (textHeaderPhoneNumber != null) textHeaderPhoneNumber.setText(settings.getPhoneNumber());
-                    if (txtOwnerName != null) txtOwnerName.setText(settings.getBusinessName() + " " + getString(R.string.header_owner_suffix));
-                    
-                    TextView txtOwnerEmail = findViewById(R.id.txtOwnerEmail);
-                    if (txtOwnerEmail != null) {
-                        txtOwnerEmail.setText(settings.getEmail() != null && !settings.getEmail().isEmpty() 
-                            ? settings.getEmail() : "nutritioncompany.com@gmail.com");
-                    }
                     
                     if (imgLogo != null) {
                         if (settings.getBusinessLogoPath() != null && !settings.getBusinessLogoPath().isEmpty()) {
@@ -704,6 +717,56 @@ public class ReportsActivity extends AppCompatActivity {
                 }
             });
         });
+    }
+
+    private void syncProfileToLocalBusinessTable(BusinessProfile profile) {
+        if (profile == null) return;
+        android.util.Log.d("SETUP", "SWITCH_BUSINESS_LOADED");
+        
+        Executors.newSingleThreadExecutor().execute(() -> {
+            AppDatabase db = AppDatabase.getInstance(this);
+            List<Business> businesses = db.businessDao().getAllBusinesses();
+            
+            boolean found = false;
+            for (Business b : businesses) {
+                if (b.getName().equals(profile.getBusinessName())) {
+                    b.setCategory(profile.getCategory());
+                    b.setStatus(profile.getStatus());
+                    b.setEmail(profile.getEmail());
+                    b.setRole(profile.getRole());
+                    b.setPlan(profile.getPlan());
+                    b.setPhoneNumber(profile.getMobile());
+                    db.businessDao().update(b);
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found) {
+                Business b = new Business(profile.getBusinessName(), profile.getMobile(), profile.getRole(), businesses.isEmpty());
+                b.setCategory(profile.getCategory());
+                b.setStatus(profile.getStatus());
+                b.setEmail(profile.getEmail());
+                b.setPlan(profile.getPlan());
+                db.businessDao().insert(b);
+            }
+            Log.d("ReportsActivity", "SWITCH_BUSINESS_DATA_LOADED");
+        });
+    }
+
+    private void refreshProfileUI() {
+        PreferenceManager pm = new PreferenceManager(this);
+        String name = pm.getBusinessName();
+        String email = pm.getBusinessEmail();
+
+        if (name != null && !name.isEmpty()) {
+            if (textHeaderBusinessName != null) textHeaderBusinessName.setText(name);
+            if (txtOwnerName != null) txtOwnerName.setText(name + " " + getString(R.string.header_owner_suffix));
+        }
+
+        if (email != null && !email.isEmpty()) {
+            if (txtOwnerEmail != null) txtOwnerEmail.setText(email);
+        }
     }
 
     private void updateSidebarLanguageText() {
