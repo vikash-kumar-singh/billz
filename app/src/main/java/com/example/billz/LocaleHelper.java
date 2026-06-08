@@ -8,6 +8,7 @@ import androidx.core.os.LocaleListCompat;
 public class LocaleHelper {
     private static final String PREF_NAME = "LanguagePref";
     private static final String KEY_LANGUAGE = "selected_language";
+    private static final String KEY_IS_SELECTED = "is_language_selected";
 
     public static void setLocale(Context context, String languageCode) {
         persist(context, languageCode);
@@ -16,12 +17,20 @@ public class LocaleHelper {
 
     private static void persist(Context context, String languageCode) {
         SharedPreferences preferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
-        preferences.edit().putString(KEY_LANGUAGE, languageCode).apply();
+        preferences.edit()
+                .putString(KEY_LANGUAGE, languageCode)
+                .putBoolean(KEY_IS_SELECTED, true)
+                .apply();
     }
 
     public static String getPersistedLanguage(Context context) {
         SharedPreferences preferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         return preferences.getString(KEY_LANGUAGE, "en");
+    }
+
+    public static boolean isLanguageSelected(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        return preferences.getBoolean(KEY_IS_SELECTED, false);
     }
 
     public static void applyLocale(String languageCode) {

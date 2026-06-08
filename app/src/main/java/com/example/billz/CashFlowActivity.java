@@ -22,6 +22,14 @@ public class CashFlowActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         LocaleHelper.applyLocale(LocaleHelper.getPersistedLanguage(this));
         super.onCreate(savedInstanceState);
+
+        // Security Check: Ensure user is logged in
+        if (FirebaseHelper.getCurrentUid() == null) {
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+            return;
+        }
+
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_cash_flow);
 

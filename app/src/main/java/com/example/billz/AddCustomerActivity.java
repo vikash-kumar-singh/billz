@@ -76,6 +76,10 @@ public class AddCustomerActivity extends AppCompatActivity {
 
         Executors.newSingleThreadExecutor().execute(() -> {
             AppDatabase.getInstance(this).customerDao().insert(customer);
+            
+            // Sync to Cloud after successful Room save
+            new CustomerSyncManager(this).syncCustomerToCloud(customer);
+
             runOnUiThread(() -> {
                 Toast.makeText(this, R.string.success_save, Toast.LENGTH_SHORT).show();
                 finish();

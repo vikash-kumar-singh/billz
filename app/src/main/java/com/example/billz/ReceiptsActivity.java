@@ -2,6 +2,7 @@ package com.example.billz;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.RadioButton;
@@ -38,6 +39,14 @@ public class ReceiptsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         LocaleHelper.applyLocale(LocaleHelper.getPersistedLanguage(this));
         super.onCreate(savedInstanceState);
+
+        // Security Check: Ensure user is logged in
+        if (FirebaseHelper.getCurrentUid() == null) {
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+            return;
+        }
+
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_receipts);
 

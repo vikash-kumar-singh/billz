@@ -35,6 +35,7 @@ import android.widget.Toast;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.util.Log;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -42,6 +43,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.Executors;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 
 public class ReportsActivity extends AppCompatActivity {
 
@@ -67,7 +73,8 @@ public class ReportsActivity extends AppCompatActivity {
     private TextView[] bottomTabLabels;
     private TextView textHeaderBusinessName, textHeaderPhoneNumber, txtOwnerName, txtOwnerEmail;
     private ImageView imgLogo;
-    
+    private TextView textDashboardCustomerCount;
+
     private RecyclerView recyclerItemCategories;
     private RecyclerView recyclerItemList;
     private RecyclerView recyclerItemGrid;
@@ -93,6 +100,14 @@ public class ReportsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         LocaleHelper.applyLocale(LocaleHelper.getPersistedLanguage(this));
         super.onCreate(savedInstanceState);
+
+        // Security Check: Ensure user is logged in
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            startActivity(new Intent(this, WelcomeActivity.class));
+            finish();
+            return;
+        }
+
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_reports);
 
@@ -196,6 +211,7 @@ public class ReportsActivity extends AppCompatActivity {
         txtOwnerName = findViewById(R.id.txtOwnerName);
         txtOwnerEmail = findViewById(R.id.txtOwnerEmail);
         imgLogo = findViewById(R.id.imgLogo);
+        textDashboardCustomerCount = findViewById(R.id.textDashboardCustomerCount);
 
         bottomTabs = new View[]{
                 findViewById(R.id.tabReports),
@@ -272,7 +288,9 @@ public class ReportsActivity extends AppCompatActivity {
 
         findViewById(R.id.nav_language).setOnClickListener(v -> {
             drawerLayout.closeDrawer(GravityCompat.START);
-            showLanguageDialog();
+            Intent intent = new Intent(ReportsActivity.this, LanguageSelectionActivity.class);
+            intent.putExtra("isFromSettings", true);
+            startActivity(intent);
         });
 
         findViewById(R.id.nav_add_expense).setOnClickListener(v -> {
@@ -303,6 +321,11 @@ public class ReportsActivity extends AppCompatActivity {
         findViewById(R.id.nav_business_settings).setOnClickListener(v -> {
             drawerLayout.closeDrawer(GravityCompat.START);
             startActivity(new Intent(ReportsActivity.this, BusinessSettingsActivity.class));
+        });
+
+        findViewById(R.id.nav_logout).setOnClickListener(v -> {
+            drawerLayout.closeDrawer(GravityCompat.START);
+            logoutUser();
         });
 
         findViewById(R.id.btnEditBusiness).setOnClickListener(v -> {
@@ -337,6 +360,61 @@ public class ReportsActivity extends AppCompatActivity {
         showEmptyState(true);
         updateSidebarLanguageText();
         setupCartManager();
+        updateCustomerCount();
+        syncCloudData();
+    }
+
+    private void syncCloudData() {
+        new CustomerSyncManager(this).syncCustomersFromCloud(new CustomerSyncManager.SyncCallback() {
+            @Override
+            public void onSyncComplete() {
+                runOnUiThread(() -> {
+                    updateCustomerCount();
+                    // If CustomerManagementActivity is open, it might need to refresh, 
+                    // but it refreshes onResume anyway.
+                });
+            }
+
+            @Override
+            public void onSyncFailed(String error) {
+                // Silently log or handle if needed
+                Log.e("ReportsActivity", "Sync failed: " + error);
+                runOnUiThread(() -> updateCustomerCount());
+            }
+        });
+    }
+
+    private void updateCustomerCount() {
+        Executors.newSingleThreadExecutor().execute(() -> {
+            int count = AppDatabase.getInstance(this).customerDao().getAllCustomers().size();
+            runOnUiThread(() -> {
+                if (textDashboardCustomerCount != null) {
+                    textDashboardCustomerCount.setText(String.valueOf(count));
+                }
+            });
+        });
+    }
+
+    private void logoutUser() {
+        FirebaseAuth.getInstance().signOut();
+        
+        // Google Sign Out
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+        GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+        mGoogleSignInClient.signOut().addOnCompleteListener(task -> {
+            PreferenceManager preferenceManager = new PreferenceManager(ReportsActivity.this);
+            // We don't clear everything, just enough to ensure session is gone
+            // User requested "Clear local session"
+            preferenceManager.setBusinessSetupCompleted(false);
+            
+            Intent intent = new Intent(ReportsActivity.this, LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
+        });
     }
 
     private void setupCartManager() {
@@ -587,6 +665,13 @@ public class ReportsActivity extends AppCompatActivity {
     }
 
     private void loadBusinessData() {
+        String uid = FirebaseHelper.getCurrentUid();
+        if (uid == null) {
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+            return;
+        }
+
         Executors.newSingleThreadExecutor().execute(() -> {
             ReceiptSettings settings = AppDatabase.getInstance(this).receiptSettingsDao().getSettings();
             
@@ -670,27 +755,27 @@ public class ReportsActivity extends AppCompatActivity {
         RecyclerView recyclerView = dialog.findViewById(R.id.recyclerLanguages);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         List<Language> languages = new ArrayList<>();
-        languages.add(new Language("ENGLISH", "en"));
-        languages.add(new Language("عربي", "ar"));
-        languages.add(new Language("FRANÇAISE", "fr"));
-        languages.add(new Language("ESPAÑOLA", "es"));
-        languages.add(new Language("हिंदी", "hi"));
-        languages.add(new Language("বাঙালি", "bn"));
-        languages.add(new Language("FILIPINO", "fil"));
-        languages.add(new Language("MELAYU", "ms"));
-        languages.add(new Language("PORTUGUESA", "pt"));
-        languages.add(new Language("РУССКИЙ", "ru"));
-        languages.add(new Language("ಕನ್ನಡ", "kn"));
-        languages.add(new Language("తెలుగు", "te"));
-        languages.add(new Language("தமிழ்", "ta"));
-        languages.add(new Language("मরাठी", "mr"));
-        languages.add(new Language("日本語", "ja"));
-        languages.add(new Language("中文", "zh"));
-        languages.add(new Language("DEUTSCHE", "de"));
-        languages.add(new Language("BAHASA INDONESIA", "in"));
-        languages.add(new Language("עברית", "iw"));
-        languages.add(new Language("KISWAHILI", "sw"));
-        languages.add(new Language("TÜRKÇE", "tr"));
+        languages.add(new Language("English", "ENGLISH", "en"));
+        languages.add(new Language("Arabic", "عربي", "ar"));
+        languages.add(new Language("French", "FRANÇAISE", "fr"));
+        languages.add(new Language("Spanish", "ESPAÑOLA", "es"));
+        languages.add(new Language("Hindi", "हिंदी", "hi"));
+        languages.add(new Language("Bengali", "বাঙালি", "bn"));
+        languages.add(new Language("Filipino", "FILIPINO", "fil"));
+        languages.add(new Language("Malay", "MELAYU", "ms"));
+        languages.add(new Language("Portuguese", "PORTUGUESA", "pt"));
+        languages.add(new Language("Russian", "РУССКИЙ", "ru"));
+        languages.add(new Language("Kannada", "ಕನ್ನಡ", "kn"));
+        languages.add(new Language("Telugu", "తెలుగు", "te"));
+        languages.add(new Language("Tamil", "தமிழ்", "ta"));
+        languages.add(new Language("Marathi", "मরাठी", "mr"));
+        languages.add(new Language("Japanese", "日本語", "ja"));
+        languages.add(new Language("Chinese", "中文", "zh"));
+        languages.add(new Language("German", "DEUTSCHE", "de"));
+        languages.add(new Language("Indonesian", "BAHASA INDONESIA", "in"));
+        languages.add(new Language("Hebrew", "עברית", "iw"));
+        languages.add(new Language("Swahili", "KISWAHILI", "sw"));
+        languages.add(new Language("Turkish", "TÜRKÇE", "tr"));
         LanguageAdapter adapter = new LanguageAdapter(languages, language -> {
             LocaleHelper.setLocale(this, language.getCode());
             dialog.dismiss();

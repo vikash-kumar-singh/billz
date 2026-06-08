@@ -39,7 +39,14 @@ android {
 
 dependencies {
     implementation platform(libs.firebase.bom)
+    implementation libs.credentials
+    implementation libs.credentials.play.services.auth
     implementation libs.firebase.analytics
+    implementation libs.firebase.auth
+    implementation libs.firebase.firestore
+    implementation libs.googleid
+    implementation libs.play.services.auth
+    implementation libs.viewpager2
     implementation libs.activity.ktx
     implementation libs.appcompat
     implementation libs.constraintlayout
@@ -51,6 +58,4 @@ dependencies {
     testImplementation libs.junit
     androidTestImplementation libs.espresso.core
     androidTestImplementation libs.ext.junit
-    implementation platform('com.google.firebase:firebase-bom:34.0.0')
-    implementation 'com.google.firebase:firebase-auth'
 }
