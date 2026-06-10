@@ -144,12 +144,16 @@ public class ReceiptPreviewActivity extends AppCompatActivity {
     private void loadReceiptData() {
         Executors.newSingleThreadExecutor().execute(() -> {
             Receipt receipt = db.receiptDao().getById(receiptId);
+            if (receipt == null) return;
+            
             List<ReceiptItem> items = db.receiptItemDao().getItemsForReceipt(receiptId);
-            ReceiptSettings settings = db.receiptSettingsDao().getSettings();
+            ReceiptSettings settings = db.receiptSettingsDao().getSettingsByBusiness(receipt.getBusinessId());
+            Business business = db.businessDao().getById(receipt.getBusinessId());
 
             runOnUiThread(() -> {
                 if (settings != null) {
-                    textBusinessName.setText(settings.getBusinessName() != null ? settings.getBusinessName().toUpperCase() : "BUSINESS NAME");
+                    textBusinessName.setText(settings.getBusinessName() != null ? settings.getBusinessName().toUpperCase() : 
+                                           (business != null ? business.getName().toUpperCase() : "BUSINESS NAME"));
                     
                     if (settings.getBusinessAddress() != null && !settings.getBusinessAddress().isEmpty()) {
                         textBusinessAddress.setText(settings.getBusinessAddress());
@@ -186,33 +190,58 @@ public class ReceiptPreviewActivity extends AppCompatActivity {
                         } catch (Exception e) {
                             imgBusinessLogo.setImageResource(R.drawable.ic_nav_reports);
                         }
+                    } else if (business != null && business.getLogoPath() != null && !business.getLogoPath().isEmpty()) {
+                        try {
+                            imgBusinessLogo.setImageURI(Uri.parse(business.getLogoPath()));
+                            imgBusinessLogo.setVisibility(View.VISIBLE);
+                        } catch (Exception e) {
+                            imgBusinessLogo.setImageResource(R.drawable.ic_nav_reports);
+                        }
                     } else {
                         imgBusinessLogo.setImageResource(R.drawable.ic_nav_reports);
                     }
 
                     textThankYou.setText(settings.getThankYouNote() != null ? settings.getThankYouNote() : "Thank You! Visit again!");
+                } else if (business != null) {
+                    textBusinessName.setText(business.getName().toUpperCase());
+                    textBusinessPhone.setText(business.getPhoneNumber());
+                    textBusinessPhone.setVisibility(business.getPhoneNumber() != null && !business.getPhoneNumber().isEmpty() ? View.VISIBLE : View.GONE);
+                    textBusinessAddress.setVisibility(View.GONE);
+                    textBusinessTaxNo.setVisibility(View.GONE);
+                    textBusinessWebsite.setVisibility(View.GONE);
+                    
+                    if (business.getLogoPath() != null && !business.getLogoPath().isEmpty()) {
+                        try {
+                            imgBusinessLogo.setImageURI(Uri.parse(business.getLogoPath()));
+                            imgBusinessLogo.setVisibility(View.VISIBLE);
+                        } catch (Exception e) {
+                            imgBusinessLogo.setImageResource(R.drawable.ic_nav_reports);
+                        }
+                    } else {
+                        imgBusinessLogo.setImageResource(R.drawable.ic_nav_reports);
+                    }
+                    textThankYou.setText("Thank You! Visit again!");
                 }
 
-                if (receipt != null) {
-                    textCustomerName.setText(receipt.getCustomerName() != null && !receipt.getCustomerName().isEmpty() ? receipt.getCustomerName() : "Cash Customer");
-                    textReceiptNo.setText("Receipt# " + receipt.getReceiptNo());
-                    textDate.setText("Date : " + dateTimeFormat.format(new Date(receipt.getTimestamp())));
-                    
-                    textPMode.setText(receipt.getPaymentMode());
-                    textICount.setText(String.valueOf(receipt.getItemCount()));
-                    
-                    int totalUnits = 0;
-                    for (ReceiptItem item : items) {
-                        totalUnits += item.getQuantity();
-                        addTableRow(item);
-                    }
-                    textUCount.setText(String.valueOf(totalUnits));
-                    
-                    String totalStr = String.format(Locale.getDefault(), "₹%,.2f", receipt.getTotalAmount());
-                    textTotalTable.setText(totalStr);
-                    textSubtotal.setText(totalStr);
-                    textGrandTotal.setText(totalStr);
+                textCustomerName.setText(receipt.getCustomerName() != null && !receipt.getCustomerName().isEmpty() ? receipt.getCustomerName() : "Cash Customer");
+                textReceiptNo.setText("Receipt# " + receipt.getReceiptNo());
+                textDate.setText("Date : " + dateTimeFormat.format(new Date(receipt.getTimestamp())));
+                
+                textPMode.setText(receipt.getPaymentMode());
+                textICount.setText(String.valueOf(receipt.getItemCount()));
+                
+                int totalUnits = 0;
+                tableItems.removeAllViews();
+                for (ReceiptItem item : items) {
+                    totalUnits += item.getQuantity();
+                    addTableRow(item);
                 }
+                textUCount.setText(String.valueOf(totalUnits));
+                
+                String totalStr = String.format(Locale.getDefault(), "₹%,.2f", receipt.getTotalAmount());
+                textTotalTable.setText(totalStr);
+                textSubtotal.setText(totalStr);
+                textGrandTotal.setText(totalStr);
             });
         });
     }

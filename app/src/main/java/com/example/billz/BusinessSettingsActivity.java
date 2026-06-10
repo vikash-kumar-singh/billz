@@ -98,9 +98,13 @@ public class BusinessSettingsActivity extends AppCompatActivity {
 
     private void loadSettings() {
         Executors.newSingleThreadExecutor().execute(() -> {
-            settings = AppDatabase.getInstance(this).receiptSettingsDao().getSettings();
+            Business active = AppDatabase.getInstance(this).businessDao().getSelectedBusiness();
+            int bId = (active != null) ? active.getId() : 1;
+
+            settings = AppDatabase.getInstance(this).receiptSettingsDao().getSettingsByBusiness(bId);
             if (settings == null) {
                 settings = new ReceiptSettings();
+                settings.setId(bId);
             }
             runOnUiThread(() -> {
                 updateUI();
@@ -115,10 +119,13 @@ public class BusinessSettingsActivity extends AppCompatActivity {
         }
 
         Executors.newSingleThreadExecutor().execute(() -> {
-            int count = AppDatabase.getInstance(this).taxDao().getAllTaxes().size();
-            int dCount = AppDatabase.getInstance(this).discountDao().getAllDiscounts().size();
-            int sCount = AppDatabase.getInstance(this).serviceFeeDao().getAllServiceFees().size();
-            int oCount = AppDatabase.getInstance(this).otherFeeDao().getAllOtherFees().size();
+            Business active = AppDatabase.getInstance(this).businessDao().getSelectedBusiness();
+            int bId = (active != null) ? active.getId() : -1;
+
+            int count = AppDatabase.getInstance(this).taxDao().getAllTaxes(bId).size();
+            int dCount = AppDatabase.getInstance(this).discountDao().getAllDiscounts(bId).size();
+            int sCount = AppDatabase.getInstance(this).serviceFeeDao().getAllServiceFees(bId).size();
+            int oCount = AppDatabase.getInstance(this).otherFeeDao().getAllOtherFees(bId).size();
             runOnUiThread(() -> {
                 textTaxDesc.setText(getString(R.string.tax_settings_desc, count));
                 textDiscountDesc.setText(getString(R.string.discount_settings_desc, dCount));

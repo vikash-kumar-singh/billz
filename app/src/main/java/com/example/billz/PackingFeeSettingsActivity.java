@@ -61,7 +61,9 @@ public class PackingFeeSettingsActivity extends AppCompatActivity {
 
     private void loadPackingFees() {
         Executors.newSingleThreadExecutor().execute(() -> {
-            List<PackingFee> dbFees = AppDatabase.getInstance(this).packingFeeDao().getAllPackingFees();
+            Business active = AppDatabase.getInstance(this).businessDao().getSelectedBusiness();
+            int bId = (active != null) ? active.getId() : -1;
+            List<PackingFee> dbFees = AppDatabase.getInstance(this).packingFeeDao().getAllPackingFees(bId);
             final List<PackingFee> finalDbFees = dbFees;
             runOnUiThread(() -> {
                 feeList.clear();
@@ -129,7 +131,13 @@ public class PackingFeeSettingsActivity extends AppCompatActivity {
                 fee.setDefault(isDefault);
                 updatePackingFee(fee);
             } else {
-                savePackingFee(new PackingFee(name, value, isPercentage, isDefault));
+                Executors.newSingleThreadExecutor().execute(() -> {
+                    Business active = AppDatabase.getInstance(this).businessDao().getSelectedBusiness();
+                    int bId = (active != null) ? active.getId() : -1;
+                    PackingFee newFee = new PackingFee(name, value, isPercentage, isDefault);
+                    newFee.setBusinessId(bId);
+                    savePackingFee(newFee);
+                });
             }
             dialog.dismiss();
         });

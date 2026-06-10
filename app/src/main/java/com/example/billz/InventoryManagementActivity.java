@@ -400,7 +400,9 @@ public class InventoryManagementActivity extends AppCompatActivity {
 
     private void loadCategoriesFromDB() {
         java.util.concurrent.Executors.newSingleThreadExecutor().execute(() -> {
-            List<Category> dbCategories = AppDatabase.getInstance(this).categoryDao().getAllCategories();
+            Business active = AppDatabase.getInstance(this).businessDao().getSelectedBusiness();
+            int bId = (active != null) ? active.getId() : -1;
+            List<Category> dbCategories = AppDatabase.getInstance(this).categoryDao().getAllCategories(bId);
             ItemDao itemDao = AppDatabase.getInstance(this).itemDao();
             
             List<InventoryItem> newCategoriesList = new ArrayList<>();
@@ -408,7 +410,7 @@ public class InventoryManagementActivity extends AppCompatActivity {
                 if (cat.getName() != null && (cat.getName().equalsIgnoreCase("Uncategorized") || cat.getName().equalsIgnoreCase("No Category") || cat.getName().isEmpty())) {
                     continue;
                 }
-                int count = itemDao.getItemCountByCategory(cat.getName());
+                int count = itemDao.getItemCountByCategory(cat.getName(), bId);
                 String countText = count + (count == 1 ? " Item" : " Items");
                 
                 InventoryItem item = new InventoryItem(cat.getName(), "", countText, false, 0, new ArrayList<>());
@@ -433,8 +435,10 @@ public class InventoryManagementActivity extends AppCompatActivity {
 
     private void loadModifiersFromDB() {
         java.util.concurrent.Executors.newSingleThreadExecutor().execute(() -> {
+            Business active = AppDatabase.getInstance(this).businessDao().getSelectedBusiness();
+            int bId = (active != null) ? active.getId() : -1;
             ModifierDao dao = AppDatabase.getInstance(this).modifierDao();
-            List<ModifierSet> dbSets = dao.getAllModifierSets();
+            List<ModifierSet> dbSets = dao.getAllModifierSets(); // You might want to filter this by bId if ModifierSet has businessId
             runOnUiThread(() -> {
                 modifiersList.clear();
                 for (ModifierSet set : dbSets) {
@@ -452,15 +456,6 @@ public class InventoryManagementActivity extends AppCompatActivity {
                     modifiersList.add(item);
                 }
                 
-                // Add remaining dummy modifiers
-                InventoryItem dummy1 = new InventoryItem("Sugar Free", "₹0", "Health Option", false, 0, new ArrayList<>());
-                dummy1.setType(2);
-                modifiersList.add(dummy1);
-                
-                InventoryItem dummy2 = new InventoryItem("Extra Scoop", "₹50", "Add-on", false, 0, new ArrayList<>());
-                dummy2.setType(2);
-                modifiersList.add(dummy2);
-
                 // Update UI if on modifiers tab
                 TabLayout tabLayout = findViewById(R.id.tabLayoutInventory);
                 if (tabLayout != null && tabLayout.getSelectedTabPosition() == 2) {
@@ -483,15 +478,6 @@ public class InventoryManagementActivity extends AppCompatActivity {
                     ingredientsList.add(item);
                 }
                 
-                // Dummy ingredients (matching the new style)
-                InventoryItem ing1 = new InventoryItem("Whey Isolate", "", "10", false, 10, new ArrayList<>());
-                ing1.setType(3);
-                ingredientsList.add(ing1);
-                
-                InventoryItem ing2 = new InventoryItem("Cocoa Powder", "", "2", false, 2, new ArrayList<>());
-                ing2.setType(3);
-                ingredientsList.add(ing2);
-
                 // Update UI if on ingredients tab
                 TabLayout tabLayout = findViewById(R.id.tabLayoutInventory);
                 if (tabLayout != null && tabLayout.getSelectedTabPosition() == 3) {
@@ -541,7 +527,9 @@ public class InventoryManagementActivity extends AppCompatActivity {
 
         // Fetch categories from DB to populate filter chips
         java.util.concurrent.Executors.newSingleThreadExecutor().execute(() -> {
-            List<Category> categories = AppDatabase.getInstance(this).categoryDao().getAllCategories();
+            Business active = AppDatabase.getInstance(this).businessDao().getSelectedBusiness();
+            int bId = (active != null) ? active.getId() : -1;
+            List<Category> categories = AppDatabase.getInstance(this).categoryDao().getAllCategories(bId);
             
             runOnUiThread(() -> {
                 // Add "Brand All Item" first
@@ -630,7 +618,9 @@ public class InventoryManagementActivity extends AppCompatActivity {
 
     private void loadItemsFromDB() {
         java.util.concurrent.Executors.newSingleThreadExecutor().execute(() -> {
-            List<Item> dbItems = AppDatabase.getInstance(this).itemDao().getAllItems();
+            Business active = AppDatabase.getInstance(this).businessDao().getSelectedBusiness();
+            int bId = (active != null) ? active.getId() : -1;
+            List<Item> dbItems = AppDatabase.getInstance(this).itemDao().getAllItems(bId);
             runOnUiThread(() -> {
                 itemsList.clear();
                 for (Item item : dbItems) {
@@ -652,9 +642,6 @@ public class InventoryManagementActivity extends AppCompatActivity {
                     itemsList.add(uiItem);
                 }
                 
-                // Keep dummy data if we want to show it alongside real data
-                populateDummyData();
-
                 // Update UI if on items tab
                 TabLayout tabLayout = findViewById(R.id.tabLayoutInventory);
                 if (tabLayout != null && tabLayout.getSelectedTabPosition() == 0) {
@@ -662,66 +649,5 @@ public class InventoryManagementActivity extends AppCompatActivity {
                 }
             });
         });
-    }
-
-    private void populateDummyData() {
-        // Items
-        itemsList.add(new InventoryItem(
-                "Avvatar Iso Rich 1kg",
-                "₹3,499",
-                "1 Left In Stock",
-                false,
-                1,
-                Arrays.asList("Whey ISOLATE", "Premium")
-        ));
-        itemsList.add(new InventoryItem(
-                getString(R.string.item_fat_burner),
-                "₹2,899",
-                getString(R.string.out_of_stock),
-                true,
-                0,
-                Arrays.asList("Fat-Cutter / Burner", "Stack")
-        ));
-        itemsList.add(new InventoryItem(
-                getString(R.string.item_whey_protein),
-                "₹2,109",
-                getString(R.string.out_of_stock),
-                true,
-                0,
-                Arrays.asList("Whey Protein 100%", "DAILY SUPPORT")
-        ));
-        itemsList.add(new InventoryItem(
-                getString(R.string.item_oats),
-                "₹499",
-                getString(R.string.left_in_stock, 3),
-                false,
-                3,
-                Arrays.asList("OATs", "PEANUT BUTTER")
-        ));
-        itemsList.add(new InventoryItem(
-                "Muscle Gainer 5kg",
-                "₹4,999",
-                "10 Items",
-                false,
-                10,
-                Arrays.asList("Muscle Gainer", "MASS GAINER")
-        ));
-        itemsList.add(new InventoryItem(
-                "Gym Gloves",
-                "₹299",
-                "5 Left In Stock",
-                false,
-                5,
-                Arrays.asList("GYM ACCESSORIES", "College")
-        ));
-
-        // Categories
-        // Moved to DB load logic above
-
-        // Modifiers
-        // Moved to DB load logic above
-
-        // Ingredients
-        // Moved to DB load logic above
     }
 }

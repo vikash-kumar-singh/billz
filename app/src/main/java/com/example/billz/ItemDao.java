@@ -9,8 +9,8 @@ import java.util.List;
 
 @Dao
 public interface ItemDao {
-    @Query("SELECT * FROM items")
-    List<Item> getAllItems();
+    @Query("SELECT * FROM items WHERE businessId = :businessId")
+    List<Item> getAllItems(int businessId);
 
     @Insert
     long insert(Item item);
@@ -21,17 +21,17 @@ public interface ItemDao {
     @Query("SELECT * FROM items WHERE id = :id")
     Item getById(int id);
 
-    @Query("SELECT COUNT(*) FROM items WHERE category = :categoryName")
-    int getItemCountByCategory(String categoryName);
+    @Query("SELECT COUNT(*) FROM items WHERE category = :categoryName AND businessId = :businessId")
+    int getItemCountByCategory(String categoryName, int businessId);
 
-    @Query("SELECT * FROM items WHERE category = :categoryName")
-    List<Item> getItemsByCategory(String categoryName);
+    @Query("SELECT * FROM items WHERE category = :categoryName AND businessId = :businessId")
+    List<Item> getItemsByCategory(String categoryName, int businessId);
 
-    @Query("SELECT COUNT(*) FROM items WHERE category IS NULL OR category = '' OR category = 'Uncategorized' OR category = 'No Category'")
-    int getUncategorizedItemCount();
+    @Query("SELECT COUNT(*) FROM items WHERE (category IS NULL OR category = '' OR category = 'Uncategorized' OR category = 'No Category') AND businessId = :businessId")
+    int getUncategorizedItemCount(int businessId);
 
-    @Query("SELECT * FROM items WHERE category IS NULL OR category = '' OR category = 'Uncategorized' OR category = 'No Category'")
-    List<Item> getUncategorizedItems();
+    @Query("SELECT * FROM items WHERE (category IS NULL OR category = '' OR category = 'Uncategorized' OR category = 'No Category') AND businessId = :businessId")
+    List<Item> getUncategorizedItems(int businessId);
 
     @Query("DELETE FROM items WHERE id = :id")
     void deleteById(int id);

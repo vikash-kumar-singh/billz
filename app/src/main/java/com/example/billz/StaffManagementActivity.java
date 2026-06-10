@@ -209,7 +209,10 @@ public class StaffManagementActivity extends AppCompatActivity {
 
     private void loadStaff() {
         Executors.newSingleThreadExecutor().execute(() -> {
-            allStaffList = AppDatabase.getInstance(this).staffDao().getAllStaff();
+            AppDatabase db = AppDatabase.getInstance(this);
+            Business active = db.businessDao().getSelectedBusiness();
+            int bId = active != null ? active.getId() : -1;
+            allStaffList = db.staffDao().getAllStaff(bId);
             runOnUiThread(this::filterStaff);
         });
     }

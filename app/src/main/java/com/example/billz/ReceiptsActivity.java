@@ -119,7 +119,12 @@ public class ReceiptsActivity extends AppCompatActivity {
         RadioGroup group = dialog.findViewById(R.id.radioGroupFilter);
 
         Executors.newSingleThreadExecutor().execute(() -> {
-            List<PaymentMode> allModes = db.paymentModeDao().getAllPaymentModes();
+            int bId = currentBusinessId;
+            if (bId == 0) {
+                Business selected = db.businessDao().getSelectedBusiness();
+                if (selected != null) bId = selected.getId();
+            }
+            List<PaymentMode> allModes = db.paymentModeDao().getAllPaymentModes(bId);
             List<String> activeModes = new ArrayList<>();
             activeModes.add("All");
             for (PaymentMode mode : allModes) {

@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey;
 public class Staff {
     @PrimaryKey(autoGenerate = true)
     public int id;
+    public int businessId;
     
     public String name;
     public String email;

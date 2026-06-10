@@ -63,10 +63,12 @@ public class TaxSettingsActivity extends AppCompatActivity {
 
     private void loadTaxes() {
         Executors.newSingleThreadExecutor().execute(() -> {
-            List<Tax> dbTaxes = AppDatabase.getInstance(this).taxDao().getAllTaxes();
+            Business active = AppDatabase.getInstance(this).businessDao().getSelectedBusiness();
+            int bId = (active != null) ? active.getId() : -1;
+            List<Tax> dbTaxes = AppDatabase.getInstance(this).taxDao().getAllTaxes(bId);
             if (dbTaxes.isEmpty()) {
-                addInitialDummyTaxes();
-                dbTaxes = AppDatabase.getInstance(this).taxDao().getAllTaxes();
+                addInitialDummyTaxes(bId);
+                dbTaxes = AppDatabase.getInstance(this).taxDao().getAllTaxes(bId);
             }
             final List<Tax> finalDbTaxes = dbTaxes;
             runOnUiThread(() -> {
@@ -77,12 +79,23 @@ public class TaxSettingsActivity extends AppCompatActivity {
         });
     }
 
-    private void addInitialDummyTaxes() {
+    private void addInitialDummyTaxes(int bId) {
         TaxDao dao = AppDatabase.getInstance(this).taxDao();
-        dao.insert(new Tax("CGST on sales", 9.0, false));
-        dao.insert(new Tax("SGST+CGST", 18.0, false));
-        dao.insert(new Tax("SGST on sales", 9.0, false));
-        dao.insert(new Tax("TRANSPORTATION", 50.0, false));
+        Tax t1 = new Tax("CGST on sales", 9.0, false);
+        t1.setBusinessId(bId);
+        dao.insert(t1);
+
+        Tax t2 = new Tax("SGST+CGST", 18.0, false);
+        t2.setBusinessId(bId);
+        dao.insert(t2);
+
+        Tax t3 = new Tax("SGST on sales", 9.0, false);
+        t3.setBusinessId(bId);
+        dao.insert(t3);
+
+        Tax t4 = new Tax("TRANSPORTATION", 50.0, false);
+        t4.setBusinessId(bId);
+        dao.insert(t4);
     }
 
     private void showAddTaxDialog() {
@@ -138,7 +151,13 @@ public class TaxSettingsActivity extends AppCompatActivity {
                 tax.setDefault(checkDefault.isChecked());
                 updateTax(tax);
             } else {
-                saveTax(new Tax(name, value, checkDefault.isChecked()));
+                Executors.newSingleThreadExecutor().execute(() -> {
+                    Business active = AppDatabase.getInstance(this).businessDao().getSelectedBusiness();
+                    int bId = (active != null) ? active.getId() : -1;
+                    Tax newTax = new Tax(name, value, checkDefault.isChecked());
+                    newTax.setBusinessId(bId);
+                    saveTax(newTax);
+                });
             }
             dialog.dismiss();
         };

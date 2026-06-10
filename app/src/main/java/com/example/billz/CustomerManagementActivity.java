@@ -90,8 +90,13 @@ public class CustomerManagementActivity extends AppCompatActivity {
     }
 
     private void loadCustomers() {
-        allCustomersList = AppDatabase.getInstance(this).customerDao().getAllCustomers();
-        filterCustomers(tabLayout.getSelectedTabPosition());
+        java.util.concurrent.Executors.newSingleThreadExecutor().execute(() -> {
+            AppDatabase db = AppDatabase.getInstance(this);
+            Business active = db.businessDao().getSelectedBusiness();
+            int bId = (active != null) ? active.getId() : -1;
+            allCustomersList = db.customerDao().getAllCustomers(bId);
+            runOnUiThread(() -> filterCustomers(tabLayout.getSelectedTabPosition()));
+        });
     }
 
     private void filterCustomers(int position) {

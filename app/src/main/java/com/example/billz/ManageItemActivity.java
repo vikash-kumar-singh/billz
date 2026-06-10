@@ -260,12 +260,15 @@ public class ManageItemActivity extends AppCompatActivity {
 
     private void loadItemData() {
         Executors.newSingleThreadExecutor().execute(() -> {
+            Business active = db.businessDao().getSelectedBusiness();
+            int bId = (active != null) ? active.getId() : -1;
+            
             currentItem = db.itemDao().getById(itemId);
             List<Variant> variants = db.variantDao().getVariantsForItem(itemId);
 
             if (currentItem != null) {
                 String categoryName = currentItem.getCategory();
-                Category category = db.categoryDao().getByName(categoryName);
+                Category category = db.categoryDao().getByName(categoryName, bId);
 
                 runOnUiThread(() -> {
                     editItemName.setText(currentItem.getName());
@@ -304,7 +307,9 @@ public class ManageItemActivity extends AppCompatActivity {
 
     private void showCategorySelectionDialog() {
         Executors.newSingleThreadExecutor().execute(() -> {
-            List<Category> categories = db.categoryDao().getAllCategories();
+            Business active = db.businessDao().getSelectedBusiness();
+            int bId = (active != null) ? active.getId() : -1;
+            List<Category> categories = db.categoryDao().getAllCategories(bId);
             runOnUiThread(() -> {
                 String[] names = new String[categories.size()];
                 for (int i = 0; i < categories.size(); i++) names[i] = categories.get(i).getName();

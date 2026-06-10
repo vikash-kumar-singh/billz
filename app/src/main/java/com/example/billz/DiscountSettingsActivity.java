@@ -61,10 +61,12 @@ public class DiscountSettingsActivity extends AppCompatActivity {
 
     private void loadDiscounts() {
         Executors.newSingleThreadExecutor().execute(() -> {
-            List<Discount> dbDiscounts = AppDatabase.getInstance(this).discountDao().getAllDiscounts();
+            Business active = AppDatabase.getInstance(this).businessDao().getSelectedBusiness();
+            int bId = (active != null) ? active.getId() : -1;
+            List<Discount> dbDiscounts = AppDatabase.getInstance(this).discountDao().getAllDiscounts(bId);
             if (dbDiscounts.isEmpty()) {
-                addInitialDummyDiscounts();
-                dbDiscounts = AppDatabase.getInstance(this).discountDao().getAllDiscounts();
+                addInitialDummyDiscounts(bId);
+                dbDiscounts = AppDatabase.getInstance(this).discountDao().getAllDiscounts(bId);
             }
             final List<Discount> finalDbDiscounts = dbDiscounts;
             runOnUiThread(() -> {
@@ -75,14 +77,32 @@ public class DiscountSettingsActivity extends AppCompatActivity {
         });
     }
 
-    private void addInitialDummyDiscounts() {
+    private void addInitialDummyDiscounts(int bId) {
         DiscountDao dao = AppDatabase.getInstance(this).discountDao();
-        dao.insert(new Discount("DUES", 1800.0, false, false));
-        dao.insert(new Discount("PREVIOUS", 250.0, false, false));
-        dao.insert(new Discount("ONLINE", 250.0, false, false));
-        dao.insert(new Discount("RETURN", 650.0, false, false));
-        dao.insert(new Discount("RETURN GRIPPER", 250.0, false, false));
-        dao.insert(new Discount("CASH", 1500.0, false, false));
+        
+        Discount d1 = new Discount("DUES", 1800.0, false, false);
+        d1.setBusinessId(bId);
+        dao.insert(d1);
+
+        Discount d2 = new Discount("PREVIOUS", 250.0, false, false);
+        d2.setBusinessId(bId);
+        dao.insert(d2);
+
+        Discount d3 = new Discount("ONLINE", 250.0, false, false);
+        d3.setBusinessId(bId);
+        dao.insert(d3);
+
+        Discount d4 = new Discount("RETURN", 650.0, false, false);
+                d4.setBusinessId(bId);
+        dao.insert(d4);
+
+        Discount d5 = new Discount("RETURN GRIPPER", 250.0, false, false);
+                d5.setBusinessId(bId);
+        dao.insert(d5);
+
+        Discount d6 = new Discount("CASH", 1500.0, false, false);
+                d6.setBusinessId(bId);
+        dao.insert(d6);
     }
 
     private void showAddDiscountDialog() {
@@ -149,7 +169,13 @@ public class DiscountSettingsActivity extends AppCompatActivity {
                 discount.setDefault(isDefault);
                 updateDiscount(discount);
             } else {
-                saveDiscount(new Discount(name, value, isPercentage, isDefault));
+                Executors.newSingleThreadExecutor().execute(() -> {
+                    Business active = AppDatabase.getInstance(this).businessDao().getSelectedBusiness();
+                    int bId = (active != null) ? active.getId() : -1;
+                    Discount newDiscount = new Discount(name, value, isPercentage, isDefault);
+                    newDiscount.setBusinessId(bId);
+                    saveDiscount(newDiscount);
+                });
             }
             dialog.dismiss();
         };

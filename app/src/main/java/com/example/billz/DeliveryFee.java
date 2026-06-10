@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey;
 public class DeliveryFee {
     @PrimaryKey(autoGenerate = true)
     private int id;
-
+    private int businessId;
     private String name;
     private double value;
     private boolean isPercentage;
@@ -22,16 +22,14 @@ public class DeliveryFee {
 
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
-
+    public int getBusinessId() { return businessId; }
+    public void setBusinessId(int businessId) { this.businessId = businessId; }
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
-
     public double getValue() { return value; }
     public void setValue(double value) { this.value = value; }
-
     public boolean isPercentage() { return isPercentage; }
     public void setPercentage(boolean percentage) { isPercentage = percentage; }
-
     public boolean isDefault() { return isDefault; }
     public void setDefault(boolean aDefault) { isDefault = aDefault; }
 }

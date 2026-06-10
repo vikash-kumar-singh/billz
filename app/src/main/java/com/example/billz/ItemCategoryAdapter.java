@@ -35,10 +35,12 @@ public class ItemCategoryAdapter extends RecyclerView.Adapter<ItemCategoryAdapte
     private List<CategoryWithCount> categoriesFull;
     private int expandedPosition = -1;
     private OnItemClickListener itemClickListener;
+    private int businessId;
 
-    public ItemCategoryAdapter(List<CategoryWithCount> categories, OnItemClickListener listener) {
+    public ItemCategoryAdapter(List<CategoryWithCount> categories, int businessId, OnItemClickListener listener) {
         this.categories = categories;
         this.categoriesFull = new ArrayList<>(categories);
+        this.businessId = businessId;
         this.itemClickListener = listener;
     }
 
@@ -91,7 +93,7 @@ public class ItemCategoryAdapter extends RecyclerView.Adapter<ItemCategoryAdapte
     private void loadItemsForCategory(ViewHolder holder, String categoryName) {
         Executors.newSingleThreadExecutor().execute(() -> {
             AppDatabase db = AppDatabase.getInstance(holder.itemView.getContext());
-            List<Item> items = db.itemDao().getItemsByCategory(categoryName);
+            List<Item> items = db.itemDao().getItemsByCategory(categoryName, businessId);
             
             holder.itemView.post(() -> {
                 holder.recyclerProducts.setLayoutManager(new GridLayoutManager(holder.itemView.getContext(), 3));

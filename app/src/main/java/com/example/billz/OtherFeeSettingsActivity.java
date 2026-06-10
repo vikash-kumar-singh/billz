@@ -61,7 +61,9 @@ public class OtherFeeSettingsActivity extends AppCompatActivity {
 
     private void loadOtherFees() {
         Executors.newSingleThreadExecutor().execute(() -> {
-            List<OtherFee> dbFees = AppDatabase.getInstance(this).otherFeeDao().getAllOtherFees();
+            Business active = AppDatabase.getInstance(this).businessDao().getSelectedBusiness();
+            int bId = (active != null) ? active.getId() : -1;
+            List<OtherFee> dbFees = AppDatabase.getInstance(this).otherFeeDao().getAllOtherFees(bId);
             final List<OtherFee> finalDbFees = dbFees;
             runOnUiThread(() -> {
                 feeList.clear();
@@ -128,7 +130,13 @@ public class OtherFeeSettingsActivity extends AppCompatActivity {
                 fee.setDefault(checkDefault.isChecked());
                 updateOtherFee(fee);
             } else {
-                saveOtherFee(new OtherFee(name, value, isPercentage, checkDefault.isChecked()));
+                Executors.newSingleThreadExecutor().execute(() -> {
+                    Business active = AppDatabase.getInstance(this).businessDao().getSelectedBusiness();
+                    int bId = (active != null) ? active.getId() : -1;
+                    OtherFee newFee = new OtherFee(name, value, isPercentage, checkDefault.isChecked());
+                    newFee.setBusinessId(bId);
+                    saveOtherFee(newFee);
+                });
             }
             dialog.dismiss();
         });

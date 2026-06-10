@@ -399,6 +399,11 @@ public class ReportsActivity extends AppCompatActivity {
         syncCloudData();
     }
 
+    private int getActiveBusinessId() {
+        Business active = AppDatabase.getInstance(this).businessDao().getSelectedBusiness();
+        return active != null ? active.getId() : -1;
+    }
+
     private void syncCloudData() {
         new CustomerSyncManager(this).syncCustomersFromCloud(new CustomerSyncManager.SyncCallback() {
             @Override
@@ -421,7 +426,8 @@ public class ReportsActivity extends AppCompatActivity {
 
     private void updateCustomerCount() {
         Executors.newSingleThreadExecutor().execute(() -> {
-            int count = AppDatabase.getInstance(this).customerDao().getAllCustomers().size();
+            int bId = getActiveBusinessId();
+            int count = AppDatabase.getInstance(this).customerDao().getAllCustomers(bId).size();
             runOnUiThread(() -> {
                 if (textDashboardCustomerCount != null) {
                     textDashboardCustomerCount.setText(String.valueOf(count));
@@ -435,7 +441,8 @@ public class ReportsActivity extends AppCompatActivity {
 
     private void updateInventoryCount() {
         Executors.newSingleThreadExecutor().execute(() -> {
-            int count = AppDatabase.getInstance(this).itemDao().getAllItems().size();
+            int bId = getActiveBusinessId();
+            int count = AppDatabase.getInstance(this).itemDao().getAllItems(bId).size();
             runOnUiThread(() -> {
                 if (textSidebarInventoryCount != null) {
                     textSidebarInventoryCount.setText(String.valueOf(count));
@@ -815,7 +822,9 @@ public class ReportsActivity extends AppCompatActivity {
 
         // Also refresh logo if we have it in settings or pm
         Executors.newSingleThreadExecutor().execute(() -> {
-            ReceiptSettings settings = AppDatabase.getInstance(this).receiptSettingsDao().getSettings();
+            Business active = AppDatabase.getInstance(this).businessDao().getSelectedBusiness();
+            int bId = (active != null) ? active.getId() : 1;
+            ReceiptSettings settings = AppDatabase.getInstance(this).receiptSettingsDao().getSettingsByBusiness(bId);
             runOnUiThread(() -> {
                 if (settings != null && imgLogo != null) {
                     if (settings.getBusinessLogoPath() != null && !settings.getBusinessLogoPath().isEmpty()) {
@@ -1097,7 +1106,8 @@ public class ReportsActivity extends AppCompatActivity {
 
     private void loadItemList() {
         Executors.newSingleThreadExecutor().execute(() -> {
-            List<Item> dbItems = AppDatabase.getInstance(this).itemDao().getAllItems();
+            int bId = getActiveBusinessId();
+            List<Item> dbItems = AppDatabase.getInstance(this).itemDao().getAllItems(bId);
             runOnUiThread(() -> {
                 if (recyclerItemList != null) {
                     ProductListAdapter adapter = new ProductListAdapter(dbItems);
@@ -1130,9 +1140,10 @@ public class ReportsActivity extends AppCompatActivity {
 
     private void loadItemGrid() {
         Executors.newSingleThreadExecutor().execute(() -> {
+            int bId = getActiveBusinessId();
             List<Item> dbItems;
-            if (itemTileStyle == 1) dbItems = AppDatabase.getInstance(this).itemDao().getUncategorizedItems();
-            else dbItems = AppDatabase.getInstance(this).itemDao().getAllItems();
+            if (itemTileStyle == 1) dbItems = AppDatabase.getInstance(this).itemDao().getUncategorizedItems(bId);
+            else dbItems = AppDatabase.getInstance(this).itemDao().getAllItems(bId);
             final List<Item> finalItems = dbItems;
             runOnUiThread(() -> {
                 if (recyclerItemGrid != null) {
@@ -1201,19 +1212,20 @@ public class ReportsActivity extends AppCompatActivity {
 
     private void loadItemCategories() {
         Executors.newSingleThreadExecutor().execute(() -> {
-            List<Category> dbCategories = AppDatabase.getInstance(this).categoryDao().getAllCategories();
+            int bId = getActiveBusinessId();
+            List<Category> dbCategories = AppDatabase.getInstance(this).categoryDao().getAllCategories(bId);
             ItemDao itemDao = AppDatabase.getInstance(this).itemDao();
             List<ItemCategoryAdapter.CategoryWithCount> list = new ArrayList<>();
             for (Category cat : dbCategories) {
                 if (cat.getName() != null && (cat.getName().equalsIgnoreCase("Uncategorized") || cat.getName().equalsIgnoreCase("No Category") || cat.getName().isEmpty())) {
                     continue;
                 }
-                int count = itemDao.getItemCountByCategory(cat.getName());
+                int count = itemDao.getItemCountByCategory(cat.getName(), bId);
                 list.add(new ItemCategoryAdapter.CategoryWithCount(cat.getName(), count));
             }
             runOnUiThread(() -> {
                 if (recyclerItemCategories != null) {
-                    recyclerItemCategories.setAdapter(new ItemCategoryAdapter(list, item -> {
+                    recyclerItemCategories.setAdapter(new ItemCategoryAdapter(list, bId, item -> {
                         if (item.isAdvanceMode()) {
                             showVariantSelectorDialog(item);
                         } else {
@@ -1282,7 +1294,8 @@ public class ReportsActivity extends AppCompatActivity {
             if (mobile.isEmpty()) return;
             
             Executors.newSingleThreadExecutor().execute(() -> {
-                Customer customer = AppDatabase.getInstance(this).customerDao().getCustomerByMobile(mobile);
+                int bId = getActiveBusinessId();
+                Customer customer = AppDatabase.getInstance(this).customerDao().getCustomerByMobile(mobile, bId);
                 runOnUiThread(() -> {
                     if (customer != null) {
                         editName.setText(customer.getName());
@@ -1305,19 +1318,31 @@ public class ReportsActivity extends AppCompatActivity {
         rv.setLayoutManager(new GridLayoutManager(this, 2));
 
         Executors.newSingleThreadExecutor().execute(() -> {
-            List<PaymentMode> modes = AppDatabase.getInstance(this).paymentModeDao().getAllPaymentModes();
+            int bId = getActiveBusinessId();
+            List<PaymentMode> modes = AppDatabase.getInstance(this).paymentModeDao().getAllPaymentModes(bId);
             if (modes.isEmpty()) {
-                AppDatabase.getInstance(this).paymentModeDao().insert(new PaymentMode("Cash", true, false));
-                AppDatabase.getInstance(this).paymentModeDao().insert(new PaymentMode("Debit Card", true, false));
-                AppDatabase.getInstance(this).paymentModeDao().insert(new PaymentMode("Credit Card", true, false));
-                AppDatabase.getInstance(this).paymentModeDao().insert(new PaymentMode("Credit", true, false));
-                AppDatabase.getInstance(this).paymentModeDao().insert(new PaymentMode("UPI", true, true));
-                AppDatabase.getInstance(this).paymentModeDao().insert(new PaymentMode("Store Credit", true, false));
-                AppDatabase.getInstance(this).paymentModeDao().insert(new PaymentMode("Online", true, false));
-                AppDatabase.getInstance(this).paymentModeDao().insert(new PaymentMode("Sample Rate", true, false));
-                AppDatabase.getInstance(this).paymentModeDao().insert(new PaymentMode("Exchange", true, false));
-                AppDatabase.getInstance(this).paymentModeDao().insert(new PaymentMode("Google Pay", true, false));
-                modes = AppDatabase.getInstance(this).paymentModeDao().getAllPaymentModes();
+                PaymentMode p1 = new PaymentMode("Cash", true, false); p1.setBusinessId(bId);
+                PaymentMode p2 = new PaymentMode("Debit Card", true, false); p2.setBusinessId(bId);
+                PaymentMode p3 = new PaymentMode("Credit Card", true, false); p3.setBusinessId(bId);
+                PaymentMode p4 = new PaymentMode("Credit", true, false); p4.setBusinessId(bId);
+                PaymentMode p5 = new PaymentMode("UPI", true, true); p5.setBusinessId(bId);
+                PaymentMode p6 = new PaymentMode("Store Credit", true, false); p6.setBusinessId(bId);
+                PaymentMode p7 = new PaymentMode("Online", true, false); p7.setBusinessId(bId);
+                PaymentMode p8 = new PaymentMode("Sample Rate", true, false); p8.setBusinessId(bId);
+                PaymentMode p9 = new PaymentMode("Exchange", true, false); p9.setBusinessId(bId);
+                PaymentMode p10 = new PaymentMode("Google Pay", true, false); p10.setBusinessId(bId);
+                
+                AppDatabase.getInstance(this).paymentModeDao().insert(p1);
+                AppDatabase.getInstance(this).paymentModeDao().insert(p2);
+                AppDatabase.getInstance(this).paymentModeDao().insert(p3);
+                AppDatabase.getInstance(this).paymentModeDao().insert(p4);
+                AppDatabase.getInstance(this).paymentModeDao().insert(p5);
+                AppDatabase.getInstance(this).paymentModeDao().insert(p6);
+                AppDatabase.getInstance(this).paymentModeDao().insert(p7);
+                AppDatabase.getInstance(this).paymentModeDao().insert(p8);
+                AppDatabase.getInstance(this).paymentModeDao().insert(p9);
+                AppDatabase.getInstance(this).paymentModeDao().insert(p10);
+                modes = AppDatabase.getInstance(this).paymentModeDao().getAllPaymentModes(bId);
             }
 
             final List<PaymentMode> finalModes = modes;
@@ -1346,9 +1371,17 @@ public class ReportsActivity extends AppCompatActivity {
 
                         Executors.newSingleThreadExecutor().execute(() -> {
                             AppDatabase db = AppDatabase.getInstance(ReportsActivity.this);
-                            ReceiptSettings settings = db.receiptSettingsDao().getSettings();
+                            Business activeBus = db.businessDao().getSelectedBusiness();
+                            int bId = activeBus != null ? activeBus.getId() : 0;
+
+                            ReceiptSettings settings = db.receiptSettingsDao().getSettingsByBusiness(bId);
                             if (settings == null) {
                                 settings = new ReceiptSettings();
+                                settings.setId(bId);
+                                if (activeBus != null) {
+                                    settings.setBusinessName(activeBus.getName());
+                                    settings.setPhoneNumber(activeBus.getPhoneNumber());
+                                }
                                 db.receiptSettingsDao().insert(settings);
                             }
                             
@@ -1356,10 +1389,7 @@ public class ReportsActivity extends AppCompatActivity {
                             settings.setCurrentBillNo(billNo);
                             db.receiptSettingsDao().update(settings);
 
-                            Business activeBus = db.businessDao().getSelectedBusiness();
-                            int bId = activeBus != null ? activeBus.getId() : 0;
-
-                            String rNo = settings.getReceiptIdPrefix() + "-" + billNo;
+                            String rNo = (settings.getReceiptIdPrefix() != null ? settings.getReceiptIdPrefix() : "NC") + "-" + billNo;
                             Receipt receipt = new Receipt(rNo, custName, mode.getName(), totalToSave, itemsToSave, System.currentTimeMillis(), bId);
                             long insertedId = db.receiptDao().insert(receipt);
 
@@ -1452,7 +1482,8 @@ public class ReportsActivity extends AppCompatActivity {
         }
 
         Executors.newSingleThreadExecutor().execute(() -> {
-            List<DeliveryFee> list = AppDatabase.getInstance(this).deliveryFeeDao().getAllDeliveryFees();
+            int bId = getActiveBusinessId();
+            List<DeliveryFee> list = AppDatabase.getInstance(this).deliveryFeeDao().getAllDeliveryFees(bId);
             runOnUiThread(() -> {
                 DeliverySelectionAdapter adapter = new DeliverySelectionAdapter(list, fee -> {
                     selectedDeliveryCharge = fee;
@@ -1512,7 +1543,8 @@ public class ReportsActivity extends AppCompatActivity {
         }
 
         Executors.newSingleThreadExecutor().execute(() -> {
-            List<PackingFee> list = AppDatabase.getInstance(this).packingFeeDao().getAllPackingFees();
+            int bId = getActiveBusinessId();
+            List<PackingFee> list = AppDatabase.getInstance(this).packingFeeDao().getAllPackingFees(bId);
             runOnUiThread(() -> {
                 PackingSelectionAdapter adapter = new PackingSelectionAdapter(list, fee -> {
                     selectedPackingCharge = fee;
@@ -1572,7 +1604,8 @@ public class ReportsActivity extends AppCompatActivity {
         }
 
         Executors.newSingleThreadExecutor().execute(() -> {
-            List<ServiceFee> list = AppDatabase.getInstance(this).serviceFeeDao().getAllServiceFees();
+            int bId = getActiveBusinessId();
+            List<ServiceFee> list = AppDatabase.getInstance(this).serviceFeeDao().getAllServiceFees(bId);
             runOnUiThread(() -> {
                 ServiceSelectionAdapter adapter = new ServiceSelectionAdapter(list, fee -> {
                     selectedServiceCharge = fee;
@@ -1632,13 +1665,19 @@ public class ReportsActivity extends AppCompatActivity {
         }
 
         Executors.newSingleThreadExecutor().execute(() -> {
-            List<OtherFee> others = AppDatabase.getInstance(this).otherFeeDao().getAllOtherFees();
+            int bId = getActiveBusinessId();
+            List<OtherFee> others = AppDatabase.getInstance(this).otherFeeDao().getAllOtherFees(bId);
             if (others.isEmpty()) {
-                AppDatabase.getInstance(this).otherFeeDao().insert(new OtherFee("PREVIOUS DUES", 100, false, false));
-                AppDatabase.getInstance(this).otherFeeDao().insert(new OtherFee("DELIVERY CHARGES", 0, false, false));
-                AppDatabase.getInstance(this).otherFeeDao().insert(new OtherFee("BUS CHARGE", 100, false, false));
-                AppDatabase.getInstance(this).otherFeeDao().insert(new OtherFee("TRANSPORTATION", 0, false, false));
-                others = AppDatabase.getInstance(this).otherFeeDao().getAllOtherFees();
+                OtherFee f1 = new OtherFee("PREVIOUS DUES", 100, false, false); f1.setBusinessId(bId);
+                OtherFee f2 = new OtherFee("DELIVERY CHARGES", 0, false, false); f2.setBusinessId(bId);
+                OtherFee f3 = new OtherFee("BUS CHARGE", 100, false, false); f3.setBusinessId(bId);
+                OtherFee f4 = new OtherFee("TRANSPORTATION", 0, false, false); f4.setBusinessId(bId);
+                
+                AppDatabase.getInstance(this).otherFeeDao().insert(f1);
+                AppDatabase.getInstance(this).otherFeeDao().insert(f2);
+                AppDatabase.getInstance(this).otherFeeDao().insert(f3);
+                AppDatabase.getInstance(this).otherFeeDao().insert(f4);
+                others = AppDatabase.getInstance(this).otherFeeDao().getAllOtherFees(bId);
             }
 
             final List<OtherFee> finalOthers = others;
@@ -1698,13 +1737,19 @@ public class ReportsActivity extends AppCompatActivity {
         }
 
         Executors.newSingleThreadExecutor().execute(() -> {
-            List<Discount> discounts = AppDatabase.getInstance(this).discountDao().getAllDiscounts();
+            int bId = getActiveBusinessId();
+            List<Discount> discounts = AppDatabase.getInstance(this).discountDao().getAllDiscounts(bId);
             if (discounts.isEmpty()) {
-                AppDatabase.getInstance(this).discountDao().insert(new Discount("DUES", 40, false, false));
-                AppDatabase.getInstance(this).discountDao().insert(new Discount("PREVIOUS", 250, false, false));
-                AppDatabase.getInstance(this).discountDao().insert(new Discount("ONLINE", 780, false, false));
-                AppDatabase.getInstance(this).discountDao().insert(new Discount("RETURN GRIPPER", 250, false, false));
-                discounts = AppDatabase.getInstance(this).discountDao().getAllDiscounts();
+                Discount d1 = new Discount("DUES", 40, false, false); d1.setBusinessId(bId);
+                Discount d2 = new Discount("PREVIOUS", 250, false, false); d2.setBusinessId(bId);
+                Discount d3 = new Discount("ONLINE", 780, false, false); d3.setBusinessId(bId);
+                Discount d4 = new Discount("RETURN GRIPPER", 250, false, false); d4.setBusinessId(bId);
+                
+                AppDatabase.getInstance(this).discountDao().insert(d1);
+                AppDatabase.getInstance(this).discountDao().insert(d2);
+                AppDatabase.getInstance(this).discountDao().insert(d3);
+                AppDatabase.getInstance(this).discountDao().insert(d4);
+                discounts = AppDatabase.getInstance(this).discountDao().getAllDiscounts(bId);
             }
 
             final List<Discount> finalDiscounts = discounts;
@@ -1764,13 +1809,19 @@ public class ReportsActivity extends AppCompatActivity {
         }
 
         Executors.newSingleThreadExecutor().execute(() -> {
-            List<Tax> taxes = AppDatabase.getInstance(this).taxDao().getAllTaxes();
+            int bId = getActiveBusinessId();
+            List<Tax> taxes = AppDatabase.getInstance(this).taxDao().getAllTaxes(bId);
             if (taxes.isEmpty()) {
-                AppDatabase.getInstance(this).taxDao().insert(new Tax("CGST on sales", 9.0, false));
-                AppDatabase.getInstance(this).taxDao().insert(new Tax("SGST+CGST", 18.0, false));
-                AppDatabase.getInstance(this).taxDao().insert(new Tax("SGST on sales", 9.0, false));
-                AppDatabase.getInstance(this).taxDao().insert(new Tax("TRANSPORTATION", 50.0, false));
-                taxes = AppDatabase.getInstance(this).taxDao().getAllTaxes();
+                Tax t1 = new Tax("CGST on sales", 9.0, false); t1.setBusinessId(bId);
+                Tax t2 = new Tax("SGST+CGST", 18.0, false); t2.setBusinessId(bId);
+                Tax t3 = new Tax("SGST on sales", 9.0, false); t3.setBusinessId(bId);
+                Tax t4 = new Tax("TRANSPORTATION", 50.0, false); t4.setBusinessId(bId);
+                
+                AppDatabase.getInstance(this).taxDao().insert(t1);
+                AppDatabase.getInstance(this).taxDao().insert(t2);
+                AppDatabase.getInstance(this).taxDao().insert(t3);
+                AppDatabase.getInstance(this).taxDao().insert(t4);
+                taxes = AppDatabase.getInstance(this).taxDao().getAllTaxes(bId);
             }
 
             final List<Tax> finalTaxes = taxes;

@@ -14,7 +14,7 @@ public interface BusinessDao {
     List<Business> getAllBusinesses();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(Business business);
+    long insert(Business business);
 
     @Update
     void update(Business business);

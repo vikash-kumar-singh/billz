@@ -206,10 +206,10 @@ public class AddBusinessActivity extends AppCompatActivity {
                 db.businessDao().deselectAll();
                 db.businessDao().selectBusiness(switchTarget.getId());
                 
-                ReceiptSettings settings = db.receiptSettingsDao().getSettings();
+                ReceiptSettings settings = db.receiptSettingsDao().getSettingsByBusiness(switchTarget.getId());
                 if (settings == null) {
                     settings = new ReceiptSettings();
-                    settings.setId(1);
+                    settings.setId(switchTarget.getId());
                 }
                 settings.setBusinessName(switchTarget.getName());
                 settings.setPhoneNumber(switchTarget.getPhoneNumber());
@@ -252,12 +252,14 @@ public class AddBusinessActivity extends AppCompatActivity {
                 businessToSave = new Business(name, mobile, "OWNER", true);
             }
             
-            db.businessDao().insert(businessToSave);
+            long savedId = db.businessDao().insert(businessToSave);
+            int finalBId = isUpdate ? businessToSave.getId() : (int) savedId;
 
             if (businessToSave.isSelected()) {
-                ReceiptSettings settings = db.receiptSettingsDao().getSettings();
+                ReceiptSettings settings = db.receiptSettingsDao().getSettingsByBusiness(finalBId);
                 if (settings == null) {
                     settings = new ReceiptSettings();
+                    settings.setId(finalBId);
                 }
                 settings.setBusinessName(name);
                 settings.setPhoneNumber(mobile);

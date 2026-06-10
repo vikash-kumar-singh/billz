@@ -141,7 +141,13 @@ public class AddItemActivity extends AppCompatActivity {
         Item item = new Item(name, category, first.sellingPrice, first.costPrice, first.stockQuantity, first.name, selectedSellBy, !isSimpleMode);
 
         java.util.concurrent.Executors.newSingleThreadExecutor().execute(() -> {
-            long itemId = AppDatabase.getInstance(this).itemDao().insert(item);
+            AppDatabase db = AppDatabase.getInstance(this);
+            Business active = db.businessDao().getSelectedBusiness();
+            if (active != null) {
+                item.setBusinessId(active.getId());
+            }
+            
+            long itemId = db.itemDao().insert(item);
             
             for (int i = 0; i < variantsToSave.size(); i++) {
                 VariantData vd = variantsToSave.get(i);
@@ -228,7 +234,10 @@ public class AddItemActivity extends AppCompatActivity {
 
         // Fetch categories from DB
         java.util.concurrent.Executors.newSingleThreadExecutor().execute(() -> {
-            List<Category> categories = AppDatabase.getInstance(this).categoryDao().getAllCategories();
+            AppDatabase db = AppDatabase.getInstance(this);
+            Business active = db.businessDao().getSelectedBusiness();
+            int bId = active != null ? active.getId() : -1;
+            List<Category> categories = db.categoryDao().getAllCategories(bId);
             
             // Add dummy data if empty to match image
             if (categories.isEmpty()) {

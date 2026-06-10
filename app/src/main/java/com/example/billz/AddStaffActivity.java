@@ -781,10 +781,16 @@ public class AddStaffActivity extends AppCompatActivity {
         }
 
         Executors.newSingleThreadExecutor().execute(() -> {
+            AppDatabase db = AppDatabase.getInstance(this);
+            Business active = db.businessDao().getSelectedBusiness();
+            if (active != null) {
+                staff.businessId = active.getId();
+            }
+            
             if (staffId != -1) {
-                AppDatabase.getInstance(this).staffDao().update(staff);
+                db.staffDao().update(staff);
             } else {
-                AppDatabase.getInstance(this).staffDao().insert(staff);
+                db.staffDao().insert(staff);
             }
             runOnUiThread(() -> {
                 Toast.makeText(this, staffId != -1 ? "Staff Updated Successfully" : "Staff Saved Successfully", Toast.LENGTH_SHORT).show();

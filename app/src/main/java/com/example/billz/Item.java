@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey;
 public class Item {
     @PrimaryKey(autoGenerate = true)
     private int id;
+    private int businessId;
     private String name;
     private String category;
     private double sellingPrice;
@@ -29,6 +30,8 @@ public class Item {
 
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
+    public int getBusinessId() { return businessId; }
+    public void setBusinessId(int businessId) { this.businessId = businessId; }
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
     public String getCategory() { return category; }

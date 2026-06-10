@@ -61,7 +61,9 @@ public class ServiceFeeSettingsActivity extends AppCompatActivity {
 
     private void loadServiceFees() {
         Executors.newSingleThreadExecutor().execute(() -> {
-            List<ServiceFee> dbFees = AppDatabase.getInstance(this).serviceFeeDao().getAllServiceFees();
+            Business active = AppDatabase.getInstance(this).businessDao().getSelectedBusiness();
+            int bId = (active != null) ? active.getId() : -1;
+            List<ServiceFee> dbFees = AppDatabase.getInstance(this).serviceFeeDao().getAllServiceFees(bId);
             final List<ServiceFee> finalDbFees = dbFees;
             runOnUiThread(() -> {
                 feeList.clear();
@@ -129,7 +131,13 @@ public class ServiceFeeSettingsActivity extends AppCompatActivity {
                 fee.setDefault(isDefault);
                 updateServiceFee(fee);
             } else {
-                saveServiceFee(new ServiceFee(name, value, isPercentage, isDefault));
+                Executors.newSingleThreadExecutor().execute(() -> {
+                    Business active = AppDatabase.getInstance(this).businessDao().getSelectedBusiness();
+                    int bId = (active != null) ? active.getId() : -1;
+                    ServiceFee newFee = new ServiceFee(name, value, isPercentage, isDefault);
+                    newFee.setBusinessId(bId);
+                    saveServiceFee(newFee);
+                });
             }
             dialog.dismiss();
         });

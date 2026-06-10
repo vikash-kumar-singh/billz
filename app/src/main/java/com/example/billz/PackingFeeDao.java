@@ -5,12 +5,13 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
+
 import java.util.List;
 
 @Dao
 public interface PackingFeeDao {
-    @Query("SELECT * FROM packing_fees")
-    List<PackingFee> getAllPackingFees();
+    @Query("SELECT * FROM packing_fees WHERE businessId = :businessId")
+    List<PackingFee> getAllPackingFees(int businessId);
 
     @Insert
     void insert(PackingFee fee);

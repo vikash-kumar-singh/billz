@@ -7,9 +7,9 @@ import androidx.room.PrimaryKey;
 public class PaymentMode {
     @PrimaryKey(autoGenerate = true)
     private int id;
-
+    private int businessId;
     private String name;
-    private boolean isAdded; // True if it's in the "Add / Remove" section, false for "Suggestion"
+    private boolean isAdded; // True if it's in the \"Add / Remove\" section, false for \"Suggestion\"
     private boolean hasConfig; // True for modes like UPI/BHIM that might have settings
 
     public PaymentMode(String name, boolean isAdded, boolean hasConfig) {
@@ -20,7 +20,8 @@ public class PaymentMode {
 
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
-
+    public int getBusinessId() { return businessId; }
+    public void setBusinessId(int businessId) { this.businessId = businessId; }
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 

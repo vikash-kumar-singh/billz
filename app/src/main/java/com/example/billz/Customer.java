@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey;
 public class Customer {
     @PrimaryKey(autoGenerate = true)
     private int id;
+    private int businessId;
     private String mobile;
     private String name;
     private String email;
@@ -37,6 +38,8 @@ public class Customer {
 
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
+    public int getBusinessId() { return businessId; }
+    public void setBusinessId(int businessId) { this.businessId = businessId; }
     public String getMobile() { return mobile; }
     public void setMobile(String mobile) { this.mobile = mobile; }
     public String getName() { return name; }

@@ -75,7 +75,13 @@ public class AddCustomerActivity extends AppCompatActivity {
         Customer customer = new Customer(mobile, name, email, gender, dob, anniversary, gstin, address, notes);
 
         Executors.newSingleThreadExecutor().execute(() -> {
-            AppDatabase.getInstance(this).customerDao().insert(customer);
+            AppDatabase db = AppDatabase.getInstance(this);
+            Business active = db.businessDao().getSelectedBusiness();
+            if (active != null) {
+                customer.setBusinessId(active.getId());
+            }
+            
+            db.customerDao().insert(customer);
             
             // Sync to Cloud after successful Room save
             new CustomerSyncManager(this).syncCustomerToCloud(customer);

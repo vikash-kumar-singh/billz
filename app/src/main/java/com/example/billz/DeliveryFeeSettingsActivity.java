@@ -61,7 +61,9 @@ public class DeliveryFeeSettingsActivity extends AppCompatActivity {
 
     private void loadDeliveryFees() {
         Executors.newSingleThreadExecutor().execute(() -> {
-            List<DeliveryFee> dbFees = AppDatabase.getInstance(this).deliveryFeeDao().getAllDeliveryFees();
+            Business active = AppDatabase.getInstance(this).businessDao().getSelectedBusiness();
+            int bId = (active != null) ? active.getId() : -1;
+            List<DeliveryFee> dbFees = AppDatabase.getInstance(this).deliveryFeeDao().getAllDeliveryFees(bId);
             final List<DeliveryFee> finalDbFees = dbFees;
             runOnUiThread(() -> {
                 feeList.clear();
@@ -129,7 +131,13 @@ public class DeliveryFeeSettingsActivity extends AppCompatActivity {
                 fee.setDefault(isDefault);
                 updateDeliveryFee(fee);
             } else {
-                saveDeliveryFee(new DeliveryFee(name, value, isPercentage, isDefault));
+                Executors.newSingleThreadExecutor().execute(() -> {
+                    Business active = AppDatabase.getInstance(this).businessDao().getSelectedBusiness();
+                    int bId = (active != null) ? active.getId() : -1;
+                    DeliveryFee newFee = new DeliveryFee(name, value, isPercentage, isDefault);
+                    newFee.setBusinessId(bId);
+                    saveDeliveryFee(newFee);
+                });
             }
             dialog.dismiss();
         });

@@ -98,8 +98,13 @@ public class PaymentSettingsActivity extends AppCompatActivity {
                 return;
             }
 
-            PaymentMode newMode = new PaymentMode(name, true, false);
-            saveNewPaymentMode(newMode);
+            Executors.newSingleThreadExecutor().execute(() -> {
+                Business active = AppDatabase.getInstance(this).businessDao().getSelectedBusiness();
+                int bId = (active != null) ? active.getId() : -1;
+                PaymentMode newMode = new PaymentMode(name, true, false);
+                newMode.setBusinessId(bId);
+                saveNewPaymentMode(newMode);
+            });
             dialog.dismiss();
         });
 
@@ -170,10 +175,12 @@ public class PaymentSettingsActivity extends AppCompatActivity {
 
     private void loadPaymentModes() {
         Executors.newSingleThreadExecutor().execute(() -> {
-            List<PaymentMode> allModes = AppDatabase.getInstance(this).paymentModeDao().getAllPaymentModes();
+            Business active = AppDatabase.getInstance(this).businessDao().getSelectedBusiness();
+            int bId = (active != null) ? active.getId() : -1;
+            List<PaymentMode> allModes = AppDatabase.getInstance(this).paymentModeDao().getAllPaymentModes(bId);
             if (allModes.isEmpty()) {
-                addInitialPaymentModes();
-                allModes = AppDatabase.getInstance(this).paymentModeDao().getAllPaymentModes();
+                addInitialPaymentModes(bId);
+                allModes = AppDatabase.getInstance(this).paymentModeDao().getAllPaymentModes(bId);
             }
             
             final List<PaymentMode> suggestions = new ArrayList<>();
@@ -196,18 +203,37 @@ public class PaymentSettingsActivity extends AppCompatActivity {
         });
     }
 
-    private void addInitialPaymentModes() {
+    private void addInitialPaymentModes(int bId) {
         PaymentModeDao dao = AppDatabase.getInstance(this).paymentModeDao();
         // Suggestions
-        dao.insert(new PaymentMode("Store Credit", false, false));
-        dao.insert(new PaymentMode("Google Pay", false, false));
+        PaymentMode m1 = new PaymentMode("Store Credit", false, false);
+        m1.setBusinessId(bId);
+        dao.insert(m1);
+
+        PaymentMode m2 = new PaymentMode("Google Pay", false, false);
+        m2.setBusinessId(bId);
+        dao.insert(m2);
         
         // Added modes
-        dao.insert(new PaymentMode("Cash", true, false));
-        dao.insert(new PaymentMode("Debit Card", true, false));
-        dao.insert(new PaymentMode("Credit Card", true, false));
-        dao.insert(new PaymentMode("Credit", true, false));
-        dao.insert(new PaymentMode("UPI / BHIM", true, true));
+        PaymentMode m3 = new PaymentMode("Cash", true, false);
+        m3.setBusinessId(bId);
+        dao.insert(m3);
+
+        PaymentMode m4 = new PaymentMode("Debit Card", true, false);
+        m4.setBusinessId(bId);
+        dao.insert(m4);
+
+        PaymentMode m5 = new PaymentMode("Credit Card", true, false);
+        m5.setBusinessId(bId);
+        dao.insert(m5);
+
+        PaymentMode m6 = new PaymentMode("Credit", true, false);
+        m6.setBusinessId(bId);
+        dao.insert(m6);
+
+        PaymentMode m7 = new PaymentMode("UPI / BHIM", true, true);
+        m7.setBusinessId(bId);
+        dao.insert(m7);
     }
 
     private void addPaymentMode(PaymentMode mode) {

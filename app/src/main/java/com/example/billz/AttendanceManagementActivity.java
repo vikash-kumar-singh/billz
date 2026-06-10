@@ -12,7 +12,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.app.DatePickerDialog;
-import java.text.SimpleDateFormat;
+import android.widget.Toast;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -26,6 +26,7 @@ public class AttendanceManagementActivity extends AppCompatActivity {
     private ImageView imageDropdown, btnPrevDate, btnNextDate;
     private boolean isExpanded = false;
     private Calendar selectedDate = Calendar.getInstance();
+    private Staff currentStaff;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,8 +59,16 @@ public class AttendanceManagementActivity extends AppCompatActivity {
         updateDateDisplay();
         
         btnPrevDate.setOnClickListener(v -> {
-            selectedDate.add(Calendar.DAY_OF_MONTH, -1);
-            updateDateDisplay();
+            Calendar prev = (Calendar) selectedDate.clone();
+            prev.add(Calendar.DAY_OF_MONTH, -1);
+            
+            Calendar joiningDate = parseJoiningDate(currentStaff != null ? currentStaff.joiningDate : null);
+            if (joiningDate != null && prev.before(joiningDate)) {
+                Toast.makeText(this, "Cannot go before joining date", Toast.LENGTH_SHORT).show();
+            } else {
+                selectedDate = prev;
+                updateDateDisplay();
+            }
         });
 
         btnNextDate.setOnClickListener(v -> {
@@ -96,21 +105,30 @@ public class AttendanceManagementActivity extends AppCompatActivity {
     }
 
     private void showDatePicker() {
-        // Use the spinner style if possible by using a legacy theme or custom style
+        Calendar joiningDate = parseJoiningDate(currentStaff != null ? currentStaff.joiningDate : null);
+        
         DatePickerDialog datePickerDialog = new DatePickerDialog(this,
                 android.R.style.Theme_Holo_Light_Dialog_MinWidth,
                 (view, year, month, dayOfMonth) -> {
-                    selectedDate.set(Calendar.YEAR, year);
-                    selectedDate.set(Calendar.MONTH, month);
-                    selectedDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                    updateDateDisplay();
+                    Calendar newDate = Calendar.getInstance();
+                    newDate.set(year, month, dayOfMonth);
+                    if (joiningDate != null && newDate.before(joiningDate)) {
+                        Toast.makeText(this, "Selected date is before joining date", Toast.LENGTH_SHORT).show();
+                    } else {
+                        selectedDate.set(Calendar.YEAR, year);
+                        selectedDate.set(Calendar.MONTH, month);
+                        selectedDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                        updateDateDisplay();
+                    }
                 },
                 selectedDate.get(Calendar.YEAR),
                 selectedDate.get(Calendar.MONTH),
                 selectedDate.get(Calendar.DAY_OF_MONTH));
         
-        // Hide the year if needed, but the image shows day, month, year.
-        // The Holo theme usually provides the spinner look shown in the image.
+        if (joiningDate != null) {
+            datePickerDialog.getDatePicker().setMinDate(joiningDate.getTimeInMillis());
+        }
+        
         if (datePickerDialog.getWindow() != null) {
             datePickerDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         }
@@ -128,16 +146,41 @@ public class AttendanceManagementActivity extends AppCompatActivity {
 
     private void loadStaffData() {
         Executors.newSingleThreadExecutor().execute(() -> {
-            Staff staff = AppDatabase.getInstance(this).staffDao().getById(staffId);
-            if (staff != null) {
+            currentStaff = AppDatabase.getInstance(this).staffDao().getById(staffId);
+            if (currentStaff != null) {
                 runOnUiThread(() -> {
-                    String info = staff.name + " - " + (staff.email != null ? staff.email : "-");
+                    String info = currentStaff.name + " - " + (currentStaff.email != null ? currentStaff.email : "-");
                     textStaffInfo.setText(info);
-                    if (staff.name != null && !staff.name.isEmpty()) {
-                        textStaffInitials.setText(String.valueOf(staff.name.charAt(0)).toUpperCase());
+                    if (currentStaff.name != null && !currentStaff.name.isEmpty()) {
+                        textStaffInitials.setText(String.valueOf(currentStaff.name.charAt(0)).toUpperCase());
+                    }
+                    
+                    Calendar joiningDate = parseJoiningDate(currentStaff.joiningDate);
+                    if (joiningDate != null && selectedDate.before(joiningDate)) {
+                        selectedDate = (Calendar) joiningDate.clone();
+                        updateDateDisplay();
                     }
                 });
             }
         });
+    }
+
+    private Calendar parseJoiningDate(String dateStr) {
+        if (dateStr == null || dateStr.isEmpty()) return null;
+        try {
+            String[] parts = dateStr.split("/");
+            if (parts.length == 3) {
+                Calendar cal = Calendar.getInstance();
+                cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(parts[0]));
+                cal.set(Calendar.MONTH, Integer.parseInt(parts[1]) - 1);
+                cal.set(Calendar.YEAR, Integer.parseInt(parts[2]));
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                return cal;
+            }
+        } catch (Exception ignored) {}
+        return null;
     }
 }

@@ -137,15 +137,23 @@ public class SalarySlipActivity extends AppCompatActivity {
         DatePickerDialog datePickerDialog = new DatePickerDialog(this,
                 android.R.style.Theme_Holo_Light_Dialog_MinWidth,
                 (view, year, month, dayOfMonth) -> {
-                    selectedEndDate.set(Calendar.YEAR, year);
-                    selectedEndDate.set(Calendar.MONTH, month);
-                    selectedEndDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                    updateUI();
+                    Calendar newDate = Calendar.getInstance();
+                    newDate.set(year, month, dayOfMonth);
+                    if (newDate.after(Calendar.getInstance())) {
+                        Toast.makeText(this, "Cannot select future date", Toast.LENGTH_SHORT).show();
+                    } else {
+                        selectedEndDate.set(Calendar.YEAR, year);
+                        selectedEndDate.set(Calendar.MONTH, month);
+                        selectedEndDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                        updateUI();
+                    }
                 },
                 selectedEndDate.get(Calendar.YEAR),
                 selectedEndDate.get(Calendar.MONTH),
                 selectedEndDate.get(Calendar.DAY_OF_MONTH));
         
+        datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis());
+
         if (datePickerDialog.getWindow() != null) {
             datePickerDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         }
@@ -181,13 +189,33 @@ public class SalarySlipActivity extends AppCompatActivity {
         
         Calendar cal = (Calendar) selectedEndDate.clone();
         cal.add(Calendar.DAY_OF_MONTH, -29);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+
+        Calendar joiningDate = parseJoiningDate(currentStaff.joiningDate);
         
         SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
         Random random = new Random();
         int presentDays = 0;
-        int totalDays = 30;
+        boolean firstItemAdded = false;
 
-        for (int i = 0; i < totalDays; i++) {
+        for (int i = 0; i < 30; i++) {
+            // Check if current date is before joining date
+            if (joiningDate != null && cal.before(joiningDate)) {
+                cal.add(Calendar.DAY_OF_MONTH, 1);
+                continue;
+            }
+
+            // Add divider before item if it's not the first one being displayed
+            if (firstItemAdded) {
+                View divider = new View(this);
+                divider.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 2));
+                divider.setBackgroundColor(0xFFF1F5F9);
+                layoutAttendanceList.addView(divider);
+            }
+
             boolean isPresent = random.nextInt(10) > 2; // ~70% chance of being present
             if (isPresent) presentDays++;
 
@@ -212,13 +240,7 @@ public class SalarySlipActivity extends AppCompatActivity {
             }
 
             layoutAttendanceList.addView(view);
-            
-            if (i < totalDays - 1) {
-                View divider = new View(this);
-                divider.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 2));
-                divider.setBackgroundColor(0xFFF1F5F9);
-                layoutAttendanceList.addView(divider);
-            }
+            firstItemAdded = true;
             cal.add(Calendar.DAY_OF_MONTH, 1);
         }
 
@@ -229,5 +251,25 @@ public class SalarySlipActivity extends AppCompatActivity {
         textBaseSalaryLabel.setText(String.format(Locale.getDefault(), "Base Salary (%d days)", presentDays));
         textBaseSalaryValue.setText(String.format(Locale.getDefault(), "₹%.0f", earnedSalary));
         textTotalSalary.setText(String.format(Locale.getDefault(), "₹%.0f", earnedSalary));
+    }
+
+    private Calendar parseJoiningDate(String dateStr) {
+        if (dateStr == null || dateStr.isEmpty()) return null;
+        try {
+            // Expected format d/M/yyyy from AddStaffActivity
+            String[] parts = dateStr.split("/");
+            if (parts.length == 3) {
+                Calendar cal = Calendar.getInstance();
+                cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(parts[0]));
+                cal.set(Calendar.MONTH, Integer.parseInt(parts[1]) - 1);
+                cal.set(Calendar.YEAR, Integer.parseInt(parts[2]));
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                return cal;
+            }
+        } catch (Exception ignored) {}
+        return null;
     }
 }
