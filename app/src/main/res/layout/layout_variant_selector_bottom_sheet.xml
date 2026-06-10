@@ -6,47 +6,45 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-    <!-- Header -->
+    <!-- Custom Header matching image -->
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:paddingHorizontal="12dp">
+        android:layout_height="56dp"
+        android:paddingHorizontal="16dp">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnEditItem"
-            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+        <TextView
+            android:id="@+id/textNewBadge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:backgroundTint="#3F51B5"
-            android:text="EDIT ITEM"
+            android:background="#8BC34A"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="2dp"
+            android:text="NEW"
             android:textColor="@color/white"
-            android:textStyle="bold"
-            app:cornerRadius="2dp" />
+            android:textSize="10sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/textItemNameHeader"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:gravity="center"
             android:text="ITEM NAME"
             android:textColor="#3F51B5"
             android:textSize="16sp"
             android:textStyle="bold" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnSelectDone"
-            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <ImageView
+            android:id="@+id/btnCloseSheet"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:backgroundTint="#66BB6A"
-            android:text="SELECT"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            app:cornerRadius="2dp" />
+            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            android:contentDescription="Close"
+            app:tint="#3F51B5" />
     </RelativeLayout>
 
     <View
@@ -58,6 +56,11 @@
         android:id="@+id/recyclerVariantSelector"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp" />
+        android:padding="0dp" />
+
+    <!-- Extra space at bottom if needed -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="16dp" />
 
 </LinearLayout>

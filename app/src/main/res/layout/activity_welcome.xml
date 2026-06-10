@@ -68,7 +68,9 @@
             android:id="@+id/btnNewUser"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:text="NEW USER"
+            android:text="New User"
+            android:backgroundTint="@color/colorPrimary"
+            android:textColor="@color/white"
             app:cornerRadius="8dp" />
 
         <com.google.android.material.button.MaterialButton
@@ -77,7 +79,9 @@
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_marginTop="12dp"
-            android:text="EXISTING USER"
+            android:text="Existing User"
+            android:textColor="@color/textPrimary"
+            app:strokeColor="@color/reports_divider"
             app:cornerRadius="8dp" />
 
         <TextView

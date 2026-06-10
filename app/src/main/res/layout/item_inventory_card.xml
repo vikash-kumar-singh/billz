@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="8dp"
-    android:layout_marginVertical="4dp"
-    app:cardCornerRadius="8dp"
-    app:cardElevation="0dp"
-    app:cardBackgroundColor="@color/white">
+    android:layout_marginHorizontal="12dp"
+    android:layout_marginVertical="6dp"
+    app:cardCornerRadius="@dimen/reports_card_corner_radius"
+    app:cardElevation="2dp"
+    app:cardBackgroundColor="@color/surfaceColor"
+    app:strokeColor="@color/reports_divider"
+    app:strokeWidth="1dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,10 +24,11 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardItemImage"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                app:cardCornerRadius="8dp"
+                android:layout_width="52dp"
+                android:layout_height="52dp"
+                app:cardCornerRadius="12dp"
                 app:cardElevation="0dp"
+                app:cardBackgroundColor="@color/colorPrimaryLight"
                 app:strokeWidth="0dp">
 
                 <FrameLayout
@@ -36,45 +39,49 @@
                         android:id="@+id/textInitial"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@drawable/bg_inventory_initial"
                         android:gravity="center"
                         android:text="A"
-                        android:textColor="#1E293B"
-                        android:textSize="24sp" />
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="22sp"
+                        android:textStyle="bold" />
 
                     <ImageView
                         android:id="@+id/imgItem"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:scaleType="centerCrop"
-                        android:visibility="gone" />
+                        android:visibility="gone"
+                        android:contentDescription="Item image" />
                 </FrameLayout>
             </com.google.android.material.card.MaterialCardView>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
+                android:layout_marginStart="14dp"
                 android:layout_toEndOf="@id/cardItemImage"
+                android:layout_toStartOf="@id/textStockStatus"
                 android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/textItemName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="AA Paranormic Fat Burners"
-                    android:textColor="#475569"
+                    android:text="Item Name"
+                    android:textColor="@color/textPrimary"
                     android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:ellipsize="end"
+                    android:maxLines="1" />
 
                 <TextView
                     android:id="@+id/textItemPrice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:text="₹2,899"
-                    android:textColor="#2563EB"
-                    android:textSize="15sp"
+                    android:text="₹0.00"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="14sp"
                     android:textStyle="bold" />
             </LinearLayout>
 
@@ -83,17 +90,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:layout_below="@id/cardItemImage"
-                android:layout_marginTop="-20dp"
-                android:text="Out of stock"
-                android:textColor="#EF4444"
-                android:textSize="13sp" />
+                android:layout_centerVertical="false"
+                android:layout_marginTop="4dp"
+                android:text="Status"
+                android:textColor="@color/error"
+                android:textSize="12sp"
+                android:textStyle="bold" />
         </RelativeLayout>
 
         <HorizontalScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="14dp"
             android:scrollbars="none">
 
             <LinearLayout
@@ -101,33 +109,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
-
-                <!-- Placeholder tags -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:background="@drawable/bg_reports_nav_item"
-                    android:backgroundTint="#2563EB"
-                    android:paddingHorizontal="10dp"
-                    android:paddingVertical="4dp"
-                    android:text="Paranormic Fat"
-                    android:textColor="@color/white"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:background="@drawable/bg_reports_nav_item"
-                    android:backgroundTint="#F1F5F9"
-                    android:paddingHorizontal="10dp"
-                    android:paddingVertical="4dp"
-                    android:text="Carbamide Forte"
-                    android:textColor="#475569"
-                    android:textSize="12sp" />
+                <!-- Tags added dynamically -->
             </LinearLayout>
         </HorizontalScrollView>
 
     </LinearLayout>
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

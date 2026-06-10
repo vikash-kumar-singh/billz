@@ -42,10 +42,12 @@ public class WelcomeActivity extends AppCompatActivity {
 
         findViewById(R.id.btnNewUser).setOnClickListener(v -> {
             startActivity(new Intent(WelcomeActivity.this, RegisterActivity.class));
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         });
 
         findViewById(R.id.btnExistingUser).setOnClickListener(v -> {
             startActivity(new Intent(WelcomeActivity.this, LoginActivity.class));
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         });
     }
 

@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.HashMap;
 import java.util.List;
@@ -48,30 +47,31 @@ public class VariantSelectorAdapter extends RecyclerView.Adapter<VariantSelector
         int qty = variantQuantities.containsKey(variant.getId()) ? variantQuantities.get(variant.getId()) : 0;
 
         holder.textPrice.setText(String.format(Locale.getDefault(), "₹%.0f", variant.getSellingPrice()));
-        holder.textName.setText(variant.getName());
-        
-        String stockInfo = variant.getStockQuantity() <= 0 ? "Out of stock ( 0 )" : variant.getStockQuantity() + " Left";
-        holder.textStock.setText(stockInfo);
+        holder.textName.setText(variant.getName().toUpperCase());
         holder.textQuantity.setText(String.valueOf(qty));
 
         if (qty > 0) {
+            // Selected state matching image (Blue background)
             holder.card.setCardBackgroundColor(0xFF3F51B5);
             holder.textPrice.setTextColor(Color.WHITE);
             holder.textName.setTextColor(Color.WHITE);
-            holder.textStock.setTextColor(0xCCFFFFFF);
             holder.btnMinus.setImageTintList(ColorStateList.valueOf(Color.WHITE));
             holder.btnPlus.setImageTintList(ColorStateList.valueOf(Color.WHITE));
             holder.textQuantity.setTextColor(Color.WHITE);
             holder.textQuantity.setBackgroundResource(R.drawable.bg_quantity_box_white);
+            holder.divider1.setBackgroundColor(0x33FFFFFF);
+            holder.divider2.setBackgroundColor(0x33FFFFFF);
         } else {
+            // Unselected state (White background)
             holder.card.setCardBackgroundColor(Color.WHITE);
             holder.textPrice.setTextColor(0xFF3F51B5);
             holder.textName.setTextColor(0xFF334155);
-            holder.textStock.setTextColor(0xFF94A3B8);
             holder.btnMinus.setImageTintList(ColorStateList.valueOf(0xFF3F51B5));
             holder.btnPlus.setImageTintList(ColorStateList.valueOf(0xFF3F51B5));
             holder.textQuantity.setTextColor(0xFF334155);
             holder.textQuantity.setBackgroundResource(R.drawable.bg_quantity_box);
+            holder.divider1.setBackgroundColor(0xFFE2E8F0);
+            holder.divider2.setBackgroundColor(0xFFE2E8F0);
         }
 
         holder.btnPlus.setOnClickListener(v -> {
@@ -101,19 +101,21 @@ public class VariantSelectorAdapter extends RecyclerView.Adapter<VariantSelector
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        CardView card;
-        TextView textPrice, textName, textStock, textQuantity;
+        androidx.cardview.widget.CardView card;
+        TextView textPrice, textName, textQuantity;
         ImageView btnMinus, btnPlus;
+        View divider1, divider2;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             card = itemView.findViewById(R.id.cardVariant);
             textPrice = itemView.findViewById(R.id.textVariantPrice);
             textName = itemView.findViewById(R.id.textVariantName);
-            textStock = itemView.findViewById(R.id.textVariantStock);
             textQuantity = itemView.findViewById(R.id.textQuantity);
             btnMinus = itemView.findViewById(R.id.btnMinus);
             btnPlus = itemView.findViewById(R.id.btnPlus);
+            divider1 = itemView.findViewById(R.id.divider1);
+            divider2 = itemView.findViewById(R.id.divider2);
         }
     }
 }

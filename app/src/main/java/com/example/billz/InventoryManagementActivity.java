@@ -192,7 +192,8 @@ public class InventoryManagementActivity extends AppCompatActivity {
         imageFilter.setOnClickListener(v -> showFilterBottomSheet());
 
         MaterialToolbar toolbarView = findViewById(R.id.toolbarInventory);
-        ViewCompat.setOnApplyWindowInsetsListener(toolbarView, (v, insets) -> {
+        View appBarLayout = findViewById(R.id.appBarLayout);
+        ViewCompat.setOnApplyWindowInsetsListener(appBarLayout, (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(0, systemBars.top, 0, 0);
             return insets;
@@ -404,6 +405,9 @@ public class InventoryManagementActivity extends AppCompatActivity {
             
             List<InventoryItem> newCategoriesList = new ArrayList<>();
             for (Category cat : dbCategories) {
+                if (cat.getName() != null && (cat.getName().equalsIgnoreCase("Uncategorized") || cat.getName().equalsIgnoreCase("No Category") || cat.getName().isEmpty())) {
+                    continue;
+                }
                 int count = itemDao.getItemCountByCategory(cat.getName());
                 String countText = count + (count == 1 ? " Item" : " Items");
                 
@@ -412,17 +416,6 @@ public class InventoryManagementActivity extends AppCompatActivity {
                 item.setBackgroundColor(cat.getBackgroundColor());
                 item.setType(1); // Category
                 newCategoriesList.add(item);
-            }
-
-            // Also check for items with no category or "Uncategorized"
-            int uncategorizedCount = itemDao.getUncategorizedItemCount();
-            
-            if (uncategorizedCount > 0) {
-                String countText = uncategorizedCount + (uncategorizedCount == 1 ? " Item" : " Items");
-                InventoryItem uncategorizedItem = new InventoryItem("Uncategorized", "", countText, false, 0, new ArrayList<>());
-                uncategorizedItem.setType(1); // Category
-                uncategorizedItem.setBackgroundColor(Color.LTGRAY);
-                newCategoriesList.add(uncategorizedItem);
             }
 
             runOnUiThread(() -> {

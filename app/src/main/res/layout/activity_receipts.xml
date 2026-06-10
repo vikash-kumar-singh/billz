@@ -9,7 +9,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#F3F4F6"
+        android:background="@color/backgroundColor"
         android:orientation="vertical">
 
         <!-- Toolbar Container for proper status bar handling -->
@@ -25,9 +25,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="64dp"
                 app:navigationIcon="@drawable/ic_chevron_left"
-                app:navigationIconTint="#3F51B5"
+                app:navigationIconTint="@color/colorPrimary"
                 app:title="Receipts"
-                app:titleTextColor="#3F51B5" />
+                app:titleTextColor="@color/colorPrimary" />
         </LinearLayout>
 
         <!-- Date Selectors -->
@@ -43,23 +43,23 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="#3F51B5"
+                android:background="@drawable/bg_receipt_date_selector"
                 android:orientation="vertical"
-                android:padding="8dp"
-                android:layout_marginEnd="2dp">
+                android:padding="10dp"
+                android:layout_marginEnd="4dp">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="From"
-                    android:textColor="#E0E0E0"
-                    android:textSize="12sp" />
+                    android:textColor="#BDBDBD"
+                    android:textSize="11sp" />
                 <TextView
                     android:id="@+id/textDateFrom"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="03 Jun 2025"
+                    android:text="08 Jun 2026"
                     android:textColor="@color/white"
-                    android:textSize="16sp"
+                    android:textSize="15sp"
                     android:textStyle="bold" />
             </LinearLayout>
 
@@ -68,23 +68,22 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="#3F51B5"
+                android:background="@drawable/bg_receipt_date_selector"
                 android:orientation="vertical"
-                android:padding="8dp"
-                android:layout_marginStart="2dp">
+                android:padding="10dp">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="To"
-                    android:textColor="#E0E0E0"
-                    android:textSize="12sp" />
+                    android:textColor="#BDBDBD"
+                    android:textSize="11sp" />
                 <TextView
                     android:id="@+id/textDateTo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="05 Jun 2025"
+                    android:text="10 Jun 2026"
                     android:textColor="@color/white"
-                    android:textSize="16sp"
+                    android:textSize="15sp"
                     android:textStyle="bold" />
             </LinearLayout>
         </LinearLayout>
@@ -108,7 +107,7 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
         android:text="FILTER : ALL"
-        android:backgroundTint="#3F51B5"
+        android:backgroundTint="@color/colorPrimary"
         android:textColor="@color/white"
         app:cornerRadius="24dp"
         app:icon="@drawable/ic_lightning"

@@ -74,6 +74,7 @@ public class ReportsActivity extends AppCompatActivity {
     private TextView textHeaderBusinessName, textHeaderPhoneNumber, txtOwnerName, txtOwnerEmail;
     private ImageView imgLogo;
     private TextView textDashboardCustomerCount;
+    private TextView textSidebarCustomerCount, textSidebarInventoryCount;
 
     private RecyclerView recyclerItemCategories;
     private RecyclerView recyclerItemList;
@@ -212,6 +213,20 @@ public class ReportsActivity extends AppCompatActivity {
         txtOwnerEmail = findViewById(R.id.txtOwnerEmail);
         imgLogo = findViewById(R.id.imgLogo);
         textDashboardCustomerCount = findViewById(R.id.textDashboardCustomerCount);
+        textSidebarCustomerCount = findViewById(R.id.textSidebarCustomerCount);
+        textSidebarInventoryCount = findViewById(R.id.textSidebarInventoryCount);
+
+        // Explicitly look in sidebar if needed
+        View sidebar = findViewById(R.id.sidebarContent);
+        if (sidebar != null) {
+            if (textHeaderBusinessName == null) textHeaderBusinessName = sidebar.findViewById(R.id.textHeaderBusinessName);
+            if (textHeaderPhoneNumber == null) textHeaderPhoneNumber = sidebar.findViewById(R.id.textHeaderPhoneNumber);
+            if (txtOwnerName == null) txtOwnerName = sidebar.findViewById(R.id.txtOwnerName);
+            if (txtOwnerEmail == null) txtOwnerEmail = sidebar.findViewById(R.id.txtOwnerEmail);
+            if (imgLogo == null) imgLogo = sidebar.findViewById(R.id.imgLogo);
+            if (textSidebarCustomerCount == null) textSidebarCustomerCount = sidebar.findViewById(R.id.textSidebarCustomerCount);
+            if (textSidebarInventoryCount == null) textSidebarInventoryCount = sidebar.findViewById(R.id.textSidebarInventoryCount);
+        }
 
         bottomTabs = new View[]{
                 findViewById(R.id.tabReports),
@@ -249,13 +264,13 @@ public class ReportsActivity extends AppCompatActivity {
                     bottomNavigationView.getPaddingLeft(),
                     getResources().getDimensionPixelSize(R.dimen.reports_bottom_nav_padding_top),
                     bottomNavigationView.getPaddingRight(),
-                    getResources().getDimensionPixelSize(R.dimen.reports_bottom_nav_padding_bottom)
+                    systemBars.bottom + getResources().getDimensionPixelSize(R.dimen.reports_bottom_nav_padding_bottom)
             );
 
             ViewGroup.MarginLayoutParams layoutParams =
                     (ViewGroup.MarginLayoutParams) bottomNavigationView.getLayoutParams();
-            if (layoutParams.bottomMargin != systemBars.bottom) {
-                layoutParams.bottomMargin = systemBars.bottom;
+            if (layoutParams.bottomMargin != 0) {
+                layoutParams.bottomMargin = 0;
                 bottomNavigationView.setLayoutParams(layoutParams);
             }
             return windowInsets;
@@ -265,6 +280,21 @@ public class ReportsActivity extends AppCompatActivity {
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
+        
+        // Fix: Hide bottom navigation when drawer is sliding out
+        drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
+                if (bottomNavigationView != null) {
+                    bottomNavigationView.setTranslationY(bottomNavigationView.getHeight() * slideOffset);
+                }
+            }
+
+            @Override public void onDrawerOpened(@NonNull View drawerView) {}
+            @Override public void onDrawerClosed(@NonNull View drawerView) {}
+            @Override public void onDrawerStateChanged(int newState) {}
+        });
+
         toggle.syncState();
 
         setupCartManager();
@@ -395,6 +425,20 @@ public class ReportsActivity extends AppCompatActivity {
             runOnUiThread(() -> {
                 if (textDashboardCustomerCount != null) {
                     textDashboardCustomerCount.setText(String.valueOf(count));
+                }
+                if (textSidebarCustomerCount != null) {
+                    textSidebarCustomerCount.setText(String.valueOf(count));
+                }
+            });
+        });
+    }
+
+    private void updateInventoryCount() {
+        Executors.newSingleThreadExecutor().execute(() -> {
+            int count = AppDatabase.getInstance(this).itemDao().getAllItems().size();
+            runOnUiThread(() -> {
+                if (textSidebarInventoryCount != null) {
+                    textSidebarInventoryCount.setText(String.valueOf(count));
                 }
             });
         });
@@ -677,10 +721,28 @@ public class ReportsActivity extends AppCompatActivity {
             return;
         }
 
+        // Ensure PreferenceManager is synced with the selected business in Room DB
+        Executors.newSingleThreadExecutor().execute(() -> {
+            Business selected = AppDatabase.getInstance(this).businessDao().getSelectedBusiness();
+            if (selected != null) {
+                PreferenceManager pm = new PreferenceManager(this);
+                pm.setBusinessName(selected.getName());
+                pm.setBusinessMobile(selected.getPhoneNumber());
+                pm.setBusinessEmail(selected.getEmail());
+                pm.setBusinessRole(selected.getRole());
+                
+                runOnUiThread(this::refreshProfileUI);
+            }
+        });
+
         // First, load from local cache for immediate UI update
         refreshProfileUI();
+        updateCustomerCount();
+        updateInventoryCount();
+        syncCloudData();
 
-        // Then, sync from Firestore using the Repository
+        // Removed automatic Firestore pull that was reverting local business switches
+        /*
         new BusinessProfileRepository(this).loadBusinessProfile(new BusinessProfileRepository.ProfileCallback() {
             @Override
             public void onProfileLoaded(BusinessProfile profile) {
@@ -697,65 +759,33 @@ public class ReportsActivity extends AppCompatActivity {
                 Log.e("ReportsActivity", "PROFILE_LOAD_FAILED: " + message);
             }
         });
+        */
 
-        Executors.newSingleThreadExecutor().execute(() -> {
-            ReceiptSettings settings = AppDatabase.getInstance(this).receiptSettingsDao().getSettings();
-            
-            runOnUiThread(() -> {
-                if (settings != null) {
-                    if (textHeaderPhoneNumber != null) textHeaderPhoneNumber.setText(settings.getPhoneNumber());
-                    
-                    if (imgLogo != null) {
-                        if (settings.getBusinessLogoPath() != null && !settings.getBusinessLogoPath().isEmpty()) {
-                            try {
-                                imgLogo.setImageURI(android.net.Uri.parse(settings.getBusinessLogoPath()));
-                                imgLogo.setImageTintList(null);
-                            } catch (Exception ignored) {
-                                imgLogo.setImageResource(R.drawable.ic_nav_reports);
-                                imgLogo.setImageTintList(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(this, R.color.reports_tab_selected)));
-                            }
-                        } else {
-                            imgLogo.setImageResource(R.drawable.ic_nav_reports);
-                            imgLogo.setImageTintList(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(this, R.color.reports_tab_selected)));
-                        }
-                    }
-                }
-            });
-        });
-    }
-
-    private void syncProfileToLocalBusinessTable(BusinessProfile profile) {
-        if (profile == null) return;
-        android.util.Log.d("SETUP", "SWITCH_BUSINESS_LOADED");
-        
         Executors.newSingleThreadExecutor().execute(() -> {
             AppDatabase db = AppDatabase.getInstance(this);
-            List<Business> businesses = db.businessDao().getAllBusinesses();
-            
-            boolean found = false;
-            for (Business b : businesses) {
-                if (b.getName().equals(profile.getBusinessName())) {
-                    b.setCategory(profile.getCategory());
-                    b.setStatus(profile.getStatus());
-                    b.setEmail(profile.getEmail());
-                    b.setRole(profile.getRole());
-                    b.setPlan(profile.getPlan());
-                    b.setPhoneNumber(profile.getMobile());
-                    db.businessDao().update(b);
-                    found = true;
-                    break;
-                }
+            Business selected = db.businessDao().getSelectedBusiness();
+            if (selected != null) {
+                ReceiptSettings settings = db.receiptSettingsDao().getSettingsByBusiness(selected.getId());
+                
+                runOnUiThread(() -> {
+                    if (settings != null) {
+                        if (textHeaderPhoneNumber != null) textHeaderPhoneNumber.setText(settings.getPhoneNumber());
+                        
+                        if (imgLogo != null) {
+                            if (settings.getBusinessLogoPath() != null && !settings.getBusinessLogoPath().isEmpty()) {
+                                try {
+                                    imgLogo.setImageURI(android.net.Uri.parse(settings.getBusinessLogoPath()));
+                                    imgLogo.setImageTintList(null);
+                                } catch (Exception ignored) {
+                                    setDefaultLogo();
+                                }
+                            } else {
+                                setDefaultLogo();
+                            }
+                        }
+                    }
+                });
             }
-
-            if (!found) {
-                Business b = new Business(profile.getBusinessName(), profile.getMobile(), profile.getRole(), businesses.isEmpty());
-                b.setCategory(profile.getCategory());
-                b.setStatus(profile.getStatus());
-                b.setEmail(profile.getEmail());
-                b.setPlan(profile.getPlan());
-                db.businessDao().insert(b);
-            }
-            Log.d("ReportsActivity", "SWITCH_BUSINESS_DATA_LOADED");
         });
     }
 
@@ -763,14 +793,51 @@ public class ReportsActivity extends AppCompatActivity {
         PreferenceManager pm = new PreferenceManager(this);
         String name = pm.getBusinessName();
         String email = pm.getBusinessEmail();
+        String mobile = pm.getBusinessMobile();
+        String role = pm.getBusinessRole();
 
-        if (name != null && !name.isEmpty()) {
-            if (textHeaderBusinessName != null) textHeaderBusinessName.setText(name);
-            if (txtOwnerName != null) txtOwnerName.setText(name + " " + getString(R.string.header_owner_suffix));
+        if (textHeaderBusinessName != null) textHeaderBusinessName.setText(name != null ? name : "");
+        
+        if (txtOwnerName != null) {
+            String suffix = (role != null && !role.isEmpty()) ? " (" + role.toLowerCase() + ")" : " " + getString(R.string.header_owner_suffix);
+            txtOwnerName.setText((name != null ? name : "") + suffix);
         }
 
-        if (email != null && !email.isEmpty()) {
-            if (txtOwnerEmail != null) txtOwnerEmail.setText(email);
+        if (toolbar != null && currentTab == TAB_TODAY) {
+            toolbar.setTitle(getString(R.string.reports_tab_today));
+        }
+        if (toolbar != null && currentTab == TAB_REPORTS) {
+            toolbar.setTitle(getString(R.string.reports_title));
+        }
+
+        if (txtOwnerEmail != null) txtOwnerEmail.setText(email != null ? email : "");
+        if (textHeaderPhoneNumber != null) textHeaderPhoneNumber.setText(mobile != null ? mobile : "");
+
+        // Also refresh logo if we have it in settings or pm
+        Executors.newSingleThreadExecutor().execute(() -> {
+            ReceiptSettings settings = AppDatabase.getInstance(this).receiptSettingsDao().getSettings();
+            runOnUiThread(() -> {
+                if (settings != null && imgLogo != null) {
+                    if (settings.getBusinessLogoPath() != null && !settings.getBusinessLogoPath().isEmpty()) {
+                        try {
+                            imgLogo.setImageURI(android.net.Uri.parse(settings.getBusinessLogoPath()));
+                            imgLogo.setImageTintList(null);
+                        } catch (Exception ignored) {
+                            setDefaultLogo();
+                        }
+                    } else {
+                        setDefaultLogo();
+                    }
+                }
+            });
+        });
+    }
+
+    private void setDefaultLogo() {
+        if (imgLogo != null) {
+            imgLogo.setImageResource(R.drawable.ic_nav_reports);
+            imgLogo.setImageTintList(android.content.res.ColorStateList.valueOf(
+                    ContextCompat.getColor(this, R.color.reports_tab_selected)));
         }
     }
 
@@ -860,9 +927,15 @@ public class ReportsActivity extends AppCompatActivity {
         if (dialog.getWindow() != null) {
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            dialog.getWindow().setWindowAnimations(android.R.style.Animation_Dialog);
         }
         RecyclerView recyclerView = dialog.findViewById(R.id.recyclerBusinesses);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+
+        // Add slide-up animation for the grid items
+        android.view.animation.Animation slideUp = android.view.animation.AnimationUtils.loadAnimation(this, R.anim.slide_up);
+        recyclerView.startAnimation(slideUp);
+
         Executors.newSingleThreadExecutor().execute(() -> {
             List<Business> businesses = AppDatabase.getInstance(this).businessDao().getAllBusinesses();
             runOnUiThread(() -> {
@@ -873,17 +946,24 @@ public class ReportsActivity extends AppCompatActivity {
                         db.businessDao().deselectAll();
                         db.businessDao().selectBusiness(business.getId());
                         
-                        // Sync with ReceiptSettings (ID 1)
-                        ReceiptSettings settings = db.receiptSettingsDao().getSettings();
+                        // Sync with ReceiptSettings for THIS specific business
+                        ReceiptSettings settings = db.receiptSettingsDao().getSettingsByBusiness(business.getId());
                         if (settings == null) {
                             settings = new ReceiptSettings();
-                            settings.setId(1);
+                            settings.setId(business.getId());
                         }
                         settings.setBusinessName(business.getName());
                         settings.setPhoneNumber(business.getPhoneNumber());
                         settings.setEmail(business.getEmail());
                         settings.setBusinessLogoPath(business.getLogoPath());
                         db.receiptSettingsDao().insert(settings);
+                        
+                        // Sync with PreferenceManager for immediate UI update in refreshProfileUI()
+                        PreferenceManager pm = new PreferenceManager(ReportsActivity.this);
+                        pm.setBusinessName(business.getName());
+                        pm.setBusinessEmail(business.getEmail());
+                        pm.setBusinessMobile(business.getPhoneNumber());
+                        pm.setBusinessRole(business.getRole());
 
                         runOnUiThread(() -> {
                             dialog.dismiss();
@@ -916,14 +996,26 @@ public class ReportsActivity extends AppCompatActivity {
 
         int unselectedColor = ContextCompat.getColor(this, R.color.reports_tab_unselected);
         int selectedColor = ContextCompat.getColor(this, R.color.white);
+        int activeBlue = Color.parseColor("#1E40AF");
 
         for (int i = 0; i < bottomTabs.length; i++) {
             boolean isSelected = i == selectedTab;
-            bottomTabs[i].setBackgroundResource(isSelected ? R.drawable.bg_reports_nav_item : 0);
-            bottomTabIcons[i].setColorFilter(isSelected ? selectedColor : unselectedColor);
-            bottomTabLabels[i].setTextColor(isSelected ? selectedColor : unselectedColor);
-            bottomTabLabels[i].setTypeface(null, isSelected ? Typeface.BOLD : Typeface.NORMAL);
+            if (isSelected) {
+                bottomTabs[i].setBackgroundResource(R.drawable.bg_reports_nav_item);
+                bottomTabs[i].getBackground().setTint(activeBlue);
+                bottomTabIcons[i].setColorFilter(selectedColor);
+                bottomTabLabels[i].setTextColor(selectedColor);
+                bottomTabLabels[i].setTypeface(null, Typeface.BOLD);
+            } else {
+                bottomTabs[i].setBackgroundResource(0);
+                bottomTabIcons[i].setColorFilter(unselectedColor);
+                bottomTabLabels[i].setTextColor(unselectedColor);
+                bottomTabLabels[i].setTypeface(null, Typeface.NORMAL);
+            }
         }
+
+        // Add a smooth transition when switching tabs
+        android.transition.TransitionManager.beginDelayedTransition(findViewById(R.id.reportsRoot));
 
         moreContentContainer.setVisibility(View.GONE);
         itemsContentContainer.setVisibility(View.GONE);
@@ -1068,14 +1160,7 @@ public class ReportsActivity extends AppCompatActivity {
         TextView textItemNameHeader = view.findViewById(R.id.textItemNameHeader);
         textItemNameHeader.setText(item.getName().toUpperCase());
 
-        view.findViewById(R.id.btnEditItem).setOnClickListener(v -> {
-            bottomSheet.dismiss();
-            Intent intent = new Intent(this, ManageItemActivity.class);
-            intent.putExtra("item_id", item.getId());
-            startActivity(intent);
-        });
-
-        view.findViewById(R.id.btnSelectDone).setOnClickListener(v -> bottomSheet.dismiss());
+        view.findViewById(R.id.btnCloseSheet).setOnClickListener(v -> bottomSheet.dismiss());
 
         RecyclerView rv = view.findViewById(R.id.recyclerVariantSelector);
         rv.setLayoutManager(new LinearLayoutManager(this));
@@ -1120,11 +1205,12 @@ public class ReportsActivity extends AppCompatActivity {
             ItemDao itemDao = AppDatabase.getInstance(this).itemDao();
             List<ItemCategoryAdapter.CategoryWithCount> list = new ArrayList<>();
             for (Category cat : dbCategories) {
+                if (cat.getName() != null && (cat.getName().equalsIgnoreCase("Uncategorized") || cat.getName().equalsIgnoreCase("No Category") || cat.getName().isEmpty())) {
+                    continue;
+                }
                 int count = itemDao.getItemCountByCategory(cat.getName());
                 list.add(new ItemCategoryAdapter.CategoryWithCount(cat.getName(), count));
             }
-            int unc = itemDao.getUncategorizedItemCount();
-            if (unc > 0) list.add(new ItemCategoryAdapter.CategoryWithCount("Uncategorized", unc));
             runOnUiThread(() -> {
                 if (recyclerItemCategories != null) {
                     recyclerItemCategories.setAdapter(new ItemCategoryAdapter(list, item -> {

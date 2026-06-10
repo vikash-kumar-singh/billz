@@ -60,6 +60,19 @@ public class StaffAdapter extends RecyclerView.Adapter<StaffAdapter.ViewHolder> 
         holder.btnPaySlip.setOnClickListener(v -> {
             if (listener != null) listener.onPaySlipClick(staff);
         });
+
+        // Set entry animation
+        setAnimation(holder.itemView, position);
+    }
+
+    private int lastPosition = -1;
+    private void setAnimation(View viewToAnimate, int position) {
+        if (position > lastPosition) {
+            android.view.animation.Animation animation = android.view.animation.AnimationUtils.loadAnimation(viewToAnimate.getContext(), android.R.anim.fade_in);
+            animation.setDuration(400);
+            viewToAnimate.startAnimation(animation);
+            lastPosition = position;
+        }
     }
 
     @Override

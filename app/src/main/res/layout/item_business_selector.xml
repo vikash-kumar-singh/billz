@@ -3,13 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    app:cardCornerRadius="8dp"
-    app:cardElevation="1dp"
-    app:strokeColor="#CBD5E1"
+    android:layout_margin="6dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="2dp"
     app:strokeWidth="1.5dp"
-    app:cardBackgroundColor="@color/white"
-    app:cardPreventCornerOverlap="false">
+    app:strokeColor="#E2E8F0"
+    app:cardBackgroundColor="@color/white">
 
     <LinearLayout
         android:id="@+id/layoutBusinessItem"
@@ -17,14 +16,14 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="vertical"
-        android:paddingVertical="24dp"
-        android:paddingHorizontal="8dp">
+        android:paddingVertical="20dp"
+        android:paddingHorizontal="12dp">
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardLogoContainer"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            app:cardCornerRadius="28dp"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            app:cardCornerRadius="32dp"
             app:cardElevation="0dp"
             app:strokeWidth="0dp">
 
@@ -42,8 +41,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:gravity="center"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:text="Business Name"
-            android:textColor="@color/black"
+            android:textColor="#1E293B"
             android:textSize="14sp"
             android:textStyle="bold" />
 
@@ -51,9 +52,10 @@
             android:id="@+id/textBusinessRole"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:text="OWNER"
-            android:textColor="#9E9E9E"
+            android:layout_marginTop="4dp"
+            android:gravity="center"
+            android:text="Category • Plan"
+            android:textColor="#64748B"
             android:textSize="11sp" />
 
     </LinearLayout>

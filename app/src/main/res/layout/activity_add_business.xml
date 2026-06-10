@@ -1,262 +1,353 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F3F4F6"
     tools:context=".AddBusinessActivity">
 
-    <!-- Custom Toolbar -->
-    <LinearLayout
-        android:id="@+id/toolbarAddBusinessLayout"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="match_parent"
+        android:background="#F3F4F6">
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbarAddBusiness"
+        <!-- Old Navigation Bar (Toolbar) -->
+        <LinearLayout
+            android:id="@+id/toolbarAddBusinessLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="64dp"
+            android:orientation="vertical"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbarAddBusiness"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="64dp"
+                android:background="#3F51B5"
+                app:navigationIcon="@drawable/ic_reports_menu"
+                app:navigationIconTint="@color/white"
+                app:title="NEW BUSINESS"
+                app:titleCentered="false"
+                app:titleTextColor="@color/white"
+                app:titleTextAppearance="@style/TextAppearance.MaterialComponents.Headline6">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnSave"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginEnd="8dp"
+                    android:text="Save"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:icon="@drawable/ic_circle_check"
+                    app:iconGravity="end"
+                    app:iconPadding="4dp"
+                    app:iconTint="@color/white" />
+
+            </com.google.android.material.appbar.MaterialToolbar>
+        </LinearLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
+            app:layout_constraintTop_toBottomOf="@id/toolbarAddBusinessLayout">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardBackgroundColor="#3F51B5"
+                    app:cardCornerRadius="8dp"
+                    app:cardElevation="0dp"
+                    android:layout_marginBottom="16dp">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="12dp"
+                        android:gravity="center"
+                        android:text="Join an existing business? Click here to join your partner's business."
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.App.TextInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Business Name"
+                    android:textColorHint="@color/textHint"
+                    app:hintTextColor="@color/colorPrimary"
+                    app:boxBackgroundColor="@color/white"
+                    android:layout_marginBottom="16dp">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editBusinessName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/textPrimary"
+                        android:inputType="textCapWords" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <ImageView
+                    android:id="@+id/checkName"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="end"
+                    android:layout_marginTop="-40dp"
+                    android:layout_marginEnd="12dp"
+                    android:layout_marginBottom="16dp"
+                    android:src="@drawable/ic_circle_check"
+                    android:visibility="gone" />
+
+                <GridLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:columnCount="2"
+                    android:rowCount="4"
+                    android:layout_marginBottom="16dp">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:layout_margin="4dp"
+                        app:cardBackgroundColor="@color/white"
+                        app:cardCornerRadius="8dp"
+                        app:cardElevation="1dp"
+                        app:strokeColor="#EEEEEE"
+                        app:strokeWidth="1dp">
+                        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="12dp">
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Country" android:textColor="#64748B" android:textSize="11sp" />
+                            <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+                                <TextView android:id="@+id/textCountry" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="India" android:textColor="#1E293B" android:textSize="14sp" android:textStyle="bold" />
+                                <ImageView android:id="@+id/checkCountry" android:layout_width="16dp" android:layout_height="16dp" android:layout_alignParentEnd="true" android:src="@drawable/ic_circle_check" android:visibility="gone" />
+                            </RelativeLayout>
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:layout_margin="4dp"
+                        app:cardBackgroundColor="@color/white"
+                        app:cardCornerRadius="8dp"
+                        app:cardElevation="1dp"
+                        app:strokeColor="#EEEEEE"
+                        app:strokeWidth="1dp">
+                        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="12dp">
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Time Zone" android:textColor="#64748B" android:textSize="11sp" />
+                            <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+                                <TextView android:id="@+id/textTimeZone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Asia/Kolkata" android:textColor="#1E293B" android:textSize="14sp" android:textStyle="bold" />
+                                <ImageView android:id="@+id/checkTimeZone" android:layout_width="16dp" android:layout_height="16dp" android:layout_alignParentEnd="true" android:src="@drawable/ic_circle_check" android:visibility="gone" />
+                            </RelativeLayout>
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:layout_margin="4dp"
+                        app:cardBackgroundColor="@color/white"
+                        app:cardCornerRadius="8dp"
+                        app:cardElevation="1dp"
+                        app:strokeColor="#EEEEEE"
+                        app:strokeWidth="1dp">
+                        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="12dp">
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Business Type" android:textColor="#64748B" android:textSize="11sp" />
+                            <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+                                <TextView android:id="@+id/textType" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Select Type" android:textColor="#94A3B8" android:textSize="14sp" android:textStyle="bold" />
+                                <ImageView android:id="@+id/checkType" android:layout_width="16dp" android:layout_height="16dp" android:layout_alignParentEnd="true" android:src="@drawable/ic_circle_check" android:visibility="gone" />
+                            </RelativeLayout>
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:layout_margin="4dp"
+                        app:cardBackgroundColor="@color/white"
+                        app:cardCornerRadius="8dp"
+                        app:cardElevation="1dp"
+                        app:strokeColor="#EEEEEE"
+                        app:strokeWidth="1dp">
+                        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="12dp">
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Currency" android:textColor="#64748B" android:textSize="11sp" />
+                            <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+                                <TextView android:id="@+id/textCurrency" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="INR" android:textColor="#1E293B" android:textSize="14sp" android:textStyle="bold" />
+                                <ImageView android:id="@+id/checkCurrency" android:layout_width="16dp" android:layout_height="16dp" android:layout_alignParentEnd="true" android:src="@drawable/ic_circle_check" android:visibility="gone" />
+                            </RelativeLayout>
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:layout_margin="4dp"
+                        app:cardBackgroundColor="@color/white"
+                        app:cardCornerRadius="8dp"
+                        app:cardElevation="1dp"
+                        app:strokeColor="#EEEEEE"
+                        app:strokeWidth="1dp">
+                        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="12dp">
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Number System" android:textColor="#64748B" android:textSize="11sp" />
+                            <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+                                <TextView android:id="@+id/textNumberSystem" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Indian" android:textColor="#1E293B" android:textSize="14sp" android:textStyle="bold" />
+                                <ImageView android:id="@+id/checkNumberSystem" android:layout_width="16dp" android:layout_height="16dp" android:layout_alignParentEnd="true" android:src="@drawable/ic_circle_check" android:visibility="gone" />
+                            </RelativeLayout>
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:layout_margin="4dp"
+                        app:cardBackgroundColor="@color/white"
+                        app:cardCornerRadius="8dp"
+                        app:cardElevation="1dp"
+                        app:strokeColor="#EEEEEE"
+                        app:strokeWidth="1dp">
+                        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="12dp">
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Decimal Places" android:textColor="#64748B" android:textSize="11sp" />
+                            <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+                                <TextView android:id="@+id/textDecimalPlaces" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="2" android:textColor="#1E293B" android:textSize="14sp" android:textStyle="bold" />
+                                <ImageView android:id="@+id/checkDecimalPlaces" android:layout_width="16dp" android:layout_height="16dp" android:layout_alignParentEnd="true" android:src="@drawable/ic_circle_check" android:visibility="gone" />
+                            </RelativeLayout>
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_columnSpan="2"
+                        android:layout_margin="4dp"
+                        app:cardBackgroundColor="@color/white"
+                        app:cardCornerRadius="8dp"
+                        app:cardElevation="1dp"
+                        app:strokeColor="#EEEEEE"
+                        app:strokeWidth="1dp">
+                        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="12dp">
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Separator Format" android:textColor="#64748B" android:textSize="11sp" />
+                            <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+                                <TextView android:id="@+id/textSeparatorFormat" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="₹ 99,99,999.00" android:textColor="#1E293B" android:textSize="14sp" android:textStyle="bold" />
+                                <ImageView android:id="@+id/checkSeparatorFormat" android:layout_width="16dp" android:layout_height="16dp" android:layout_alignParentEnd="true" android:src="@drawable/ic_circle_check" android:visibility="gone" />
+                            </RelativeLayout>
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                </GridLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.App.TextInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Mobile Number"
+                    android:textColorHint="@color/textHint"
+                    app:hintTextColor="@color/colorPrimary"
+                    app:boxBackgroundColor="@color/white"
+                    app:prefixText="+91 "
+                    app:prefixTextColor="#1E293B"
+                    android:layout_marginBottom="16dp">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editMobile"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/textPrimary"
+                        android:inputType="phone" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <LinearLayout
+                    android:id="@+id/layoutAgree"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="8dp">
+                    <CheckBox android:id="@+id/checkAgree" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="I Agree to Terms &amp; Conditions" android:textColor="#1E293B" android:textSize="13sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layoutLegal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="24dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnDeleteBusiness"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Delete Business"
+                    android:textColor="@color/error"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
+        <!-- Bottom Navigation Bar -->
+        <LinearLayout
+            android:id="@+id/bottomNavigation"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
             android:background="@color/white"
-            app:navigationIcon="@drawable/ic_reports_back"
-            app:navigationIconTint="#3F51B5"
-            app:title="NEW"
-            app:titleCentered="false"
-            app:titleTextColor="#3F51B5"
-            app:titleTextAppearance="@style/TextAppearance.MaterialComponents.Headline5">
+            android:baselineAligned="false"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:elevation="8dp"
+            app:layout_constraintBottom_toBottomOf="parent">
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginStart="8dp"
-                    android:src="@android:drawable/ic_menu_help"
-                    app:tint="#3F51B5" />
-
-                <ImageView
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
-                    android:layout_marginStart="12dp"
-                    android:src="@android:drawable/stat_notify_chat"
-                    app:tint="#3F51B5" />
-
-                <ImageView
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
-                    android:layout_marginStart="12dp"
-                    android:src="@android:drawable/ic_menu_send"
-                    app:tint="#3F51B5" />
+            <LinearLayout android:id="@+id/tabReports" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:layout_margin="4dp" android:gravity="center" android:orientation="vertical" android:clickable="true" android:focusable="true" android:background="?attr/selectableItemBackground">
+                <ImageView android:id="@+id/iconReports" android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_nav_reports" app:tint="#64748B" />
+                <TextView android:id="@+id/labelReports" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:text="@string/reports_tab_reports" android:textColor="#64748B" android:textSize="11sp" />
             </LinearLayout>
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnSave"
-                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_marginEnd="32dp"
-                android:backgroundTint="#4CAF50"
-                android:minHeight="0dp"
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="8dp"
-                android:text="Save"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                app:cornerRadius="4dp" />
-
-        </com.google.android.material.appbar.MaterialToolbar>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbarAddBusinessLayout">
-
-        <!-- Invite Banner -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#3F51B5"
-            android:padding="10dp">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="Have you been invited by your partner or owner? Click here to join exiting Business"
-                android:textColor="@color/white"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-        <!-- Business Name -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="12dp"
-            android:layout_marginTop="8dp"
-            app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="4dp"
-            app:cardElevation="1dp">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="8dp">
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Business Name*" android:textColor="#64748B" android:textSize="11sp" />
-                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:layout_marginTop="2dp">
-                    <ImageView android:id="@+id/checkName" android:layout_width="16dp" android:layout_height="16dp" android:src="@drawable/ic_circle_check" app:tint="#CBD5E1" />
-                    <EditText android:id="@+id/editBusinessName" android:layout_width="match_parent" android:layout_height="32dp" android:layout_marginStart="8dp" android:background="@null" android:hint="Enter Name" android:inputType="textCapWords" android:textColor="@color/black" android:textColorHint="#94A3B8" android:textSize="14sp" />
-                </LinearLayout>
+            <LinearLayout android:id="@+id/tabToday" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:layout_margin="4dp" android:gravity="center" android:orientation="vertical" android:clickable="true" android:focusable="true" android:background="?attr/selectableItemBackground">
+                <ImageView android:id="@+id/iconToday" android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_nav_today" app:tint="#64748B" />
+                <TextView android:id="@+id/labelToday" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:text="@string/reports_tab_today" android:textColor="#64748B" android:textSize="11sp" />
             </LinearLayout>
-        </androidx.cardview.widget.CardView>
 
-        <!-- Compact Rows -->
-        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginHorizontal="8dp" android:layout_marginTop="4dp">
-            <androidx.cardview.widget.CardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_margin="4dp" app:cardElevation="1dp" app:cardBackgroundColor="@color/white">
-                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="8dp">
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Please Select Country*" android:textColor="#64748B" android:textSize="10sp" />
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:layout_marginTop="2dp">
-                        <ImageView android:id="@+id/checkCountry" android:layout_width="14dp" android:layout_height="14dp" android:src="@drawable/ic_circle_check" app:tint="#3F51B5" />
-                        <TextView android:id="@+id/textCountry" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="India" android:textColor="@color/black" android:textSize="13sp" android:layout_marginStart="4dp" />
-                    </LinearLayout>
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-            <androidx.cardview.widget.CardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_margin="4dp" app:cardElevation="1dp" app:cardBackgroundColor="@color/white">
-                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="8dp">
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Select Time Zone*" android:textColor="#64748B" android:textSize="10sp" />
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:layout_marginTop="2dp">
-                        <ImageView android:id="@+id/checkTimeZone" android:layout_width="14dp" android:layout_height="14dp" android:src="@drawable/ic_circle_check" app:tint="#3F51B5" />
-                        <TextView android:id="@+id/textTimeZone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Asia/Kolkata" android:textColor="@color/black" android:textSize="13sp" android:layout_marginStart="4dp" />
-                    </LinearLayout>
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-        </LinearLayout>
-
-        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginHorizontal="8dp">
-            <androidx.cardview.widget.CardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_margin="4dp" app:cardElevation="1dp" app:cardBackgroundColor="@color/white">
-                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="8dp">
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Business Type*" android:textColor="#64748B" android:textSize="10sp" />
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:layout_marginTop="2dp">
-                        <ImageView android:id="@+id/checkType" android:layout_width="14dp" android:layout_height="14dp" android:src="@drawable/ic_circle_check" app:tint="#CBD5E1" />
-                        <TextView android:id="@+id/textType" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Select Type" android:textColor="#94A3B8" android:textSize="13sp" android:layout_marginStart="4dp" />
-                    </LinearLayout>
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-            <androidx.cardview.widget.CardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_margin="4dp" app:cardElevation="1dp" app:cardBackgroundColor="@color/white">
-                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="8dp">
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Currency*" android:textColor="#64748B" android:textSize="10sp" />
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:layout_marginTop="2dp">
-                        <ImageView android:id="@+id/checkCurrency" android:layout_width="14dp" android:layout_height="14dp" android:src="@drawable/ic_circle_check" app:tint="#3F51B5" />
-                        <TextView android:id="@+id/textCurrency" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="INR" android:textColor="@color/black" android:textSize="13sp" android:layout_marginStart="4dp" />
-                    </LinearLayout>
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-        </LinearLayout>
-
-        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginHorizontal="8dp">
-            <androidx.cardview.widget.CardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_margin="4dp" app:cardElevation="1dp" app:cardBackgroundColor="@color/white">
-                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="8dp">
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Number System*" android:textColor="#64748B" android:textSize="10sp" />
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:layout_marginTop="2dp">
-                        <ImageView android:id="@+id/checkNumberSystem" android:layout_width="14dp" android:layout_height="14dp" android:src="@drawable/ic_circle_check" app:tint="#3F51B5" />
-                        <TextView android:id="@+id/textNumberSystem" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="99,99,999" android:textColor="@color/black" android:textSize="13sp" android:layout_marginStart="4dp" />
-                    </LinearLayout>
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-            <androidx.cardview.widget.CardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_margin="4dp" app:cardElevation="1dp" app:cardBackgroundColor="@color/white">
-                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="8dp">
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Decimal places*" android:textColor="#64748B" android:textSize="10sp" />
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:layout_marginTop="2dp">
-                        <ImageView android:id="@+id/checkDecimalPlaces" android:layout_width="14dp" android:layout_height="14dp" android:src="@drawable/ic_circle_check" app:tint="#3F51B5" />
-                        <TextView android:id="@+id/textDecimalPlaces" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="3" android:textColor="@color/black" android:textSize="13sp" android:layout_marginStart="4dp" />
-                    </LinearLayout>
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-        </LinearLayout>
-
-        <!-- Separator Format -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="12dp"
-            android:layout_marginTop="4dp"
-            app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="4dp"
-            app:cardElevation="1dp">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="8dp">
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Separator Format*" android:textColor="#64748B" android:textSize="10sp" />
-                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:layout_marginTop="2dp">
-                    <ImageView android:id="@+id/checkSeparatorFormat" android:layout_width="14dp" android:layout_height="14dp" android:src="@drawable/ic_circle_check" app:tint="#3F51B5" />
-                    <TextView android:id="@+id/textSeparatorFormat" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginStart="4dp" android:text="₹ 99,99,999.000" android:textColor="@color/black" android:textSize="13sp" />
-                </LinearLayout>
+            <LinearLayout android:id="@+id/tabCounter" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:layout_margin="4dp" android:gravity="center" android:orientation="vertical" android:clickable="true" android:focusable="true" android:background="?attr/selectableItemBackground">
+                <ImageView android:id="@+id/iconCounter" android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_nav_counter" app:tint="#64748B" />
+                <TextView android:id="@+id/labelCounter" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:text="@string/reports_tab_counter" android:textColor="#64748B" android:textSize="11sp" />
             </LinearLayout>
-        </androidx.cardview.widget.CardView>
 
-        <!-- Mobile -->
-        <androidx.cardview.widget.CardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginHorizontal="12dp" android:layout_marginTop="8dp" app:cardElevation="1dp" app:cardBackgroundColor="@color/white">
-            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:padding="8dp">
-                <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical">
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="ISD" android:textColor="#64748B" android:textSize="10sp" />
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="+91" android:textColor="@color/black" android:textSize="14sp" android:layout_marginTop="2dp" />
-                </LinearLayout>
-                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="24dp" android:orientation="vertical">
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Enter Mobile no" android:textColor="#64748B" android:textSize="10sp" />
-                    <EditText android:id="@+id/editMobile" android:layout_width="match_parent" android:layout_height="32dp" android:background="@null" android:hint="Enter Mobile no" android:inputType="phone" android:textColor="@color/black" android:textColorHint="#94A3B8" android:textSize="14sp" />
-                </LinearLayout>
+            <LinearLayout android:id="@+id/tabItems" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:layout_margin="4dp" android:gravity="center" android:orientation="vertical" android:clickable="true" android:focusable="true" android:background="?attr/selectableItemBackground">
+                <ImageView android:id="@+id/iconItems" android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_nav_items" app:tint="#64748B" />
+                <TextView android:id="@+id/labelItems" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:text="@string/reports_tab_items" android:textColor="#64748B" android:textSize="11sp" />
             </LinearLayout>
-        </androidx.cardview.widget.CardView>
 
-        <!-- Footer Section -->
-        <LinearLayout
-            android:id="@+id/layoutAgree"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginEnd="16dp"
-            android:layout_marginTop="8dp"
-            android:gravity="center_vertical">
-            <CheckBox android:id="@+id/checkAgree" android:layout_width="wrap_content" android:layout_height="wrap_content" android:buttonTint="#94A3B8" />
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="I Agree" android:textColor="@color/black" android:textStyle="bold" android:textSize="13sp" />
+            <LinearLayout android:id="@+id/tabMore" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:layout_margin="4dp" android:gravity="center" android:orientation="vertical" android:clickable="true" android:focusable="true" android:background="?attr/selectableItemBackground">
+                <ImageView android:id="@+id/iconMore" android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_nav_more" app:tint="#64748B" />
+                <TextView android:id="@+id/labelMore" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:text="@string/reports_tab_more" android:textColor="#64748B" android:textSize="11sp" />
+            </LinearLayout>
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/layoutLegal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:gravity="center">
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Terms And Conditions" android:textColor="#3F51B5" android:textSize="11sp" />
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="16dp" android:text="Privacy Policy" android:textColor="#3F51B5" android:textSize="11sp" />
-        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnDeleteBusiness"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:layout_marginTop="24dp"
-            android:backgroundTint="#F44336"
-            android:text="DELETE BUSINESS"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:visibility="gone"
-            app:cornerRadius="0dp" />
+    <!-- Sidebar Content -->
+    <include
+        android:id="@+id/sidebarContent"
+        layout="@layout/layout_drawer_content"
+        android:layout_width="300dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start" />
 
-    </LinearLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.drawerlayout.widget.DrawerLayout>

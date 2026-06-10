@@ -6,11 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.card.MaterialCardView;
@@ -43,38 +41,50 @@ public class BusinessAdapter extends RecyclerView.Adapter<BusinessAdapter.ViewHo
         Business business = businessList.get(position);
         holder.textName.setText(business.getName());
         
-        // Display: Business Name Category Plan
         String category = (business.getCategory() != null && !business.getCategory().isEmpty()) ? business.getCategory() : "No Category";
         String plan = (business.getPlan() != null && !business.getPlan().isEmpty()) ? business.getPlan() : "FREE";
         
         String info = category + " • " + plan;
-        holder.textRole.setText(info);
+        holder.textRole.setText(info.toLowerCase());
 
         if (business.isSelected()) {
-            holder.cardView.setStrokeColor(Color.parseColor("#3F51B5"));
-            holder.cardView.setStrokeWidth(0); 
-            holder.cardView.setCardBackgroundColor(Color.parseColor("#3F51B5")); 
-            holder.textName.setTextColor(Color.WHITE);
-            holder.textRole.setTextColor(Color.parseColor("#E0E0E0"));
+            holder.cardView.setStrokeColor(Color.parseColor("#1E40AF"));
+            holder.cardView.setStrokeWidth(4);
+            holder.cardView.setCardBackgroundColor(Color.parseColor("#E0E7FF")); 
+            holder.textName.setTextColor(Color.parseColor("#1E40AF"));
+            holder.textRole.setTextColor(Color.parseColor("#475569"));
             holder.cardLogoContainer.setCardBackgroundColor(Color.WHITE);
         } else {
-            holder.cardView.setStrokeColor(Color.parseColor("#CBD5E1")); 
-            holder.cardView.setStrokeWidth(2); 
-            holder.cardView.setCardBackgroundColor(Color.WHITE);
-            holder.textName.setTextColor(Color.parseColor("#64748B"));
+            holder.cardView.setStrokeColor(Color.parseColor("#E2E8F0")); 
+            holder.cardView.setStrokeWidth(0); 
+            holder.cardView.setCardBackgroundColor(Color.parseColor("#F8FAFC"));
+            holder.textName.setTextColor(Color.parseColor("#334155"));
             holder.textRole.setTextColor(Color.parseColor("#94A3B8"));
-            holder.cardLogoContainer.setCardBackgroundColor(Color.parseColor("#F1F5F9"));
+            holder.cardLogoContainer.setCardBackgroundColor(Color.WHITE);
         }
 
-        if (business.getLogoPath() != null) {
-            holder.imgLogo.setImageURI(Uri.parse(business.getLogoPath()));
-            holder.imgLogo.setColorFilter(null);
+        if (business.getLogoPath() != null && !business.getLogoPath().isEmpty()) {
+            try {
+                holder.imgLogo.setImageURI(Uri.parse(business.getLogoPath()));
+                holder.imgLogo.setColorFilter(null);
+            } catch (Exception e) {
+                setDefaultLogo(holder);
+            }
         } else {
-            holder.imgLogo.setImageResource(R.drawable.ic_nav_reports);
-            holder.imgLogo.setColorFilter(Color.parseColor("#3F51B5"));
+            setDefaultLogo(holder);
         }
 
-        holder.itemView.setOnClickListener(v -> listener.onBusinessClick(business));
+        holder.itemView.setOnClickListener(v -> {
+            v.animate().scaleX(0.95f).scaleY(0.95f).setDuration(100).withEndAction(() -> {
+                v.animate().scaleX(1.0f).scaleY(1.0f).setDuration(100).start();
+                listener.onBusinessClick(business);
+            }).start();
+        });
+    }
+
+    private void setDefaultLogo(ViewHolder holder) {
+        holder.imgLogo.setImageResource(R.drawable.ic_nav_reports);
+        holder.imgLogo.setColorFilter(Color.parseColor("#1E40AF"));
     }
 
     @Override

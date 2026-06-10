@@ -1,5 +1,6 @@
 package com.example.billz;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -10,10 +11,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
+import androidx.core.view.GravityCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
@@ -27,6 +31,7 @@ public class AddBusinessActivity extends AppCompatActivity {
     private TextView textType, textCountry, textTimeZone, textCurrency, textNumberSystem, textDecimalPlaces, textSeparatorFormat;
     private ImageView checkName, checkType, checkCountry, checkTimeZone, checkCurrency, checkNumberSystem, checkDecimalPlaces, checkSeparatorFormat;
     private CheckBox checkAgree;
+    private DrawerLayout drawerLayout;
     private boolean isUpdate = false;
     private int businessId = -1;
     private Business currentBusiness;
@@ -50,7 +55,7 @@ public class AddBusinessActivity extends AppCompatActivity {
             return insets;
         });
 
-        toolbar.setNavigationOnClickListener(v -> finish());
+        setupSidebar();
 
         editBusinessName = findViewById(R.id.editBusinessName);
         editMobile = findViewById(R.id.editMobile);
@@ -111,6 +116,81 @@ public class AddBusinessActivity extends AppCompatActivity {
 
         btnSave.setOnClickListener(v -> saveBusiness());
         btnDelete.setOnClickListener(v -> deleteBusiness());
+    }
+
+    private void setupSidebar() {
+        drawerLayout = findViewById(R.id.drawerLayout);
+        MaterialToolbar toolbar = findViewById(R.id.toolbarAddBusiness);
+        
+        if (drawerLayout != null) {
+            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                    this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+            drawerLayout.addDrawerListener(toggle);
+            toggle.syncState();
+            
+            toolbar.setNavigationOnClickListener(v -> {
+                if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                    drawerLayout.closeDrawer(GravityCompat.START);
+                } else {
+                    drawerLayout.openDrawer(GravityCompat.START);
+                }
+            });
+
+            // Sidebar Item Click Listeners
+            findViewById(R.id.btnSwitchBusiness).setOnClickListener(v -> {
+                drawerLayout.closeDrawer(GravityCompat.START);
+                Toast.makeText(this, "Switch Business coming soon", Toast.LENGTH_SHORT).show();
+            });
+
+            findViewById(R.id.btnCreateBusiness).setOnClickListener(v -> {
+                drawerLayout.closeDrawer(GravityCompat.START);
+                if (isUpdate) {
+                    startActivity(new Intent(this, AddBusinessActivity.class));
+                }
+            });
+
+            findViewById(R.id.nav_help_chat).setOnClickListener(v -> {
+                drawerLayout.closeDrawer(GravityCompat.START);
+                Toast.makeText(this, "Help Chat coming soon", Toast.LENGTH_SHORT).show();
+            });
+
+            findViewById(R.id.nav_inventory).setOnClickListener(v -> {
+                drawerLayout.closeDrawer(GravityCompat.START);
+                startActivity(new Intent(this, InventoryManagementActivity.class));
+            });
+
+            findViewById(R.id.nav_add_expense).setOnClickListener(v -> {
+                drawerLayout.closeDrawer(GravityCompat.START);
+                startActivity(new Intent(this, CashFlowActivity.class));
+            });
+
+            findViewById(R.id.nav_receipts).setOnClickListener(v -> {
+                drawerLayout.closeDrawer(GravityCompat.START);
+                startActivity(new Intent(this, ReceiptsActivity.class));
+            });
+
+            findViewById(R.id.nav_customers).setOnClickListener(v -> {
+                drawerLayout.closeDrawer(GravityCompat.START);
+                startActivity(new Intent(this, CustomerManagementActivity.class));
+            });
+
+            findViewById(R.id.nav_staff).setOnClickListener(v -> {
+                drawerLayout.closeDrawer(GravityCompat.START);
+                startActivity(new Intent(this, StaffManagementActivity.class));
+            });
+
+            findViewById(R.id.nav_language).setOnClickListener(v -> {
+                drawerLayout.closeDrawer(GravityCompat.START);
+                Intent intent = new Intent(this, LanguageSelectionActivity.class);
+                intent.putExtra("isFromSettings", true);
+                startActivity(intent);
+            });
+
+            findViewById(R.id.nav_logout).setOnClickListener(v -> {
+                drawerLayout.closeDrawer(GravityCompat.START);
+                Toast.makeText(this, "Logging out...", Toast.LENGTH_SHORT).show();
+            });
+        }
     }
 
     private void deleteBusiness() {

@@ -2,19 +2,46 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="reports_background">#FFFFFFFF</color>
-    <color name="reports_surface">#FFFFFFFF</color>
-    <color name="reports_text_primary">#FF1B1F24</color>
-    <color name="reports_text_secondary">#FF8A9099</color>
-    <color name="reports_tab_selected">#FF2563EB</color>
-    <color name="reports_tab_unselected">#FF96A0AD</color>
-    <color name="reports_divider">#FFE8EDF3</color>
-    <color name="reports_chip_background">#FFF7F9FC</color>
-    <color name="reports_chip_stroke">#FFE6EBF2</color>
-    <color name="reports_icon_tint">#FF334155</color>
-    <color name="reports_illustration_background">#FFEAF1FF</color>
-    <color name="reports_illustration_primary">#FF2563EB</color>
-    <color name="reports_illustration_secondary">#FFFFD9A6</color>
-    <color name="reports_illustration_accent">#FF1E293B</color>
-    <color name="reports_illustration_soft">#FFD7E3FF</color>
+
+    <!-- Primary Colors -->
+    <color name="colorPrimary">#2563EB</color>
+    <color name="colorPrimaryDark">#1E40AF</color>
+    <color name="colorPrimaryLight">#DBEAFE</color>
+
+    <!-- Secondary Colors -->
+    <color name="colorSecondary">#10B981</color>
+    <color name="colorSecondaryDark">#047857</color>
+    <color name="colorSecondaryLight">#D1FAE5</color>
+
+    <!-- Background Colors -->
+    <color name="backgroundColor">#F8FAFC</color>
+    <color name="surfaceColor">#FFFFFF</color>
+
+    <!-- Text Colors -->
+    <color name="textPrimary">#1E293B</color>
+    <color name="textSecondary">#64748B</color>
+    <color name="textHint">#94A3B8</color>
+
+    <!-- UI States -->
+    <color name="error">#EF4444</color>
+    <color name="success">#22C55E</color>
+    <color name="warning">#F59E0B</color>
+    <color name="info">#3B82F6</color>
+
+    <!-- Reports (Legacy support) -->
+    <color name="reports_background">#F8FAFC</color>
+    <color name="reports_surface">#FFFFFF</color>
+    <color name="reports_text_primary">#1E293B</color>
+    <color name="reports_text_secondary">#64748B</color>
+    <color name="reports_tab_selected">#2563EB</color>
+    <color name="reports_tab_unselected">#94A3B8</color>
+    <color name="reports_divider">#E2E8F0</color>
+    <color name="reports_chip_background">#F1F5F9</color>
+    <color name="reports_chip_stroke">#E2E8F0</color>
+    <color name="reports_icon_tint">#475569</color>
+    <color name="reports_illustration_background">#EFF6FF</color>
+    <color name="reports_illustration_primary">#2563EB</color>
+    <color name="reports_illustration_secondary">#FDBA74</color>
+    <color name="reports_illustration_accent">#1E293B</color>
+    <color name="reports_illustration_soft">#DBEAFE</color>
 </resources>

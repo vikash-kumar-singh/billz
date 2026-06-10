@@ -114,65 +114,74 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
             ModifierViewHolder mHolder = (ModifierViewHolder) holder;
             mHolder.textModifierName.setText(item.getName());
             mHolder.textModifierOptions.setText(item.getStockStatus()); // We use stockStatus as options string for modifiers
-            return;
-        }
-
-        if (holder instanceof IngredientViewHolder) {
+        } else if (holder instanceof IngredientViewHolder) {
             IngredientViewHolder iHolder = (IngredientViewHolder) holder;
             iHolder.textIngredientName.setText(item.getName());
             iHolder.textIngredientStock.setText(item.getStockStatus()); // We use stockStatus as stock value for ingredients
-            return;
-        }
-
-        holder.textInitial.setText(item.getInitial());
-        holder.textItemName.setText(item.getName());
-        holder.textItemPrice.setText(item.getPrice());
-        holder.textStockStatus.setText(item.getStockStatus());
-
-        if (item.getImageUri() != null) {
-            holder.imgItem.setVisibility(View.VISIBLE);
-            holder.textInitial.setVisibility(View.GONE);
-            holder.imgItem.setImageURI(Uri.parse(item.getImageUri()));
-        } else if (item.getBackgroundColor() != -1) {
-            holder.imgItem.setVisibility(View.GONE);
-            holder.textInitial.setVisibility(View.VISIBLE);
-            holder.cardItemImage.setCardBackgroundColor(android.content.res.ColorStateList.valueOf(item.getBackgroundColor()));
-            holder.textInitial.setBackground(null); // Remove default circular background
         } else {
-            holder.imgItem.setVisibility(View.GONE);
-            holder.textInitial.setVisibility(View.VISIBLE);
-            holder.cardItemImage.setCardBackgroundColor(Color.TRANSPARENT);
-            holder.textInitial.setBackgroundResource(R.drawable.bg_inventory_initial);
-        }
+            holder.textInitial.setText(item.getInitial());
+            holder.textItemName.setText(item.getName());
+            holder.textItemPrice.setText(item.getPrice());
+            holder.textStockStatus.setText(item.getStockStatus());
 
-        if (item.isOutOfStock()) {
-            holder.textStockStatus.setTextColor(Color.parseColor("#EF4444"));
-        } else {
-            holder.textStockStatus.setTextColor(Color.parseColor("#10B981")); // Green for in stock
-        }
-
-        holder.layoutTags.removeAllViews();
-        for (int i = 0; i < item.getTags().size(); i++) {
-            String tag = item.getTags().get(i);
-            TextView tagView = new TextView(context);
-            tagView.setText(tag);
-            tagView.setTextSize(12);
-            tagView.setPadding(24, 12, 24, 12);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(0, 0, 16, 0);
-            tagView.setLayoutParams(params);
-            
-            if (i == 0) {
-                tagView.setBackgroundResource(R.drawable.bg_inventory_tag);
-                tagView.getBackground().setTint(ContextCompat.getColor(context, R.color.reports_tab_selected));
-                tagView.setTextColor(Color.WHITE);
+            if (item.getImageUri() != null) {
+                holder.imgItem.setVisibility(View.VISIBLE);
+                holder.textInitial.setVisibility(View.GONE);
+                holder.imgItem.setImageURI(Uri.parse(item.getImageUri()));
+            } else if (item.getBackgroundColor() != -1) {
+                holder.imgItem.setVisibility(View.GONE);
+                holder.textInitial.setVisibility(View.VISIBLE);
+                holder.cardItemImage.setCardBackgroundColor(android.content.res.ColorStateList.valueOf(item.getBackgroundColor()));
+                holder.textInitial.setBackground(null); // Remove default circular background
             } else {
-                tagView.setBackgroundResource(R.drawable.bg_inventory_tag);
-                tagView.getBackground().setTint(Color.parseColor("#F1F5F9"));
-                tagView.setTextColor(Color.parseColor("#475569"));
+                holder.imgItem.setVisibility(View.GONE);
+                holder.textInitial.setVisibility(View.VISIBLE);
+                holder.cardItemImage.setCardBackgroundColor(Color.TRANSPARENT);
+                holder.textInitial.setBackgroundResource(R.drawable.bg_inventory_initial);
             }
-            holder.layoutTags.addView(tagView);
+
+            if (item.isOutOfStock()) {
+                holder.textStockStatus.setTextColor(Color.parseColor("#EF4444"));
+            } else {
+                holder.textStockStatus.setTextColor(Color.parseColor("#10B981")); // Green for in stock
+            }
+
+            holder.layoutTags.removeAllViews();
+            for (int i = 0; i < item.getTags().size(); i++) {
+                String tag = item.getTags().get(i);
+                TextView tagView = new TextView(context);
+                tagView.setText(tag);
+                tagView.setTextSize(12);
+                tagView.setPadding(24, 12, 24, 12);
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                params.setMargins(0, 0, 16, 0);
+                tagView.setLayoutParams(params);
+
+                if (i == 0) {
+                    tagView.setBackgroundResource(R.drawable.bg_inventory_tag);
+                    tagView.getBackground().setTint(ContextCompat.getColor(context, R.color.reports_tab_selected));
+                    tagView.setTextColor(Color.WHITE);
+                } else {
+                    tagView.setBackgroundResource(R.drawable.bg_inventory_tag);
+                    tagView.getBackground().setTint(Color.parseColor("#F1F5F9"));
+                    tagView.setTextColor(Color.parseColor("#475569"));
+                }
+                holder.layoutTags.addView(tagView);
+            }
+        }
+
+        // Set entry animation
+        setAnimation(holder.itemView, position);
+    }
+
+    private int lastPosition = -1;
+    private void setAnimation(View viewToAnimate, int position) {
+        if (position > lastPosition) {
+            android.view.animation.Animation animation = android.view.animation.AnimationUtils.loadAnimation(viewToAnimate.getContext(), android.R.anim.fade_in);
+            animation.setDuration(400);
+            viewToAnimate.startAnimation(animation);
+            lastPosition = position;
         }
     }
 

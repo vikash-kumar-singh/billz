@@ -2,15 +2,18 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/editBusinessRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F3F4F6"
     tools:context=".EditBusinessActivity">
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarEdit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white">
+        android:background="@color/white"
+        android:elevation="0dp">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbarEditBusiness"
@@ -18,7 +21,8 @@
             android:layout_height="?attr/actionBarSize"
             app:navigationIcon="@drawable/ic_reports_back"
             app:title="Edit Business"
-            app:titleTextColor="#3F51B5">
+            app:titleTextColor="#3F51B5"
+            app:titleTextAppearance="@style/TextAppearance.MaterialComponents.Headline6">
 
         </com.google.android.material.appbar.MaterialToolbar>
     </com.google.android.material.appbar.AppBarLayout>
@@ -28,7 +32,8 @@
         android:layout_height="match_parent"
         android:clipToPadding="false"
         android:paddingBottom="100dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:background="#F3F4F6">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -40,15 +45,17 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:cardBackgroundColor="#FFFFFF"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="1dp"
+                app:cardElevation="2dp"
                 app:strokeWidth="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:padding="16dp"
+                    android:background="#FFFFFF">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -64,12 +71,18 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:startIconDrawable="@android:drawable/ic_menu_edit"
-                        android:hint="Business Name*">
+                        app:startIconTint="#64748B"
+                        android:hint="Business Name*"
+                        android:textColorHint="#94A3B8"
+                        app:hintTextColor="#3F51B5"
+                        app:boxBackgroundColor="#FFFFFF"
+                        app:boxStrokeColor="#3F51B5">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/editBusinessName"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:textColor="#1E293B"
                             android:inputType="textCapWords" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -79,12 +92,18 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
                         app:startIconDrawable="@android:drawable/ic_menu_myplaces"
-                        android:hint="Business Address">
+                        app:startIconTint="#64748B"
+                        android:hint="Business Address"
+                        android:textColorHint="#64748B"
+                        app:hintTextColor="#3F51B5"
+                        app:boxBackgroundColor="#FFFFFF"
+                        app:boxStrokeColor="#3F51B5">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/editBusinessAddress"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:textColor="#1E293B"
                             android:inputType="textPostalAddress" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -94,12 +113,18 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
                         app:startIconDrawable="@android:drawable/ic_menu_sort_alphabetically"
-                        android:hint="Business Category">
+                        app:startIconTint="#64748B"
+                        android:hint="Business Category"
+                        android:textColorHint="#64748B"
+                        app:hintTextColor="#3F51B5"
+                        app:boxBackgroundColor="#FFFFFF"
+                        app:boxStrokeColor="#3F51B5">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/editBusinessCategory"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:textColor="#1E293B"
                             android:inputType="text" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -109,12 +134,18 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
                         app:startIconDrawable="@android:drawable/ic_menu_call"
-                        android:hint="Mobile Number">
+                        app:startIconTint="#64748B"
+                        android:hint="Mobile Number"
+                        android:textColorHint="#64748B"
+                        app:hintTextColor="#3F51B5"
+                        app:boxBackgroundColor="#FFFFFF"
+                        app:boxStrokeColor="#3F51B5">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/editBusinessMobile"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:textColor="#1E293B"
                             android:inputType="phone" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -124,32 +155,39 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
                         app:startIconDrawable="@android:drawable/ic_dialog_email"
-                        android:hint="Email Address">
+                        app:startIconTint="#64748B"
+                        android:hint="Email Address"
+                        android:textColorHint="#64748B"
+                        app:hintTextColor="#3F51B5"
+                        app:boxBackgroundColor="#FFFFFF"
+                        app:boxStrokeColor="#3F51B5">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/editBusinessEmail"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:textColor="#1E293B"
                             android:inputType="textEmailAddress" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Section 2 & 3: Location and Business Type -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                app:cardBackgroundColor="#FFFFFF"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="1dp"
+                app:cardElevation="2dp"
                 app:strokeWidth="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:padding="16dp"
+                    android:background="#FFFFFF">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -165,12 +203,18 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:startIconDrawable="@android:drawable/ic_menu_mapmode"
-                        android:hint="Country">
+                        app:startIconTint="#64748B"
+                        android:hint="Country"
+                        android:textColorHint="#64748B"
+                        app:hintTextColor="#3F51B5"
+                        app:boxBackgroundColor="#FFFFFF"
+                        app:boxStrokeColor="#3F51B5">
 
                         <AutoCompleteTextView
                             android:id="@+id/autoCountry"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:textColor="#1E293B"
                             android:inputType="none" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -180,12 +224,18 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
                         app:startIconDrawable="@android:drawable/ic_menu_recent_history"
-                        android:hint="Timezone">
+                        app:startIconTint="#64748B"
+                        android:hint="Timezone"
+                        android:textColorHint="#64748B"
+                        app:hintTextColor="#3F51B5"
+                        app:boxBackgroundColor="#FFFFFF"
+                        app:boxStrokeColor="#3F51B5">
 
                         <AutoCompleteTextView
                             android:id="@+id/autoTimezone"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:textColor="#1E293B"
                             android:inputType="none" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -195,32 +245,39 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
                         app:startIconDrawable="@android:drawable/ic_menu_view"
-                        android:hint="Business Type">
+                        app:startIconTint="#64748B"
+                        android:hint="Business Type"
+                        android:textColorHint="#64748B"
+                        app:hintTextColor="#3F51B5"
+                        app:boxBackgroundColor="#FFFFFF"
+                        app:boxStrokeColor="#3F51B5">
 
                         <AutoCompleteTextView
                             android:id="@+id/autoBusinessType"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:textColor="#1E293B"
                             android:inputType="none" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Section 4, 5 & 6: Currency and Format -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                app:cardBackgroundColor="#FFFFFF"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="1dp"
+                app:cardElevation="2dp"
                 app:strokeWidth="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:padding="16dp"
+                    android:background="#FFFFFF">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -236,12 +293,18 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:startIconDrawable="@drawable/ic_nav_reports"
-                        android:hint="Currency">
+                        app:startIconTint="#64748B"
+                        android:hint="Currency"
+                        android:textColorHint="#64748B"
+                        app:hintTextColor="#3F51B5"
+                        app:boxBackgroundColor="#FFFFFF"
+                        app:boxStrokeColor="#3F51B5">
 
                         <AutoCompleteTextView
                             android:id="@+id/autoCurrency"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:textColor="#1E293B"
                             android:inputType="none" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -251,12 +314,18 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
                         app:startIconDrawable="@android:drawable/ic_menu_sort_by_size"
-                        android:hint="Number System">
+                        app:startIconTint="#64748B"
+                        android:hint="Number System"
+                        android:textColorHint="#64748B"
+                        app:hintTextColor="#3F51B5"
+                        app:boxBackgroundColor="#FFFFFF"
+                        app:boxStrokeColor="#3F51B5">
 
                         <AutoCompleteTextView
                             android:id="@+id/autoNumberSystem"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:textColor="#1E293B"
                             android:inputType="none" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -266,12 +335,18 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
                         app:startIconDrawable="@android:drawable/ic_menu_agenda"
-                        android:hint="Decimal Places">
+                        app:startIconTint="#64748B"
+                        android:hint="Decimal Places"
+                        android:textColorHint="#64748B"
+                        app:hintTextColor="#3F51B5"
+                        app:boxBackgroundColor="#FFFFFF"
+                        app:boxStrokeColor="#3F51B5">
 
                         <AutoCompleteTextView
                             android:id="@+id/autoDecimalPlaces"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:textColor="#1E293B"
                             android:inputType="none" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -283,15 +358,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                app:cardBackgroundColor="#FFFFFF"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="1dp"
+                app:cardElevation="2dp"
                 app:strokeWidth="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:padding="16dp"
+                    android:background="#FFFFFF">
 
                     <TextView
                         android:layout_width="wrap_content"

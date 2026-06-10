@@ -1,247 +1,264 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F8FAFC"
+    android:background="@color/backgroundColor"
     tools:context=".InventoryManagementActivity">
 
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbarInventory"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
-        app:layout_constraintTop_toTopOf="parent"
-        app:navigationIcon="@drawable/ic_reports_back"
-        app:title="@string/inventory_title"
-        app:titleCentered="false"
-        app:titleTextColor="#2563EB">
+        android:background="@color/surfaceColor"
+        app:elevation="0dp">
 
-        <ImageView
-            android:id="@+id/imageSearch"
-            android:layout_width="wrap_content"
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbarInventory"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/surfaceColor"
+            app:navigationIcon="@drawable/ic_reports_back"
+            app:navigationIconTint="@color/colorPrimary"
+            app:title="@string/inventory_title"
+            app:titleTextColor="@color/textPrimary"
+            app:titleTextAppearance="@style/TextAppearance.MaterialComponents.Headline6">
+
+            <ImageView
+                android:id="@+id/imageSearch"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="end"
+                android:layout_marginEnd="16dp"
+                android:src="@android:drawable/ic_menu_search"
+                app:tint="@color/colorPrimary" />
+        </com.google.android.material.appbar.MaterialToolbar>
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabLayoutInventory"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginEnd="16dp"
-            android:src="@android:drawable/ic_menu_search"
-            app:tint="#2563EB" />
-    </com.google.android.material.appbar.MaterialToolbar>
-
-    <LinearLayout
-        android:id="@+id/searchBarContainer"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginVertical="8dp"
-        android:background="@drawable/bg_search_bar"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingHorizontal="16dp"
-        android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/toolbarInventory">
-
-        <ImageView
-            android:id="@+id/imageSearchIconInBox"
-            android:layout_width="22dp"
-            android:layout_height="22dp"
-            android:src="@android:drawable/ic_menu_search"
-            app:tint="#2563EB" />
-
-        <EditText
-            android:id="@+id/editSearch"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
             android:background="@android:color/transparent"
-            android:hint="@string/search_hint"
-            android:imeOptions="actionSearch"
-            android:inputType="text"
-            android:paddingHorizontal="12dp"
-            android:textColor="#1E293B"
-            android:textColorHint="#94A3B8"
-            android:textSize="15sp" />
+            app:tabIndicatorColor="@color/colorPrimary"
+            app:tabIndicatorHeight="3dp"
+            app:tabMode="scrollable"
+            app:tabSelectedTextColor="@color/textPrimary"
+            app:tabTextColor="@color/textSecondary"
+            app:tabTextAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+            app:tabRippleColor="@color/colorPrimaryLight">
 
-        <ImageView
-            android:id="@+id/imageClearSearch"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@android:drawable/ic_menu_close_clear_cancel"
-            app:tint="#64748B" />
-    </LinearLayout>
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tab_items" />
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tabLayoutInventory"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        app:layout_constraintTop_toBottomOf="@id/searchBarContainer"
-        app:tabIndicatorColor="#2563EB"
-        app:tabIndicatorHeight="3dp"
-        app:tabMode="scrollable"
-        app:tabSelectedTextColor="#1E293B"
-        app:tabTextColor="#64748B">
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tab_category" />
 
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/tab_items" />
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tab_modifiers" />
 
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/tab_category" />
-
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/tab_modifiers" />
-
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/tab_ingredient" />
-    </com.google.android.material.tabs.TabLayout>
-
-    <HorizontalScrollView
-        android:id="@+id/filterScrollView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:scrollbars="none"
-        app:layout_constraintEnd_toStartOf="@id/imageFilter"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tabLayoutInventory">
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tab_ingredient" />
+        </com.google.android.material.tabs.TabLayout>
 
         <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="8dp">
+
+            <HorizontalScrollView
+                android:id="@+id/filterScrollView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/chipAll"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:background="@drawable/bg_inventory_chip"
+                        android:backgroundTint="@color/colorPrimaryLight"
+                        android:paddingHorizontal="16dp"
+                        android:paddingVertical="6dp"
+                        android:text="@string/chip_all"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/chipLowStock"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:background="@drawable/bg_inventory_chip"
+                        android:backgroundTint="@color/reports_chip_background"
+                        android:paddingHorizontal="16dp"
+                        android:paddingVertical="6dp"
+                        android:text="@string/chip_low_stock"
+                        android:textColor="@color/textSecondary"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/chipExpired"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_inventory_chip"
+                        android:backgroundTint="@color/reports_chip_background"
+                        android:paddingHorizontal="16dp"
+                        android:paddingVertical="6dp"
+                        android:text="@string/chip_expired"
+                        android:textColor="@color/textSecondary"
+                        android:textSize="14sp" />
+                </LinearLayout>
+            </HorizontalScrollView>
+
+            <ImageView
+                android:id="@+id/imageFilter"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="12dp"
+                android:src="@android:drawable/ic_menu_sort_by_size"
+                app:tint="@color/textPrimary" />
+        </LinearLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:id="@+id/searchBarContainer"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginVertical="8dp"
+            android:background="@drawable/bg_search_bar"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="16dp"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@android:drawable/ic_menu_search"
+                app:tint="@color/colorPrimary" />
+
+            <EditText
+                android:id="@+id/editSearch"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:hint="@string/search_hint"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:paddingHorizontal="12dp"
+                android:textColor="@color/textPrimary"
+                android:textColorHint="@color/textHint"
+                android:textSize="15sp" />
+
+            <ImageView
+                android:id="@+id/imageClearSearch"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@android:drawable/ic_menu_close_clear_cancel"
+                app:tint="@color/textSecondary" />
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerInventory"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:paddingHorizontal="8dp"
+            android:paddingTop="4dp"
+            android:clipToPadding="false"
+            android:paddingBottom="88dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/searchBarContainer"
+            tools:listitem="@layout/item_inventory_card" />
+
+        <LinearLayout
+            android:id="@+id/emptyStateView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp">
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:alpha="0.3"
+                android:src="@android:drawable/ic_menu_search"
+                app:tint="@color/textSecondary" />
 
             <TextView
-                android:id="@+id/chipAll"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:background="@drawable/bg_inventory_chip"
-                android:backgroundTint="#E9D5FF"
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="6dp"
-                android:text="@string/chip_all"
-                android:textColor="#7C3AED"
-                android:textSize="14sp" />
+                android:layout_marginTop="16dp"
+                android:text="@string/no_items_found"
+                android:textColor="@color/textPrimary"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/chipLowStock"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:background="@drawable/bg_inventory_chip"
-                android:backgroundTint="#E2E8F0"
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="6dp"
-                android:text="@string/chip_low_stock"
-                android:textColor="#475569"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/chipExpired"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bg_inventory_chip"
-                android:backgroundTint="#E2E8F0"
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="6dp"
-                android:text="@string/chip_expired"
-                android:textColor="#475569"
+                android:layout_marginTop="8dp"
+                android:text="@string/adjust_search_filter"
+                android:textColor="@color/textSecondary"
                 android:textSize="14sp" />
         </LinearLayout>
-    </HorizontalScrollView>
-
-    <ImageView
-        android:id="@+id/imageFilter"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginEnd="16dp"
-        android:src="@android:drawable/ic_menu_sort_by_size"
-        app:layout_constraintBottom_toBottomOf="@id/filterScrollView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/filterScrollView"
-        app:tint="#1E293B" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerInventory"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="12dp"
-        android:padding="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/filterScrollView"
-        tools:listitem="@layout/item_inventory_card" />
-
-    <LinearLayout
-        android:id="@+id/emptyStateView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/filterScrollView">
-
-        <ImageView
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:alpha="0.5"
-            android:src="@android:drawable/ic_menu_search"
-            app:tint="#64748B" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/no_items_found"
-            android:textColor="#64748B"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="@string/adjust_search_filter"
-            android:textColor="#94A3B8"
-            android:textSize="14sp" />
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabScan"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="96dp"
         android:src="@android:drawable/ic_menu_camera"
-        app:backgroundTint="#2563EB"
+        app:backgroundTint="@color/colorSecondary"
         app:fabSize="mini"
-        app:layout_constraintBottom_toTopOf="@id/fabAdd"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:tint="@color/white" />
+        app:tint="@color/white"
+        app:elevation="4dp"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAdd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="24dp"
         android:src="@android:drawable/ic_input_add"
-        app:backgroundTint="#2563EB"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:tint="@color/white" />
+        app:backgroundTint="@color/colorPrimary"
+        app:tint="@color/white"
+        app:elevation="6dp"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

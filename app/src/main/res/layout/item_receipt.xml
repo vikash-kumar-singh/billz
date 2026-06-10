@@ -13,12 +13,12 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="12dp"
-        android:background="#FFFFFF"
+        android:background="@color/surfaceColor"
         android:gravity="center_vertical">
 
         <ImageView
-            android:layout_width="44dp"
-            android:layout_height="44dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:src="@drawable/ic_credit_calendar"
             android:contentDescription="Receipt Icon" />
 
@@ -33,27 +33,27 @@
                 android:id="@+id/textReceiptNo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="NC-2"
-                android:textColor="#000000"
-                android:textSize="16sp"
+                android:text="NC-5089"
+                android:textColor="@color/textPrimary"
+                android:textSize="17sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/textReceiptDesc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Prabhakar Ji Gym by Store Credit"
-                android:textColor="#333333"
-                android:textSize="13sp" />
+                android:text="XYZ by Google Pay"
+                android:textColor="@color/textPrimary"
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/textReceiptStats"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
-                android:text="4 Items 04 Jun 2025 - 5:35 PM"
-                android:textColor="#666666"
-                android:textSize="11sp" />
+                android:text="3 Items 10 Jun 2026 - 12:32 PM"
+                android:textColor="@color/textSecondary"
+                android:textSize="12sp" />
 
         </LinearLayout>
 
@@ -61,9 +61,9 @@
             android:id="@+id/textReceiptAmount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="₹8,394"
-            android:textColor="#3F51B5"
-            android:textSize="18sp"
+            android:text="₹1,214"
+            android:textColor="@color/colorPrimary"
+            android:textSize="19sp"
             android:textStyle="bold" />
 
     </LinearLayout>

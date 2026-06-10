@@ -128,7 +128,31 @@ public class ReceiptSettingsActivity extends AppCompatActivity {
 
     private void loadSettings() {
         new Thread(() -> {
-            currentSettings = db.receiptSettingsDao().getSettings();
+            Business selected = db.businessDao().getSelectedBusiness();
+            if (selected != null) {
+                currentSettings = db.receiptSettingsDao().getSettingsByBusiness(selected.getId());
+                if (currentSettings == null) {
+                    currentSettings = new ReceiptSettings();
+                    currentSettings.setId(selected.getId());
+                    currentSettings.setBusinessName(selected.getName());
+                    currentSettings.setPhoneNumber(selected.getPhoneNumber());
+                    currentSettings.setEmail(selected.getEmail());
+                    currentSettings.setBusinessLogoPath(selected.getLogoPath());
+                    
+                    // Set defaults
+                    currentSettings.setShowRateInReceipt(true);
+                    currentSettings.setShowCustomerPhone(true);
+                    currentSettings.setShowTotalItemCount(true);
+                    currentSettings.setShowChangeReturn(true);
+                    currentSettings.setShowPaymentDetails(true);
+                    currentSettings.setShowPoweredBy(true);
+                    currentSettings.setOrderItemsBy("Name");
+                    currentSettings.setWhatsappShareApp("WhatsApp");
+                }
+            } else {
+                currentSettings = db.receiptSettingsDao().getSettings();
+            }
+
             if (currentSettings != null) {
                 runOnUiThread(() -> {
                     etBusinessName.setText(currentSettings.getBusinessName());
@@ -171,23 +195,9 @@ public class ReceiptSettingsActivity extends AppCompatActivity {
                         rbWhatsapp.setChecked(true);
                     }
 
-                    if (currentSettings.getBusinessLogoPath() != null) {
+                    if (currentSettings.getBusinessLogoPath() != null && !currentSettings.getBusinessLogoPath().isEmpty()) {
                         updateLogoUI(Uri.parse(currentSettings.getBusinessLogoPath()));
                     }
-                });
-            } else {
-                currentSettings = new ReceiptSettings();
-                // Set defaults based on image
-                runOnUiThread(() -> {
-                    switchShowRate.setChecked(true);
-                    switchCustomerPhone.setChecked(true);
-                    switchTotalItem.setChecked(true);
-                    switchChangeReturn.setChecked(true);
-                    switchPaymentDetails.setChecked(true);
-                    switchPoweredBy.setChecked(true);
-                    rbOrderName.setChecked(true);
-                    rbWhatsapp.setChecked(true);
-                    etMessageTemplate.setText(getString(R.string.template_default));
                 });
             }
         }).start();

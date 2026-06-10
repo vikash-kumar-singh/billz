@@ -11,14 +11,13 @@
         android:id="@+id/reportsRoot"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/reports_background">
+        android:background="@color/backgroundColor">
 
-        <!-- Custom Top Bar to match Receipt Settings style -->
         <FrameLayout
             android:id="@+id/topBarReports"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@color/reports_surface"
+            android:background="@color/colorPrimary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -29,9 +28,11 @@
                 android:layout_height="?attr/actionBarSize"
                 android:background="@android:color/transparent"
                 app:navigationIcon="@drawable/ic_reports_menu"
+                app:navigationIconTint="@color/white"
                 app:title="@string/reports_title"
                 app:titleCentered="false"
-                app:titleTextColor="@color/reports_text_primary" />
+                app:titleTextColor="@color/white"
+                app:titleTextAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
         </FrameLayout>
 
         <androidx.constraintlayout.widget.Guideline
@@ -77,7 +78,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:text="@string/reports_date_today"
-                android:textColor="@color/reports_text_primary"
+                android:textColor="@color/textPrimary"
                 android:textSize="15sp"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -112,7 +113,7 @@
                 android:maxWidth="@dimen/reports_empty_state_max_width"
                 android:text="@string/reports_empty_message"
                 android:textAlignment="center"
-                android:textColor="@color/reports_text_secondary"
+                android:textColor="@color/textSecondary"
                 android:textSize="17sp"
                 tools:ignore="TextViewEdits" />
         </LinearLayout>
@@ -122,7 +123,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/reports_content_placeholder"
-            android:textColor="@color/reports_text_secondary"
+            android:textColor="@color/textSecondary"
             android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
             app:layout_constraintEnd_toEndOf="parent"
@@ -144,7 +145,7 @@
             android:id="@+id/counterContentContainer"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:background="#F3F4F6"
+            android:background="@color/backgroundColor"
             android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
             app:layout_constraintEnd_toEndOf="parent"
@@ -160,7 +161,7 @@
                     android:id="@+id/recyclerCounterItems"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/white"
+                    android:background="@color/surfaceColor"
                     android:nestedScrollingEnabled="false" />
 
                 <!-- Add New Item Section -->
@@ -169,7 +170,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
                     android:layout_marginTop="1dp"
-                    android:background="@color/white"
+                    android:background="@color/surfaceColor"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:paddingHorizontal="16dp">
@@ -180,7 +181,7 @@
                         android:layout_weight="1"
                         android:gravity="center"
                         android:text="Add New Item"
-                        android:textColor="#3F51B5"
+                        android:textColor="@color/colorPrimary"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
@@ -188,123 +189,146 @@
                         android:layout_width="1dp"
                         android:layout_height="match_parent"
                         android:layout_marginVertical="8dp"
-                        android:background="#E2E8F0" />
+                        android:background="@color/reports_divider" />
 
                     <ImageView
                         android:layout_width="48dp"
                         android:layout_height="match_parent"
                         android:padding="12dp"
                         android:src="@drawable/ic_barcode_scanner"
-                        app:tint="#3F51B5" />
+                        app:tint="@color/colorPrimary" />
                 </LinearLayout>
 
                 <!-- Totals Section -->
-                <LinearLayout
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:background="@color/white"
-                    android:orientation="vertical"
-                    android:padding="16dp">
+                    android:layout_margin="12dp"
+                    app:cardBackgroundColor="@color/surfaceColor"
+                    app:cardCornerRadius="@dimen/reports_card_corner_radius"
+                    app:cardElevation="2dp"
+                    app:strokeColor="@color/reports_divider"
+                    app:strokeWidth="1dp">
 
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Subtotal"
-                            android:textColor="#64748B"
-                            android:textSize="14sp" />
-                        <TextView
-                            android:id="@+id/textCounterSubtotal"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:text="0"
-                            android:textColor="#1E293B"
-                            android:textSize="14sp" />
-                    </RelativeLayout>
-
-                    <!-- Dynamic Breakdown Container -->
                     <LinearLayout
-                        android:id="@+id/layoutBreakdownContainer"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:visibility="gone" />
+                        android:padding="16dp">
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginVertical="12dp"
-                        android:background="#E2E8F0" />
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Subtotal"
+                                android:textColor="@color/textSecondary"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+                            <TextView
+                                android:id="@+id/textCounterSubtotal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:text="0"
+                                android:textColor="@color/textPrimary"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+                        </RelativeLayout>
 
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-                        <TextView
-                            android:layout_width="wrap_content"
+                        <!-- Dynamic Breakdown Container -->
+                        <LinearLayout
+                            android:id="@+id/layoutBreakdownContainer"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Grand Total"
-                            android:textColor="#1E293B"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
-                        <TextView
-                            android:id="@+id/textCounterGrandTotal"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:text="₹0"
-                            android:textColor="#3F51B5"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
-                    </RelativeLayout>
+                            android:orientation="vertical"
+                            android:visibility="gone" />
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:orientation="horizontal">
-                        <TextView
-                            android:id="@+id/btnAddTax"
-                            android:layout_width="wrap_content"
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginVertical="12dp"
+                            android:background="@color/reports_divider" />
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Grand Total"
+                                android:textColor="@color/textPrimary"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+                            <TextView
+                                android:id="@+id/textCounterGrandTotal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:text="₹0"
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="18sp"
+                                android:textStyle="bold" />
+                        </RelativeLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Add Tax"
-                            android:textColor="#3F51B5"
-                            android:textSize="14sp" />
-                        <View android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1"/>
-                        <TextView
-                            android:id="@+id/textItemCountSummary"
-                            android:layout_width="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:id="@+id/btnAddTax"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/bg_nav_item_selected"
+                                android:paddingHorizontal="12dp"
+                                android:paddingVertical="6dp"
+                                android:text="+ Add Tax"
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="12sp"
+                                android:textStyle="bold" />
+                            <View android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1"/>
+                            <TextView
+                                android:id="@+id/textItemCountSummary"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="0 Items | 0 Units"
+                                android:textColor="@color/textSecondary"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="0 Items | 0 Units"
-                            android:textColor="#64748B"
-                            android:textSize="12sp" />
+                            android:layout_marginTop="8dp"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:id="@+id/btnAddDiscount"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/bg_nav_item_selected"
+                                android:paddingHorizontal="12dp"
+                                android:paddingVertical="6dp"
+                                android:text="+ Add Discount"
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="12sp"
+                                android:textStyle="bold" />
+                            <TextView
+                                android:id="@+id/btnAddOtherCharges"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:background="@drawable/bg_nav_item_selected"
+                                android:paddingHorizontal="12dp"
+                                android:paddingVertical="6dp"
+                                android:text="+ Others"
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="12sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
                     </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:orientation="horizontal">
-                        <TextView
-                            android:id="@+id/btnAddDiscount"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Add Discount"
-                            android:textColor="#3F51B5"
-                            android:textSize="14sp" />
-                        <View android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1"/>
-                        <TextView
-                            android:id="@+id/btnAddOtherCharges"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Add Other Charges"
-                            android:textColor="#3F51B5"
-                            android:textSize="14sp" />
-                    </LinearLayout>
-                </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
 
                 <!-- Actions Section -->
                 <LinearLayout
@@ -320,7 +344,7 @@
                         android:layout_height="50dp"
                         android:layout_weight="1"
                         android:layout_marginEnd="8dp"
-                        android:backgroundTint="#EF4444"
+                        android:backgroundTint="@color/error"
                         android:text="Clear"
                         android:textAllCaps="false"
                         android:textColor="@color/white" />
@@ -330,7 +354,7 @@
                         android:layout_height="50dp"
                         android:layout_weight="1"
                         android:layout_marginStart="8dp"
-                        android:backgroundTint="#F59E0B"
+                        android:backgroundTint="@color/warning"
                         android:text="Save for later"
                         android:textAllCaps="false"
                         android:textColor="@color/white" />
@@ -346,7 +370,7 @@
             android:layout_height="50dp"
             android:layout_marginHorizontal="16dp"
             android:layout_marginBottom="8dp"
-            android:backgroundTint="#10B981"
+            android:backgroundTint="@color/success"
             android:text="Charge: ₹0"
             android:textAllCaps="false"
             android:textColor="@color/white"
@@ -359,7 +383,7 @@
             android:id="@+id/itemsContentContainer"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:background="#F3F4F6"
+            android:background="@color/backgroundColor"
             android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@id/btnGoToCounter"
             app:layout_constraintEnd_toEndOf="parent"
@@ -375,7 +399,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/reports_tab_selected"
+                    android:background="@color/colorPrimary"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:paddingHorizontal="10dp"
@@ -394,7 +418,7 @@
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:src="@android:drawable/ic_menu_search"
-                            app:tint="#3F51B5" />
+                            app:tint="@color/colorPrimary" />
 
                         <EditText
                             android:id="@+id/editSearchItems"
@@ -405,7 +429,7 @@
                             android:hint="I want to sell..."
                             android:inputType="text"
                             android:textColor="@color/black"
-                            android:textColorHint="#94A3B8"
+                            android:textColorHint="@color/textHint"
                             android:textSize="15sp" />
                     </LinearLayout>
 
@@ -422,7 +446,7 @@
                             android:layout_height="24dp"
                             android:layout_gravity="center"
                             android:src="@drawable/ic_barcode_scanner"
-                            app:tint="#3F51B5" />
+                            app:tint="@color/colorPrimary" />
                     </androidx.cardview.widget.CardView>
 
                     <androidx.cardview.widget.CardView
@@ -438,7 +462,7 @@
                             android:layout_height="24dp"
                             android:layout_gravity="center"
                             android:src="@drawable/ic_lightning"
-                            app:tint="#3F51B5" />
+                            app:tint="@color/colorPrimary" />
                     </androidx.cardview.widget.CardView>
                 </LinearLayout>
 
@@ -479,7 +503,7 @@
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_margin="10dp"
-            android:backgroundTint="#4CAF50"
+            android:backgroundTint="@color/success"
             android:text="Go To Counter"
             android:textAllCaps="false"
             android:textColor="@color/white"
@@ -493,7 +517,7 @@
             android:id="@+id/moreContentContainer"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:background="#F8FAFC"
+            android:background="@color/backgroundColor"
             android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
             app:layout_constraintEnd_toEndOf="parent"
@@ -512,44 +536,22 @@
                     android:layout_height="wrap_content"
                     android:alignmentMode="alignMargins"
                     android:columnCount="2"
-                    android:background="#E2E8F0"
-                    android:padding="1dp">
+                    android:padding="8dp">
 
                     <!-- 1. Attendance -->
-                    <LinearLayout
+                    <com.google.android.material.card.MaterialCardView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
-                        android:layout_margin="0.5dp"
-                        android:background="#FFFFFF"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:padding="20dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/more_attendance"
-                            android:textColor="#2563EB"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:text="@string/more_attendance_desc"
-                            android:textColor="#64748B"
-                            android:textSize="12sp" />
-                    </LinearLayout>
-
-                    <!-- 2. Manage Payroll -->
-                    <FrameLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_columnWeight="1"
-                        android:layout_margin="0.5dp"
-                        android:background="#FFFFFF">
+                        android:layout_margin="8dp"
+                        app:cardBackgroundColor="@color/surfaceColor"
+                        app:cardCornerRadius="@dimen/reports_card_corner_radius"
+                        app:cardElevation="1dp"
+                        app:strokeColor="@color/reports_divider"
+                        app:strokeWidth="1dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackground">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -561,8 +563,8 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/more_manage_payroll"
-                                android:textColor="#2563EB"
+                                android:text="@string/more_attendance"
+                                android:textColor="@color/colorPrimary"
                                 android:textSize="16sp"
                                 android:textStyle="bold" />
 
@@ -570,317 +572,453 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="4dp"
-                                android:text="@string/more_payments"
-                                android:textColor="#64748B"
+                                android:text="@string/more_attendance_desc"
+                                android:textColor="@color/textSecondary"
                                 android:textSize="12sp" />
                         </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="end|top"
-                            android:layout_margin="4dp"
-                            android:background="#22C55E"
-                            android:paddingHorizontal="6dp"
-                            android:paddingVertical="2dp"
-                            android:text="@string/more_new"
-                            android:textColor="#FFFFFF"
-                            android:textSize="10sp"
-                            android:textStyle="bold" />
-                    </FrameLayout>
-
-                    <!-- 3. Shopfront -->
-                    <LinearLayout
+                    <!-- 2. Manage Payroll -->
+                    <com.google.android.material.card.MaterialCardView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
-                        android:layout_margin="0.5dp"
-                        android:background="#FFFFFF"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:padding="20dp">
+                        android:layout_margin="8dp"
+                        app:cardBackgroundColor="@color/surfaceColor"
+                        app:cardCornerRadius="@dimen/reports_card_corner_radius"
+                        app:cardElevation="1dp"
+                        app:strokeColor="@color/reports_divider"
+                        app:strokeWidth="1dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackground">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/dummy_zero"
-                            android:textColor="#2563EB"
-                            android:textSize="20sp"
-                            android:textStyle="bold" />
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
 
-                        <TextView
-                            android:layout_width="wrap_content"
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:orientation="vertical"
+                                android:padding="20dp">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/more_manage_payroll"
+                                    android:textColor="@color/colorPrimary"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="4dp"
+                                    android:text="@string/more_payments"
+                                    android:textColor="@color/textSecondary"
+                                    android:textSize="12sp" />
+                            </LinearLayout>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="end|top"
+                                android:layout_margin="8dp"
+                                android:background="@drawable/bg_reports_nav_item"
+                                android:backgroundTint="@color/success"
+                                android:paddingHorizontal="6dp"
+                                android:paddingVertical="2dp"
+                                android:text="@string/more_new"
+                                android:textColor="@color/white"
+                                android:textSize="10sp"
+                                android:textStyle="bold" />
+                        </FrameLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- 3. Shopfront -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:layout_margin="8dp"
+                        app:cardBackgroundColor="@color/surfaceColor"
+                        app:cardCornerRadius="@dimen/reports_card_corner_radius"
+                        app:cardElevation="1dp"
+                        app:strokeColor="@color/reports_divider"
+                        app:strokeWidth="1dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:text="@string/more_shopfront"
-                            android:textColor="#64748B"
-                            android:textSize="12sp" />
-                    </LinearLayout>
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="20dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/dummy_zero"
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="20sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:text="@string/more_shopfront"
+                                android:textColor="@color/textSecondary"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
 
                     <!-- 4. All Customers -->
-                    <LinearLayout
+                    <com.google.android.material.card.MaterialCardView
                         android:id="@+id/cardAllCustomers"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
-                        android:layout_margin="0.5dp"
-                        android:background="#FFFFFF"
+                        android:layout_margin="8dp"
+                        app:cardBackgroundColor="@color/surfaceColor"
+                        app:cardCornerRadius="@dimen/reports_card_corner_radius"
+                        app:cardElevation="1dp"
+                        app:strokeColor="@color/reports_divider"
+                        app:strokeWidth="1dp"
                         android:clickable="true"
                         android:focusable="true"
-                        android:foreground="?attr/selectableItemBackground"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:padding="20dp">
+                        android:foreground="?attr/selectableItemBackground">
 
-                        <TextView
-                            android:id="@+id/textDashboardCustomerCount"
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@string/dummy_all_customers_count"
-                            android:textColor="#2563EB"
-                            android:textSize="20sp"
-                            android:textStyle="bold" />
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="20dp">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:text="@string/more_all_customers"
-                            android:textColor="#64748B"
-                            android:textSize="12sp" />
-                    </LinearLayout>
+                            <TextView
+                                android:id="@+id/textDashboardCustomerCount"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/dummy_all_customers_count"
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="20sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:text="@string/more_all_customers"
+                                android:textColor="@color/textSecondary"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
 
                     <!-- 5. Due Customers -->
-                    <LinearLayout
+                    <com.google.android.material.card.MaterialCardView
                         android:id="@+id/cardDueCustomers"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
-                        android:layout_margin="0.5dp"
-                        android:background="#FFFFFF"
+                        android:layout_margin="8dp"
+                        app:cardBackgroundColor="@color/surfaceColor"
+                        app:cardCornerRadius="@dimen/reports_card_corner_radius"
+                        app:cardElevation="1dp"
+                        app:strokeColor="@color/reports_divider"
+                        app:strokeWidth="1dp"
                         android:clickable="true"
                         android:focusable="true"
-                        android:foreground="?attr/selectableItemBackground"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:padding="20dp">
+                        android:foreground="?attr/selectableItemBackground">
 
-                        <TextView
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@string/dummy_zero"
-                            android:textColor="#22C55E"
-                            android:textSize="20sp"
-                            android:textStyle="bold" />
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="20dp">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:text="@string/more_due_customers"
-                            android:textColor="#64748B"
-                            android:textSize="12sp" />
-                    </LinearLayout>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/dummy_zero"
+                                android:textColor="@color/success"
+                                android:textSize="20sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:text="@string/more_due_customers"
+                                android:textColor="@color/textSecondary"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
 
                     <!-- 6. Expense - Income -->
-                    <LinearLayout
+                    <com.google.android.material.card.MaterialCardView
                         android:id="@+id/cardExpenseIncome"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
-                        android:layout_margin="0.5dp"
-                        android:background="#FFFFFF"
+                        android:layout_margin="8dp"
+                        app:cardBackgroundColor="@color/surfaceColor"
+                        app:cardCornerRadius="@dimen/reports_card_corner_radius"
+                        app:cardElevation="1dp"
+                        app:strokeColor="@color/reports_divider"
+                        app:strokeWidth="1dp"
                         android:clickable="true"
                         android:focusable="true"
-                        android:foreground="?attr/selectableItemBackground"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:padding="20dp">
+                        android:foreground="?attr/selectableItemBackground">
 
-                        <TextView
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@string/dummy_currency_zero"
-                            android:textColor="#2563EB"
-                            android:textSize="20sp"
-                            android:textStyle="bold" />
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="20dp">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:text="@string/more_expense_income"
-                            android:textColor="#64748B"
-                            android:textSize="12sp" />
-                    </LinearLayout>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/dummy_currency_zero"
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="20sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:text="@string/more_expense_income"
+                                android:textColor="@color/textSecondary"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
 
                     <!-- 7. Low Stocks -->
-                    <LinearLayout
+                    <com.google.android.material.card.MaterialCardView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
-                        android:layout_margin="0.5dp"
-                        android:background="#FFFFFF"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:padding="20dp">
+                        android:layout_margin="8dp"
+                        app:cardBackgroundColor="@color/surfaceColor"
+                        app:cardCornerRadius="@dimen/reports_card_corner_radius"
+                        app:cardElevation="1dp"
+                        app:strokeColor="@color/reports_divider"
+                        app:strokeWidth="1dp">
 
-                        <TextView
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@string/dummy_low_stock_count"
-                            android:textColor="#EF4444"
-                            android:textSize="20sp"
-                            android:textStyle="bold" />
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="20dp">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:text="@string/more_low_stocks"
-                            android:textColor="#64748B"
-                            android:textSize="12sp" />
-                    </LinearLayout>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/dummy_low_stock_count"
+                                android:textColor="@color/error"
+                                android:textSize="20sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:text="@string/more_low_stocks"
+                                android:textColor="@color/textSecondary"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
 
                     <!-- 8. Staff and Partners -->
-                    <LinearLayout
+                    <com.google.android.material.card.MaterialCardView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
-                        android:layout_margin="0.5dp"
-                        android:background="#FFFFFF"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:padding="20dp">
+                        android:layout_margin="8dp"
+                        app:cardBackgroundColor="@color/surfaceColor"
+                        app:cardCornerRadius="@dimen/reports_card_corner_radius"
+                        app:cardElevation="1dp"
+                        app:strokeColor="@color/reports_divider"
+                        app:strokeWidth="1dp">
 
-                        <TextView
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@string/dummy_zero"
-                            android:textColor="#2563EB"
-                            android:textSize="20sp"
-                            android:textStyle="bold" />
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="20dp">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:text="@string/more_staff_partners"
-                            android:textColor="#64748B"
-                            android:textSize="12sp" />
-                    </LinearLayout>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/dummy_zero"
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="20sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:text="@string/more_staff_partners"
+                                android:textColor="@color/textSecondary"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
 
                     <!-- 9. SMS Available -->
-                    <LinearLayout
+                    <com.google.android.material.card.MaterialCardView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
-                        android:layout_margin="0.5dp"
-                        android:background="#FFFFFF"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:padding="20dp">
+                        android:layout_margin="8dp"
+                        app:cardBackgroundColor="@color/surfaceColor"
+                        app:cardCornerRadius="@dimen/reports_card_corner_radius"
+                        app:cardElevation="1dp"
+                        app:strokeColor="@color/reports_divider"
+                        app:strokeWidth="1dp">
 
-                        <TextView
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@string/dummy_zero"
-                            android:textColor="#2563EB"
-                            android:textSize="20sp"
-                            android:textStyle="bold" />
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="20dp">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:text="@string/more_sms_available"
-                            android:textColor="#64748B"
-                            android:textSize="12sp" />
-                    </LinearLayout>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/dummy_zero"
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="20sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:text="@string/more_sms_available"
+                                android:textColor="@color/textSecondary"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
 
                     <!-- 10. Items and Subitems -->
-                    <LinearLayout
+                    <com.google.android.material.card.MaterialCardView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
-                        android:layout_margin="0.5dp"
-                        android:background="#FFFFFF"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:padding="20dp">
+                        android:layout_margin="8dp"
+                        app:cardBackgroundColor="@color/surfaceColor"
+                        app:cardCornerRadius="@dimen/reports_card_corner_radius"
+                        app:cardElevation="1dp"
+                        app:strokeColor="@color/reports_divider"
+                        app:strokeWidth="1dp">
 
-                        <TextView
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@string/dummy_items_count"
-                            android:textColor="#2563EB"
-                            android:textSize="20sp"
-                            android:textStyle="bold" />
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="20dp">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:text="@string/more_items_subitems"
-                            android:textColor="#64748B"
-                            android:textSize="12sp" />
-                    </LinearLayout>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/dummy_items_count"
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="20sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:text="@string/more_items_subitems"
+                                android:textColor="@color/textSecondary"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
 
                     <!-- 11. Stock Value Cost Price -->
-                    <LinearLayout
+                    <com.google.android.material.card.MaterialCardView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
-                        android:layout_margin="0.5dp"
-                        android:background="#FFFFFF"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:padding="20dp">
+                        android:layout_margin="8dp"
+                        app:cardBackgroundColor="@color/surfaceColor"
+                        app:cardCornerRadius="@dimen/reports_card_corner_radius"
+                        app:cardElevation="1dp"
+                        app:strokeColor="@color/reports_divider"
+                        app:strokeWidth="1dp">
 
-                        <TextView
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@string/dummy_currency_zero"
-                            android:textColor="#2563EB"
-                            android:textSize="20sp"
-                            android:textStyle="bold" />
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="20dp">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:text="@string/more_stock_cost"
-                            android:textColor="#64748B"
-                            android:textSize="12sp" />
-                    </LinearLayout>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/dummy_currency_zero"
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="20sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:text="@string/more_stock_cost"
+                                android:textColor="@color/textSecondary"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
 
                     <!-- 12. Stock Value Selling Price -->
-                    <LinearLayout
+                    <com.google.android.material.card.MaterialCardView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
-                        android:layout_margin="0.5dp"
-                        android:background="#FFFFFF"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:padding="20dp">
+                        android:layout_margin="8dp"
+                        app:cardBackgroundColor="@color/surfaceColor"
+                        app:cardCornerRadius="@dimen/reports_card_corner_radius"
+                        app:cardElevation="1dp"
+                        app:strokeColor="@color/reports_divider"
+                        app:strokeWidth="1dp">
 
-                        <TextView
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@string/dummy_currency_zero"
-                            android:textColor="#2563EB"
-                            android:textSize="20sp"
-                            android:textStyle="bold" />
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="20dp">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:text="@string/more_stock_selling"
-                            android:textColor="#64748B"
-                            android:textSize="12sp" />
-                    </LinearLayout>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/dummy_currency_zero"
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="20sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:text="@string/more_stock_selling"
+                                android:textColor="@color/textSecondary"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
 
                 </GridLayout>
             </LinearLayout>
@@ -898,13 +1036,13 @@
         <LinearLayout
             android:id="@+id/bottomNavigation"
             android:layout_width="0dp"
-            android:layout_height="@dimen/reports_bottom_nav_height"
-            android:background="@color/reports_surface"
+            android:layout_height="wrap_content"
+            android:background="@color/surfaceColor"
             android:baselineAligned="false"
             android:gravity="center"
             android:orientation="horizontal"
-            android:paddingTop="@dimen/reports_bottom_nav_padding_top"
-            android:paddingBottom="@dimen/reports_bottom_nav_padding_bottom"
+            android:elevation="0dp"
+            android:paddingBottom="4dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
@@ -914,6 +1052,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:layout_margin="4dp"
                 android:background="@drawable/bg_reports_nav_item"
                 android:clickable="true"
                 android:focusable="true"
@@ -926,9 +1065,8 @@
 
                     <ImageView
                         android:id="@+id/iconReports"
-                        android:layout_width="@dimen/reports_bottom_nav_icon_size"
-                        android:layout_height="@dimen/reports_bottom_nav_icon_size"
-                        android:contentDescription="@string/reports_tab_reports"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
                         android:src="@drawable/ic_nav_reports"
                         app:tint="@color/white" />
 
@@ -950,10 +1088,10 @@
                     android:id="@+id/labelReports"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="2dp"
                     android:text="@string/reports_tab_reports"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/reports_bottom_nav_label_text"
+                    android:textSize="11sp"
                     android:textStyle="bold" />
             </LinearLayout>
 
@@ -962,6 +1100,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:layout_margin="4dp"
                 android:clickable="true"
                 android:focusable="true"
                 android:gravity="center"
@@ -969,20 +1108,19 @@
 
                 <ImageView
                     android:id="@+id/iconToday"
-                    android:layout_width="@dimen/reports_bottom_nav_icon_size"
-                    android:layout_height="@dimen/reports_bottom_nav_icon_size"
-                    android:contentDescription="@string/reports_tab_today"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:src="@drawable/ic_nav_today"
-                    app:tint="@color/reports_tab_unselected" />
+                    app:tint="@color/textSecondary" />
 
                 <TextView
                     android:id="@+id/labelToday"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="2dp"
                     android:text="@string/reports_tab_today"
-                    android:textColor="@color/reports_tab_unselected"
-                    android:textSize="@dimen/reports_bottom_nav_label_text" />
+                    android:textColor="@color/textSecondary"
+                    android:textSize="11sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -990,6 +1128,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:layout_margin="4dp"
                 android:clickable="true"
                 android:focusable="true"
                 android:gravity="center"
@@ -1001,18 +1140,17 @@
 
                     <ImageView
                         android:id="@+id/iconCounter"
-                        android:layout_width="@dimen/reports_bottom_nav_icon_size"
-                        android:layout_height="@dimen/reports_bottom_nav_icon_size"
-                        android:contentDescription="@string/reports_tab_counter"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
                         android:src="@drawable/ic_nav_counter"
-                        app:tint="@color/reports_tab_unselected" />
+                        app:tint="@color/textSecondary" />
 
                     <TextView
                         android:id="@+id/labelCounterBadge"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="end|top"
-                        android:layout_marginEnd="-8dp"
+                        android:layout_marginEnd="-6dp"
                         android:layout_marginTop="-4dp"
                         android:background="@drawable/bg_circle_green"
                         android:paddingHorizontal="4dp"
@@ -1027,10 +1165,10 @@
                     android:id="@+id/labelCounter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="2dp"
                     android:text="@string/reports_tab_counter"
-                    android:textColor="@color/reports_tab_unselected"
-                    android:textSize="@dimen/reports_bottom_nav_label_text" />
+                    android:textColor="@color/textSecondary"
+                    android:textSize="11sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -1038,6 +1176,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:layout_margin="4dp"
                 android:clickable="true"
                 android:focusable="true"
                 android:gravity="center"
@@ -1045,20 +1184,19 @@
 
                 <ImageView
                     android:id="@+id/iconItems"
-                    android:layout_width="@dimen/reports_bottom_nav_icon_size"
-                    android:layout_height="@dimen/reports_bottom_nav_icon_size"
-                    android:contentDescription="@string/reports_tab_items"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:src="@drawable/ic_nav_items"
-                    app:tint="@color/reports_tab_unselected" />
+                    app:tint="@color/textSecondary" />
 
                 <TextView
                     android:id="@+id/labelItems"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="2dp"
                     android:text="@string/reports_tab_items"
-                    android:textColor="@color/reports_tab_unselected"
-                    android:textSize="@dimen/reports_bottom_nav_label_text" />
+                    android:textColor="@color/textSecondary"
+                    android:textSize="11sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -1066,6 +1204,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:layout_margin="4dp"
                 android:clickable="true"
                 android:focusable="true"
                 android:gravity="center"
@@ -1073,20 +1212,19 @@
 
                 <ImageView
                     android:id="@+id/iconMore"
-                    android:layout_width="@dimen/reports_bottom_nav_icon_size"
-                    android:layout_height="@dimen/reports_bottom_nav_icon_size"
-                    android:contentDescription="@string/reports_tab_more"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:src="@drawable/ic_nav_more"
-                    app:tint="@color/reports_tab_unselected" />
+                    app:tint="@color/textSecondary" />
 
                 <TextView
                     android:id="@+id/labelMore"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="2dp"
                     android:text="@string/reports_tab_more"
-                    android:textColor="@color/reports_tab_unselected"
-                    android:textSize="@dimen/reports_bottom_nav_label_text" />
+                    android:textColor="@color/textSecondary"
+                    android:textSize="11sp" />
             </LinearLayout>
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>

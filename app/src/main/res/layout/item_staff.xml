@@ -5,17 +5,17 @@
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="12dp"
     android:layout_marginVertical="6dp"
-    app:cardBackgroundColor="@color/white"
-    app:cardCornerRadius="4dp"
-    app:cardElevation="1dp"
-    app:strokeColor="#E2E8F0"
+    app:cardBackgroundColor="@color/surfaceColor"
+    app:cardCornerRadius="@dimen/reports_card_corner_radius"
+    app:cardElevation="2dp"
+    app:strokeColor="@color/reports_divider"
     app:strokeWidth="1dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="12dp">
+        android:padding="16dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -24,29 +24,29 @@
             <!-- Initials Box -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardStaffInitials"
-                android:layout_width="44dp"
-                android:layout_height="44dp"
-                app:cardCornerRadius="4dp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                app:cardCornerRadius="24dp"
                 app:cardElevation="0dp"
-                app:strokeColor="#E2E8F0"
-                app:strokeWidth="1.5dp">
+                app:cardBackgroundColor="@color/colorPrimaryLight"
+                app:strokeWidth="0dp">
                 <TextView
                     android:id="@+id/textStaffInitials"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:text="V"
-                    android:textColor="#3F51B5"
-                    android:textSize="18sp"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="20sp"
                     android:textStyle="bold" />
             </com.google.android.material.card.MaterialCardView>
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_toEndOf="@id/cardStaffInitials"
                 android:layout_toStartOf="@id/textStaffRoleBadge"
-                android:layout_marginStart="12dp"
+                android:layout_marginStart="14dp"
                 android:layout_marginEnd="8dp"
                 android:orientation="vertical">
 
@@ -55,7 +55,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Vinit"
-                    android:textColor="@color/black"
+                    android:textColor="@color/textPrimary"
                     android:textSize="17sp"
                     android:textStyle="bold"
                     android:maxLines="1"
@@ -67,7 +67,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
                     android:text="abcd@gmail.com"
-                    android:textColor="#64748B"
+                    android:textColor="@color/textSecondary"
                     android:textSize="13sp"
                     android:maxLines="1"
                     android:ellipsize="end"/>
@@ -79,19 +79,21 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:background="#F1F5F9"
+                android:background="@drawable/bg_reports_nav_item"
+                android:backgroundTint="@color/reports_chip_background"
                 android:paddingHorizontal="10dp"
                 android:paddingVertical="4dp"
-                android:text="Helper Permissions"
-                android:textColor="#3F51B5"
-                android:textSize="11sp" />
+                android:text="Helper"
+                android:textColor="@color/colorPrimary"
+                android:textSize="11sp"
+                android:textStyle="bold" />
         </RelativeLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginVertical="12dp"
-            android:background="#F1F5F9" />
+            android:layout_marginVertical="16dp"
+            android:background="@color/reports_divider" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -100,30 +102,20 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnAttendance"
-                android:layout_width="wrap_content"
-                android:layout_height="36dp"
-                android:backgroundTint="#3F51B5"
-                android:insetTop="0dp"
-                android:insetBottom="0dp"
-                android:text="Attendance"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
-                android:textSize="12sp"
-                app:cornerRadius="4dp" />
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Attendance" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnPaySlip"
-                android:layout_width="wrap_content"
-                android:layout_height="36dp"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:layout_marginStart="12dp"
-                android:backgroundTint="#3F51B5"
-                android:insetTop="0dp"
-                android:insetBottom="0dp"
                 android:text="Pay Slip"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
-                android:textSize="12sp"
-                app:cornerRadius="4dp" />
+                app:strokeColor="@color/colorPrimary" />
         </LinearLayout>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

@@ -20,26 +20,29 @@ public class SplashActivity extends AppCompatActivity {
 
         new Handler().postDelayed(() -> {
             FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+            Intent intent;
 
             if (currentUser != null) {
                 // User is logged in
                 PreferenceManager preferenceManager = new PreferenceManager(this);
                 if (preferenceManager.isBusinessSetupCompleted()) {
-                    startActivity(new Intent(SplashActivity.this, ReportsActivity.class));
+                    intent = new Intent(SplashActivity.this, ReportsActivity.class);
                 } else {
-                    startActivity(new Intent(SplashActivity.this, BusinessSetupActivity.class));
+                    intent = new Intent(SplashActivity.this, BusinessSetupActivity.class);
                 }
             } else {
                 // User is not logged in
                 PreferenceManager preferenceManager = new PreferenceManager(this);
                 if (preferenceManager.isFirstLaunch()) {
                     // First time launch - go to Language Selection
-                    startActivity(new Intent(SplashActivity.this, LanguageSelectionActivity.class));
+                    intent = new Intent(SplashActivity.this, LanguageSelectionActivity.class);
                 } else {
                     // Not first time, but logged out - go to LoginActivity (Requirement 8)
-                    startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+                    intent = new Intent(SplashActivity.this, LoginActivity.class);
                 }
             }
+            startActivity(intent);
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             finish();
         }, 1500); // 1.5 seconds delay
     }

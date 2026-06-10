@@ -8,7 +8,10 @@ import androidx.room.Update;
 
 @Dao
 public interface ReceiptSettingsDao {
-    @Query("SELECT * FROM receipt_settings WHERE id = 1")
+    @Query("SELECT * FROM receipt_settings WHERE id = :businessId")
+    ReceiptSettings getSettingsByBusiness(int businessId);
+
+    @Query("SELECT * FROM receipt_settings LIMIT 1")
     ReceiptSettings getSettings();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

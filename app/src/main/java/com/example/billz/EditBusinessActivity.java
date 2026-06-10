@@ -21,6 +21,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Executors;
 
 public class EditBusinessActivity extends AppCompatActivity {
 
@@ -51,9 +52,9 @@ public class EditBusinessActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(v -> finish());
 
-        ViewCompat.setOnApplyWindowInsetsListener(toolbar, (v, insets) -> {
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.appBarEdit), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(v.getPaddingLeft(), systemBars.top, v.getPaddingRight(), v.getPaddingBottom());
+            v.setPadding(0, systemBars.top, 0, 0);
             return insets;
         });
     }
@@ -96,22 +97,51 @@ public class EditBusinessActivity extends AppCompatActivity {
     private void loadProfile() {
         Log.d(TAG, "PROFILE_LOAD_STARTED");
         
-        // Load cached first
-        BusinessProfile cached = profileRepository.getCachedProfile();
-        populateUI(cached);
+        // Load from Room DB for the currently selected business
+        Executors.newSingleThreadExecutor().execute(() -> {
+            AppDatabase db = AppDatabase.getInstance(this);
+            Business selected = db.businessDao().getSelectedBusiness();
+            
+            runOnUiThread(() -> {
+                if (selected != null) {
+                    editName.setText(selected.getName());
+                    editMobile.setText(selected.getPhoneNumber());
+                    editEmail.setText(selected.getEmail());
+                    editCategory.setText(selected.getCategory());
+                    textPlan.setText(selected.getPlan() != null ? selected.getPlan() : "FREE");
+                    textRole.setText(selected.getRole() != null ? selected.getRole() : "OWNER");
+                    textStatus.setText(selected.getStatus() != null ? selected.getStatus() : "ACTIVE");
 
+                    // Load ReceiptSettings for THIS specific business
+                    Executors.newSingleThreadExecutor().execute(() -> {
+                        ReceiptSettings settings = db.receiptSettingsDao().getSettingsByBusiness(selected.getId());
+                        runOnUiThread(() -> {
+                            if (settings != null) {
+                                editAddress.setText(settings.getBusinessAddress());
+                            } else {
+                                editAddress.setText(""); // Default if no settings for this business yet
+                            }
+                        });
+                    });
+                }
+            });
+        });
+
+        // Still attempt Firestore pull to update local data if needed, but local is priority for switching
         profileRepository.loadBusinessProfile(new BusinessProfileRepository.ProfileCallback() {
             @Override
             public void onProfileLoaded(BusinessProfile profile) {
-                Log.d(TAG, "PROFILE_LOAD_SUCCESS");
-                Log.d(TAG, "BUSINESS_NAME_LOADED = " + profile.getBusinessName());
-                runOnUiThread(() -> populateUI(profile));
+                // If the firestore profile matches our local selected business name, update UI
+                runOnUiThread(() -> {
+                    if (editName.getText().toString().equals(profile.getBusinessName())) {
+                        populateUI(profile);
+                    }
+                });
             }
 
             @Override
             public void onError(String message) {
                 Log.e(TAG, "PROFILE_LOAD_FAILED: " + message);
-                Toast.makeText(EditBusinessActivity.this, "Error: " + message, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -167,9 +197,34 @@ public class EditBusinessActivity extends AppCompatActivity {
         profileRepository.saveBusinessProfile(data, new BusinessProfileRepository.ProfileCallback() {
             @Override
             public void onProfileLoaded(BusinessProfile profile) {
-                runOnUiThread(() -> {
-                    Toast.makeText(EditBusinessActivity.this, "Business profile updated", Toast.LENGTH_SHORT).show();
-                    finish();
+                // Also update local database and ReceiptSettings
+                Executors.newSingleThreadExecutor().execute(() -> {
+                    AppDatabase db = AppDatabase.getInstance(EditBusinessActivity.this);
+                    Business selected = db.businessDao().getSelectedBusiness();
+                    if (selected != null) {
+                        selected.setName(name);
+                        selected.setPhoneNumber(editMobile.getText().toString().trim());
+                        selected.setEmail(editEmail.getText().toString().trim());
+                        selected.setCategory(editCategory.getText().toString().trim());
+                        db.businessDao().update(selected);
+
+                        // Update ReceiptSettings Address for THIS SPECIFIC business
+                        ReceiptSettings rs = db.receiptSettingsDao().getSettingsByBusiness(selected.getId());
+                        if (rs == null) {
+                            rs = new ReceiptSettings();
+                            rs.setId(selected.getId());
+                        }
+                        rs.setBusinessName(name);
+                        rs.setPhoneNumber(editMobile.getText().toString().trim());
+                        rs.setEmail(editEmail.getText().toString().trim());
+                        rs.setBusinessAddress(editAddress.getText().toString().trim());
+                        db.receiptSettingsDao().insert(rs);
+                    }
+
+                    runOnUiThread(() -> {
+                        Toast.makeText(EditBusinessActivity.this, "Business profile updated", Toast.LENGTH_SHORT).show();
+                        finish();
+                    });
                 });
             }
 
