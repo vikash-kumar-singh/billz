@@ -37,12 +37,13 @@ public class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ViewHold
                 ? receipt.getCustomerName() + " " : "";
         holder.textReceiptDesc.setText(customer + "by " + receipt.getPaymentMode());
         
-        String items = receipt.getItemCount() + (receipt.getItemCount() == 1 ? " Item " : " Items ");
-        holder.textReceiptStats.setText(items + dateTimeFormat.format(new Date(receipt.getTimestamp())));
+        String itemsCountText = receipt.getItemCount() + (receipt.getItemCount() == 1 ? " Item " : " Items ");
+        holder.textReceiptStats.setText(itemsCountText + dateTimeFormat.format(new Date(receipt.getTimestamp())));
         
         holder.textReceiptAmount.setText(String.format(Locale.getDefault(), "₹%,.0f", receipt.getTotalAmount()));
 
-        holder.itemView.setOnClickListener(v -> {
+        View clickTarget = holder.layoutContent != null ? holder.layoutContent : holder.itemView;
+        clickTarget.setOnClickListener(v -> {
             Intent intent = new Intent(v.getContext(), ReceiptPreviewActivity.class);
             intent.putExtra("receipt_id", receipt.getId());
             v.getContext().startActivity(intent);
@@ -56,6 +57,7 @@ public class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ViewHold
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView textReceiptNo, textReceiptDesc, textReceiptStats, textReceiptAmount;
+        View layoutContent;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -63,6 +65,7 @@ public class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ViewHold
             textReceiptDesc = itemView.findViewById(R.id.textReceiptDesc);
             textReceiptStats = itemView.findViewById(R.id.textReceiptStats);
             textReceiptAmount = itemView.findViewById(R.id.textReceiptAmount);
+            layoutContent = itemView.findViewById(R.id.layoutReceiptContent);
         }
     }
 }

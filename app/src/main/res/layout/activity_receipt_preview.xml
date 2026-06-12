@@ -29,6 +29,7 @@
                 android:paddingEnd="16dp">
 
                 <ImageView
+                    android:id="@+id/imgActionShare"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_marginHorizontal="12dp"
@@ -36,6 +37,7 @@
                     app:tint="@color/white" />
 
                 <ImageView
+                    android:id="@+id/imgActionMessage"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_marginHorizontal="12dp"
@@ -43,6 +45,7 @@
                     app:tint="@color/white" />
 
                 <ImageView
+                    android:id="@+id/imgActionUpload"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_marginHorizontal="12dp"
@@ -50,6 +53,7 @@
                     app:tint="@color/white" />
 
                 <ImageView
+                    android:id="@+id/btnDownload"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_marginHorizontal="12dp"
@@ -57,6 +61,7 @@
                     app:tint="@color/white" />
 
                 <ImageView
+                    android:id="@+id/imgActionPrint"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_marginHorizontal="12dp"
@@ -68,6 +73,7 @@
 
         <!-- Top Action Buttons -->
         <LinearLayout
+            android:id="@+id/layoutActionButtons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="end"
@@ -117,6 +123,7 @@
             android:layout_weight="1">
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/invoiceCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
@@ -139,6 +146,18 @@
                         android:textColor="@color/black"
                         android:textSize="18sp"
                         android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textReturnedBy"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="4dp"
+                        android:text="Returned by Business Name"
+                        android:textColor="#EF4444"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:visibility="gone" />
 
                     <ImageView
                         android:id="@+id/imgBusinessLogo"

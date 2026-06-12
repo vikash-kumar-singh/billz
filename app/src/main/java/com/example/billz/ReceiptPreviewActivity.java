@@ -2,6 +2,7 @@ package com.example.billz;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.util.Log;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -26,7 +27,7 @@ public class ReceiptPreviewActivity extends AppCompatActivity {
 
     private TextView textBusinessName, textBusinessAddress, textBusinessTaxNo, textBusinessWebsite, textBusinessPhone;
     private TextView textReceiptNo, textDate, textPMode, textICount, textUCount, textTotalTable;
-    private TextView textSubtotal, textGrandTotal, textReceived, textChange, textThankYou, textCustomerName;
+    private TextView textSubtotal, textGrandTotal, textReceived, textChange, textThankYou, textCustomerName, textReturnedBy;
     private ImageView imgBusinessLogo;
     private TableLayout tableItems;
     private AppDatabase db;
@@ -55,6 +56,8 @@ public class ReceiptPreviewActivity extends AppCompatActivity {
         
         toolbar.setNavigationOnClickListener(v -> finish());
 
+        findViewById(R.id.btnDownload).setOnClickListener(v -> downloadInvoice());
+
         findViewById(R.id.btnReturn).setOnClickListener(v -> showReturnDialog());
         findViewById(R.id.btnDelete).setOnClickListener(v -> showDeleteDialog());
 
@@ -69,6 +72,45 @@ public class ReceiptPreviewActivity extends AppCompatActivity {
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
         });
+    }
+
+    private void downloadInvoice() {
+        // Logic to save invoice view as image
+        View invoiceView = findViewById(R.id.invoiceCard); // Need to add ID to CardView
+        if (invoiceView == null) invoiceView = findViewById(android.R.id.content);
+
+        try {
+            android.graphics.Bitmap bitmap = android.graphics.Bitmap.createBitmap(invoiceView.getWidth(), invoiceView.getHeight(), android.graphics.Bitmap.Config.ARGB_8888);
+            android.graphics.Canvas canvas = new android.graphics.Canvas(bitmap);
+            invoiceView.draw(canvas);
+
+            String fileName = "Invoice_" + System.currentTimeMillis() + ".png";
+            
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+                android.content.ContentValues values = new android.content.ContentValues();
+                values.put(android.provider.MediaStore.Images.Media.DISPLAY_NAME, fileName);
+                values.put(android.provider.MediaStore.Images.Media.MIME_TYPE, "image/png");
+                values.put(android.provider.MediaStore.Images.Media.RELATIVE_PATH, android.os.Environment.DIRECTORY_PICTURES + "/Billz");
+
+                Uri uri = getContentResolver().insert(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+                if (uri != null) {
+                    try (java.io.OutputStream out = getContentResolver().openOutputStream(uri)) {
+                        bitmap.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, out);
+                        Toast.makeText(this, "Invoice downloaded to Pictures/Billz", Toast.LENGTH_LONG).show();
+                    }
+                }
+            } else {
+                String path = android.os.Environment.getExternalStoragePublicDirectory(android.os.Environment.DIRECTORY_PICTURES).toString() + "/" + fileName;
+                java.io.File file = new java.io.File(path);
+                try (java.io.FileOutputStream out = new java.io.FileOutputStream(file)) {
+                    bitmap.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, out);
+                    Toast.makeText(this, "Invoice downloaded: " + path, Toast.LENGTH_LONG).show();
+                }
+            }
+        } catch (Exception e) {
+            Log.e("ReceiptPreview", "Download failed", e);
+            Toast.makeText(this, "Download failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void showReturnDialog() {
@@ -138,6 +180,7 @@ public class ReceiptPreviewActivity extends AppCompatActivity {
         textSubtotal = findViewById(R.id.textSubtotal);
         textGrandTotal = findViewById(R.id.textGrandTotal);
         textThankYou = findViewById(R.id.textThankYou);
+        textReturnedBy = findViewById(R.id.textReturnedBy);
         tableItems = findViewById(R.id.tableItems);
     }
 
@@ -229,6 +272,41 @@ public class ReceiptPreviewActivity extends AppCompatActivity {
                 
                 textPMode.setText(receipt.getPaymentMode());
                 textICount.setText(String.valueOf(receipt.getItemCount()));
+
+                if (receipt.isReturned()) {
+                    if (textReturnedBy != null) {
+                        textReturnedBy.setVisibility(View.VISIBLE);
+                        String bName = (settings != null && settings.getBusinessName() != null) ? settings.getBusinessName() : 
+                                      (business != null ? business.getName() : "Business");
+                        textReturnedBy.setText("Returned by " + bName);
+                    }
+                    
+                    // Simplify header as per image (Only back and download)
+                    findViewById(R.id.imgActionShare).setVisibility(View.GONE);
+                    findViewById(R.id.imgActionMessage).setVisibility(View.GONE);
+                    findViewById(R.id.imgActionUpload).setVisibility(View.GONE);
+                    findViewById(R.id.imgActionPrint).setVisibility(View.GONE);
+
+                    // Remove all action buttons for returned receipts
+                    View actionLayout = findViewById(R.id.layoutActionButtons);
+                    if (actionLayout != null) actionLayout.setVisibility(View.GONE);
+                } else {
+                    if (textReturnedBy != null) textReturnedBy.setVisibility(View.GONE);
+                    findViewById(R.id.imgActionShare).setVisibility(View.VISIBLE);
+                    findViewById(R.id.imgActionMessage).setVisibility(View.VISIBLE);
+                    findViewById(R.id.imgActionUpload).setVisibility(View.VISIBLE);
+                    findViewById(R.id.imgActionPrint).setVisibility(View.VISIBLE);
+
+                    View actionLayout = findViewById(R.id.layoutActionButtons);
+                    if (actionLayout != null) actionLayout.setVisibility(View.VISIBLE);
+                    
+                    // Specifically remove delete button as requested for all previews if desired? 
+                    // No, the user said "remove the delete button" in the context of return Invoice heading logic.
+                    // But if they want it gone everywhere, I can hide it.
+                    // "Return Invoice should have... and remove the delete button"
+                    View btnDelete = findViewById(R.id.btnDelete);
+                    if (btnDelete != null) btnDelete.setVisibility(View.GONE);
+                }
                 
                 int totalUnits = 0;
                 tableItems.removeAllViews();

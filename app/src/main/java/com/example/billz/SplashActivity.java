@@ -19,12 +19,17 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
 
         new Handler().postDelayed(() -> {
+            PreferenceManager preferenceManager = new PreferenceManager(this);
             FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
             Intent intent;
 
-            if (currentUser != null) {
+            // 1. Check for Language Selection first (New User or Reinstall)
+            if (preferenceManager.getSelectedLanguage() == null) {
+                intent = new Intent(SplashActivity.this, LanguageSelectionActivity.class);
+            } 
+            // 2. Check for Auth
+            else if (currentUser != null) {
                 // User is logged in
-                PreferenceManager preferenceManager = new PreferenceManager(this);
                 if (preferenceManager.isBusinessSetupCompleted()) {
                     intent = new Intent(SplashActivity.this, ReportsActivity.class);
                 } else {
@@ -32,17 +37,18 @@ public class SplashActivity extends AppCompatActivity {
                 }
             } else {
                 // User is not logged in
-                PreferenceManager preferenceManager = new PreferenceManager(this);
                 if (preferenceManager.isFirstLaunch()) {
-                    // First time launch - go to Language Selection
-                    intent = new Intent(SplashActivity.this, LanguageSelectionActivity.class);
+                    // Language selected, but onboarding not seen yet
+                    intent = new Intent(SplashActivity.this, WelcomeActivity.class);
                 } else {
                     // Not first time, but logged out - go to LoginActivity (Requirement 8)
                     intent = new Intent(SplashActivity.this, LoginActivity.class);
                 }
             }
             startActivity(intent);
-            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+            try {
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+            } catch (Exception ignored) {}
             finish();
         }, 1500); // 1.5 seconds delay
     }
