@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey;
 public class ModifierSet {
     @PrimaryKey(autoGenerate = true)
     private int id;
+    private int businessId;
     private String name;
 
     public ModifierSet(String name) {
@@ -15,6 +16,8 @@ public class ModifierSet {
 
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
+    public int getBusinessId() { return businessId; }
+    public void setBusinessId(int businessId) { this.businessId = businessId; }
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 }

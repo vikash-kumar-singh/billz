@@ -140,12 +140,9 @@ public class AddCategoryActivity extends AppCompatActivity {
         String imageUriStr = selectedImageUri != null ? selectedImageUri.toString() : null;
         Category category = new Category(name, imageUriStr, selectedColor);
 
-        java.util.concurrent.Executors.newSingleThreadExecutor().execute(() -> {
+        BusinessHelper.ensureActiveBusiness(this, () -> {
             AppDatabase db = AppDatabase.getInstance(this);
-            Business active = db.businessDao().getSelectedBusiness();
-            if (active != null) {
-                category.setBusinessId(active.getId());
-            }
+            category.setBusinessId(BusinessHelper.getActiveBusinessId(this));
             db.categoryDao().insert(category);
             runOnUiThread(() -> {
                 Intent resultIntent = new Intent();

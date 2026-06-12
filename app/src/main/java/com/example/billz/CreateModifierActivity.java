@@ -148,13 +148,16 @@ public class CreateModifierActivity extends AppCompatActivity {
             return;
         }
 
-        Executors.newSingleThreadExecutor().execute(() -> {
+        BusinessHelper.ensureActiveBusiness(this, () -> {
             ModifierDao dao = AppDatabase.getInstance(this).modifierDao();
+            int bId = BusinessHelper.getActiveBusinessId(this);
+            
             if (isUpdate && modifierSetId != -1) {
                 dao.deleteOptionsForSet(modifierSetId);
                 // Update set name if changed
                 ModifierSet existingSet = new ModifierSet(setName);
                 existingSet.setId(modifierSetId);
+                existingSet.setBusinessId(bId);
                 dao.insertModifierSet(existingSet); // OnConflict REPLACE should work if set up
                 
                 for (ModifierOption opt : options) {
@@ -162,6 +165,7 @@ public class CreateModifierActivity extends AppCompatActivity {
                 }
             } else {
                 ModifierSet set = new ModifierSet(setName);
+                set.setBusinessId(bId);
                 long setId = dao.insertModifierSet(set);
                 for (ModifierOption opt : options) {
                     opt.setModifierSetId((int) setId);

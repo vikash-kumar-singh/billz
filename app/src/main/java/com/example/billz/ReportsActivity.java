@@ -395,13 +395,17 @@ public class ReportsActivity extends AppCompatActivity {
         showEmptyState(true);
         updateSidebarLanguageText();
         setupCartManager();
+        ensureActiveBusiness();
         updateCustomerCount();
         syncCloudData();
     }
 
+    private void ensureActiveBusiness() {
+        BusinessHelper.ensureActiveBusiness(this, null);
+    }
+
     private int getActiveBusinessId() {
-        Business active = AppDatabase.getInstance(this).businessDao().getSelectedBusiness();
-        return active != null ? active.getId() : -1;
+        return BusinessHelper.getActiveBusinessId(this);
     }
 
     private void syncCloudData() {

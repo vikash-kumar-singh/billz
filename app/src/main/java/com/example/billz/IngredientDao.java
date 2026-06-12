@@ -8,8 +8,8 @@ import java.util.List;
 
 @Dao
 public interface IngredientDao {
-    @Query("SELECT * FROM ingredients ORDER BY id DESC")
-    List<Ingredient> getAllIngredients();
+    @Query("SELECT * FROM ingredients WHERE businessId = :businessId ORDER BY id DESC")
+    List<Ingredient> getAllIngredients(int businessId);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Ingredient ingredient);

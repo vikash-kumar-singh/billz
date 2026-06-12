@@ -213,10 +213,12 @@ public class InventoryManagementActivity extends AppCompatActivity {
         modifiersList = new ArrayList<>();
         ingredientsList = new ArrayList<>();
         
-        loadCategoriesFromDB();
-        loadModifiersFromDB();
-        loadIngredientsFromDB();
-        loadItemsFromDB();
+        BusinessHelper.ensureActiveBusiness(this, () -> {
+            loadCategoriesFromDB();
+            loadModifiersFromDB();
+            loadIngredientsFromDB();
+            loadItemsFromDB();
+        });
 
         currentDisplayList = new ArrayList<>(itemsList);
         adapter = new InventoryAdapter(currentDisplayList, this, itemClickListener);
@@ -438,7 +440,7 @@ public class InventoryManagementActivity extends AppCompatActivity {
             Business active = AppDatabase.getInstance(this).businessDao().getSelectedBusiness();
             int bId = (active != null) ? active.getId() : -1;
             ModifierDao dao = AppDatabase.getInstance(this).modifierDao();
-            List<ModifierSet> dbSets = dao.getAllModifierSets(); // You might want to filter this by bId if ModifierSet has businessId
+            List<ModifierSet> dbSets = dao.getAllModifierSets(bId); 
             runOnUiThread(() -> {
                 modifiersList.clear();
                 for (ModifierSet set : dbSets) {
@@ -467,7 +469,9 @@ public class InventoryManagementActivity extends AppCompatActivity {
 
     private void loadIngredientsFromDB() {
         java.util.concurrent.Executors.newSingleThreadExecutor().execute(() -> {
-            List<Ingredient> dbIngredients = AppDatabase.getInstance(this).ingredientDao().getAllIngredients();
+            Business active = AppDatabase.getInstance(this).businessDao().getSelectedBusiness();
+            int bId = (active != null) ? active.getId() : -1;
+            List<Ingredient> dbIngredients = AppDatabase.getInstance(this).ingredientDao().getAllIngredients(bId);
             runOnUiThread(() -> {
                 ingredientsList.clear();
                 for (Ingredient ing : dbIngredients) {

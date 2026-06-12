@@ -140,12 +140,9 @@ public class AddItemActivity extends AppCompatActivity {
         VariantData first = variantsToSave.get(0);
         Item item = new Item(name, category, first.sellingPrice, first.costPrice, first.stockQuantity, first.name, selectedSellBy, !isSimpleMode);
 
-        java.util.concurrent.Executors.newSingleThreadExecutor().execute(() -> {
+        BusinessHelper.ensureActiveBusiness(this, () -> {
             AppDatabase db = AppDatabase.getInstance(this);
-            Business active = db.businessDao().getSelectedBusiness();
-            if (active != null) {
-                item.setBusinessId(active.getId());
-            }
+            item.setBusinessId(BusinessHelper.getActiveBusinessId(this));
             
             long itemId = db.itemDao().insert(item);
             
@@ -153,7 +150,7 @@ public class AddItemActivity extends AppCompatActivity {
                 VariantData vd = variantsToSave.get(i);
                 Variant variant = new Variant((int)itemId, vd.name, vd.sellingPrice, vd.costPrice, vd.stockQuantity);
                 variant.setSortOrder(i);
-                AppDatabase.getInstance(this).variantDao().insert(variant);
+                db.variantDao().insert(variant);
             }
 
             runOnUiThread(() -> {

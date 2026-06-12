@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey;
 public class Ingredient {
     @PrimaryKey(autoGenerate = true)
     private int id;
+    private int businessId;
     private String name;
     private double stock;
 
@@ -17,6 +18,8 @@ public class Ingredient {
 
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
+    public int getBusinessId() { return businessId; }
+    public void setBusinessId(int businessId) { this.businessId = businessId; }
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
     public double getStock() { return stock; }

@@ -84,8 +84,9 @@ public class AddIngredientActivity extends AppCompatActivity {
 
     private void loadIngredientData() {
         if (ingredientId == -1) return;
-        Executors.newSingleThreadExecutor().execute(() -> {
-            Ingredient ingredient = AppDatabase.getInstance(this).ingredientDao().getAllIngredients().stream()
+        BusinessHelper.ensureActiveBusiness(this, () -> {
+            int bId = BusinessHelper.getActiveBusinessId(this);
+            Ingredient ingredient = AppDatabase.getInstance(this).ingredientDao().getAllIngredients(bId).stream()
                     .filter(i -> i.getId() == ingredientId).findFirst().orElse(null);
             
             if (ingredient != null) {
@@ -258,8 +259,10 @@ public class AddIngredientActivity extends AppCompatActivity {
         double finalChangeAmount = changeAmount;
         boolean finalIsAddingStock = isAddingStock;
 
-        Executors.newSingleThreadExecutor().execute(() -> {
+        BusinessHelper.ensureActiveBusiness(this, () -> {
             AppDatabase db = AppDatabase.getInstance(this);
+            ingredient.setBusinessId(BusinessHelper.getActiveBusinessId(this));
+
             if (isUpdate && ingredientId != -1) {
                 db.ingredientDao().insert(ingredient);
                 

@@ -15,8 +15,8 @@ public interface ModifierDao {
     @Insert
     void insertModifierOptions(List<ModifierOption> options);
 
-    @Query("SELECT * FROM modifier_sets ORDER BY id DESC")
-    List<ModifierSet> getAllModifierSets();
+    @Query("SELECT * FROM modifier_sets WHERE businessId = :businessId ORDER BY id DESC")
+    List<ModifierSet> getAllModifierSets(int businessId);
 
     @Query("SELECT * FROM modifier_options WHERE modifierSetId = :setId")
     List<ModifierOption> getOptionsForSet(int setId);

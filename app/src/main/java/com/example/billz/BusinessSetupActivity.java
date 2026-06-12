@@ -65,13 +65,23 @@ public class BusinessSetupActivity extends AppCompatActivity {
         new BusinessProfileRepository(this).saveBusinessProfile(businessData, new BusinessProfileRepository.ProfileCallback() {
             @Override
             public void onProfileLoaded(BusinessProfile profile) {
-                runOnUiThread(() -> {
-                    PreferenceManager preferenceManager = new PreferenceManager(BusinessSetupActivity.this);
-                    preferenceManager.setBusinessSetupCompleted(true);
-                    preferenceManager.setFirstLaunch(false);
+                java.util.concurrent.Executors.newSingleThreadExecutor().execute(() -> {
+                    AppDatabase db = AppDatabase.getInstance(BusinessSetupActivity.this);
+                    db.businessDao().deselectAll();
+                    
+                    Business localBusiness = new Business(name, "", "OWNER", true);
+                    localBusiness.setCategory(category);
+                    localBusiness.setEmail(currentUserEmail);
+                    db.businessDao().insert(localBusiness);
 
-                    startActivity(new Intent(BusinessSetupActivity.this, ReportsActivity.class));
-                    finishAffinity();
+                    runOnUiThread(() -> {
+                        PreferenceManager preferenceManager = new PreferenceManager(BusinessSetupActivity.this);
+                        preferenceManager.setBusinessSetupCompleted(true);
+                        preferenceManager.setFirstLaunch(false);
+
+                        startActivity(new Intent(BusinessSetupActivity.this, ReportsActivity.class));
+                        finishAffinity();
+                    });
                 });
             }
 
