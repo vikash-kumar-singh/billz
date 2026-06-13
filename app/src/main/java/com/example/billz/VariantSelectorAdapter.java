@@ -44,13 +44,33 @@ public class VariantSelectorAdapter extends RecyclerView.Adapter<VariantSelector
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Variant variant = variants.get(position);
-        int qty = variantQuantities.containsKey(variant.getId()) ? variantQuantities.get(variant.getId()) : 0;
+        int qty = variantQuantities.getOrDefault(variant.getId(), 0);
+        boolean isOutOfStock = variant.getStockQuantity() <= 0;
 
         holder.textPrice.setText(String.format(Locale.getDefault(), "₹%.0f", variant.getSellingPrice()));
-        holder.textName.setText(variant.getName().toUpperCase());
+        
+        String displayName = variant.getName().toUpperCase();
+        if (isOutOfStock) {
+            displayName += " (OUT OF STOCK)";
+        }
+        holder.textName.setText(displayName);
         holder.textQuantity.setText(String.valueOf(qty));
 
-        if (qty > 0) {
+        if (isOutOfStock) {
+            // Out of Stock state matching image (Greyed out)
+            holder.card.setCardBackgroundColor(0xFFF1F5F9);
+            holder.textPrice.setTextColor(0xFF94A3B8);
+            holder.textName.setTextColor(0xFF94A3B8);
+            holder.btnMinus.setImageTintList(ColorStateList.valueOf(0xFFCBD5E1));
+            holder.btnPlus.setImageTintList(ColorStateList.valueOf(0xFFCBD5E1));
+            holder.textQuantity.setTextColor(0xFF94A3B8);
+            holder.textQuantity.setBackgroundResource(R.drawable.bg_quantity_box);
+            holder.divider1.setBackgroundColor(0xFFE2E8F0);
+            holder.divider2.setBackgroundColor(0xFFE2E8F0);
+            
+            holder.btnPlus.setEnabled(false);
+            holder.btnMinus.setEnabled(false);
+        } else if (qty > 0) {
             // Selected state matching image (Blue background)
             holder.card.setCardBackgroundColor(0xFF3F51B5);
             holder.textPrice.setTextColor(Color.WHITE);
@@ -61,6 +81,9 @@ public class VariantSelectorAdapter extends RecyclerView.Adapter<VariantSelector
             holder.textQuantity.setBackgroundResource(R.drawable.bg_quantity_box_white);
             holder.divider1.setBackgroundColor(0x33FFFFFF);
             holder.divider2.setBackgroundColor(0x33FFFFFF);
+            
+            holder.btnPlus.setEnabled(true);
+            holder.btnMinus.setEnabled(true);
         } else {
             // Unselected state (White background)
             holder.card.setCardBackgroundColor(Color.WHITE);
@@ -72,6 +95,9 @@ public class VariantSelectorAdapter extends RecyclerView.Adapter<VariantSelector
             holder.textQuantity.setBackgroundResource(R.drawable.bg_quantity_box);
             holder.divider1.setBackgroundColor(0xFFE2E8F0);
             holder.divider2.setBackgroundColor(0xFFE2E8F0);
+            
+            holder.btnPlus.setEnabled(true);
+            holder.btnMinus.setEnabled(true);
         }
 
         holder.btnPlus.setOnClickListener(v -> {

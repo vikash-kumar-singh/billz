@@ -33,6 +33,9 @@ public interface ItemDao {
     @Query("SELECT * FROM items WHERE (category IS NULL OR category = '' OR category = 'Uncategorized' OR category = 'No Category') AND businessId = :businessId")
     List<Item> getUncategorizedItems(int businessId);
 
+    @Query("SELECT * FROM items WHERE name = :name AND businessId = :businessId LIMIT 1")
+    Item getByName(String name, int businessId);
+
     @Query("DELETE FROM items WHERE id = :id")
     void deleteById(int id);
 }

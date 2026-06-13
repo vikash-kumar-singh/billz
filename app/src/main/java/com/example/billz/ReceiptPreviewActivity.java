@@ -125,12 +125,33 @@ public class ReceiptPreviewActivity extends AppCompatActivity {
         dialog.findViewById(R.id.btnYesReturn).setOnClickListener(v -> {
             Executors.newSingleThreadExecutor().execute(() -> {
                 Receipt receipt = db.receiptDao().getById(receiptId);
-                if (receipt != null) {
+                if (receipt != null && !receipt.isReturned()) {
                     receipt.setReturned(true);
                     db.receiptDao().update(receipt);
+
+                    // Restock Logic
+                    List<ReceiptItem> items = db.receiptItemDao().getItemsForReceipt(receiptId);
+                    for (ReceiptItem ri : items) {
+                        // 1. Find and update base item stock
+                        Item item = db.itemDao().getByName(ri.getItemName(), receipt.getBusinessId());
+                        if (item != null) {
+                            item.setStockQuantity(item.getStockQuantity() + ri.getQuantity());
+                            db.itemDao().update(item);
+
+                            // 2. Find and update variant stock if applicable
+                            if (ri.getVariantName() != null && !ri.getVariantName().isEmpty() && !ri.getVariantName().equalsIgnoreCase("Default")) {
+                                Variant variant = db.variantDao().getByName(item.getId(), ri.getVariantName());
+                                if (variant != null) {
+                                    variant.setStockQuantity(variant.getStockQuantity() + ri.getQuantity());
+                                    db.variantDao().update(variant);
+                                }
+                            }
+                        }
+                    }
+
                     runOnUiThread(() -> {
                         dialog.dismiss();
-                        Toast.makeText(this, "Receipt added to return archive", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Receipt returned and items restocked", Toast.LENGTH_SHORT).show();
                         finish();
                     });
                 }
@@ -300,12 +321,8 @@ public class ReceiptPreviewActivity extends AppCompatActivity {
                     View actionLayout = findViewById(R.id.layoutActionButtons);
                     if (actionLayout != null) actionLayout.setVisibility(View.VISIBLE);
                     
-                    // Specifically remove delete button as requested for all previews if desired? 
-                    // No, the user said "remove the delete button" in the context of return Invoice heading logic.
-                    // But if they want it gone everywhere, I can hide it.
-                    // "Return Invoice should have... and remove the delete button"
                     View btnDelete = findViewById(R.id.btnDelete);
-                    if (btnDelete != null) btnDelete.setVisibility(View.GONE);
+                    if (btnDelete != null) btnDelete.setVisibility(View.VISIBLE);
                 }
                 
                 int totalUnits = 0;

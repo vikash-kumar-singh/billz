@@ -1397,7 +1397,7 @@ public class ReportsActivity extends AppCompatActivity {
                             Receipt receipt = new Receipt(rNo, custName, mode.getName(), totalToSave, itemsToSave, System.currentTimeMillis(), bId);
                             long insertedId = db.receiptDao().insert(receipt);
 
-                            // Save individual items
+                            // Save individual items and reduce stock
                             List<CartItem> cartItems = CartManager.getInstance().getCartItems();
                             List<ReceiptItem> receiptItems = new ArrayList<>();
                             for (CartItem ci : cartItems) {
@@ -1405,6 +1405,20 @@ public class ReportsActivity extends AppCompatActivity {
                                 receiptItems.add(new ReceiptItem((int)insertedId, ci.getItem().getName(), vName, 
                                         ci.getVariant() != null ? ci.getVariant().getSellingPrice() : ci.getItem().getSellingPrice(), 
                                         ci.getQuantity()));
+
+                                // 1. Reduce Variant stock if available
+                                if (ci.getVariant() != null) {
+                                    Variant v = ci.getVariant();
+                                    v.setStockQuantity(Math.max(0, v.getStockQuantity() - ci.getQuantity()));
+                                    db.variantDao().update(v);
+                                }
+
+                                // 2. Reduce Base Item stock
+                                Item item = db.itemDao().getById(ci.getItem().getId());
+                                if (item != null) {
+                                    item.setStockQuantity(Math.max(0, item.getStockQuantity() - ci.getQuantity()));
+                                    db.itemDao().update(item);
+                                }
                             }
                             db.receiptItemDao().insertAll(receiptItems);
 

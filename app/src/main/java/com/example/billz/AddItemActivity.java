@@ -136,9 +136,17 @@ public class AddItemActivity extends AppCompatActivity {
             return;
         }
 
-        // Use the first variant's prices/stock for the base Item record (for legacy list views)
+        // Use the first variant's prices for the base Item record
+        // But use the SUM of all variant stocks for the base Item stock
         VariantData first = variantsToSave.get(0);
-        Item item = new Item(name, category, first.sellingPrice, first.costPrice, first.stockQuantity, first.name, selectedSellBy, !isSimpleMode);
+        int totalStock = 0;
+        if (!isSimpleMode) {
+            for (VariantData vd : variantsToSave) totalStock += vd.stockQuantity;
+        } else {
+            totalStock = first.stockQuantity;
+        }
+        
+        Item item = new Item(name, category, first.sellingPrice, first.costPrice, totalStock, first.name, selectedSellBy, !isSimpleMode);
 
         BusinessHelper.ensureActiveBusiness(this, () -> {
             AppDatabase db = AppDatabase.getInstance(this);
