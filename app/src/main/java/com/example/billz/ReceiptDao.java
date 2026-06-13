@@ -32,6 +32,9 @@ public interface ReceiptDao {
     @Query("SELECT * FROM receipts WHERE businessId = :businessId AND isReturned = 1 AND paymentMode = :mode AND timestamp BETWEEN :from AND :to ORDER BY timestamp DESC")
     List<Receipt> getReturnedReceiptsByFilter(int businessId, String mode, long from, long to);
 
+    @Query("SELECT * FROM receipts WHERE businessId = :businessId AND timestamp BETWEEN :from AND :to ORDER BY timestamp DESC")
+    List<Receipt> getAllReceiptsByDateRange(int businessId, long from, long to);
+
     @Query("SELECT * FROM receipts WHERE id = :id")
     Receipt getById(int id);
 

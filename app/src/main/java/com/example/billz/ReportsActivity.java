@@ -40,6 +40,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.Executors;
@@ -80,6 +81,7 @@ public class ReportsActivity extends AppCompatActivity {
     private RecyclerView recyclerItemList;
     private RecyclerView recyclerItemGrid;
     private RecyclerView recyclerCounterItems;
+    private RecyclerView recyclerTodayReceipts;
     private View btnGoToCounter;
     private Button btnCharge;
     private TextView labelCounterBadge, textCounterSubtotal, textCounterGrandTotal, textItemCountSummary;
@@ -143,6 +145,11 @@ public class ReportsActivity extends AppCompatActivity {
         recyclerCounterItems = findViewById(R.id.recyclerCounterItems);
         if (recyclerCounterItems != null) {
             recyclerCounterItems.setLayoutManager(new LinearLayoutManager(this));
+        }
+
+        recyclerTodayReceipts = findViewById(R.id.recyclerTodayReceipts);
+        if (recyclerTodayReceipts != null) {
+            recyclerTodayReceipts.setLayoutManager(new LinearLayoutManager(this));
         }
 
         btnGoToCounter = findViewById(R.id.btnGoToCounter);
@@ -720,6 +727,7 @@ public class ReportsActivity extends AppCompatActivity {
             runOnUiThread(() -> {
                 if (currentTab == TAB_COUNTER) updateCounterUI();
                 if (currentTab == TAB_ITEMS) refreshItemsView();
+                if (currentTab == TAB_TODAY) loadTodayReceipts();
             });
         });
     }
@@ -823,6 +831,10 @@ public class ReportsActivity extends AppCompatActivity {
 
         if (txtOwnerEmail != null) txtOwnerEmail.setText(email != null ? email : "");
         if (textHeaderPhoneNumber != null) textHeaderPhoneNumber.setText(mobile != null ? mobile : "");
+
+        if (toolbar != null && currentTab == TAB_TODAY) {
+            toolbar.setTitle(name != null ? name.toUpperCase() : getString(R.string.reports_tab_today));
+        }
 
         // Also refresh logo if we have it in settings or pm
         Executors.newSingleThreadExecutor().execute(() -> {
@@ -1007,23 +1019,30 @@ public class ReportsActivity extends AppCompatActivity {
         this.currentTab = selectedTab;
         invalidateOptionsMenu();
 
-        int unselectedColor = ContextCompat.getColor(this, R.color.reports_tab_unselected);
+        int unselectedColor = Color.parseColor("#94A3B8");
         int selectedColor = ContextCompat.getColor(this, R.color.white);
-        int activeBlue = Color.parseColor("#1E40AF");
+        int activeBlue = ContextCompat.getColor(this, R.color.colorPrimary);
 
         for (int i = 0; i < bottomTabs.length; i++) {
             boolean isSelected = i == selectedTab;
             if (isSelected) {
                 bottomTabs[i].setBackgroundResource(R.drawable.bg_reports_nav_item);
-                bottomTabs[i].getBackground().setTint(activeBlue);
+                if (bottomTabs[i].getBackground() != null) {
+                    bottomTabs[i].getBackground().setTint(activeBlue);
+                }
                 bottomTabIcons[i].setColorFilter(selectedColor);
                 bottomTabLabels[i].setTextColor(selectedColor);
                 bottomTabLabels[i].setTypeface(null, Typeface.BOLD);
+                
+                // Increase vertical padding to make the pill/circle shape taller
+                int py = (int) (8 * getResources().getDisplayMetrics().density);
+                bottomTabs[i].setPadding(0, py, 0, py);
             } else {
                 bottomTabs[i].setBackgroundResource(0);
                 bottomTabIcons[i].setColorFilter(unselectedColor);
                 bottomTabLabels[i].setTextColor(unselectedColor);
                 bottomTabLabels[i].setTypeface(null, Typeface.NORMAL);
+                bottomTabs[i].setPadding(0, 0, 0, 0);
             }
         }
 
@@ -1036,6 +1055,7 @@ public class ReportsActivity extends AppCompatActivity {
         counterEmptyStateContainer.setVisibility(View.GONE);
         emptyStateContainer.setVisibility(View.GONE);
         reportsContentPlaceholder.setVisibility(View.GONE);
+        if (recyclerTodayReceipts != null) recyclerTodayReceipts.setVisibility(View.GONE);
         dateSelectorRow.setVisibility(View.GONE);
         if (btnGoToCounter != null) btnGoToCounter.setVisibility(View.GONE);
         if (btnCharge != null) btnCharge.setVisibility(View.GONE);
@@ -1068,13 +1088,16 @@ public class ReportsActivity extends AppCompatActivity {
             toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.reports_text_primary));
             toolbar.setNavigationIconTint(ContextCompat.getColor(this, R.color.reports_text_primary));
         } else if (selectedId == R.id.tabToday) {
-            toolbar.setTitle(getString(R.string.reports_tab_today));
-            reportsContentPlaceholder.setVisibility(View.VISIBLE);
-            int bgColor = ContextCompat.getColor(this, R.color.reports_surface);
+            PreferenceManager pm = new PreferenceManager(this);
+            String bName = pm.getBusinessName();
+            toolbar.setTitle(bName != null ? bName.toUpperCase() : getString(R.string.reports_tab_today));
+            if (recyclerTodayReceipts != null) recyclerTodayReceipts.setVisibility(View.VISIBLE);
+            int bgColor = ContextCompat.getColor(this, R.color.reports_tab_selected);
             topBarReports.setBackgroundColor(bgColor);
             toolbar.setBackgroundColor(bgColor);
-            toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.reports_text_primary));
-            toolbar.setNavigationIconTint(ContextCompat.getColor(this, R.color.reports_text_primary));
+            toolbar.setTitleTextColor(selectedColor);
+            toolbar.setNavigationIconTint(selectedColor);
+            loadTodayReceipts();
         } else if (selectedId == R.id.tabCounter) {
             toolbar.setTitle(getString(R.string.reports_tab_counter));
             int bgColor = ContextCompat.getColor(this, R.color.reports_tab_selected);
@@ -1106,6 +1129,33 @@ public class ReportsActivity extends AppCompatActivity {
         } else if (itemViewMode == 2) {
             if (recyclerItemGrid.getAdapter() instanceof ItemGridAdapter) ((ItemGridAdapter) recyclerItemGrid.getAdapter()).filter(query);
         }
+    }
+
+    private void loadTodayReceipts() {
+        Executors.newSingleThreadExecutor().execute(() -> {
+            int bId = getActiveBusinessId();
+
+            Calendar cal = Calendar.getInstance();
+            cal.set(Calendar.HOUR_OF_DAY, 0);
+            cal.set(Calendar.MINUTE, 0);
+            cal.set(Calendar.SECOND, 0);
+            cal.set(Calendar.MILLISECOND, 0);
+            long startOfDay = cal.getTimeInMillis();
+
+            cal.set(Calendar.HOUR_OF_DAY, 23);
+            cal.set(Calendar.MINUTE, 59);
+            cal.set(Calendar.SECOND, 59);
+            cal.set(Calendar.MILLISECOND, 999);
+            long endOfDay = cal.getTimeInMillis();
+
+            List<Receipt> todayReceipts = AppDatabase.getInstance(this).receiptDao().getAllReceiptsByDateRange(bId, startOfDay, endOfDay);
+
+            runOnUiThread(() -> {
+                if (recyclerTodayReceipts != null) {
+                    recyclerTodayReceipts.setAdapter(new ReceiptAdapter(todayReceipts));
+                }
+            });
+        });
     }
 
     private void loadItemList() {
