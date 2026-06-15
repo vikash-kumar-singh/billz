@@ -32,7 +32,15 @@ public class HelpChatActivity extends AppCompatActivity {
         });
 
         findViewById(R.id.btnStartConversation).setOnClickListener(v -> {
-            Toast.makeText(this, "Starting a conversation...", Toast.LENGTH_SHORT).show();
+            String phoneNumber = "+918825347516"; // Support/Business Owner Number
+            String url = "https://api.whatsapp.com/send?phone=" + phoneNumber;
+            try {
+                android.content.Intent intent = new android.content.Intent(android.content.Intent.ACTION_VIEW);
+                intent.setData(android.net.Uri.parse(url));
+                startActivity(intent);
+            } catch (Exception e) {
+                Toast.makeText(this, "WhatsApp not installed", Toast.LENGTH_SHORT).show();
+            }
         });
     }
 }
