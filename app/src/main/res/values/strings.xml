@@ -160,6 +160,18 @@
     <string name="nav_receipt_settings">Receipt Settings</string>
     <string name="nav_business_settings">Business Settings</string>
     <string name="nav_printer_setup">Printer Setup</string>
+    <string name="nav_device_details">Device Details</string>
+    <string name="device_info_title">Device info</string>
+    <string name="device_label">Device</string>
+    <string name="device_code_label">Device code</string>
+    <string name="android_label">Android</string>
+    <string name="app_version_label">App version</string>
+    <string name="locale_label">Locale</string>
+    <string name="signed_in_as_label">Signed in as</string>
+    <string name="copy_device_details">Copy device details</string>
+    <string name="details_copied">Details copied to clipboard</string>
+    <string name="not_signed_in">Not signed in</string>
+    <string name="unknown_version">Unknown</string>
     <string name="nav_logout">Logout</string>
 
     <!-- Business Settings -->

@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/device_info_title"
+            android:textColor="#1E293B"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/btnClose"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignParentEnd="true"
+            android:contentDescription="@string/reports_back"
+            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            app:tint="#3F51B5" />
+    </RelativeLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="32dp">
+
+        <View
+            android:layout_width="280dp"
+            android:layout_height="280dp"
+            android:layout_gravity="center"
+            android:background="@drawable/circle_background_light" />
+
+        <ImageView
+            android:layout_width="160dp"
+            android:layout_height="240dp"
+            android:layout_gravity="center"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_device_illustration" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#F1F5F9"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="12dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/device_label"
+                android:textColor="#64748B"
+                android:textSize="14sp" />
+            <TextView
+                android:id="@+id/textDeviceName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:textColor="#1E293B"
+                android:textSize="14sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="12dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/device_code_label"
+                android:textColor="#64748B"
+                android:textSize="14sp" />
+            <TextView
+                android:id="@+id/textDeviceCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:textColor="#1E293B"
+                android:textSize="14sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="12dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/android_label"
+                android:textColor="#64748B"
+                android:textSize="14sp" />
+            <TextView
+                android:id="@+id/textAndroidVersion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:textColor="#1E293B"
+                android:textSize="14sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="12dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/app_version_label"
+                android:textColor="#64748B"
+                android:textSize="14sp" />
+            <TextView
+                android:id="@+id/textAppVersion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:textColor="#1E293B"
+                android:textSize="14sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="12dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/locale_label"
+                android:textColor="#64748B"
+                android:textSize="14sp" />
+            <TextView
+                android:id="@+id/textLocale"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:textColor="#1E293B"
+                android:textSize="14sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="12dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/signed_in_as_label"
+                android:textColor="#64748B"
+                android:textSize="14sp" />
+            <TextView
+                android:id="@+id/textSignedInEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:textColor="#1E293B"
+                android:textSize="14sp" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnCopyDetails"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="#3F51B5"
+        android:text="@string/copy_device_details"
+        android:textAllCaps="false"
+        android:textColor="#FFFFFF" />
+
+</LinearLayout>

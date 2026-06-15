@@ -160,28 +160,6 @@
                     android:text="0" />
             </LinearLayout>
 
-            <!-- ShopFront -->
-            <LinearLayout
-                android:id="@+id/nav_shopfront"
-                style="@style/NavMenuItemStyle">
-                <ImageView
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
-                    android:src="@drawable/ic_grid_view"
-                    app:tint="#3F51B5" />
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
-                    android:layout_weight="1"
-                    android:text="@string/nav_shopfront"
-                    android:textColor="#1E293B"
-                    android:textSize="14sp" />
-                <TextView
-                    style="@style/NavBadgeStyle"
-                    android:text="0" />
-            </LinearLayout>
-
             <!-- Refer App -->
             <LinearLayout
                 android:id="@+id/nav_refer"
@@ -216,25 +194,6 @@
                     android:layout_marginStart="24dp"
                     android:layout_weight="1"
                     android:text="@string/nav_returned_receipt"
-                    android:textColor="#1E293B"
-                    android:textSize="14sp" />
-            </LinearLayout>
-
-            <!-- Web Back Office -->
-            <LinearLayout
-                android:id="@+id/nav_web_office"
-                style="@style/NavMenuItemStyle">
-                <ImageView
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
-                    android:src="@android:drawable/ic_menu_mapmode"
-                    app:tint="#3F51B5" />
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
-                    android:layout_weight="1"
-                    android:text="@string/nav_web_office"
                     android:textColor="#1E293B"
                     android:textSize="14sp" />
             </LinearLayout>
@@ -288,45 +247,6 @@
                 android:layout_marginBottom="8dp"
                 android:background="#F1F5F9" />
 
-            <!-- Section: Other apps -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingStart="16dp"
-                android:paddingTop="12dp"
-                android:paddingBottom="8dp"
-                android:text="Other apps"
-                android:textColor="#94A3B8"
-                android:textSize="11sp"
-                android:textStyle="bold"
-                android:letterSpacing="0.1" />
-
-            <!-- Connect Kitchen display App -->
-            <LinearLayout
-                android:id="@+id/nav_connect_kitchen"
-                style="@style/NavMenuItemStyle">
-                <ImageView
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
-                    android:src="@android:drawable/ic_menu_call"
-                    app:tint="#3F51B5" />
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
-                    android:layout_weight="1"
-                    android:text="@string/nav_connect_kitchen"
-                    android:textColor="#1E293B"
-                    android:textSize="14sp" />
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:background="#F1F5F9" />
-
             <!-- Section: Settings -->
             <TextView
                 android:layout_width="wrap_content"
@@ -358,29 +278,6 @@
                     android:text="Language - English"
                     android:textColor="#1E293B"
                     android:textSize="14sp" />
-            </LinearLayout>
-
-            <!-- Weighing Machine -->
-            <LinearLayout
-                android:id="@+id/nav_weighing_machine"
-                style="@style/NavMenuItemStyle">
-                <ImageView
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
-                    android:src="@android:drawable/ic_menu_preferences"
-                    app:tint="#3F51B5" />
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
-                    android:layout_weight="1"
-                    android:text="@string/nav_weighing_machine"
-                    android:textColor="#1E293B"
-                    android:textSize="14sp" />
-                <TextView
-                    style="@style/NavBadgeStyle"
-                    android:backgroundTint="#10B981"
-                    android:text="New" />
             </LinearLayout>
 
             <!-- Receipt Settings -->
@@ -441,6 +338,25 @@
                 <TextView
                     style="@style/NavBadgeStyle"
                     android:text="3" />
+            </LinearLayout>
+
+            <!-- Device Details -->
+            <LinearLayout
+                android:id="@+id/nav_device_details"
+                style="@style/NavMenuItemStyle">
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:src="@android:drawable/ic_menu_info_details"
+                    app:tint="#3F51B5" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_weight="1"
+                    android:text="@string/nav_device_details"
+                    android:textColor="#1E293B"
+                    android:textSize="14sp" />
             </LinearLayout>
 
             <!-- Logout -->

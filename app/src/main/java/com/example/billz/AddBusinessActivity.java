@@ -179,6 +179,16 @@ public class AddBusinessActivity extends AppCompatActivity {
                 startActivity(new Intent(this, StaffManagementActivity.class));
             });
 
+            findViewById(R.id.nav_printer_setup).setOnClickListener(v -> {
+                drawerLayout.closeDrawer(GravityCompat.START);
+                Toast.makeText(this, "Printer Setup coming soon", Toast.LENGTH_SHORT).show();
+            });
+
+            findViewById(R.id.nav_device_details).setOnClickListener(v -> {
+                drawerLayout.closeDrawer(GravityCompat.START);
+                startActivity(new Intent(this, DeviceDetailsActivity.class));
+            });
+
             findViewById(R.id.nav_language).setOnClickListener(v -> {
                 drawerLayout.closeDrawer(GravityCompat.START);
                 Intent intent = new Intent(this, LanguageSelectionActivity.class);

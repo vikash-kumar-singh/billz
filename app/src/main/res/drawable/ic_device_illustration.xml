@@ -1,0 +1,26 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="160dp"
+    android:height="240dp"
+    android:viewportWidth="160"
+    android:viewportHeight="240">
+    <!-- Phone Body -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M30,10 L130,10 Q140,10 140,20 L140,220 Q140,230 130,230 L30,230 Q20,230 20,220 L20,20 Q20,10 30,10 Z"
+        android:strokeColor="#1E293B"
+        android:strokeWidth="4"/>
+    <!-- Screen -->
+    <path
+        android:fillColor="#F8FAFC"
+        android:pathData="M25,25 L135,25 L135,215 L25,215 Z"/>
+    <!-- Logo Circle -->
+    <path
+        android:fillColor="#3F51B5"
+        android:pathData="M80,80 m-20,0 a20,20 0 1,1 40,0 a20,20 0 1,1 -40,0"/>
+    <!-- Dots -->
+    <path
+        android:fillColor="#3F51B5"
+        android:pathData="M80,140 m-4,0 a4,4 0 1,1 8,0 a4,4 0 1,1 -8,0
+                        M80,160 m-4,0 a4,4 0 1,1 8,0 a4,4 0 1,1 -8,0
+                        M95,150 m-4,0 a4,4 0 1,1 8,0 a4,4 0 1,1 -8,0"/>
+</vector>

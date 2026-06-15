@@ -21,7 +21,8 @@ public class CustomerCloudRepository {
 
         CollectionReference customersRef = FirebaseHelper.getCustomersCollection();
         if (customersRef == null) {
-            Log.e(TAG, "CUSTOMER_SAVE_FAILED: Collection reference null");
+            Log.e(TAG, "CUSTOMER_SAVE_FAILED: Collection " +
+                    "reference null");
             return;
         }
 

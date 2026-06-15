@@ -205,6 +205,11 @@
             android:exported="false"
             android:theme="@style/Theme.Billz">
         </activity>
+        <activity
+            android:name=".DeviceDetailsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Billz">
+        </activity>
     </application>
 
 </manifest>
