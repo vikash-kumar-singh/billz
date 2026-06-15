@@ -775,16 +775,15 @@ public class ReportsActivity extends AppCompatActivity {
         updateInventoryCount();
         syncCloudData();
 
-        // Removed automatic Firestore pull that was reverting local business switches
-        /*
+        // 2. Sync profile from Firestore (Source of Truth)
+        // This ensures fresh installs or new logins populate local details
         new BusinessProfileRepository(this).loadBusinessProfile(new BusinessProfileRepository.ProfileCallback() {
             @Override
             public void onProfileLoaded(BusinessProfile profile) {
-                android.util.Log.d("SETUP", "BUSINESS_PROFILE_LOADED");
-                android.util.Log.d("SETUP", "BUSINESS_NAME = " + profile.getBusinessName());
                 runOnUiThread(() -> {
                     refreshProfileUI();
-                    syncProfileToLocalBusinessTable(profile);
+                    Log.d("ReportsActivity", "BUSINESS_PROFILE_LOADED");
+                    Log.d("ReportsActivity", "BUSINESS_NAME = " + profile.getBusinessName());
                 });
             }
 
@@ -793,7 +792,6 @@ public class ReportsActivity extends AppCompatActivity {
                 Log.e("ReportsActivity", "PROFILE_LOAD_FAILED: " + message);
             }
         });
-        */
 
         Executors.newSingleThreadExecutor().execute(() -> {
             AppDatabase db = AppDatabase.getInstance(this);

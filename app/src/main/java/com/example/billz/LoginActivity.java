@@ -130,35 +130,33 @@ public class LoginActivity extends AppCompatActivity {
     private void checkUserProfile() {
         String uid = FirebaseHelper.getCurrentUid();
         if (uid != null) {
-            // Check for profile info under users/{uid}/profile/info
-            db.collection("users").document(uid)
-                    .collection("profile").document("info")
-                    .get()
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            DocumentSnapshot document = task.getResult();
-                            if (document.exists()) {
-                                PreferenceManager preferenceManager = new PreferenceManager(this);
-                                
-                                // Sync setup status from Firestore to local preferences
-                                Boolean setupCompleted = document.getBoolean("setupCompleted");
-                                if (setupCompleted != null && setupCompleted) {
-                                    preferenceManager.setBusinessSetupCompleted(true);
-                                    startActivity(new Intent(LoginActivity.this, ReportsActivity.class));
-                                } else {
-                                    preferenceManager.setBusinessSetupCompleted(false);
-                                    startActivity(new Intent(LoginActivity.this, BusinessSetupActivity.class));
-                                }
-                                finishAffinity();
-                            } else {
-                                // User signed in but no profile (e.g., first time Google login)
-                                startActivity(new Intent(LoginActivity.this, BusinessSetupActivity.class));
-                                finishAffinity();
-                            }
+            // Use Repository to load and sync profile upon login
+            new BusinessProfileRepository(this).loadBusinessProfile(new BusinessProfileRepository.ProfileCallback() {
+                @Override
+                public void onProfileLoaded(BusinessProfile profile) {
+                    runOnUiThread(() -> {
+                        PreferenceManager preferenceManager = new PreferenceManager(LoginActivity.this);
+                        
+                        if (profile.isSetupCompleted()) {
+                            preferenceManager.setBusinessSetupCompleted(true);
+                            startActivity(new Intent(LoginActivity.this, ReportsActivity.class));
                         } else {
-                            Toast.makeText(LoginActivity.this, "Error fetching profile", Toast.LENGTH_SHORT).show();
+                            preferenceManager.setBusinessSetupCompleted(false);
+                            startActivity(new Intent(LoginActivity.this, BusinessSetupActivity.class));
                         }
+                        finishAffinity();
                     });
+                }
+
+                @Override
+                public void onError(String message) {
+                    runOnUiThread(() -> {
+                        // If profile doesn't exist at all, go to setup
+                        startActivity(new Intent(LoginActivity.this, BusinessSetupActivity.class));
+                        finishAffinity();
+                    });
+                }
+            });
         }
     }
 }

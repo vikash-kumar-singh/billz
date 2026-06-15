@@ -39,6 +39,7 @@ public class BusinessAdapter extends RecyclerView.Adapter<BusinessAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Business business = businessList.get(position);
+        android.util.Log.d("BusinessAdapter", "SWITCH_BUSINESS_LOADED: " + business.getName());
         holder.textName.setText(business.getName());
         
         String category = (business.getCategory() != null && !business.getCategory().isEmpty()) ? business.getCategory() : "No Category";

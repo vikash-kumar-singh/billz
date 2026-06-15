@@ -97,46 +97,20 @@ public class EditBusinessActivity extends AppCompatActivity {
     private void loadProfile() {
         Log.d(TAG, "PROFILE_LOAD_STARTED");
         
-        // Load from Room DB for the currently selected business
-        Executors.newSingleThreadExecutor().execute(() -> {
-            AppDatabase db = AppDatabase.getInstance(this);
-            Business selected = db.businessDao().getSelectedBusiness();
-            
-            runOnUiThread(() -> {
-                if (selected != null) {
-                    editName.setText(selected.getName());
-                    editMobile.setText(selected.getPhoneNumber());
-                    editEmail.setText(selected.getEmail());
-                    editCategory.setText(selected.getCategory());
-                    textPlan.setText(selected.getPlan() != null ? selected.getPlan() : "FREE");
-                    textRole.setText(selected.getRole() != null ? selected.getRole() : "OWNER");
-                    textStatus.setText(selected.getStatus() != null ? selected.getStatus() : "ACTIVE");
+        // Load immediate cached data for speed
+        BusinessProfile cached = profileRepository.getCachedProfile();
+        if (cached != null) {
+            populateUI(cached);
+        }
 
-                    // Load ReceiptSettings for THIS specific business
-                    Executors.newSingleThreadExecutor().execute(() -> {
-                        ReceiptSettings settings = db.receiptSettingsDao().getSettingsByBusiness(selected.getId());
-                        runOnUiThread(() -> {
-                            if (settings != null) {
-                                editAddress.setText(settings.getBusinessAddress());
-                            } else {
-                                editAddress.setText(""); // Default if no settings for this business yet
-                            }
-                        });
-                    });
-                }
-            });
-        });
-
-        // Still attempt Firestore pull to update local data if needed, but local is priority for switching
+        // Pull fresh from Firestore (Single Source of Truth)
         profileRepository.loadBusinessProfile(new BusinessProfileRepository.ProfileCallback() {
             @Override
             public void onProfileLoaded(BusinessProfile profile) {
-                // If the firestore profile matches our local selected business name, update UI
-                runOnUiThread(() -> {
-                    if (editName.getText().toString().equals(profile.getBusinessName())) {
-                        populateUI(profile);
-                    }
-                });
+                Log.d(TAG, "PROFILE_LOAD_SUCCESS");
+                Log.d(TAG, "BUSINESS_NAME_LOADED: " + profile.getBusinessName());
+                Log.d(TAG, "EDIT_BUSINESS_LOADED");
+                runOnUiThread(() -> populateUI(profile));
             }
 
             @Override
