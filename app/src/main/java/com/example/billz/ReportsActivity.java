@@ -308,6 +308,11 @@ public class ReportsActivity extends AppCompatActivity {
         setupBottomTabs();
         highlightBottomTab(TAB_REPORTS);
 
+        findViewById(R.id.nav_help_chat).setOnClickListener(v -> {
+            drawerLayout.closeDrawer(GravityCompat.START);
+            startActivity(new Intent(ReportsActivity.this, HelpChatActivity.class));
+        });
+
         findViewById(R.id.nav_inventory).setOnClickListener(v -> {
             drawerLayout.closeDrawer(GravityCompat.START);
             startActivity(new Intent(ReportsActivity.this, InventoryManagementActivity.class));

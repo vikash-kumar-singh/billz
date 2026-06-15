@@ -210,6 +210,11 @@
             android:exported="false"
             android:theme="@style/Theme.Billz">
         </activity>
+        <activity
+            android:name=".HelpChatActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Billz">
+        </activity>
     </application>
 
 </manifest>

@@ -151,7 +151,7 @@ public class AddBusinessActivity extends AppCompatActivity {
 
             findViewById(R.id.nav_help_chat).setOnClickListener(v -> {
                 drawerLayout.closeDrawer(GravityCompat.START);
-                Toast.makeText(this, "Help Chat coming soon", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this, HelpChatActivity.class));
             });
 
             findViewById(R.id.nav_inventory).setOnClickListener(v -> {

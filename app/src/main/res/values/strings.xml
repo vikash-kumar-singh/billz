@@ -172,6 +172,10 @@
     <string name="details_copied">Details copied to clipboard</string>
     <string name="not_signed_in">Not signed in</string>
     <string name="unknown_version">Unknown</string>
+    <string name="help_how_can_we_help">How can we help?</string>
+    <string name="help_messages">Messages</string>
+    <string name="help_start_conversation">Start a conversation</string>
+    <string name="help_greeting_format">Hi %s 👋</string>
     <string name="nav_logout">Logout</string>
 
     <!-- Business Settings -->
