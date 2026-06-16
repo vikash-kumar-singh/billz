@@ -1,8 +1,13 @@
 package com.example.billz;
 
 import android.animation.LayoutTransition;
+import android.app.Activity;
+import android.content.ContentValues;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.content.Intent;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -12,6 +17,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import java.util.ArrayList;
@@ -34,12 +41,19 @@ public class ManageItemActivity extends AppCompatActivity {
     private String selectedSellBy = "Unit";
     private List<View> variantViews = new ArrayList<>();
 
+    private ActivityResultLauncher<Intent> galleryLauncher;
+    private ActivityResultLauncher<Intent> cameraLauncher;
+    private View activeVariantView;
+    private android.net.Uri cameraImageUri;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         LocaleHelper.applyLocale(LocaleHelper.getPersistedLanguage(this));
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_manage_item);
+
+        setupImageLaunchers();
 
         View root = findViewById(R.id.manageItemRoot);
         topBarManage = findViewById(R.id.topBarManage);
@@ -90,6 +104,108 @@ public class ManageItemActivity extends AppCompatActivity {
         loadItemData();
     }
 
+    private void setupImageLaunchers() {
+        galleryLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                android.net.Uri uri = result.getData().getData();
+                if (uri != null) {
+                    try {
+                        final int takeFlags = result.getData().getFlags()
+                                & (Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                        getContentResolver().takePersistableUriPermission(uri, takeFlags);
+                    } catch (Exception e) {
+                        android.util.Log.e("ManageItem", "Failed to take persistable permission", e);
+                    }
+                    updateVariantImage(uri);
+                }
+            }
+        });
+
+        cameraLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            if (result.getResultCode() == Activity.RESULT_OK) {
+                updateVariantImage(cameraImageUri);
+            }
+        });
+    }
+
+    private void updateVariantImage(android.net.Uri uri) {
+        if (activeVariantView != null && uri != null) {
+            try {
+                // Copy to internal storage to ensure persistent access
+                String fileName = "variant_" + System.currentTimeMillis() + ".jpg";
+                java.io.File internalFile = new java.io.File(getFilesDir(), fileName);
+                
+                try (java.io.InputStream is = getContentResolver().openInputStream(uri);
+                     java.io.OutputStream os = new java.io.FileOutputStream(internalFile)) {
+                    if (is == null) throw new java.io.IOException("Input stream is null");
+                    byte[] buffer = new byte[1024];
+                    int read;
+                    while ((read = is.read(buffer)) != -1) {
+                        os.write(buffer, 0, read);
+                    }
+                }
+
+                android.net.Uri internalUri = android.net.Uri.fromFile(internalFile);
+                ImageView imgVariant = activeVariantView.findViewById(R.id.imgVariant);
+                imgVariant.setImageURI(internalUri);
+                imgVariant.setImageTintList(null);
+                imgVariant.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                imgVariant.setPadding(0, 0, 0, 0);
+                activeVariantView.setTag(R.id.imgVariant, internalUri.toString());
+            } catch (Exception e) {
+                Log.e("ManageItem", "Failed to copy image to internal storage", e);
+                Toast.makeText(this, "Failed to load image", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void showImageSourceDialog(View variantView) {
+        activeVariantView = variantView;
+        com.google.android.material.bottomsheet.BottomSheetDialog bottomSheet = new com.google.android.material.bottomsheet.BottomSheetDialog(this);
+        View view = getLayoutInflater().inflate(R.layout.layout_image_source_selector, null);
+        bottomSheet.setContentView(view);
+
+        view.findViewById(R.id.optionCamera).setOnClickListener(v -> {
+            bottomSheet.dismiss();
+            openCamera();
+        });
+
+        view.findViewById(R.id.optionGallery).setOnClickListener(v -> {
+            bottomSheet.dismiss();
+            openGallery();
+        });
+
+        bottomSheet.show();
+    }
+
+    private void openGallery() {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("image/*");
+        intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        galleryLauncher.launch(intent);
+    }
+
+    private void openCamera() {
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            androidx.core.app.ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.CAMERA}, 101);
+            return;
+        }
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Images.Media.TITLE, "New Picture");
+        values.put(MediaStore.Images.Media.DESCRIPTION, "From Camera");
+        cameraImageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+        if (cameraImageUri == null) {
+            Toast.makeText(this, "Failed to create image file", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, cameraImageUri);
+        cameraLauncher.launch(intent);
+    }
+
     private void setMode(boolean simple) {
         isSimpleMode = simple;
         if (simple) {
@@ -121,6 +237,8 @@ public class ManageItemActivity extends AppCompatActivity {
         EditText editSelling = variantView.findViewById(R.id.editSellingPriceAdvance);
         EditText editCost = variantView.findViewById(R.id.editCostPriceAdvance);
         EditText editStock = variantView.findViewById(R.id.editStockAdvance);
+        ImageView imgVariant = variantView.findViewById(R.id.imgVariant);
+        View cardImage = variantView.findViewById(R.id.cardVariantImage);
         View btnRemove = variantView.findViewById(R.id.btnRemoveVariant);
         View btnUp = variantView.findViewById(R.id.btnMoveUp);
         View btnDown = variantView.findViewById(R.id.btnMoveDown);
@@ -131,7 +249,37 @@ public class ManageItemActivity extends AppCompatActivity {
             editCost.setText(data.getCostPrice() > 0 ? String.valueOf((int)data.getCostPrice()) : "");
             editStock.setText(String.valueOf(data.getStockQuantity()));
             variantView.setTag(data.getId()); // Store ID for updates
+            
+            if (data.getImageUri() != null && !data.getImageUri().isEmpty()) {
+                try {
+                    android.net.Uri uri = android.net.Uri.parse(data.getImageUri());
+                    // Only load if it's a file URI or we have permission (internal files are file://)
+                    if ("file".equals(uri.getScheme())) {
+                        imgVariant.setImageURI(uri);
+                        imgVariant.setImageTintList(null);
+                        imgVariant.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                        imgVariant.setPadding(0, 0, 0, 0);
+                        variantView.setTag(R.id.imgVariant, data.getImageUri());
+                    } else {
+                        // If it's a content URI, it might crash during measure. 
+                        // Try to load bitmap safely to verify access
+                        try (java.io.InputStream is = getContentResolver().openInputStream(uri)) {
+                            if (is != null) {
+                                imgVariant.setImageURI(uri);
+                                imgVariant.setImageTintList(null);
+                                imgVariant.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                                imgVariant.setPadding(0, 0, 0, 0);
+                                variantView.setTag(R.id.imgVariant, data.getImageUri());
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    Log.e("ManageItem", "Failed to load variant image: " + data.getImageUri(), e);
+                }
+            }
         }
+
+        cardImage.setOnClickListener(v -> showImageSourceDialog(variantView));
 
         btnRemove.setOnClickListener(v -> {
             if (variantViews.size() > 1) {
@@ -227,7 +375,11 @@ public class ManageItemActivity extends AppCompatActivity {
 
                 Variant variant = new Variant(itemId, vName, selling, cost, stock);
                 variant.setSortOrder(i);
-                if (v.getTag() != null) variant.setId((Integer) v.getTag());
+                
+                String vImageUri = (String) v.getTag(R.id.imgVariant);
+                if (vImageUri != null) variant.setImageUri(vImageUri);
+
+                if (v.getTag() != null && v.getTag() instanceof Integer) variant.setId((Integer) v.getTag());
                 variantsToSave.add(variant);
                 totalStock += stock;
             }

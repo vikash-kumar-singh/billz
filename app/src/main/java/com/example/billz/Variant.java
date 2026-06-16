@@ -13,6 +13,7 @@ public class Variant {
     private double costPrice;
     private int stockQuantity;
     private int sortOrder;
+    private String imageUri;
 
     public Variant(int itemId, String name, double sellingPrice, double costPrice, int stockQuantity) {
         this.itemId = itemId;
@@ -36,4 +37,6 @@ public class Variant {
     public void setStockQuantity(int stockQuantity) { this.stockQuantity = stockQuantity; }
     public int getSortOrder() { return sortOrder; }
     public void setSortOrder(int sortOrder) { this.sortOrder = sortOrder; }
+    public String getImageUri() { return imageUri; }
+    public void setImageUri(String imageUri) { this.imageUri = imageUri; }
 }

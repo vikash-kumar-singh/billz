@@ -15,6 +15,9 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.content.ContentValues;
+import android.content.pm.PackageManager;
+import android.provider.MediaStore;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.content.Intent;
@@ -59,6 +62,8 @@ public class InventoryManagementActivity extends AppCompatActivity {
     private ActivityResultLauncher<Intent> addModifierLauncher;
     private ActivityResultLauncher<Intent> addIngredientLauncher;
     private ActivityResultLauncher<Intent> addItemLauncher;
+    private ActivityResultLauncher<Intent> cameraLauncher;
+    private android.net.Uri cameraImageUri;
 
     private InventoryAdapter.OnItemClickListener itemClickListener = item -> {
         if (item.getType() == 0) { // Item
@@ -125,6 +130,15 @@ public class InventoryManagementActivity extends AppCompatActivity {
                     if (result.getResultCode() == RESULT_OK) {
                         loadItemsFromDB();
                         loadCategoriesFromDB(); // Real-time reflection of category counts
+                    }
+                }
+        );
+
+        cameraLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK) {
+                        Toast.makeText(this, "Image captured successfully", Toast.LENGTH_SHORT).show();
                     }
                 }
         );
@@ -206,6 +220,10 @@ public class InventoryManagementActivity extends AppCompatActivity {
 
         findViewById(R.id.fabAdd).setOnClickListener(v -> {
             showAddMenuBottomSheet();
+        });
+
+        findViewById(R.id.fabScan).setOnClickListener(v -> {
+            openCamera();
         });
 
         itemsList = new ArrayList<>();
@@ -398,6 +416,25 @@ public class InventoryManagementActivity extends AppCompatActivity {
     private void hideKeyboard() {
         InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         if (imm != null) imm.hideSoftInputFromWindow(editSearch.getWindowToken(), 0);
+    }
+
+    private void openCamera() {
+        if (androidx.core.content.ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
+            androidx.core.app.ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.CAMERA}, 101);
+            return;
+        }
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Images.Media.TITLE, "New Inventory Picture");
+        values.put(MediaStore.Images.Media.DESCRIPTION, "From Inventory Management");
+        cameraImageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+        if (cameraImageUri == null) {
+            Toast.makeText(this, "Failed to create image file", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, cameraImageUri);
+        cameraLauncher.launch(intent);
     }
 
     private void loadCategoriesFromDB() {

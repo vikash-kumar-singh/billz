@@ -21,10 +21,26 @@
             android:gravity="center_vertical"
             android:paddingHorizontal="12dp">
 
-            <View
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardVariantImage"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:background="@drawable/bg_circle_red" />
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="0dp"
+                app:strokeColor="@android:color/transparent"
+                app:cardMaxElevation="0dp"
+                android:clickable="true"
+                android:focusable="true">
+                <ImageView
+                    android:id="@+id/imgVariant"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerInside"
+                    android:padding="8dp"
+                    android:src="@android:drawable/ic_menu_camera"
+                    app:tint="#64748B" />
+            </com.google.android.material.card.MaterialCardView>
 
             <EditText
                 android:id="@+id/editVariantName"
