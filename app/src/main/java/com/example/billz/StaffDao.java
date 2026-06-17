@@ -9,7 +9,7 @@ import java.util.List;
 @Dao
 public interface StaffDao {
     @Insert
-    void insert(Staff staff);
+    long insert(Staff staff);
 
     @androidx.room.Update
     void update(Staff staff);

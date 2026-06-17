@@ -790,8 +790,13 @@ public class AddStaffActivity extends AppCompatActivity {
             if (staffId != -1) {
                 db.staffDao().update(staff);
             } else {
-                db.staffDao().insert(staff);
+                long newId = db.staffDao().insert(staff);
+                staff.id = (int) newId;
             }
+
+            // Sync to Cloud for Chatbot and Multi-device support
+            new StaffCloudRepository().saveStaffToCloud(staff);
+
             runOnUiThread(() -> {
                 Toast.makeText(this, staffId != -1 ? "Staff Updated Successfully" : "Staff Saved Successfully", Toast.LENGTH_SHORT).show();
                 

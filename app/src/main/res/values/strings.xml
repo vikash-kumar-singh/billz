@@ -176,6 +176,10 @@
     <string name="help_messages">Messages</string>
     <string name="help_start_conversation">Start a conversation</string>
     <string name="help_greeting_format">Hi %s 👋</string>
+    <string name="chatbot_title">Billz Assistant</string>
+    <string name="chatbot_online">Online</string>
+    <string name="chatbot_hint">Type a message...</string>
+    <string name="chatbot_whatsapp">Chat on WhatsApp</string>
     <string name="nav_logout">Logout</string>
 
     <!-- Business Settings -->
