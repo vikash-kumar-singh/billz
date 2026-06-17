@@ -371,6 +371,9 @@
     <string name="left_in_stock">%1$d Left In Stock</string>
     <string name="expired_on">Expired on %1$s</string>
     <string name="items_count">%1$d Items</string>
+    <string name="no_items_yet">No Items Yet</string>
+    <string name="no_items_yet_desc">Start building your product catalog by adding your first item.</string>
+    <string name="add_your_first_item">+ ADD YOUR FIRST ITEM</string>
     <string name="available">Available</string>
     <string name="unit_kg_left">%1$dkg Left</string>
 

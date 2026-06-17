@@ -226,6 +226,10 @@ public class InventoryManagementActivity extends AppCompatActivity {
             openCamera();
         });
 
+        findViewById(R.id.btnEmptyAddFirstItem).setOnClickListener(v -> {
+            showAddMenuBottomSheet();
+        });
+
         itemsList = new ArrayList<>();
         categoriesList = new ArrayList<>();
         modifiersList = new ArrayList<>();

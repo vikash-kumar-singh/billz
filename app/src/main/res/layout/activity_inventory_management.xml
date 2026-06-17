@@ -200,39 +200,56 @@
 
         <LinearLayout
             android:id="@+id/emptyStateView"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="vertical"
+            android:paddingHorizontal="32dp"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toBottomOf="@id/searchBarContainer"
+            app:layout_constraintVertical_bias="0.4">
 
             <ImageView
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:alpha="0.3"
-                android:src="@android:drawable/ic_menu_search"
-                app:tint="@color/textSecondary" />
+                android:layout_width="140dp"
+                android:layout_height="140dp"
+                android:src="@drawable/ic_reports_empty_illustration" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="@string/no_items_found"
+                android:text="@string/no_items_yet"
                 android:textColor="@color/textPrimary"
-                android:textSize="18sp"
+                android:textSize="20sp"
                 android:textStyle="bold" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="@string/adjust_search_filter"
+                android:gravity="center"
+                android:text="@string/no_items_yet_desc"
                 android:textColor="@color/textSecondary"
-                android:textSize="14sp" />
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/btnEmptyAddFirstItem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:padding="12dp"
+                android:text="@string/add_your_first_item"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.05"
+                android:textAllCaps="true"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackground" />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
