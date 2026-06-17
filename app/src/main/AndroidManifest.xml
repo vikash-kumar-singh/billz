@@ -226,6 +226,11 @@
             android:theme="@style/Theme.Billz"
             android:windowSoftInputMode="adjustResize">
         </activity>
+        <activity
+            android:name=".ReferAppActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Billz">
+        </activity>
     </application>
 
 </manifest>

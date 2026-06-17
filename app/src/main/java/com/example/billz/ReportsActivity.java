@@ -328,6 +328,11 @@ public class ReportsActivity extends AppCompatActivity {
             startActivity(new Intent(ReportsActivity.this, StaffManagementActivity.class));
         });
 
+        findViewById(R.id.nav_refer).setOnClickListener(v -> {
+            drawerLayout.closeDrawer(GravityCompat.START);
+            startActivity(new Intent(ReportsActivity.this, ReferAppActivity.class));
+        });
+
         findViewById(R.id.nav_language).setOnClickListener(v -> {
             drawerLayout.closeDrawer(GravityCompat.START);
             Intent intent = new Intent(ReportsActivity.this, LanguageSelectionActivity.class);

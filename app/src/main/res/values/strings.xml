@@ -147,6 +147,13 @@
     <string name="nav_staff">Staff Management</string>
     <string name="nav_shopfront">ShopFront</string>
     <string name="nav_refer">Refer App</string>
+    <string name="refer_title">Invite your friends!</string>
+    <string name="refer_description">Share Billz with your business friends and help them manage their billing easily.</string>
+    <string name="refer_link_label">Your Referral Link</string>
+    <string name="refer_share_button">Share App</string>
+    <string name="refer_thank_you">Thank you for being with us!</string>
+    <string name="refer_copy_success">Link copied to clipboard</string>
+    <string name="refer_share_message">Hey! I\'m using Billz to manage my business billing and inventory. It\'s awesome! Check it out here: %s</string>
     <string name="nav_returned_receipt">Returned Receipt</string>
     <string name="nav_web_office">Web Back Office</string>
     <string name="nav_feedback">Feedback</string>
