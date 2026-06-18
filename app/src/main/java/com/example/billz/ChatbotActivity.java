@@ -26,6 +26,7 @@ public class ChatbotActivity extends AppCompatActivity {
     private ChatAdapter adapter;
     private List<ChatMessage> messages = new ArrayList<>();
     private EditText editMessage;
+    private String lastQuery = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +60,7 @@ public class ChatbotActivity extends AppCompatActivity {
         btnSend.setOnClickListener(v -> {
             String text = editMessage.getText().toString().trim();
             if (!text.isEmpty()) {
+                lastQuery = text;
                 addUserMessage(text);
                 editMessage.setText("");
                 processUserQuery(text);
@@ -148,22 +150,63 @@ public class ChatbotActivity extends AppCompatActivity {
                 addBotMessage("Check your phone's specific details and app version in Sidebar -> Device Details.");
             } else if (input.contains("switch") || input.contains("create")) {
                 addBotMessage("You can manage multiple businesses! Use 'Switch Business' or 'Create Business' at the top of the sidebar.");
+            } else if (input.contains("whatsapp") || input.contains("support") || input.contains("contact") || input.contains("help")) {
+                addBotMessage("Connecting you to our support team on WhatsApp for immediate help...");
+                addWhatsappLink();
+                new Handler().postDelayed(this::openWhatsapp, 1500);
             } else {
                 addBotMessage("I'm sorry, I'm still learning about that. Would you like to talk to our support team on WhatsApp for immediate help?");
                 addWhatsappLink();
+                new Handler().postDelayed(this::openWhatsapp, 1500);
             }
         }, 1000);
     }
 
     private void openWhatsapp() {
+        if (isFinishing()) return;
         String phoneNumber = "918825347516";
-        String url = "https://wa.me/" + phoneNumber;
+        if (!phoneNumber.startsWith("+")) {
+            phoneNumber = "+" + phoneNumber;
+        }
+
+        String businessName = "Not specified";
         try {
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse(url));
-            startActivity(intent);
+            AppDatabase db = AppDatabase.getInstance(this);
+            Business active = db.businessDao().getSelectedBusiness();
+            if (active != null) {
+                businessName = active.getName();
+            }
         } catch (Exception e) {
-            Toast.makeText(this, "WhatsApp not installed", Toast.LENGTH_SHORT).show();
+            Log.e("Chatbot", "Error getting business name", e);
+        }
+
+        String message = "Hello Billz Support, I need assistance for " + businessName + 
+                (lastQuery.isEmpty() ? "" : ". Question: " + lastQuery);
+
+        String url = "https://api.whatsapp.com/send?phone=" + phoneNumber + "&text=" + Uri.encode(message);
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+
+        boolean started = false;
+        String[] packages = {"com.whatsapp", "com.whatsapp.w4b"};
+
+        for (String pkg : packages) {
+            try {
+                getPackageManager().getPackageInfo(pkg, 0);
+                intent.setPackage(pkg);
+                startActivity(intent);
+                started = true;
+                break;
+            } catch (Exception ignored) {
+            }
+        }
+
+        if (!started) {
+            intent.setPackage(null);
+            try {
+                startActivity(intent);
+            } catch (Exception e) {
+                Toast.makeText(this, "WhatsApp not installed", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 }

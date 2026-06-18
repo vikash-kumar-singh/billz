@@ -67,7 +67,7 @@
         android:textStyle="bold"
         android:visibility="gone"
         app:cornerRadius="12dp"
-        app:icon="@drawable/ic_nav_more"
+        app:icon="@drawable/ic_call_support"
         app:iconTint="#166534" />
 
 </LinearLayout>
