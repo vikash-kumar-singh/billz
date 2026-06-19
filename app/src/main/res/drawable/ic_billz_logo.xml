@@ -1,0 +1,34 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+
+    <!-- Stylized B Logo with Gradient -->
+    <path
+        android:pathData="M35,25 L65,25 C80,25 85,35 85,45 C85,55 80,60 70,60 L70,60 C80,60 90,65 90,80 C90,95 80,105 60,105 L35,105 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:startX="35"
+                android:startY="25"
+                android:endX="90"
+                android:endY="105"
+                android:type="linear">
+                <item android:offset="0" android:color="#00BFA5"/> <!-- Teal Accent -->
+                <item android:offset="1" android:color="#00695C"/> <!-- Dark Teal -->
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- Swish element representing the arrow/movement in the B -->
+    <path
+        android:pathData="M35,65 Q55,65 65,85 T85,105"
+        android:strokeWidth="8"
+        android:strokeColor="#FFD700"
+        android:strokeLineCap="round" />
+
+    <path
+        android:pathData="M80,95 L85,105 L75,105"
+        android:fillColor="#FFD700" />
+</vector>

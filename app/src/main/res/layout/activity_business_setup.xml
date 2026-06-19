@@ -7,12 +7,19 @@
     android:orientation="vertical"
     android:padding="24dp">
 
+    <ImageView
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/ic_billz_logo"
+        android:contentDescription="@string/brand_name" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="Business Setup"
-        android:textColor="@color/black"
+        android:layout_marginTop="24dp"
+        android:text="@string/business_setup_title"
+        android:textColor="@color/textPrimary"
         android:textSize="28sp"
         android:textStyle="bold" />
 
@@ -20,8 +27,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Let's set up your business profile"
-        android:textColor="#666666"
+        android:text="@string/business_setup_subtitle"
+        android:textColor="@color/textSecondary"
         android:textSize="16sp" />
 
     <com.google.android.material.textfield.TextInputLayout

@@ -17,9 +17,10 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:src="@mipmap/ic_launcher" />
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:src="@drawable/ic_billz_logo"
+            app:tint="@color/colorPrimary" />
 
         <TextView
             android:layout_width="wrap_content"

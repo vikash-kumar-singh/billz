@@ -841,10 +841,10 @@ public class ReportsActivity extends AppCompatActivity {
         }
 
         if (toolbar != null && currentTab == TAB_TODAY) {
-            toolbar.setTitle(getString(R.string.reports_tab_today));
+            toolbar.setTitle(getString(R.string.brand_name));
         }
         if (toolbar != null && currentTab == TAB_REPORTS) {
-            toolbar.setTitle(getString(R.string.reports_title));
+            toolbar.setTitle(getString(R.string.brand_name));
         }
 
         if (txtOwnerEmail != null) txtOwnerEmail.setText(email != null ? email : "");

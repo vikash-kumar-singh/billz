@@ -55,25 +55,25 @@ public class WelcomeActivity extends AppCompatActivity {
         List<OnboardingItem> onboardingItems = new ArrayList<>();
 
         onboardingItems.add(new OnboardingItem(
-                R.drawable.ic_launcher_foreground,
+                R.drawable.ic_billz_logo,
                 "Inventory Management",
                 "Keep track of your stock levels and product movements in real-time."
         ));
 
         onboardingItems.add(new OnboardingItem(
-                R.drawable.ic_launcher_foreground,
+                R.drawable.ic_billz_logo,
                 "Billing & Invoicing",
                 "Create professional invoices and receipts for your customers quickly."
         ));
 
         onboardingItems.add(new OnboardingItem(
-                R.drawable.ic_launcher_foreground,
+                R.drawable.ic_billz_logo,
                 "Customer Management",
                 "Maintain customer profiles, purchase history and loyalty programs."
         ));
 
         onboardingItems.add(new OnboardingItem(
-                R.drawable.ic_launcher_foreground,
+                R.drawable.ic_billz_logo,
                 "Business Reports & Analytics",
                 "Gain valuable insights with comprehensive sales and profit reports."
         ));

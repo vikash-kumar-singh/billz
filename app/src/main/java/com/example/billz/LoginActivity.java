@@ -85,12 +85,16 @@ public class LoginActivity extends AppCompatActivity {
 
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
+                    findViewById(R.id.btnLogin).setEnabled(true);
                     if (task.isSuccessful()) {
                         checkUserProfile();
                     } else {
-                        findViewById(R.id.btnLogin).setEnabled(true);
-                        Toast.makeText(LoginActivity.this, "Authentication failed: " + task.getException().getMessage(),
-                                Toast.LENGTH_SHORT).show();
+                        String errorMessage = "Authentication failed";
+                        if (task.getException() != null) {
+                            errorMessage = task.getException().getMessage();
+                            android.util.Log.e("LoginActivity", "Login error: ", task.getException());
+                        }
+                        Toast.makeText(LoginActivity.this, errorMessage, Toast.LENGTH_LONG).show();
                     }
                 });
     }
@@ -110,7 +114,8 @@ public class LoginActivity extends AppCompatActivity {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 firebaseAuthWithGoogle(account.getIdToken());
             } catch (ApiException e) {
-                Toast.makeText(this, "Google sign in failed", Toast.LENGTH_SHORT).show();
+                android.util.Log.e("LoginActivity", "Google sign in failed. Code: " + e.getStatusCode(), e);
+                Toast.makeText(this, "Google sign in failed: " + e.getStatusCode(), Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -137,6 +142,9 @@ public class LoginActivity extends AppCompatActivity {
                     runOnUiThread(() -> {
                         PreferenceManager preferenceManager = new PreferenceManager(LoginActivity.this);
                         
+                        // Local Database Sync
+                        saveToLocalDatabase(profile);
+
                         if (profile.isSetupCompleted()) {
                             preferenceManager.setBusinessSetupCompleted(true);
                             startActivity(new Intent(LoginActivity.this, ReportsActivity.class));
@@ -158,5 +166,31 @@ public class LoginActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    private void saveToLocalDatabase(BusinessProfile profile) {
+        java.util.concurrent.Executors.newSingleThreadExecutor().execute(() -> {
+            AppDatabase localDb = AppDatabase.getInstance(this);
+            Business b = localDb.businessDao().getSelectedBusiness();
+            if (b == null) {
+                b = new Business(profile.getBusinessName() != null ? profile.getBusinessName() : "My Business", 
+                        profile.getMobile(), "OWNER", true);
+            } else {
+                b.setName(profile.getBusinessName() != null ? profile.getBusinessName() : b.getName());
+                b.setPhoneNumber(profile.getMobile() != null ? profile.getMobile() : b.getPhoneNumber());
+                b.setEmail(profile.getEmail() != null ? profile.getEmail() : b.getEmail());
+            }
+            localDb.businessDao().insert(b);
+
+            ReceiptSettings rs = localDb.receiptSettingsDao().getSettingsByBusiness(b.getId());
+            if (rs == null) {
+                rs = new ReceiptSettings();
+                rs.setId(b.getId());
+                rs.setBusinessName(b.getName());
+                rs.setPhoneNumber(b.getPhoneNumber());
+                rs.setEmail(b.getEmail());
+                localDb.receiptSettingsDao().insert(rs);
+            }
+        });
     }
 }

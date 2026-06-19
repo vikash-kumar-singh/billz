@@ -13,22 +13,22 @@
 
         <ImageView
             android:id="@+id/ivLogo"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:layout_marginTop="32dp"
-            android:src="@mipmap/ic_launcher"
+            android:src="@drawable/ic_billz_logo"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:contentDescription="@string/app_name" />
+            android:contentDescription="@string/brand_name" />
 
         <TextView
             android:id="@+id/tvTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:text="Welcome Back"
+            android:text="@string/welcome_message"
             android:textColor="@color/textPrimary"
-            android:textSize="32sp"
+            android:textSize="28sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ivLogo" />
@@ -38,7 +38,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Login to continue managing your business"
+            android:text="@string/brand_tagline"
             android:textColor="@color/textSecondary"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"

@@ -21,13 +21,36 @@
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/imgLogo"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:padding="2dp"
-                android:src="@drawable/ic_nav_reports"
+                android:src="@drawable/ic_billz_logo"
                 app:shapeAppearanceOverlay="@style/ShapeAppearance.MaterialComponents.SmallComponent"
                 app:strokeColor="#80FFFFFF"
                 app:strokeWidth="2dp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/imgLogo"
+                android:layout_marginStart="12dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/brand_name"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/brand_tagline"
+                    android:textColor="#CCFFFFFF"
+                    android:textSize="11sp" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/btnEditBusiness"

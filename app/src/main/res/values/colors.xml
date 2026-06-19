@@ -1,47 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
+    <color name="black">#FF1A1A1A</color>
     <color name="white">#FFFFFFFF</color>
 
-    <!-- Primary Colors -->
-    <color name="colorPrimary">#2563EB</color>
-    <color name="colorPrimaryDark">#1E40AF</color>
-    <color name="colorPrimaryLight">#DBEAFE</color>
+    <!-- Billz Brand Colors -->
+    <color name="colorPrimary">#00897B</color> <!-- Teal 600 -->
+    <color name="colorPrimaryDark">#00695C</color> <!-- Teal 800 -->
+    <color name="colorPrimaryLight">#B2DFDB</color> <!-- Teal 100 -->
 
-    <!-- Secondary Colors -->
-    <color name="colorSecondary">#10B981</color>
-    <color name="colorSecondaryDark">#047857</color>
-    <color name="colorSecondaryLight">#D1FAE5</color>
+    <color name="colorAccent">#FFD700</color> <!-- Gold -->
+    <color name="colorSecondary">#004D40</color> <!-- Very Dark Teal -->
+    <color name="colorSecondaryDark">#004D40</color> <!-- Alias for backward compatibility -->
 
     <!-- Background Colors -->
-    <color name="backgroundColor">#F8FAFC</color>
+    <color name="backgroundColor">#F5F7FA</color>
     <color name="surfaceColor">#FFFFFF</color>
 
     <!-- Text Colors -->
-    <color name="textPrimary">#1E293B</color>
-    <color name="textSecondary">#64748B</color>
-    <color name="textHint">#94A3B8</color>
+    <color name="textPrimary">#2C3E50</color>
+    <color name="textSecondary">#7F8C8D</color>
+    <color name="textHint">#BDC3C7</color>
 
     <!-- UI States -->
-    <color name="error">#EF4444</color>
-    <color name="success">#22C55E</color>
-    <color name="warning">#F59E0B</color>
-    <color name="info">#3B82F6</color>
+    <color name="error">#E74C3C</color>
+    <color name="success">#27AE60</color>
+    <color name="warning">#F39C12</color>
+    <color name="info">#3498DB</color>
 
-    <!-- Reports (Legacy support) -->
-    <color name="reports_background">#F8FAFC</color>
+    <!-- Legacy / Component specific (Mapped to Brand) -->
+    <color name="reports_background">#F5F7FA</color>
     <color name="reports_surface">#FFFFFF</color>
-    <color name="reports_text_primary">#1E293B</color>
-    <color name="reports_text_secondary">#64748B</color>
-    <color name="reports_tab_selected">#2563EB</color>
-    <color name="reports_tab_unselected">#94A3B8</color>
-    <color name="reports_divider">#E2E8F0</color>
-    <color name="reports_chip_background">#F1F5F9</color>
-    <color name="reports_chip_stroke">#E2E8F0</color>
-    <color name="reports_icon_tint">#475569</color>
-    <color name="reports_illustration_background">#EFF6FF</color>
-    <color name="reports_illustration_primary">#2563EB</color>
-    <color name="reports_illustration_secondary">#FDBA74</color>
-    <color name="reports_illustration_accent">#1E293B</color>
-    <color name="reports_illustration_soft">#DBEAFE</color>
+    <color name="reports_divider">#ECF0F1</color>
+    <color name="reports_icon_tint">#34495E</color>
+    <color name="reports_tab_selected">#00897B</color> <!-- Mapped to colorPrimary -->
+    <color name="reports_tab_unselected">#7F8C8D</color> <!-- Grey / Text Secondary -->
+    <color name="reports_text_primary">#2C3E50</color> <!-- Mapped to textPrimary -->
+    <color name="reports_text_secondary">#7F8C8D</color> <!-- Mapped to textSecondary -->
+
+    <!-- Chip / Date Row Colors -->
+    <color name="reports_chip_background">#E0F2F1</color> <!-- Light Teal 50 -->
+    <color name="reports_chip_stroke">#B2DFDB</color> <!-- Teal 100 -->
+
+    <!-- Illustration Colors -->
+    <color name="reports_illustration_background">#F5F7FA</color>
+    <color name="reports_illustration_primary">#00897B</color>
+    <color name="reports_illustration_accent">#FFD700</color>
+    <color name="reports_illustration_secondary">#004D40</color>
+    <color name="reports_illustration_soft">#B2DFDB</color>
 </resources>
