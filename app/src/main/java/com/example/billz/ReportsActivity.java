@@ -1216,11 +1216,42 @@ public class ReportsActivity extends AppCompatActivity {
             List<Item> dbItems;
             if (itemTileStyle == 1) dbItems = AppDatabase.getInstance(this).itemDao().getUncategorizedItems(bId);
             else dbItems = AppDatabase.getInstance(this).itemDao().getAllItems(bId);
-            final List<Item> finalItems = dbItems;
+
+            List<ItemGridAdapter.GridItem> gridItems = new ArrayList<>();
+            if (itemTileStyle == 0) {
+                // Show all variants side by side
+                for (Item item : dbItems) {
+                    if (item.isAdvanceMode()) {
+                        List<Variant> variants = AppDatabase.getInstance(this).variantDao().getVariantsForItem(item.getId());
+                        if (variants.isEmpty()) {
+                            gridItems.add(new ItemGridAdapter.GridItem(item, null));
+                        } else {
+                            for (Variant v : variants) {
+                                gridItems.add(new ItemGridAdapter.GridItem(item, v));
+                            }
+                        }
+                    } else {
+                        gridItems.add(new ItemGridAdapter.GridItem(item, null));
+                    }
+                }
+            } else {
+                // Standard mode (items only)
+                for (Item item : dbItems) {
+                    gridItems.add(new ItemGridAdapter.GridItem(item, null));
+                }
+            }
+
             runOnUiThread(() -> {
                 if (recyclerItemGrid != null) {
-                    recyclerItemGrid.setAdapter(new ItemGridAdapter(finalItems, itemTileStyle, (item, pos) -> {
-                        if (item.isAdvanceMode()) {
+                    recyclerItemGrid.setAdapter(new ItemGridAdapter(gridItems, itemTileStyle, (item, variant, pos) -> {
+                        if (variant != null) {
+                            if (CartManager.getInstance().addItem(item, variant)) {
+                                updateCounterUI();
+                            } else {
+                                Toast.makeText(this, "Not enough stock available", Toast.LENGTH_SHORT).show();
+                            }
+                        } else if (item.isAdvanceMode() && itemTileStyle != 0) {
+                            // If it's advance mode but not in style 0, show selector
                             showVariantSelectorDialog(item);
                         } else {
                             if (CartManager.getInstance().addItem(item)) {

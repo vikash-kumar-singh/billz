@@ -6,26 +6,36 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class ItemGridAdapter extends RecyclerView.Adapter<ItemGridAdapter.ViewHolder> {
 
-    private List<Item> items;
-    private List<Item> itemsFull;
+    public static class GridItem {
+        public Item item;
+        public Variant variant;
+
+        public GridItem(Item item, Variant variant) {
+            this.item = item;
+            this.variant = variant;
+        }
+    }
+
+    private List<GridItem> items;
+    private List<GridItem> itemsFull;
     private int style; // 0: Tap to add, 1: Without Category
     private OnItemClickListener listener;
 
     public interface OnItemClickListener {
-        void onItemClick(Item item, int position);
+        void onItemClick(Item item, Variant variant, int position);
     }
 
-    public ItemGridAdapter(List<Item> items, int style, OnItemClickListener listener) {
+    public ItemGridAdapter(List<GridItem> items, int style, OnItemClickListener listener) {
         this.items = items;
-        this.itemsFull = new java.util.ArrayList<>(items);
+        this.itemsFull = new ArrayList<>(items);
         this.style = style;
         this.listener = listener;
     }
@@ -36,9 +46,11 @@ public class ItemGridAdapter extends RecyclerView.Adapter<ItemGridAdapter.ViewHo
             items.addAll(itemsFull);
         } else {
             text = text.toLowerCase();
-            for (Item item : itemsFull) {
-                if (item.getName().toLowerCase().contains(text)) {
-                    items.add(item);
+            for (GridItem gi : itemsFull) {
+                boolean matchItem = gi.item.getName() != null && gi.item.getName().toLowerCase().contains(text);
+                boolean matchVariant = gi.variant != null && gi.variant.getName() != null && gi.variant.getName().toLowerCase().contains(text);
+                if (matchItem || matchVariant) {
+                    items.add(gi);
                 }
             }
         }
@@ -54,13 +66,65 @@ public class ItemGridAdapter extends RecyclerView.Adapter<ItemGridAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Item item = items.get(position);
-        holder.textName.setText(item.getName());
-        holder.textPrice.setText("₹" + (int)item.getSellingPrice());
-        
-        String variant = item.getVariantName();
-        if (variant == null || variant.isEmpty() || variant.equalsIgnoreCase("Default")) {
-            variant = "NO VARIANT";
+        GridItem gridItem = items.get(position);
+        Item item = gridItem.item;
+        Variant variant = gridItem.variant;
+
+        // Display logic
+        if (variant != null) {
+            // It's a variant tile (only used in style 0)
+            holder.textName.setText(variant.getName());
+            holder.textPrice.setText("₹" + (int)variant.getSellingPrice());
+            holder.textVariantCenter.setText(item.getName()); // Show product name above variant name
+            
+            if (item.getName() != null && !item.getName().isEmpty()) {
+                holder.textInitial.setText(item.getName().substring(0, 1).toUpperCase());
+            }
+            
+            // Out of stock logic
+            boolean isOutOfStock = variant.getStockQuantity() <= 0;
+            holder.textOutOfStock.setVisibility(isOutOfStock ? View.VISIBLE : View.GONE);
+            holder.circleBackground.setAlpha(isOutOfStock ? 0.5f : 1.0f);
+            holder.textInitial.setAlpha(isOutOfStock ? 0.3f : 1.0f);
+
+            // Selection / Quantity logic
+            int qty = 0;
+            for (CartItem ci : CartManager.getInstance().getCartItems()) {
+                if (ci.getItem().getId() == item.getId() && ci.getVariant() != null && ci.getVariant().getId() == variant.getId()) {
+                    qty += ci.getQuantity();
+                }
+            }
+            updateSelectionOverlay(holder, qty);
+
+        } else {
+            // It's a regular item tile
+            holder.textName.setText(item.getName());
+            holder.textPrice.setText("₹" + (int)item.getSellingPrice());
+            
+            String vName = item.getVariantName();
+            if (vName == null || vName.isEmpty() || vName.equalsIgnoreCase("Default")) {
+                vName = "NO VARIANT";
+            }
+            holder.textVariantCenter.setText(vName);
+
+            if (item.getName() != null && !item.getName().isEmpty()) {
+                holder.textInitial.setText(item.getName().substring(0, 1).toUpperCase());
+            }
+
+            // Out of stock logic
+            boolean isOutOfStock = item.getStockQuantity() <= 0;
+            holder.textOutOfStock.setVisibility(isOutOfStock ? View.VISIBLE : View.GONE);
+            holder.circleBackground.setAlpha(isOutOfStock ? 0.5f : 1.0f);
+            holder.textInitial.setAlpha(isOutOfStock ? 0.3f : 1.0f);
+
+            // Selection / Quantity logic
+            int qty = 0;
+            for (CartItem ci : CartManager.getInstance().getCartItems()) {
+                if (ci.getItem().getId() == item.getId() && ci.getVariant() == null) {
+                    qty += ci.getQuantity();
+                }
+            }
+            updateSelectionOverlay(holder, qty);
         }
 
         if (style == 0) {
@@ -68,33 +132,76 @@ public class ItemGridAdapter extends RecyclerView.Adapter<ItemGridAdapter.ViewHo
             holder.textVariantCenter.setVisibility(View.VISIBLE);
             holder.textVariantBanner.setVisibility(View.GONE);
             holder.indicatorDot.setVisibility(View.GONE);
-            holder.textVariantCenter.setText(variant);
         } else {
             // Without category style
             holder.textVariantCenter.setVisibility(View.GONE);
             holder.textVariantBanner.setVisibility(View.VISIBLE);
             holder.indicatorDot.setVisibility(View.VISIBLE);
-            holder.textVariantBanner.setText(variant.toUpperCase());
+            String vName = (variant != null) ? variant.getName() : item.getVariantName();
+            if (vName == null) vName = "DEFAULT";
+            holder.textVariantBanner.setText(vName.toUpperCase());
         }
 
-        if (item.getName() != null && !item.getName().isEmpty()) {
-            holder.textInitial.setText(item.getName().substring(0, 1).toUpperCase());
-        }
-
-        // Out of stock logic
-        boolean isOutOfStock = item.getStockQuantity() <= 0;
-        holder.textOutOfStock.setVisibility(isOutOfStock ? View.VISIBLE : View.GONE);
-        holder.circleBackground.setAlpha(isOutOfStock ? 0.5f : 1.0f);
-        holder.textInitial.setAlpha(isOutOfStock ? 0.3f : 1.0f);
-
-        // Selection / Quantity logic from CartManager
-        int qty = 0;
-        for (CartItem ci : CartManager.getInstance().getCartItems()) {
-            if (ci.getItem().getId() == item.getId()) {
-                qty += ci.getQuantity();
+        holder.itemView.setOnClickListener(v -> {
+            int currentPos = holder.getAdapterPosition();
+            if (currentPos == RecyclerView.NO_POSITION) return;
+            GridItem currentGridItem = items.get(currentPos);
+            
+            if (listener != null) {
+                listener.onItemClick(currentGridItem.item, currentGridItem.variant, currentPos);
+            } else {
+                // Default fallback if no listener (shouldn't happen in ReportsActivity)
+                Item ci = currentGridItem.item;
+                Variant cv = currentGridItem.variant;
+                int stock = (cv != null) ? cv.getStockQuantity() : ci.getStockQuantity();
+                
+                if (stock > 0) {
+                    if (CartManager.getInstance().addItem(ci, cv)) {
+                        notifyItemChanged(currentPos);
+                    }
+                } else {
+                    Toast.makeText(v.getContext(), "Out of stock", Toast.LENGTH_SHORT).show();
+                }
             }
-        }
+        });
 
+        holder.itemView.setOnLongClickListener(v -> {
+            int currentPos = holder.getAdapterPosition();
+            if (currentPos == RecyclerView.NO_POSITION) return false;
+            GridItem currentGridItem = items.get(currentPos);
+
+            if (style == 0) {
+                // Style 0: Long press removes one quantity
+                int itemId = currentGridItem.item.getId();
+                int variantId = (currentGridItem.variant != null) ? currentGridItem.variant.getId() : -1;
+                
+                int currentQty = 0;
+                for (CartItem ci : CartManager.getInstance().getCartItems()) {
+                    boolean sameItem = ci.getItem().getId() == itemId;
+                    boolean sameVariant = (variantId == -1 && ci.getVariant() == null) || 
+                                         (ci.getVariant() != null && ci.getVariant().getId() == variantId);
+                    if (sameItem && sameVariant) {
+                        currentQty = ci.getQuantity();
+                        break;
+                    }
+                }
+
+                if (currentQty > 0) {
+                    CartManager.getInstance().updateQuantity(itemId, variantId, currentQty - 1);
+                    notifyItemChanged(currentPos);
+                    return true;
+                }
+            }
+            
+            // For other styles or if quantity is 0, open edit screen
+            Intent intent = new Intent(v.getContext(), ManageItemActivity.class);
+            intent.putExtra("item_id", currentGridItem.item.getId());
+            v.getContext().startActivity(intent);
+            return true;
+        });
+    }
+
+    private void updateSelectionOverlay(ViewHolder holder, int qty) {
         if (qty > 0) {
             holder.viewSelectedOverlay.setVisibility(View.VISIBLE);
             holder.textQuantityOverlay.setVisibility(View.VISIBLE);
@@ -108,34 +215,6 @@ public class ItemGridAdapter extends RecyclerView.Adapter<ItemGridAdapter.ViewHo
             holder.viewSelectedOverlay.setVisibility(View.GONE);
             holder.textQuantityOverlay.setVisibility(View.GONE);
         }
-
-        holder.itemView.setOnClickListener(v -> {
-            int currentPos = holder.getAdapterPosition();
-            if (currentPos == RecyclerView.NO_POSITION) return;
-            Item currentItem = items.get(currentPos);
-            
-            if (listener != null) {
-                listener.onItemClick(currentItem, currentPos);
-            } else {
-                if (currentItem.getStockQuantity() > 0) {
-                    if (CartManager.getInstance().addItem(currentItem)) {
-                        notifyItemChanged(currentPos);
-                    }
-                } else {
-                    android.widget.Toast.makeText(v.getContext(), "Out of stock", android.widget.Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        holder.itemView.setOnLongClickListener(v -> {
-            int currentPos = holder.getAdapterPosition();
-            if (currentPos == RecyclerView.NO_POSITION) return false;
-            
-            Intent intent = new Intent(v.getContext(), ManageItemActivity.class);
-            intent.putExtra("item_id", items.get(currentPos).getId());
-            v.getContext().startActivity(intent);
-            return true;
-        });
     }
 
     @Override
