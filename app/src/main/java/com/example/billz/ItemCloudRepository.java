@@ -13,12 +13,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ItemCloudRepository {
     private static final String TAG = "ItemCloudRepository";
     private final FirebaseFirestore db;
     private final Context context;
     private final String uid;
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     public ItemCloudRepository(Context context) {
         this.context = context;
@@ -47,10 +50,10 @@ public class ItemCloudRepository {
             docRef = itemsRef.document();
             item.setId(docRef.getId()); // Use Document ID as Primary Key
             // Update local Room database with the new ID
-            new Thread(() -> {
+            executor.execute(() -> {
                 AppDatabase dbLocal = AppDatabase.getInstance(context);
                 dbLocal.itemDao().insert(item);
-            }).start();
+            });
         }
 
         Log.d(TAG, "PRODUCT_SAVE_STARTED: " + item.getName() + " ID: " + item.getId());
@@ -66,6 +69,7 @@ public class ItemCloudRepository {
         itemMap.put("sellingPrice", item.getSellingPrice());
         itemMap.put("costPrice", item.getCostPrice());
         itemMap.put("stockQuantity", item.getStockQuantity());
+        itemMap.put("variantName", item.getVariantName());
         itemMap.put("sellBy", item.getSellBy());
         itemMap.put("isAdvanceMode", item.isAdvanceMode());
         itemMap.put("updatedAt", com.google.firebase.Timestamp.now());
@@ -83,10 +87,10 @@ public class ItemCloudRepository {
                 variant.setId(vDocRef.getId());
                 variant.setItemId(item.getId());
                 // Update local variant ID
-                new Thread(() -> {
+                executor.execute(() -> {
                     AppDatabase dbLocal = AppDatabase.getInstance(context);
                     dbLocal.variantDao().insert(variant);
-                }).start();
+                });
             }
 
             Map<String, Object> vMap = new HashMap<>();
@@ -117,6 +121,21 @@ public class ItemCloudRepository {
             .addOnFailureListener(e -> Log.e(TAG, "PRODUCT_DELETE_FAILED: " + e.getMessage()));
     }
 
+    public void updateStock(String itemId, int newQuantity) {
+        if (uid == null || itemId == null) return;
+        getItemsCollection().document(itemId).update("stockQuantity", newQuantity)
+            .addOnSuccessListener(aVoid -> Log.d(TAG, "STOCK_UPDATE_SUCCESS: " + itemId + " Qty: " + newQuantity))
+            .addOnFailureListener(e -> Log.e(TAG, "STOCK_UPDATE_FAILED: " + itemId, e));
+    }
+
+    public void updateVariantStock(String itemId, String variantId, int newQuantity) {
+        if (uid == null || itemId == null || variantId == null) return;
+        getItemsCollection().document(itemId).collection("variants").document(variantId)
+            .update("stockQuantity", newQuantity)
+            .addOnSuccessListener(aVoid -> Log.d(TAG, "VARIANT_STOCK_UPDATE_SUCCESS: " + variantId + " Qty: " + newQuantity))
+            .addOnFailureListener(e -> Log.e(TAG, "VARIANT_STOCK_UPDATE_FAILED: " + variantId, e));
+    }
+
     public void syncProductsFromCloud(SyncCallback callback) {
         if (uid == null) {
             Log.e(TAG, "SYNC_STARTED: FAILED (UID is null)");
@@ -135,7 +154,7 @@ public class ItemCloudRepository {
             int cloudCount = queryDocumentSnapshots.size();
             Log.d(TAG, "FIRESTORE_RECORD_COUNT: " + cloudCount);
             
-            new Thread(() -> {
+            executor.execute(() -> {
                 AppDatabase localDb = AppDatabase.getInstance(context);
                 int localCountBefore = localDb.itemDao().getAllItems(activeBusinessId).size();
                 Log.d(TAG, "ROOM_RECORD_COUNT (Before): " + localCountBefore);
@@ -149,7 +168,7 @@ public class ItemCloudRepository {
                         doc.getDouble("sellingPrice") != null ? doc.getDouble("sellingPrice") : 0,
                         doc.getDouble("costPrice") != null ? doc.getDouble("costPrice") : 0,
                         doc.getLong("stockQuantity") != null ? doc.getLong("stockQuantity").intValue() : 0,
-                        "", 
+                        doc.getString("variantName") != null ? doc.getString("variantName") : "", 
                         doc.getString("sellBy"),
                         doc.getBoolean("isAdvanceMode") != null ? doc.getBoolean("isAdvanceMode") : false
                     );
@@ -161,7 +180,7 @@ public class ItemCloudRepository {
 
                     // Sync Variants
                     doc.getReference().collection("variants").get().addOnSuccessListener(vSnaps -> {
-                        new Thread(() -> {
+                        executor.execute(() -> {
                             List<Variant> cloudVariants = new ArrayList<>();
                             for (com.google.firebase.firestore.DocumentSnapshot vDoc : vSnaps) {
                                 Variant v = new Variant(
@@ -179,7 +198,7 @@ public class ItemCloudRepository {
                             if (!cloudVariants.isEmpty()) {
                                 localDb.variantDao().insertAll(cloudVariants);
                             }
-                        }).start();
+                        });
                     });
                 }
                 
@@ -190,7 +209,7 @@ public class ItemCloudRepository {
                 }
 
                 if (callback != null) callback.onSyncComplete();
-            }).start();
+            });
         }).addOnFailureListener(e -> Log.e(TAG, "SYNC_FAILED", e));
     }
 

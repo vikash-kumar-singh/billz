@@ -19,29 +19,32 @@ public interface ReceiptDao {
     void update(Receipt receipt);
 
     @Query("SELECT * FROM receipts WHERE businessId = :businessId AND isReturned = 0 ORDER BY timestamp DESC")
-    List<Receipt> getReceiptsByBusiness(int businessId);
+    List<Receipt> getReceiptsByBusiness(String businessId);
 
     @Query("SELECT * FROM receipts WHERE businessId = :businessId AND isReturned = 0 AND timestamp BETWEEN :from AND :to ORDER BY timestamp DESC")
-    List<Receipt> getReceiptsByDateRange(int businessId, long from, long to);
+    List<Receipt> getReceiptsByDateRange(String businessId, long from, long to);
 
     @Query("SELECT * FROM receipts WHERE businessId = :businessId AND isReturned = 0 AND paymentMode = :mode AND timestamp BETWEEN :from AND :to ORDER BY timestamp DESC")
-    List<Receipt> getReceiptsByFilter(int businessId, String mode, long from, long to);
+    List<Receipt> getReceiptsByFilter(String businessId, String mode, long from, long to);
 
     @Query("SELECT * FROM receipts WHERE businessId = :businessId AND isReturned = 1 ORDER BY timestamp DESC")
-    List<Receipt> getReturnedReceipts(int businessId);
+    List<Receipt> getReturnedReceipts(String businessId);
 
     @Query("SELECT * FROM receipts WHERE businessId = :businessId AND isReturned = 1 AND timestamp BETWEEN :from AND :to ORDER BY timestamp DESC")
-    List<Receipt> getReturnedReceiptsByDateRange(int businessId, long from, long to);
+    List<Receipt> getReturnedReceiptsByDateRange(String businessId, long from, long to);
 
     @Query("SELECT * FROM receipts WHERE businessId = :businessId AND isReturned = 1 AND paymentMode = :mode AND timestamp BETWEEN :from AND :to ORDER BY timestamp DESC")
-    List<Receipt> getReturnedReceiptsByFilter(int businessId, String mode, long from, long to);
+    List<Receipt> getReturnedReceiptsByFilter(String businessId, String mode, long from, long to);
 
     @Query("SELECT * FROM receipts WHERE businessId = :businessId AND timestamp BETWEEN :from AND :to ORDER BY timestamp DESC")
-    List<Receipt> getAllReceiptsByDateRange(int businessId, long from, long to);
+    List<Receipt> getAllReceiptsByDateRange(String businessId, long from, long to);
 
     @Query("SELECT * FROM receipts WHERE id = :id")
     Receipt getById(String id);
 
     @Query("DELETE FROM receipts WHERE id = :id")
     void deleteById(String id);
+
+    @Query("SELECT * FROM receipts WHERE syncPending = 1")
+    List<Receipt> getPendingSyncReceipts();
 }

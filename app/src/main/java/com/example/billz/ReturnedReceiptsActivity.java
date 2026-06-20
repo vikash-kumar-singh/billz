@@ -33,7 +33,7 @@ public class ReturnedReceiptsActivity extends AppCompatActivity {
     private Calendar calendarFrom, calendarTo;
     private SimpleDateFormat displayFormat = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
     private AppDatabase db;
-    private int currentBusinessId = 0;
+    private String currentUid;
     private String currentFilter = "ALL";
     private com.google.android.material.button.MaterialButton btnFilterAll;
 
@@ -42,8 +42,8 @@ public class ReturnedReceiptsActivity extends AppCompatActivity {
         LocaleHelper.applyLocale(LocaleHelper.getPersistedLanguage(this));
         super.onCreate(savedInstanceState);
 
-        // Security Check: Ensure user is logged in
-        if (FirebaseHelper.getCurrentUid() == null) {
+        currentUid = FirebaseHelper.getCurrentUid();
+        if (currentUid == null) {
             startActivity(new Intent(this, LoginActivity.class));
             finish();
             return;
@@ -58,7 +58,7 @@ public class ReturnedReceiptsActivity extends AppCompatActivity {
         toolbar.setTitle("Returned Receipts");
         toolbar.setNavigationOnClickListener(v -> finish());
 
-        // Handle window insets for header padding (pushed heading down)
+        // Handle window insets for header padding
         androidx.core.view.ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.headerContainer), (v, insets) -> {
             androidx.core.graphics.Insets systemBars = insets.getInsets(androidx.core.view.WindowInsetsCompat.Type.systemBars());
             v.setPadding(0, systemBars.top, 0, 0);
@@ -81,7 +81,7 @@ public class ReturnedReceiptsActivity extends AppCompatActivity {
         textDateTo = findViewById(R.id.textDateTo);
 
         calendarFrom = Calendar.getInstance();
-        calendarFrom.add(Calendar.DAY_OF_YEAR, -30); // Default to last 30 days
+        calendarFrom.add(Calendar.DAY_OF_YEAR, -30); 
         calendarTo = Calendar.getInstance();
 
         btnFilterAll = findViewById(R.id.btnFilterAll);
@@ -92,7 +92,7 @@ public class ReturnedReceiptsActivity extends AppCompatActivity {
         findViewById(R.id.layoutDateFrom).setOnClickListener(v -> showDatePicker(true));
         findViewById(R.id.layoutDateTo).setOnClickListener(v -> showDatePicker(false));
 
-        loadCurrentBusinessAndReceipts();
+        loadReceipts();
     }
 
     private void updateDateLabels() {
@@ -122,11 +122,9 @@ public class ReturnedReceiptsActivity extends AppCompatActivity {
         RadioGroup group = dialog.findViewById(R.id.radioGroupFilter);
 
         Executors.newSingleThreadExecutor().execute(() -> {
-            int bId = currentBusinessId;
-            if (bId == 0) {
-                Business selected = db.businessDao().getSelectedBusiness();
-                if (selected != null) bId = selected.getId();
-            }
+            Business selected = db.businessDao().getSelectedBusiness();
+            int bId = selected != null ? selected.getId() : 1;
+            
             List<PaymentMode> allModes = db.paymentModeDao().getAllPaymentModes(bId);
             List<String> activeModes = new ArrayList<>();
             activeModes.add("All");
@@ -155,9 +153,9 @@ public class ReturnedReceiptsActivity extends AppCompatActivity {
                 }
 
                 group.setOnCheckedChangeListener((rg, checkedId) -> {
-                    RadioButton selected = dialog.findViewById(checkedId);
-                    if (selected != null) {
-                        String name = selected.getText().toString();
+                    RadioButton selectedBtn = dialog.findViewById(checkedId);
+                    if (selectedBtn != null) {
+                        String name = selectedBtn.getText().toString();
                         currentFilter = name.equalsIgnoreCase("All") ? "ALL" : name;
                         btnFilterAll.setText("FILTER : " + currentFilter.toUpperCase());
                         loadReceipts();
@@ -170,16 +168,8 @@ public class ReturnedReceiptsActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    private void loadCurrentBusinessAndReceipts() {
-        BusinessHelper.ensureActiveBusiness(this, () -> {
-            currentBusinessId = BusinessHelper.getActiveBusinessId(this);
-            loadReceipts();
-        });
-    }
-
     private void loadReceipts() {
         Executors.newSingleThreadExecutor().execute(() -> {
-            // Set range
             Calendar start = (Calendar) calendarFrom.clone();
             start.set(Calendar.HOUR_OF_DAY, 0);
             start.set(Calendar.MINUTE, 0);
@@ -191,10 +181,14 @@ public class ReturnedReceiptsActivity extends AppCompatActivity {
             end.set(Calendar.SECOND, 59);
 
             List<Receipt> list;
-            if (currentFilter.equals("ALL")) {
-                list = db.receiptDao().getReturnedReceiptsByDateRange(currentBusinessId, start.getTimeInMillis(), end.getTimeInMillis());
+            if (currentUid != null) {
+                if (currentFilter.equals("ALL")) {
+                    list = db.receiptDao().getReturnedReceiptsByDateRange(currentUid, start.getTimeInMillis(), end.getTimeInMillis());
+                } else {
+                    list = db.receiptDao().getReturnedReceiptsByFilter(currentUid, currentFilter, start.getTimeInMillis(), end.getTimeInMillis());
+                }
             } else {
-                list = db.receiptDao().getReturnedReceiptsByFilter(currentBusinessId, currentFilter, start.getTimeInMillis(), end.getTimeInMillis());
+                list = new ArrayList<>();
             }
 
             runOnUiThread(() -> {

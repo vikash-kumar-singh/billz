@@ -128,22 +128,43 @@ public class ReceiptPreviewActivity extends AppCompatActivity {
                 if (receipt != null && !receipt.isReturned()) {
                     receipt.setReturned(true);
                     db.receiptDao().update(receipt);
+                    
+                    int bId = BusinessHelper.getActiveBusinessId(this);
+                    ItemCloudRepository itemCloudRepo = new ItemCloudRepository(this);
 
                     // Restock Logic
                     List<ReceiptItem> items = db.receiptItemDao().getItemsForReceipt(receiptId);
                     for (ReceiptItem ri : items) {
                         // 1. Find and update base item stock
-                        Item item = db.itemDao().getByName(ri.getItemName(), receipt.getBusinessId());
+                        Item item = null;
+                        if (ri.getItemId() != null) {
+                            item = db.itemDao().getById(ri.getItemId());
+                        } else {
+                            item = db.itemDao().getByName(ri.getItemName(), bId);
+                        }
+
                         if (item != null) {
-                            item.setStockQuantity(item.getStockQuantity() + ri.getQuantity());
+                            int newItemQty = item.getStockQuantity() + ri.getQuantity();
+                            item.setStockQuantity(newItemQty);
                             db.itemDao().update(item);
+                            itemCloudRepo.updateStock(item.getId(), newItemQty);
 
                             // 2. Find and update variant stock if applicable
-                            if (ri.getVariantName() != null && !ri.getVariantName().isEmpty() && !ri.getVariantName().equalsIgnoreCase("Default")) {
+                            if (ri.getVariantId() != null) {
+                                Variant variant = db.variantDao().getById(ri.getVariantId());
+                                if (variant != null) {
+                                    int newVariantQty = variant.getStockQuantity() + ri.getQuantity();
+                                    variant.setStockQuantity(newVariantQty);
+                                    db.variantDao().update(variant);
+                                    itemCloudRepo.updateVariantStock(item.getId(), variant.getId(), newVariantQty);
+                                }
+                            } else if (ri.getVariantName() != null && !ri.getVariantName().isEmpty() && !ri.getVariantName().equalsIgnoreCase("Default")) {
                                 Variant variant = db.variantDao().getByName(item.getId(), ri.getVariantName());
                                 if (variant != null) {
-                                    variant.setStockQuantity(variant.getStockQuantity() + ri.getQuantity());
+                                    int newVariantQty = variant.getStockQuantity() + ri.getQuantity();
+                                    variant.setStockQuantity(newVariantQty);
                                     db.variantDao().update(variant);
+                                    itemCloudRepo.updateVariantStock(item.getId(), variant.getId(), newVariantQty);
                                 }
                             }
                         }
@@ -210,9 +231,11 @@ public class ReceiptPreviewActivity extends AppCompatActivity {
             Receipt receipt = db.receiptDao().getById(receiptId);
             if (receipt == null) return;
             
+            int bId = BusinessHelper.getActiveBusinessId(this);
+            
             List<ReceiptItem> items = db.receiptItemDao().getItemsForReceipt(receiptId);
-            ReceiptSettings settings = db.receiptSettingsDao().getSettingsByBusiness(receipt.getBusinessId());
-            Business business = db.businessDao().getById(receipt.getBusinessId());
+            ReceiptSettings settings = db.receiptSettingsDao().getSettingsByBusiness(bId);
+            Business business = db.businessDao().getById(bId);
 
             runOnUiThread(() -> {
                 if (settings != null) {

@@ -40,6 +40,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
+import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
@@ -436,6 +437,10 @@ public class ReportsActivity extends AppCompatActivity {
     }
 
     private void syncCloudData() {
+        ReceiptCloudRepository receiptRepo = new ReceiptCloudRepository(this);
+        receiptRepo.syncReceiptsFromCloud(null);
+        receiptRepo.retryPendingSync();
+        
         new ItemCloudRepository(this).syncProductsFromCloud(() -> {
             runOnUiThread(() -> {
                 updateInventoryCount();
@@ -1168,7 +1173,8 @@ public class ReportsActivity extends AppCompatActivity {
 
     private void loadTodayReceipts() {
         Executors.newSingleThreadExecutor().execute(() -> {
-            int bId = getActiveBusinessId();
+            String uid = FirebaseHelper.getCurrentUid();
+            if (uid == null) return;
 
             Calendar cal = Calendar.getInstance();
             cal.set(Calendar.HOUR_OF_DAY, 0);
@@ -1183,7 +1189,7 @@ public class ReportsActivity extends AppCompatActivity {
             cal.set(Calendar.MILLISECOND, 999);
             long endOfDay = cal.getTimeInMillis();
 
-            List<Receipt> todayReceipts = AppDatabase.getInstance(this).receiptDao().getAllReceiptsByDateRange(bId, startOfDay, endOfDay);
+            List<Receipt> todayReceipts = AppDatabase.getInstance(this).receiptDao().getAllReceiptsByDateRange(uid, startOfDay, endOfDay);
 
             runOnUiThread(() -> {
                 if (recyclerTodayReceipts != null) {
@@ -1230,9 +1236,7 @@ public class ReportsActivity extends AppCompatActivity {
     private void loadItemGrid() {
         Executors.newSingleThreadExecutor().execute(() -> {
             int bId = getActiveBusinessId();
-            List<Item> dbItems;
-            if (itemTileStyle == 1) dbItems = AppDatabase.getInstance(this).itemDao().getUncategorizedItems(bId);
-            else dbItems = AppDatabase.getInstance(this).itemDao().getAllItems(bId);
+            List<Item> dbItems = AppDatabase.getInstance(this).itemDao().getAllItems(bId);
 
             List<ItemGridAdapter.GridItem> gridItems = new ArrayList<>();
             if (itemTileStyle == 0) {
@@ -1483,6 +1487,10 @@ public class ReportsActivity extends AppCompatActivity {
                         if (selectedServiceCharge != null) extra += selectedServiceCharge.isPercentage() ? (subtotal * selectedServiceCharge.getValue() / 100.0) : selectedServiceCharge.getValue();
                         if (selectedOtherCharge != null) extra += selectedOtherCharge.isPercentage() ? (subtotal * selectedOtherCharge.getValue() / 100.0) : selectedOtherCharge.getValue();
                         
+                        final double finalDisc = disc;
+                        final double finalTax = tax;
+                        final double finalSubtotal = subtotal;
+                        
                         double finalTotal = subtotal + tax - disc + extra;
                         if (isRoundOffEnabled) finalTotal = Math.round(finalTotal);
 
@@ -1510,35 +1518,49 @@ public class ReportsActivity extends AppCompatActivity {
                             db.receiptSettingsDao().update(settings);
 
                             String rNo = (settings.getReceiptIdPrefix() != null ? settings.getReceiptIdPrefix() : "NC") + "-" + billNo;
-                            Receipt receipt = new Receipt(rNo, custName, mode.getName(), totalToSave, itemsToSave, System.currentTimeMillis(), bId);
-                            long insertedId = db.receiptDao().insert(receipt);
-                            receipt.setId(String.valueOf(insertedId));
-                            db.receiptDao().update(receipt);
-
+                            String receiptId = FirebaseFirestore.getInstance().collection("users").document(FirebaseHelper.getCurrentUid()).collection("invoices").document().getId();
+                            
+                            Receipt receipt = new Receipt(receiptId, rNo, custName, mode.getName(), totalToSave, itemsToSave, System.currentTimeMillis(), FirebaseHelper.getCurrentUid());
+                            receipt.setSubtotal(finalSubtotal);
+                            receipt.setTax(finalTax);
+                            receipt.setDiscount(finalDisc);
+                            
                             // Save individual items and reduce stock
                             List<CartItem> cartItems = CartManager.getInstance().getCartItems();
                             List<ReceiptItem> receiptItems = new ArrayList<>();
+                            ItemCloudRepository itemCloudRepo = new ItemCloudRepository(ReportsActivity.this);
+                            
                             for (CartItem ci : cartItems) {
                                 String vName = ci.getVariant() != null ? ci.getVariant().getName() : "";
-                                receiptItems.add(new ReceiptItem(String.valueOf(insertedId), ci.getItem().getName(), vName,
+                                ReceiptItem receiptItem = new ReceiptItem(receiptId, ci.getItem().getName(), vName,
                                         ci.getVariant() != null ? ci.getVariant().getSellingPrice() : ci.getItem().getSellingPrice(), 
-                                        ci.getQuantity()));
+                                        ci.getQuantity());
+                                receiptItem.setItemId(ci.getItem().getId());
+                                if (ci.getVariant() != null) receiptItem.setVariantId(ci.getVariant().getId());
+                                receiptItems.add(receiptItem);
 
                                 // 1. Reduce Variant stock if available
                                 if (ci.getVariant() != null) {
-                                    Variant v = ci.getVariant();
-                                    v.setStockQuantity(Math.max(0, v.getStockQuantity() - ci.getQuantity()));
-                                    db.variantDao().update(v);
+                                    Variant v = db.variantDao().getById(ci.getVariant().getId());
+                                    if (v != null) {
+                                        int newQty = Math.max(0, v.getStockQuantity() - ci.getQuantity());
+                                        v.setStockQuantity(newQty);
+                                        db.variantDao().update(v);
+                                        itemCloudRepo.updateVariantStock(v.getItemId(), v.getId(), newQty);
+                                    }
                                 }
 
                                 // 2. Reduce Base Item stock
                                 Item item = db.itemDao().getById(ci.getItem().getId());
                                 if (item != null) {
-                                    item.setStockQuantity(Math.max(0, item.getStockQuantity() - ci.getQuantity()));
+                                    int newQty = Math.max(0, item.getStockQuantity() - ci.getQuantity());
+                                    item.setStockQuantity(newQty);
                                     db.itemDao().update(item);
+                                    itemCloudRepo.updateStock(item.getId(), newQty);
                                 }
                             }
-                            db.receiptItemDao().insertAll(receiptItems);
+                            
+                            new ReceiptCloudRepository(ReportsActivity.this).saveReceipt(receipt, receiptItems);
 
                             runOnUiThread(() -> {
                                 Toast.makeText(ReportsActivity.this, "Payment: " + mode.getName() + " - Saved as " + rNo, Toast.LENGTH_SHORT).show();
@@ -1548,7 +1570,7 @@ public class ReportsActivity extends AppCompatActivity {
                                 
                                 // Open Details
                                 Intent intent = new Intent(ReportsActivity.this, ReceiptDetailsActivity.class);
-                                intent.putExtra("receipt_id", String.valueOf(insertedId));
+                                intent.putExtra("receipt_id", receiptId);
                                 startActivity(intent);
                             });
                         });

@@ -8,6 +8,8 @@ public class ReceiptItem {
     @PrimaryKey(autoGenerate = true)
     private int id;
     private String receiptId;
+    private String itemId;
+    private String variantId;
     private String itemName;
     private String variantName;
     private double price;
@@ -25,6 +27,10 @@ public class ReceiptItem {
     public void setId(int id) { this.id = id; }
     public String getReceiptId() { return receiptId; }
     public void setReceiptId(String receiptId) { this.receiptId = receiptId; }
+    public String getItemId() { return itemId; }
+    public void setItemId(String itemId) { this.itemId = itemId; }
+    public String getVariantId() { return variantId; }
+    public void setVariantId(String variantId) { this.variantId = variantId; }
     public String getItemName() { return itemName; }
     public void setItemName(String itemName) { this.itemName = itemName; }
     public String getVariantName() { return variantName; }

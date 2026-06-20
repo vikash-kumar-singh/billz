@@ -126,7 +126,7 @@ public class ItemGridAdapter extends RecyclerView.Adapter<ItemGridAdapter.ViewHo
             int qty = 0;
             for (CartItem ci : CartManager.getInstance().getCartItems()) {
                 String ciItemId = ci.getItem().getId();
-                if (ciItemId != null && ciItemId.equals(item.getId()) && ci.getVariant() == null) {
+                if (ciItemId != null && ciItemId.equals(item.getId())) {
                     qty += ci.getQuantity();
                 }
             }
@@ -139,13 +139,13 @@ public class ItemGridAdapter extends RecyclerView.Adapter<ItemGridAdapter.ViewHo
             holder.textVariantBanner.setVisibility(View.GONE);
             holder.indicatorDot.setVisibility(View.GONE);
         } else {
-            // Without category style
+            // Without category style (View everything in a grid, show categories in banner)
             holder.textVariantCenter.setVisibility(View.GONE);
             holder.textVariantBanner.setVisibility(View.VISIBLE);
             holder.indicatorDot.setVisibility(View.VISIBLE);
-            String vName = (variant != null) ? variant.getName() : item.getVariantName();
-            if (vName == null) vName = "DEFAULT";
-            holder.textVariantBanner.setText(vName.toUpperCase());
+            String bannerText = item.getCategory();
+            if (bannerText == null || bannerText.isEmpty()) bannerText = "UNCATEGORIZED";
+            holder.textVariantBanner.setText(bannerText.toUpperCase());
         }
 
         holder.itemView.setOnClickListener(v -> {
@@ -176,34 +176,31 @@ public class ItemGridAdapter extends RecyclerView.Adapter<ItemGridAdapter.ViewHo
             if (currentPos == RecyclerView.NO_POSITION) return false;
             GridItem currentGridItem = items.get(currentPos);
 
-            if (style == 0) {
-                // Style 0: Long press removes one quantity
-                String itemId = currentGridItem.item.getId();
-                String variantId = (currentGridItem.variant != null) ? currentGridItem.variant.getId() : null;
+            String itemId = currentGridItem.item.getId();
+            String variantId = (currentGridItem.variant != null) ? currentGridItem.variant.getId() : null;
+            
+            int currentQty = 0;
+            for (CartItem ci : CartManager.getInstance().getCartItems()) {
+                String ciItemId = ci.getItem().getId();
+                boolean sameItem = ciItemId != null && ciItemId.equals(itemId);
                 
-                int currentQty = 0;
-                for (CartItem ci : CartManager.getInstance().getCartItems()) {
-                    String ciItemId = ci.getItem().getId();
-                    boolean sameItem = ciItemId != null && ciItemId.equals(itemId);
-                    
-                    String ciVariantId = (ci.getVariant() != null) ? ci.getVariant().getId() : null;
-                    boolean sameVariant = (variantId == null && ciVariantId == null) || 
-                                         (variantId != null && variantId.equals(ciVariantId));
+                String ciVariantId = (ci.getVariant() != null) ? ci.getVariant().getId() : null;
+                boolean sameVariant = (variantId == null && ciVariantId == null) || 
+                                     (variantId != null && variantId.equals(ciVariantId));
 
-                    if (sameItem && sameVariant) {
-                        currentQty = ci.getQuantity();
-                        break;
-                    }
-                }
-
-                if (currentQty > 0) {
-                    CartManager.getInstance().updateQuantity(itemId, variantId, currentQty - 1);
-                    notifyItemChanged(currentPos);
-                    return true;
+                if (sameItem && sameVariant) {
+                    currentQty = ci.getQuantity();
+                    break;
                 }
             }
+
+            if (currentQty > 0) {
+                CartManager.getInstance().updateQuantity(itemId, variantId, currentQty - 1);
+                notifyItemChanged(currentPos);
+                return true;
+            }
             
-            // For other styles or if quantity is 0, open edit screen
+            // If quantity is 0 or other fallback, open edit screen
             Intent intent = new Intent(v.getContext(), ManageItemActivity.class);
             intent.putExtra("item_id", currentGridItem.item.getId());
             v.getContext().startActivity(intent);
@@ -216,11 +213,7 @@ public class ItemGridAdapter extends RecyclerView.Adapter<ItemGridAdapter.ViewHo
             holder.viewSelectedOverlay.setVisibility(View.VISIBLE);
             holder.textQuantityOverlay.setVisibility(View.VISIBLE);
             holder.textQuantityOverlay.setText("x" + qty);
-            if (style == 0) {
-                holder.viewSelectedOverlay.setBackgroundColor(Color.parseColor("#80A1A1A1")); // Grey
-            } else {
-                holder.viewSelectedOverlay.setBackgroundColor(Color.parseColor("#602563EB")); // Blue
-            }
+            holder.viewSelectedOverlay.setBackgroundColor(Color.parseColor("#602563EB")); // Brand Blue
         } else {
             holder.viewSelectedOverlay.setVisibility(View.GONE);
             holder.textQuantityOverlay.setVisibility(View.GONE);

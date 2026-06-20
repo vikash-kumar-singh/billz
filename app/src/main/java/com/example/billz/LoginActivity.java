@@ -147,7 +147,14 @@ public class LoginActivity extends AppCompatActivity {
 
                         if (profile.isSetupCompleted()) {
                             preferenceManager.setBusinessSetupCompleted(true);
-                            startActivity(new Intent(LoginActivity.this, ReportsActivity.class));
+                            
+                            // Trigger Receipt Sync
+                            new ReceiptCloudRepository(LoginActivity.this).syncReceiptsFromCloud(() -> {
+                                runOnUiThread(() -> {
+                                    startActivity(new Intent(LoginActivity.this, ReportsActivity.class));
+                                    finishAffinity();
+                                });
+                            });
                         } else {
                             preferenceManager.setBusinessSetupCompleted(false);
                             startActivity(new Intent(LoginActivity.this, BusinessSetupActivity.class));
