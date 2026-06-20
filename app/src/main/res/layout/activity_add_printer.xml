@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/addPrinterRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F8FAFC"
+    android:orientation="vertical">
+
+    <!-- Blue Header -->
+    <LinearLayout
+        android:id="@+id/headerAddPrinter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#3F51B5"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <ImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_printer"
+            app:tint="@color/white" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="ESC-POS Printers"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="24dp"
+        android:text="Printer type"
+        android:textColor="#64748B"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingHorizontal="12dp">
+
+        <!-- Bluetooth -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/btnBluetoothPrinter"
+            android:layout_width="0dp"
+            android:layout_height="160dp"
+            android:layout_margin="8dp"
+            android:layout_weight="1"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="4dp"
+            app:cardElevation="2dp"
+            app:strokeWidth="0dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="12dp">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_bluetooth"
+                    app:tint="#475569" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:gravity="center"
+                    android:text="Bluetooth\nPrinter"
+                    android:textColor="#475569"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:autoSizeMaxTextSize="14sp"
+                    app:autoSizeMinTextSize="10sp"
+                    app:autoSizeTextType="uniform" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- USB -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/btnUsbPrinter"
+            android:layout_width="0dp"
+            android:layout_height="160dp"
+            android:layout_margin="8dp"
+            android:layout_weight="1"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="4dp"
+            app:cardElevation="2dp"
+            app:strokeWidth="0dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="12dp">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_usb"
+                    app:tint="#475569" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:gravity="center"
+                    android:text="USB\nPrinter"
+                    android:textColor="#475569"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:autoSizeMaxTextSize="14sp"
+                    app:autoSizeMinTextSize="10sp"
+                    app:autoSizeTextType="uniform" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Network -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/btnNetworkPrinter"
+            android:layout_width="0dp"
+            android:layout_height="160dp"
+            android:layout_margin="8dp"
+            android:layout_weight="1"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="4dp"
+            app:cardElevation="2dp"
+            app:strokeWidth="0dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="12dp">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_network"
+                    app:tint="#475569" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:gravity="center"
+                    android:text="Network\nPrinter"
+                    android:textColor="#475569"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:autoSizeMaxTextSize="14sp"
+                    app:autoSizeMinTextSize="10sp"
+                    app:autoSizeTextType="uniform" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+
+</LinearLayout>

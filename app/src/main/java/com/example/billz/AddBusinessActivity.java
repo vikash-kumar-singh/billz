@@ -181,7 +181,7 @@ public class AddBusinessActivity extends AppCompatActivity {
 
             findViewById(R.id.nav_printer_setup).setOnClickListener(v -> {
                 drawerLayout.closeDrawer(GravityCompat.START);
-                Toast.makeText(this, "Printer Setup coming soon", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this, PrinterSetupActivity.class));
             });
 
             findViewById(R.id.nav_device_details).setOnClickListener(v -> {

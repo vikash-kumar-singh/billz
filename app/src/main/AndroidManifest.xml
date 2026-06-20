@@ -7,6 +7,13 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
 
+    <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
     <queries>
         <package android:name="com.whatsapp" />
         <package android:name="com.whatsapp.w4b" />
@@ -220,6 +227,26 @@
             android:exported="false"
             android:theme="@style/Theme.Billz">
         </activity>
+        <activity
+            android:name=".PrinterSetupActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Billz" />
+        <activity
+            android:name=".AddPrinterActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Billz" />
+        <activity
+            android:name=".BluetoothPrinterScanActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Billz" />
+        <activity
+            android:name=".UsbPrinterScanActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Billz" />
+        <activity
+            android:name=".NetworkPrinterSetupActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Billz" />
         <activity
             android:name=".HelpChatActivity"
             android:exported="false"
