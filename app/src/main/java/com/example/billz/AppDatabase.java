@@ -6,7 +6,7 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-@Database(entities = {Customer.class, ReceiptSettings.class, Staff.class, Tax.class, Discount.class, PaymentMode.class, DeliveryFee.class, PackingFee.class, ServiceFee.class, OtherFee.class, UpiConfig.class, Business.class, Category.class, ModifierSet.class, ModifierOption.class, Ingredient.class, StockHistory.class, Item.class, Variant.class, Receipt.class, ReceiptItem.class, Printer.class}, version = 50)
+@Database(entities = {Customer.class, ReceiptSettings.class, Staff.class, Tax.class, Discount.class, PaymentMode.class, DeliveryFee.class, PackingFee.class, ServiceFee.class, OtherFee.class, UpiConfig.class, Business.class, Category.class, ModifierSet.class, ModifierOption.class, Ingredient.class, StockHistory.class, Item.class, Variant.class, Receipt.class, ReceiptItem.class, Printer.class}, version = 51)
 public abstract class AppDatabase extends RoomDatabase {
     private static AppDatabase instance;
 
@@ -37,7 +37,7 @@ public abstract class AppDatabase extends RoomDatabase {
             instance = Room.databaseBuilder(context.getApplicationContext(),
                             AppDatabase.class, "billz_database")
                     .fallbackToDestructiveMigration()
-                    .allowMainThreadQueries() // For simplicity in this example
+                    .allowMainThreadQueries()
                     .build();
         }
         return instance;

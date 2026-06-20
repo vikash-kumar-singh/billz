@@ -32,7 +32,7 @@ public class CustomerSyncManager {
     public void syncCustomersFromCloud(SyncCallback callback) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) {
-            Log.w(TAG, "SYNC_FAILED: User not logged in");
+            Log.w(TAG, "SYNC_STARTED: FAILED (User not logged in)");
             if (callback != null) callback.onSyncFailed("User not logged in");
             return;
         }
@@ -46,7 +46,7 @@ public class CustomerSyncManager {
                 .collection("customers")
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    Log.d(TAG, "CUSTOMERS_DOWNLOADED: " + queryDocumentSnapshots.size());
+                    Log.d(TAG, "FIRESTORE_RECORD_COUNT: " + queryDocumentSnapshots.size());
                     saveToRoom(queryDocumentSnapshots, callback);
                 })
                 .addOnFailureListener(e -> {
@@ -58,17 +58,23 @@ public class CustomerSyncManager {
     private void saveToRoom(QuerySnapshot snapshots, SyncCallback callback) {
         Executors.newSingleThreadExecutor().execute(() -> {
             try {
+                AppDatabase db = AppDatabase.getInstance(context);
+                int activeBusinessId = BusinessHelper.getActiveBusinessId(context);
+                
                 List<Customer> cloudCustomers = new ArrayList<>();
                 for (DocumentSnapshot doc : snapshots.getDocuments()) {
                     Customer customer = doc.toObject(Customer.class);
                     if (customer != null) {
+                        customer.setId(doc.getId()); // Map Firestore ID to Room Primary Key
+                        customer.setBusinessId(activeBusinessId);
                         cloudCustomers.add(customer);
+                        Log.d(TAG, "UPSERT_CUSTOMER: " + customer.getName() + " ID: " + customer.getId());
                     }
                 }
 
                 if (!cloudCustomers.isEmpty()) {
                     customerDao.insertAll(cloudCustomers);
-                    Log.d(TAG, "ROOM_UPDATED: " + cloudCustomers.size() + " customers synced");
+                    Log.d(TAG, "ROOM_RECORD_COUNT: " + cloudCustomers.size() + " customers upserted");
                 }
 
                 Log.d(TAG, "SYNC_SUCCESS");
@@ -76,7 +82,7 @@ public class CustomerSyncManager {
                     callback.onSyncComplete();
                 }
             } catch (Exception e) {
-                Log.e(TAG, "ROOM_UPDATE_FAILED: " + e.getMessage());
+                Log.e(TAG, "SYNC_FAILED (ROOM_UPDATE): " + e.getMessage());
                 if (callback != null) callback.onSyncFailed(e.getMessage());
             }
         });
@@ -84,6 +90,6 @@ public class CustomerSyncManager {
 
     public void syncCustomerToCloud(Customer customer) {
         // Reuse existing cloud repo or implement here
-        new CustomerCloudRepository().saveCustomerToCloud(customer);
+        new CustomerCloudRepository(context).saveCustomerToCloud(customer);
     }
 }

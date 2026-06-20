@@ -265,20 +265,28 @@ public class AddItemActivity extends AppCompatActivity {
         }
         
         Item item = new Item(name, category, first.sellingPrice, first.costPrice, totalStock, first.name, selectedSellBy, !isSimpleMode);
+        item.setBusinessId(BusinessHelper.getActiveBusinessId(this));
+        item.setId(java.util.UUID.randomUUID().toString()); // Generate a unique ID before inserting
 
         BusinessHelper.ensureActiveBusiness(this, () -> {
             AppDatabase db = AppDatabase.getInstance(this);
-            item.setBusinessId(BusinessHelper.getActiveBusinessId(this));
+            // item.setBusinessId(BusinessHelper.getActiveBusinessId(this)); // Already set above
             
-            long itemId = db.itemDao().insert(item);
+            db.itemDao().insert(item);
             
+            List<Variant> savedVariants = new ArrayList<>();
             for (int i = 0; i < variantsToSave.size(); i++) {
                 VariantData vd = variantsToSave.get(i);
-                Variant variant = new Variant((int)itemId, vd.name, vd.sellingPrice, vd.costPrice, vd.stockQuantity);
+                Variant variant = new Variant(item.getId(), vd.name, vd.sellingPrice, vd.costPrice, vd.stockQuantity);
+                variant.setId(java.util.UUID.randomUUID().toString()); // Generate unique ID for variants
                 variant.setSortOrder(i);
                 variant.setImageUri(vd.imageUri);
                 db.variantDao().insert(variant);
+                savedVariants.add(variant);
             }
+
+            // Sync to Cloud
+            new ItemCloudRepository(this).saveItem(item, savedVariants);
 
             runOnUiThread(() -> {
                 Toast.makeText(this, "Item Saved Successfully", Toast.LENGTH_SHORT).show();

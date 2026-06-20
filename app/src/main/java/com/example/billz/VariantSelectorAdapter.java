@@ -17,7 +17,7 @@ import java.util.Map;
 public class VariantSelectorAdapter extends RecyclerView.Adapter<VariantSelectorAdapter.ViewHolder> {
 
     private final List<Variant> variants;
-    private final Map<Integer, Integer> variantQuantities = new HashMap<>();
+    private final Map<String, Integer> variantQuantities = new HashMap<>();
     private final OnQuantityChangedListener listener;
 
     public interface OnQuantityChangedListener {

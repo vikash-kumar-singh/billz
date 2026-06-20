@@ -72,12 +72,16 @@ public class InventoryManagementActivity extends AppCompatActivity {
             addItemLauncher.launch(intent);
         } else if (item.getType() == 2) { // Modifier
             Intent intent = new Intent(this, CreateModifierActivity.class);
-            intent.putExtra("modifier_set_id", item.getDatabaseId());
+            try {
+                intent.putExtra("modifier_set_id", Integer.parseInt(item.getDatabaseId()));
+            } catch (NumberFormatException ignored) {}
             intent.putExtra("modifier_set_name", item.getName());
             addModifierLauncher.launch(intent);
         } else if (item.getType() == 3) { // Ingredient
             Intent intent = new Intent(this, AddIngredientActivity.class);
-            intent.putExtra("ingredient_id", item.getDatabaseId());
+            try {
+                intent.putExtra("ingredient_id", Integer.parseInt(item.getDatabaseId()));
+            } catch (NumberFormatException ignored) {}
             addIngredientLauncher.launch(intent);
         }
     };
@@ -495,7 +499,7 @@ public class InventoryManagementActivity extends AppCompatActivity {
                     
                     InventoryItem item = new InventoryItem(set.getName(), "", sb.toString(), false, 0, new ArrayList<>());
                     item.setType(2); // Modifier
-                    item.setDatabaseId(set.getId());
+                    item.setDatabaseId(String.valueOf(set.getId()));
                     modifiersList.add(item);
                 }
                 
@@ -519,7 +523,7 @@ public class InventoryManagementActivity extends AppCompatActivity {
                     // For ingredients, we show Name and Stock value (no "kg Left" suffix as per image)
                     InventoryItem item = new InventoryItem(ing.getName(), "", String.format(Locale.getDefault(), "%.0f", ing.getStock()), false, (int) ing.getStock(), new ArrayList<>());
                     item.setType(3); // Ingredient
-                    item.setDatabaseId(ing.getId());
+                    item.setDatabaseId(String.valueOf(ing.getId()));
                     ingredientsList.add(item);
                 }
                 

@@ -15,8 +15,8 @@ public interface ReceiptItemDao {
     void update(ReceiptItem item);
 
     @Query("SELECT * FROM receipt_items WHERE receiptId = :receiptId")
-    List<ReceiptItem> getItemsForReceipt(int receiptId);
+    List<ReceiptItem> getItemsForReceipt(String receiptId);
 
     @Query("DELETE FROM receipt_items WHERE receiptId = :receiptId")
-    void deleteByReceiptId(int receiptId);
+    void deleteByReceiptId(String receiptId);
 }

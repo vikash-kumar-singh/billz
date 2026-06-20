@@ -20,7 +20,7 @@ import java.util.concurrent.Executors;
 
 public class EditReceiptActivity extends AppCompatActivity {
 
-    private int receiptId;
+    private String receiptId;
     private AppDatabase db;
     private Receipt currentReceipt;
     private List<ReceiptItem> receiptItems = new ArrayList<>();
@@ -38,7 +38,7 @@ public class EditReceiptActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_receipt);
 
         db = AppDatabase.getInstance(this);
-        receiptId = getIntent().getIntExtra("receipt_id", -1);
+        receiptId = getIntent().getStringExtra("receipt_id");
 
         View headerEdit = findViewById(R.id.headerEdit);
         androidx.core.view.ViewCompat.setOnApplyWindowInsetsListener(headerEdit, (v, insets) -> {
@@ -93,10 +93,10 @@ public class EditReceiptActivity extends AppCompatActivity {
         List<CartItem> cartItems = new ArrayList<>();
         for (ReceiptItem ri : receiptItems) {
             Item dummyItem = new Item(ri.getItemName(), "", ri.getPrice(), 0, 100, ri.getVariantName(), "Unit", false);
-            dummyItem.setId(ri.getId()); 
+            dummyItem.setId(String.valueOf(ri.getId())); 
             Variant dummyVariant = null;
             if (ri.getVariantName() != null && !ri.getVariantName().isEmpty()) {
-                dummyVariant = new Variant(0, ri.getVariantName(), ri.getPrice(), 0, 100);
+                dummyVariant = new Variant("0", ri.getVariantName(), ri.getPrice(), 0, 100);
             }
             cartItems.add(new CartItem(dummyItem, dummyVariant, ri.getQuantity()));
         }
@@ -134,7 +134,7 @@ public class EditReceiptActivity extends AppCompatActivity {
             
             // Sync back to receiptItems
             for (ReceiptItem ri : receiptItems) {
-                if (ri.getId() == cartItem.getItem().getId()) {
+                if (String.valueOf(ri.getId()).equals(cartItem.getItem().getId())) {
                     ri.setQuantity(newQty);
                     break;
                 }

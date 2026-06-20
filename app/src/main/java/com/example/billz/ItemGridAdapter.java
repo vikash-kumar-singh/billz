@@ -89,8 +89,13 @@ public class ItemGridAdapter extends RecyclerView.Adapter<ItemGridAdapter.ViewHo
 
             // Selection / Quantity logic
             int qty = 0;
+            String itemId = item.getId();
+            String variantId = variant.getId();
             for (CartItem ci : CartManager.getInstance().getCartItems()) {
-                if (ci.getItem().getId() == item.getId() && ci.getVariant() != null && ci.getVariant().getId() == variant.getId()) {
+                String ciItemId = ci.getItem().getId();
+                String ciVariantId = (ci.getVariant() != null) ? ci.getVariant().getId() : null;
+
+                if (itemId != null && itemId.equals(ciItemId) && variantId != null && variantId.equals(ciVariantId)) {
                     qty += ci.getQuantity();
                 }
             }
@@ -120,7 +125,8 @@ public class ItemGridAdapter extends RecyclerView.Adapter<ItemGridAdapter.ViewHo
             // Selection / Quantity logic
             int qty = 0;
             for (CartItem ci : CartManager.getInstance().getCartItems()) {
-                if (ci.getItem().getId() == item.getId() && ci.getVariant() == null) {
+                String ciItemId = ci.getItem().getId();
+                if (ciItemId != null && ciItemId.equals(item.getId()) && ci.getVariant() == null) {
                     qty += ci.getQuantity();
                 }
             }
@@ -172,14 +178,18 @@ public class ItemGridAdapter extends RecyclerView.Adapter<ItemGridAdapter.ViewHo
 
             if (style == 0) {
                 // Style 0: Long press removes one quantity
-                int itemId = currentGridItem.item.getId();
-                int variantId = (currentGridItem.variant != null) ? currentGridItem.variant.getId() : -1;
+                String itemId = currentGridItem.item.getId();
+                String variantId = (currentGridItem.variant != null) ? currentGridItem.variant.getId() : null;
                 
                 int currentQty = 0;
                 for (CartItem ci : CartManager.getInstance().getCartItems()) {
-                    boolean sameItem = ci.getItem().getId() == itemId;
-                    boolean sameVariant = (variantId == -1 && ci.getVariant() == null) || 
-                                         (ci.getVariant() != null && ci.getVariant().getId() == variantId);
+                    String ciItemId = ci.getItem().getId();
+                    boolean sameItem = ciItemId != null && ciItemId.equals(itemId);
+                    
+                    String ciVariantId = (ci.getVariant() != null) ? ci.getVariant().getId() : null;
+                    boolean sameVariant = (variantId == null && ciVariantId == null) || 
+                                         (variantId != null && variantId.equals(ciVariantId));
+
                     if (sameItem && sameVariant) {
                         currentQty = ci.getQuantity();
                         break;

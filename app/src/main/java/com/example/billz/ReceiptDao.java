@@ -2,14 +2,18 @@ package com.example.billz;
 
 import androidx.room.Dao;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 import java.util.List;
 
 @Dao
 public interface ReceiptDao {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     long insert(Receipt receipt);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertAll(List<Receipt> receipts);
 
     @Update
     void update(Receipt receipt);
@@ -36,8 +40,8 @@ public interface ReceiptDao {
     List<Receipt> getAllReceiptsByDateRange(int businessId, long from, long to);
 
     @Query("SELECT * FROM receipts WHERE id = :id")
-    Receipt getById(int id);
+    Receipt getById(String id);
 
     @Query("DELETE FROM receipts WHERE id = :id")
-    void deleteById(int id);
+    void deleteById(String id);
 }

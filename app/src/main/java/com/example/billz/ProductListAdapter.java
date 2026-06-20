@@ -55,7 +55,7 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
         
         int qty = 0;
         for (CartItem ci : CartManager.getInstance().getCartItems()) {
-            if (ci.getItem().getId() == item.getId()) {
+            if (ci.getItem().getId() != null && ci.getItem().getId().equals(item.getId())) {
                 qty += ci.getQuantity();
             }
         }

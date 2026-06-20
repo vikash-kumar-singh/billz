@@ -31,7 +31,7 @@ public class ReceiptPreviewActivity extends AppCompatActivity {
     private ImageView imgBusinessLogo;
     private TableLayout tableItems;
     private AppDatabase db;
-    private int receiptId;
+    private String receiptId;
     private SimpleDateFormat dateTimeFormat = new SimpleDateFormat("dd MMM yyyy - h:mm a", Locale.getDefault());
 
     @Override
@@ -42,7 +42,7 @@ public class ReceiptPreviewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_receipt_preview);
 
         db = AppDatabase.getInstance(this);
-        receiptId = getIntent().getIntExtra("receipt_id", -1);
+        receiptId = getIntent().getStringExtra("receipt_id");
 
         MaterialToolbar toolbar = findViewById(R.id.toolbarPreview);
         androidx.core.view.ViewCompat.setOnApplyWindowInsetsListener(toolbar, (v, insets) -> {

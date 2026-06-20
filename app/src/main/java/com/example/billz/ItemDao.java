@@ -2,6 +2,7 @@ package com.example.billz;
 
 import androidx.room.Dao;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
@@ -12,14 +13,17 @@ public interface ItemDao {
     @Query("SELECT * FROM items WHERE businessId = :businessId")
     List<Item> getAllItems(int businessId);
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     long insert(Item item);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertAll(List<Item> items);
 
     @Update
     void update(Item item);
 
     @Query("SELECT * FROM items WHERE id = :id")
-    Item getById(int id);
+    Item getById(String id);
 
     @Query("SELECT COUNT(*) FROM items WHERE category = :categoryName AND businessId = :businessId")
     int getItemCountByCategory(String categoryName, int businessId);
@@ -37,5 +41,8 @@ public interface ItemDao {
     Item getByName(String name, int businessId);
 
     @Query("DELETE FROM items WHERE id = :id")
-    void deleteById(int id);
+    void deleteById(String id);
+
+    @Query("DELETE FROM items WHERE businessId = :businessId")
+    void deleteItemsByBusiness(int businessId);
 }

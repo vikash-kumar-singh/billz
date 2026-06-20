@@ -5,8 +5,9 @@ import androidx.room.PrimaryKey;
 
 @Entity(tableName = "customers")
 public class Customer {
-    @PrimaryKey(autoGenerate = true)
-    private int id;
+    @PrimaryKey
+    @androidx.annotation.NonNull
+    private String id; // Use Firestore Document ID as Primary Key
     private int businessId;
     private String mobile;
     private String name;
@@ -36,8 +37,8 @@ public class Customer {
         this.notes = notes;
     }
 
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
     public int getBusinessId() { return businessId; }
     public void setBusinessId(int businessId) { this.businessId = businessId; }
     public String getMobile() { return mobile; }

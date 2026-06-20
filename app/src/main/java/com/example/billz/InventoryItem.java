@@ -12,7 +12,7 @@ public class InventoryItem {
     private String imageUri;
     private int backgroundColor = -1;
     private int type = 0; // 0: Item, 1: Category, 2: Modifier, 3: Ingredient
-    private int databaseId = -1;
+    private String databaseId;
 
     public InventoryItem(String name, String price, String stockStatus, boolean isOutOfStock, int stockQuantity, List<String> tags) {
         this.name = name;
@@ -76,11 +76,11 @@ public class InventoryItem {
         this.type = type;
     }
 
-    public int getDatabaseId() {
+    public String getDatabaseId() {
         return databaseId;
     }
 
-    public void setDatabaseId(int databaseId) {
+    public void setDatabaseId(String databaseId) {
         this.databaseId = databaseId;
     }
 }

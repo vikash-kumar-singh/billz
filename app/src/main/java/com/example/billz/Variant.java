@@ -1,13 +1,15 @@
 package com.example.billz;
 
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "variants")
 public class Variant {
-    @PrimaryKey(autoGenerate = true)
-    private int id;
-    private int itemId; // Foreign key-like reference to Item.id
+    @PrimaryKey
+    @androidx.annotation.NonNull
+    private String id = ""; // Use Firestore Document ID
+    private String itemId; // Foreign key-like reference to Item.id (String now)
     private String name;
     private double sellingPrice;
     private double costPrice;
@@ -15,7 +17,11 @@ public class Variant {
     private int sortOrder;
     private String imageUri;
 
-    public Variant(int itemId, String name, double sellingPrice, double costPrice, int stockQuantity) {
+    public Variant() {
+    }
+
+    @Ignore
+    public Variant(String itemId, String name, double sellingPrice, double costPrice, int stockQuantity) {
         this.itemId = itemId;
         this.name = name;
         this.sellingPrice = sellingPrice;
@@ -23,10 +29,10 @@ public class Variant {
         this.stockQuantity = stockQuantity;
     }
 
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
-    public int getItemId() { return itemId; }
-    public void setItemId(int itemId) { this.itemId = itemId; }
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
+    public String getItemId() { return itemId; }
+    public void setItemId(String itemId) { this.itemId = itemId; }
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
     public double getSellingPrice() { return sellingPrice; }

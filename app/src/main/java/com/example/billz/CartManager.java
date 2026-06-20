@@ -35,9 +35,9 @@ public class CartManager {
         }
 
         for (CartItem ci : cartItems) {
-            boolean sameItem = ci.getItem().getId() == item.getId();
+            boolean sameItem = ci.getItem().getId() != null && ci.getItem().getId().equals(item.getId());
             boolean sameVariant = (variant == null && ci.getVariant() == null) || 
-                                 (variant != null && ci.getVariant() != null && variant.getId() == ci.getVariant().getId());
+                                 (variant != null && ci.getVariant() != null && variant.getId().equals(ci.getVariant().getId()));
             
             if (sameItem && sameVariant) {
                 if (ci.getQuantity() + 1 <= maxStock) {
@@ -58,16 +58,16 @@ public class CartManager {
         return false;
     }
 
-    public void updateQuantity(int itemId, int quantity) {
-        updateQuantity(itemId, -1, quantity);
+    public void updateQuantity(String itemId, int quantity) {
+        updateQuantity(itemId, null, quantity);
     }
 
-    public boolean updateQuantity(int itemId, int variantId, int quantity) {
+    public boolean updateQuantity(String itemId, String variantId, int quantity) {
         for (int i = 0; i < cartItems.size(); i++) {
             CartItem ci = cartItems.get(i);
-            boolean sameItem = ci.getItem().getId() == itemId;
-            boolean sameVariant = (variantId == -1 && ci.getVariant() == null) || 
-                                 (ci.getVariant() != null && ci.getVariant().getId() == variantId);
+            boolean sameItem = ci.getItem().getId() != null && ci.getItem().getId().equals(itemId);
+            boolean sameVariant = (variantId == null && ci.getVariant() == null) || 
+                                 (ci.getVariant() != null && ci.getVariant().getId().equals(variantId));
 
             if (sameItem && sameVariant) {
                 if (quantity <= 0) {
@@ -93,7 +93,7 @@ public class CartManager {
     }
 
     public boolean setVariantQuantity(Item item, Variant variant, int quantity) {
-        int variantId = (variant != null) ? variant.getId() : -1;
+        String variantId = (variant != null) ? variant.getId() : null;
         int maxStock = (variant != null) ? variant.getStockQuantity() : item.getStockQuantity();
         
         boolean capped = false;
@@ -107,7 +107,7 @@ public class CartManager {
         if (item.isAdvanceMode()) {
             for (int i = 0; i < cartItems.size(); i++) {
                 CartItem ci = cartItems.get(i);
-                if (ci.getItem().getId() == item.getId() && ci.getVariant() == null) {
+                if (ci.getItem().getId() != null && ci.getItem().getId().equals(item.getId()) && ci.getVariant() == null) {
                     cartItems.remove(i);
                     i--;
                 }
@@ -117,9 +117,9 @@ public class CartManager {
         boolean found = false;
         for (int i = 0; i < cartItems.size(); i++) {
             CartItem ci = cartItems.get(i);
-            boolean sameItem = ci.getItem().getId() == item.getId();
-            boolean sameVariant = (variantId == -1 && ci.getVariant() == null) || 
-                                 (ci.getVariant() != null && ci.getVariant().getId() == variantId);
+            boolean sameItem = ci.getItem().getId() != null && ci.getItem().getId().equals(item.getId());
+            boolean sameVariant = (variantId == null && ci.getVariant() == null) || 
+                                 (ci.getVariant() != null && ci.getVariant().getId().equals(variantId));
 
             if (sameItem && sameVariant) {
                 if (finalQuantity <= 0) {

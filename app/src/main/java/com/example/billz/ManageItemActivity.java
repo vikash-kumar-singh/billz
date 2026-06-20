@@ -34,7 +34,7 @@ public class ManageItemActivity extends AppCompatActivity {
     private View layoutCategorySelector, layoutSimpleMode, layoutAdvanceMode, layoutSellBySelector;
     private LinearLayout containerVariants;
     private View topBarManage;
-    private int itemId;
+    private String itemId;
     private AppDatabase db;
     private Item currentItem;
     private boolean isSimpleMode = true;
@@ -67,7 +67,7 @@ public class ManageItemActivity extends AppCompatActivity {
         });
 
         db = AppDatabase.getInstance(this);
-        itemId = getIntent().getIntExtra("item_id", -1);
+        itemId = getIntent().getStringExtra("item_id");
 
         editItemName = findViewById(R.id.editItemName);
         editSellingPriceSimple = findViewById(R.id.editSellingPriceSimple);
@@ -379,7 +379,7 @@ public class ManageItemActivity extends AppCompatActivity {
                 String vImageUri = (String) v.getTag(R.id.imgVariant);
                 if (vImageUri != null) variant.setImageUri(vImageUri);
 
-                if (v.getTag() != null && v.getTag() instanceof Integer) variant.setId((Integer) v.getTag());
+                if (v.getTag() != null && v.getTag() instanceof String) variant.setId((String) v.getTag());
                 variantsToSave.add(variant);
                 totalStock += stock;
             }
@@ -401,6 +401,9 @@ public class ManageItemActivity extends AppCompatActivity {
             for (Variant v : variantsToSave) {
                 db.variantDao().insert(v);
             }
+
+            // Sync to Cloud
+            new ItemCloudRepository(this).saveItem(currentItem, variantsToSave);
 
             runOnUiThread(() -> {
                 Toast.makeText(this, "Item updated successfully", Toast.LENGTH_SHORT).show();
@@ -491,6 +494,9 @@ public class ManageItemActivity extends AppCompatActivity {
 
     private void deleteItem() {
         Executors.newSingleThreadExecutor().execute(() -> {
+            if (currentItem != null) {
+                new ItemCloudRepository(this).deleteItem(currentItem);
+            }
             db.itemDao().deleteById(itemId);
             db.variantDao().deleteVariantsForItem(itemId);
             runOnUiThread(() -> {

@@ -436,6 +436,13 @@ public class ReportsActivity extends AppCompatActivity {
     }
 
     private void syncCloudData() {
+        new ItemCloudRepository(this).syncProductsFromCloud(() -> {
+            runOnUiThread(() -> {
+                updateInventoryCount();
+                if (currentTab == TAB_ITEMS) refreshItemsView();
+            });
+        });
+
         new CustomerSyncManager(this).syncCustomersFromCloud(new CustomerSyncManager.SyncCallback() {
             @Override
             public void onSyncComplete() {
@@ -483,6 +490,16 @@ public class ReportsActivity extends AppCompatActivity {
     }
 
     private void logoutUser() {
+        // Clear Local Business Data before logout to prevent leakage on next login
+        Executors.newSingleThreadExecutor().execute(() -> {
+            AppDatabase db = AppDatabase.getInstance(this);
+            List<Business> businesses = db.businessDao().getAllBusinesses();
+            for (Business b : businesses) {
+                db.variantDao().deleteVariantsByBusiness(b.getId());
+                db.itemDao().deleteItemsByBusiness(b.getId());
+            }
+        });
+
         FirebaseAuth.getInstance().signOut();
         
         // Google Sign Out
@@ -725,7 +742,7 @@ public class ReportsActivity extends AppCompatActivity {
                     Toast.makeText(this, "Only " + maxStock + " units available in stock", Toast.LENGTH_SHORT).show();
                     q = maxStock;
                 }
-                int vId = (cartItem.getVariant() != null) ? cartItem.getVariant().getId() : -1;
+                String vId = (cartItem.getVariant() != null) ? cartItem.getVariant().getId() : null;
                 CartManager.getInstance().updateQuantity(cartItem.getItem().getId(), vId, q);
                 dialog.dismiss();
             } catch (Exception e) {
@@ -1495,13 +1512,15 @@ public class ReportsActivity extends AppCompatActivity {
                             String rNo = (settings.getReceiptIdPrefix() != null ? settings.getReceiptIdPrefix() : "NC") + "-" + billNo;
                             Receipt receipt = new Receipt(rNo, custName, mode.getName(), totalToSave, itemsToSave, System.currentTimeMillis(), bId);
                             long insertedId = db.receiptDao().insert(receipt);
+                            receipt.setId(String.valueOf(insertedId));
+                            db.receiptDao().update(receipt);
 
                             // Save individual items and reduce stock
                             List<CartItem> cartItems = CartManager.getInstance().getCartItems();
                             List<ReceiptItem> receiptItems = new ArrayList<>();
                             for (CartItem ci : cartItems) {
                                 String vName = ci.getVariant() != null ? ci.getVariant().getName() : "";
-                                receiptItems.add(new ReceiptItem((int)insertedId, ci.getItem().getName(), vName, 
+                                receiptItems.add(new ReceiptItem(String.valueOf(insertedId), ci.getItem().getName(), vName,
                                         ci.getVariant() != null ? ci.getVariant().getSellingPrice() : ci.getItem().getSellingPrice(), 
                                         ci.getQuantity()));
 
@@ -1529,7 +1548,7 @@ public class ReportsActivity extends AppCompatActivity {
                                 
                                 // Open Details
                                 Intent intent = new Intent(ReportsActivity.this, ReceiptDetailsActivity.class);
-                                intent.putExtra("receipt_id", (int) insertedId);
+                                intent.putExtra("receipt_id", String.valueOf(insertedId));
                                 startActivity(intent);
                             });
                         });

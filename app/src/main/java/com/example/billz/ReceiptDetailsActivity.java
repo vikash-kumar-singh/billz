@@ -12,7 +12,7 @@ public class ReceiptDetailsActivity extends AppCompatActivity {
 
     private TextView textTotalAmount, textReceiptId, textItemCount;
     private AppDatabase db;
-    private int receiptId;
+    private String receiptId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +28,7 @@ public class ReceiptDetailsActivity extends AppCompatActivity {
         });
 
         db = AppDatabase.getInstance(this);
-        receiptId = getIntent().getIntExtra("receipt_id", -1);
+        receiptId = getIntent().getStringExtra("receipt_id");
 
         textTotalAmount = findViewById(R.id.textTotalAmount);
         textReceiptId = findViewById(R.id.textReceiptId);

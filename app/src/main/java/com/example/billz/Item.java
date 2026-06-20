@@ -5,9 +5,11 @@ import androidx.room.PrimaryKey;
 
 @Entity(tableName = "items")
 public class Item {
-    @PrimaryKey(autoGenerate = true)
-    private int id;
+    @PrimaryKey
+    @androidx.annotation.NonNull
+    private String id; // Use Firestore Document ID as Primary Key
     private int businessId;
+    private String firestoreId; // Keep for legacy, but id is now the source of truth
     private String name;
     private String category;
     private double sellingPrice;
@@ -28,10 +30,12 @@ public class Item {
         this.isAdvanceMode = isAdvanceMode;
     }
 
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
     public int getBusinessId() { return businessId; }
     public void setBusinessId(int businessId) { this.businessId = businessId; }
+    public String getFirestoreId() { return firestoreId; }
+    public void setFirestoreId(String firestoreId) { this.firestoreId = firestoreId; }
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
     public String getCategory() { return category; }
