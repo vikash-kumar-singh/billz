@@ -11,12 +11,12 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <!-- Blue Header -->
+        <!-- Teal Header -->
         <LinearLayout
             android:id="@+id/headerNetworkSetup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#3F51B5"
+            android:background="@color/colorPrimary"
             android:orientation="vertical"
             android:padding="24dp">
 
@@ -87,7 +87,7 @@
         android:layout_height="56dp"
         android:layout_alignParentBottom="true"
         android:layout_margin="16dp"
-        android:backgroundTint="#66BB6A"
+        android:backgroundTint="@color/success"
         android:text="DONE"
         android:textColor="@color/white"
         android:textSize="16sp"

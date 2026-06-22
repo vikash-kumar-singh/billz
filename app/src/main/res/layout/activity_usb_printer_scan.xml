@@ -7,12 +7,12 @@
     android:background="#E2E8F0"
     android:orientation="vertical">
 
-    <!-- Blue Header -->
+    <!-- Teal Header -->
     <LinearLayout
         android:id="@+id/headerUsbScan"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#3F51B5"
+        android:background="@color/colorPrimary"
         android:orientation="vertical"
         android:padding="24dp">
 

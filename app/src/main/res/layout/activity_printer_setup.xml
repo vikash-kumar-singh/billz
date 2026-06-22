@@ -13,13 +13,14 @@
         android:layout_height="wrap_content"
         android:minHeight="?attr/actionBarSize"
         android:background="@color/white"
-        app:navigationIcon="@drawable/ic_reports_back">
+        app:navigationIcon="@drawable/ic_chevron_left"
+        app:navigationIconTint="@color/colorPrimary">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="PRINTER"
-            android:textColor="#3F51B5"
+            android:textColor="@color/colorPrimary"
             android:textSize="20sp"
             android:textStyle="bold" />
     </androidx.appcompat.widget.Toolbar>
@@ -48,7 +49,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
-                app:cardBackgroundColor="#3F51B5"
+                app:cardBackgroundColor="@color/colorPrimary"
                 app:cardCornerRadius="4dp"
                 app:strokeWidth="0dp">
 
@@ -93,7 +94,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:layout_margin="24dp"
-        android:backgroundTint="#4CAF50"
+        android:backgroundTint="@color/success"
         android:paddingHorizontal="24dp"
         android:text="+ ADD NEW PRINTER"
         android:textColor="@color/white"

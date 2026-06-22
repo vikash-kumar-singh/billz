@@ -14,9 +14,10 @@
         android:minHeight="?attr/actionBarSize"
         android:background="@color/white"
         app:layout_constraintTop_toTopOf="parent"
-        app:navigationIcon="@drawable/ic_reports_back"
+        app:navigationIcon="@drawable/ic_chevron_left"
+        app:navigationIconTint="@color/colorPrimary"
         app:title="@string/business_settings_title"
-        app:titleTextColor="#2563EB">
+        app:titleTextColor="@color/colorPrimary">
 
         <ImageView
             android:layout_width="24dp"
@@ -24,7 +25,7 @@
             android:layout_gravity="end"
             android:layout_marginEnd="16dp"
             android:src="@android:drawable/ic_menu_help"
-            app:tint="#2563EB" />
+            app:tint="@color/colorPrimary" />
     </com.google.android.material.appbar.MaterialToolbar>
 
     <View

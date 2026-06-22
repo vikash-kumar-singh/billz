@@ -27,7 +27,7 @@
             android:layout_alignParentEnd="true"
             android:contentDescription="@string/reports_back"
             android:src="@android:drawable/ic_menu_close_clear_cancel"
-            app:tint="#3F51B5" />
+            app:tint="@color/colorPrimary" />
     </RelativeLayout>
 
     <FrameLayout
@@ -178,7 +178,7 @@
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:layout_marginTop="16dp"
-        android:backgroundTint="#3F51B5"
+        android:backgroundTint="@color/colorPrimary"
         android:text="@string/copy_device_details"
         android:textAllCaps="false"
         android:textColor="#FFFFFF" />

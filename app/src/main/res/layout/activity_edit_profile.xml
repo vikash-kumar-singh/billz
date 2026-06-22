@@ -14,7 +14,7 @@
         android:layout_marginTop="24dp"
         android:gravity="center"
         android:text="YOUR PROFILE"
-        android:textColor="#3F51B5"
+        android:textColor="@color/colorPrimary"
         android:textSize="18sp"
         android:textStyle="bold" />
 
@@ -46,7 +46,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
-                android:background="#3F51B5" />
+                android:background="@color/colorPrimary" />
 
             <EditText
                 android:id="@+id/editEmail"
@@ -131,7 +131,7 @@
         android:layout_height="54dp"
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="8dp"
-        android:backgroundTint="#5CB85C"
+        android:backgroundTint="@color/success"
         android:text="UPDATE"
         android:textColor="@color/white"
         android:textStyle="bold"
