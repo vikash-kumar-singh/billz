@@ -73,13 +73,21 @@ public class AddCustomerActivity extends AppCompatActivity {
         }
 
         Customer customer = new Customer(mobile, name, email, gender, dob, anniversary, gstin, address, notes);
+        
+        // Use Firestore-style ID generation even for local save to ensure consistency
+        String uid = FirebaseHelper.getCurrentUid();
+        if (uid != null) {
+            String customerId = com.google.firebase.firestore.FirebaseFirestore.getInstance()
+                    .collection("users").document(uid).collection("customers").document().getId();
+            customer.setId(customerId);
+        } else {
+            customer.setId(java.util.UUID.randomUUID().toString());
+        }
 
         Executors.newSingleThreadExecutor().execute(() -> {
             AppDatabase db = AppDatabase.getInstance(this);
-            Business active = db.businessDao().getSelectedBusiness();
-            if (active != null) {
-                customer.setBusinessId(active.getId());
-            }
+            int bId = BusinessHelper.getActiveBusinessId(this);
+            customer.setBusinessId(bId);
             
             db.customerDao().insert(customer);
             

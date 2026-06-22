@@ -379,7 +379,11 @@ public class ManageItemActivity extends AppCompatActivity {
                 String vImageUri = (String) v.getTag(R.id.imgVariant);
                 if (vImageUri != null) variant.setImageUri(vImageUri);
 
-                if (v.getTag() != null && v.getTag() instanceof String) variant.setId((String) v.getTag());
+                if (v.getTag() != null && v.getTag() instanceof String) {
+                    variant.setId((String) v.getTag());
+                } else {
+                    variant.setId(java.util.UUID.randomUUID().toString());
+                }
                 variantsToSave.add(variant);
                 totalStock += stock;
             }

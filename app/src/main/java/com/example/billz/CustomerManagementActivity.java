@@ -87,6 +87,19 @@ public class CustomerManagementActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         loadCustomers();
+        
+        // Also trigger a background sync to ensure data is fresh
+        new CustomerSyncManager(this).syncCustomersFromCloud(new CustomerSyncManager.SyncCallback() {
+            @Override
+            public void onSyncComplete() {
+                runOnUiThread(() -> loadCustomers());
+            }
+
+            @Override
+            public void onSyncFailed(String error) {
+                // Silently fail or log
+            }
+        });
     }
 
     private void loadCustomers() {
