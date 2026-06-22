@@ -12,6 +12,7 @@ import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -110,7 +111,7 @@ public class StaffManagementActivity extends AppCompatActivity {
     private void updateChipUI(TextView selected) {
         int unselectedBg = Color.parseColor("#E2E8F0");
         int unselectedText = Color.parseColor("#64748B");
-        int selectedBg = Color.parseColor("#3F51B5");
+        int selectedBg = ContextCompat.getColor(this, R.color.colorPrimary);
         int selectedText = Color.WHITE;
 
         chipAll.setBackgroundTintList(android.content.res.ColorStateList.valueOf(unselectedBg));

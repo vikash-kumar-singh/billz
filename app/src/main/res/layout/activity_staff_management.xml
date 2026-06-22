@@ -18,9 +18,9 @@
             android:id="@+id/toolbarStaff"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:navigationIcon="@drawable/ic_reports_back"
+            app:navigationIcon="@drawable/ic_chevron_left"
             app:navigationIconTint="@color/colorPrimary"
-            app:title="Staff Management"
+            app:title="YOUR STAFF"
             app:titleTextColor="@color/textPrimary"
             app:titleTextAppearance="@style/TextAppearance.MaterialComponents.Headline6">
 
@@ -38,8 +38,8 @@
                     style="@style/Widget.MaterialComponents.Button.TextButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Sync"
-                    android:textColor="@color/success"
+                    android:text="SYNC"
+                    android:textColor="@color/colorPrimary"
                     android:textStyle="bold" />
 
                 <ImageView

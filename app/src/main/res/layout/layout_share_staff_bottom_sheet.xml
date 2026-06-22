@@ -29,12 +29,12 @@
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:layout_marginTop="24dp"
-        android:backgroundTint="#3F51B5"
+        android:backgroundTint="@color/colorPrimary"
         android:text="Share"
         android:textAllCaps="false"
         android:textColor="@color/white"
         android:textSize="16sp"
         android:textStyle="bold"
-        app:cornerRadius="4dp" />
+        app:cornerRadius="8dp" />
 
 </LinearLayout>

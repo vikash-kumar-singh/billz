@@ -17,6 +17,7 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -309,9 +310,9 @@ public class AddStaffActivity extends AppCompatActivity {
             layoutShiftHours.setVisibility(type.equals("Hourly") ? View.GONE : View.VISIBLE);
         }
 
-        tabMonthly.setBackgroundColor(type.equals("Monthly") ? 0xFFE8F0FE : Color.WHITE);
-        tabDayWise.setBackgroundColor(type.equals("Day Wise") ? 0xFFE8F0FE : Color.WHITE);
-        tabHourly.setBackgroundColor(type.equals("Hourly") ? 0xFFE8F0FE : Color.WHITE);
+        tabMonthly.setBackgroundColor(type.equals("Monthly") ? ContextCompat.getColor(this, R.color.reports_chip_background) : Color.WHITE);
+        tabDayWise.setBackgroundColor(type.equals("Day Wise") ? ContextCompat.getColor(this, R.color.reports_chip_background) : Color.WHITE);
+        tabHourly.setBackgroundColor(type.equals("Hourly") ? ContextCompat.getColor(this, R.color.reports_chip_background) : Color.WHITE);
         float density = getResources().getDisplayMetrics().density;
         cardMonthly.setCardElevation((type.equals("Monthly") ? 4 : 1) * density);
         cardDayWise.setCardElevation((type.equals("Day Wise") ? 4 : 1) * density);
@@ -319,14 +320,20 @@ public class AddStaffActivity extends AppCompatActivity {
         imageCheckMonthly.setVisibility(type.equals("Monthly") ? View.VISIBLE : View.GONE);
         imageCheckDayWise.setVisibility(type.equals("Day Wise") ? View.VISIBLE : View.GONE);
         imageCheckHourly.setVisibility(type.equals("Hourly") ? View.VISIBLE : View.GONE);
+        
+        int checkColor = ContextCompat.getColor(this, R.color.colorPrimary);
+        imageCheckMonthly.setColorFilter(checkColor);
+        imageCheckDayWise.setColorFilter(checkColor);
+        imageCheckHourly.setColorFilter(checkColor);
     }
 
     private void selectRole(String role) {
         selectedRole = role;
-        tabRolePartner.setBackgroundColor(role.equals("Partner") ? 0xFFE8F0FE : Color.WHITE);
-        tabRoleManager.setBackgroundColor(role.equals("Manager") ? 0xFFE8F0FE : Color.WHITE);
-        tabRoleHelper.setBackgroundColor(role.equals("Helper") ? 0xFFE8F0FE : Color.WHITE);
-        tabRoleCustom.setBackgroundColor(role.equals("Custom") ? 0xFFE8F0FE : Color.WHITE);
+        int activeBg = ContextCompat.getColor(this, R.color.reports_chip_background);
+        tabRolePartner.setBackgroundColor(role.equals("Partner") ? activeBg : Color.WHITE);
+        tabRoleManager.setBackgroundColor(role.equals("Manager") ? activeBg : Color.WHITE);
+        tabRoleHelper.setBackgroundColor(role.equals("Helper") ? activeBg : Color.WHITE);
+        tabRoleCustom.setBackgroundColor(role.equals("Custom") ? activeBg : Color.WHITE);
         float density = getResources().getDisplayMetrics().density;
         cardRolePartner.setCardElevation((role.equals("Partner") ? 4 : 1) * density);
         cardRoleManager.setCardElevation((role.equals("Manager") ? 4 : 1) * density);
@@ -592,7 +599,7 @@ public class AddStaffActivity extends AppCompatActivity {
         if (cb == null) return;
         cb.setChecked(checked);
         cb.setEnabled(isToggleable);
-        int color = isToggleable ? Color.parseColor("#3F51B5") : Color.parseColor("#94A3B8");
+        int color = isToggleable ? ContextCompat.getColor(this, R.color.colorPrimary) : Color.parseColor("#94A3B8");
         cb.setButtonTintList(android.content.res.ColorStateList.valueOf(color));
     }
 

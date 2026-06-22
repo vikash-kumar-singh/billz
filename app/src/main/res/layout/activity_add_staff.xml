@@ -20,12 +20,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="64dp"
-            android:background="#3F51B5"
-            app:navigationIcon="@android:drawable/ic_menu_close_clear_cancel"
-            app:navigationIconTint="@color/white"
-            app:title="NEW STAFF"
+            android:background="@color/white"
+            app:navigationIcon="@drawable/ic_chevron_left"
+            app:navigationIconTint="@color/colorPrimary"
+            app:title="STAFF DETAILS"
             app:titleCentered="false"
-            app:titleTextColor="@color/white"
+            app:titleTextColor="@color/textPrimary"
             app:titleTextAppearance="@style/TextAppearance.MaterialComponents.Headline6">
 
             <com.google.android.material.button.MaterialButton
@@ -37,13 +37,13 @@
                 android:layout_marginEnd="8dp"
                 android:text="Save"
                 android:textAllCaps="false"
-                android:textColor="@color/white"
+                android:textColor="@color/colorPrimary"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:icon="@drawable/ic_circle_check"
                 app:iconGravity="end"
                 app:iconPadding="4dp"
-                app:iconTint="@color/white" />
+                app:iconTint="@color/colorPrimary" />
 
         </com.google.android.material.appbar.MaterialToolbar>
     </LinearLayout>
@@ -191,7 +191,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="12dp"
-                android:background="#3F51B5"
+                android:background="@color/colorPrimary"
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:padding="8dp">
@@ -238,7 +238,7 @@
                             android:id="@+id/checkTrackAttendance"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            app:buttonTint="#3F51B5" app:useMaterialThemeColors="false"
+                            app:buttonTint="@color/colorPrimary" app:useMaterialThemeColors="false"
                             android:checked="true" />
 
                         <TextView
@@ -264,7 +264,7 @@
                             android:id="@+id/checkAllowAppUse"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            app:buttonTint="#3F51B5" app:useMaterialThemeColors="false"
+                            app:buttonTint="@color/colorPrimary" app:useMaterialThemeColors="false"
                             android:checked="true" />
 
                         <TextView
@@ -302,7 +302,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="Attendance and Salary Management"
-                    android:textColor="#3F51B5"
+                    android:textColor="@color/colorPrimary"
                     android:textSize="15sp"
                     android:textStyle="bold" />
 
@@ -310,7 +310,7 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:src="@android:drawable/ic_menu_help"
-                    app:tint="#3F51B5" />
+                    app:tint="@color/colorPrimary" />
             </LinearLayout>
 
             <!-- Calculation Options -->
@@ -332,12 +332,12 @@
                         android:id="@+id/tabMonthly"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="#E8F0FE"
+                        android:background="@color/reports_chip_background"
                         android:orientation="vertical"
                         android:padding="8dp">
                         <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="calculate_as" android:textColor="#64748B" android:textSize="11sp" />
-                            <ImageView android:id="@+id/imageCheckMonthly" android:layout_width="16dp" android:layout_height="16dp" android:layout_alignParentEnd="true" android:src="@drawable/ic_circle_check" app:tint="#2563EB" />
+                            <ImageView android:id="@+id/imageCheckMonthly" android:layout_width="16dp" android:layout_height="16dp" android:layout_alignParentEnd="true" android:src="@drawable/ic_circle_check" app:tint="@color/colorPrimary" />
                         </RelativeLayout>
                         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Monthly" android:textColor="@color/black" android:textSize="14sp" android:textStyle="bold" />
                     </LinearLayout>
@@ -360,7 +360,7 @@
                         android:padding="8dp">
                         <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="calculate_as" android:textColor="#64748B" android:textSize="11sp" />
-                            <ImageView android:id="@+id/imageCheckDayWise" android:layout_width="16dp" android:layout_height="16dp" android:layout_alignParentEnd="true" android:src="@drawable/ic_circle_check" android:visibility="gone" app:tint="#2563EB" />
+                            <ImageView android:id="@+id/imageCheckDayWise" android:layout_width="16dp" android:layout_height="16dp" android:layout_alignParentEnd="true" android:src="@drawable/ic_circle_check" android:visibility="gone" app:tint="@color/colorPrimary" />
                         </RelativeLayout>
                         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Day Wise" android:textColor="@color/black" android:textSize="14sp" android:textStyle="bold" />
                     </LinearLayout>
@@ -383,7 +383,7 @@
                         android:padding="8dp">
                         <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="calculate_as" android:textColor="#64748B" android:textSize="11sp" />
-                            <ImageView android:id="@+id/imageCheckHourly" android:layout_width="16dp" android:layout_height="16dp" android:layout_alignParentEnd="true" android:src="@drawable/ic_circle_check" android:visibility="gone" app:tint="#2563EB" />
+                            <ImageView android:id="@+id/imageCheckHourly" android:layout_width="16dp" android:layout_height="16dp" android:layout_alignParentEnd="true" android:src="@drawable/ic_circle_check" android:visibility="gone" app:tint="@color/colorPrimary" />
                         </RelativeLayout>
                         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Hourly" android:textColor="@color/black" android:textSize="14sp" android:textStyle="bold" />
                     </LinearLayout>
@@ -470,7 +470,7 @@
                             android:text="@string/allow_self_attendance"
                             android:textColor="@color/black"
                             android:textSize="13sp"
-                            app:buttonTint="#3F51B5"
+                            app:buttonTint="@color/colorPrimary"
                             app:useMaterialThemeColors="false" />
 
                         <RadioGroup
@@ -489,7 +489,7 @@
                                 android:text="Single"
                                 android:textColor="@color/black"
                                 android:textSize="13sp"
-                                app:buttonTint="#3F51B5" />
+                                app:buttonTint="@color/colorPrimary" />
 
                             <RadioButton
                                 android:id="@+id/radioPunch"
@@ -500,7 +500,7 @@
                                 android:text="Punch In/Out"
                                 android:textColor="@color/black"
                                 android:textSize="13sp"
-                                app:buttonTint="#3F51B5" />
+                                app:buttonTint="@color/colorPrimary" />
                         </RadioGroup>
                     </LinearLayout>
                 </LinearLayout>
@@ -574,7 +574,7 @@
                         android:id="@+id/tabRoleHelper"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="#E8F0FE"
+                        android:background="@color/reports_chip_background"
                         android:gravity="center"
                         android:orientation="vertical"
                         android:padding="12dp">
@@ -629,25 +629,25 @@
                     <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center" android:text="Receipt Management" android:textColor="#64748B" android:textSize="15sp" android:textStyle="bold" />
                     <GridLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:columnCount="3">
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical">
-                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permCreateReceipt" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="#3F51B5" app:useMaterialThemeColors="false" android:checked="true" />
+                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permCreateReceipt" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="@color/colorPrimary" app:useMaterialThemeColors="false" android:checked="true" />
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="Create Receipt" android:textColor="#9E9E9E" android:textSize="11sp" />
                         </LinearLayout>
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical">
-                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permViewAllReceipt" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="#3F51B5" app:useMaterialThemeColors="false" android:checked="true" />
+                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permViewAllReceipt" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="@color/colorPrimary" app:useMaterialThemeColors="false" android:checked="true" />
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="View All Receipt" android:textColor="#9E9E9E" android:textSize="11sp" />
                         </LinearLayout>
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical">
-                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permEditReceipt" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="#3F51B5" app:useMaterialThemeColors="false" />
+                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permEditReceipt" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="@color/colorPrimary" app:useMaterialThemeColors="false" />
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="Edit Receipt" android:textColor="#9E9E9E" android:textSize="11sp" />
                         </LinearLayout>
                     </GridLayout>
                     <GridLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:columnCount="2" android:paddingHorizontal="40dp">
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical">
-                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permReturnReceipt" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="#3F51B5" app:useMaterialThemeColors="false" />
+                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permReturnReceipt" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="@color/colorPrimary" app:useMaterialThemeColors="false" />
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="Return Receipt" android:textColor="#9E9E9E" android:textSize="11sp" />
                         </LinearLayout>
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical">
-                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permReceiptAdmin" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="#3F51B5" app:useMaterialThemeColors="false" />
+                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permReceiptAdmin" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="@color/colorPrimary" app:useMaterialThemeColors="false" />
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="Admin" android:textColor="#9E9E9E" android:textSize="11sp" />
                         </LinearLayout>
                     </GridLayout>
@@ -658,34 +658,34 @@
                     <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center" android:text="Sales Counter Permissions" android:textColor="#64748B" android:textSize="15sp" android:textStyle="bold" />
                     <GridLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:columnCount="3">
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical">
-                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permDiscount" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="#3F51B5" app:useMaterialThemeColors="false" android:checked="true" />
+                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permDiscount" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="@color/colorPrimary" app:useMaterialThemeColors="false" android:checked="true" />
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="Discount" android:textColor="#9E9E9E" android:textSize="11sp" />
                         </LinearLayout>
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical">
-                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permGift" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="#3F51B5" app:useMaterialThemeColors="false" />
+                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permGift" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="@color/colorPrimary" app:useMaterialThemeColors="false" />
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="Gift" android:textColor="#9E9E9E" android:textSize="11sp" />
                         </LinearLayout>
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical">
-                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permFree" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="#3F51B5" app:useMaterialThemeColors="false" />
+                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permFree" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="@color/colorPrimary" app:useMaterialThemeColors="false" />
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="Free" android:textColor="#9E9E9E" android:textSize="11sp" />
                         </LinearLayout>
                     </GridLayout>
                     <GridLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:columnCount="3">
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical">
-                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permAddCharges" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="#3F51B5" app:useMaterialThemeColors="false" android:checked="true" />
+                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permAddCharges" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="@color/colorPrimary" app:useMaterialThemeColors="false" android:checked="true" />
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="Add Chargers" android:textColor="#9E9E9E" android:textSize="11sp" />
                         </LinearLayout>
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical">
-                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permAddTax" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="#3F51B5" app:useMaterialThemeColors="false" />
+                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permAddTax" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="@color/colorPrimary" app:useMaterialThemeColors="false" />
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="Add Tax" android:textColor="#9E9E9E" android:textSize="11sp" />
                         </LinearLayout>
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical">
-                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permGiveCredit" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="#3F51B5" app:useMaterialThemeColors="false" android:checked="true" />
+                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permGiveCredit" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="@color/colorPrimary" app:useMaterialThemeColors="false" android:checked="true" />
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="Give Credit" android:textColor="#9E9E9E" android:textSize="11sp" />
                         </LinearLayout>
                     </GridLayout>
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:gravity="center" android:orientation="vertical">
-                        <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permViewRunningTables" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="#3F51B5" app:useMaterialThemeColors="false" />
+                        <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permViewRunningTables" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="@color/colorPrimary" app:useMaterialThemeColors="false" />
                         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="View All Running\nTables" android:textColor="#9E9E9E" android:textSize="11sp" />
                     </LinearLayout>
 
@@ -695,19 +695,19 @@
                     <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center" android:text="Item / Inventory Management" android:textColor="#64748B" android:textSize="15sp" android:textStyle="bold" />
                     <GridLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:columnCount="4">
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical">
-                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permInvViewOnly" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="#3F51B5" app:useMaterialThemeColors="false" />
+                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permInvViewOnly" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="@color/colorPrimary" app:useMaterialThemeColors="false" />
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="View Only" android:textColor="#9E9E9E" android:textSize="11sp" />
                         </LinearLayout>
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical">
-                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permInvCreate" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="#3F51B5" app:useMaterialThemeColors="false" />
+                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permInvCreate" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="@color/colorPrimary" app:useMaterialThemeColors="false" />
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="Create" android:textColor="#9E9E9E" android:textSize="11sp" />
                         </LinearLayout>
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical">
-                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permInvEdit" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="#3F51B5" app:useMaterialThemeColors="false" />
+                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permInvEdit" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="@color/colorPrimary" app:useMaterialThemeColors="false" />
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="Edit" android:textColor="#9E9E9E" android:textSize="11sp" />
                         </LinearLayout>
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical">
-                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permInvAdmin" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="#3F51B5" app:useMaterialThemeColors="false" />
+                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permInvAdmin" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="@color/colorPrimary" app:useMaterialThemeColors="false" />
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="Admin" android:textColor="#9E9E9E" android:textSize="11sp" />
                         </LinearLayout>
                     </GridLayout>
@@ -718,19 +718,19 @@
                     <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center" android:text="Staff and Attendance Management" android:textColor="#64748B" android:textSize="15sp" android:textStyle="bold" />
                     <GridLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:columnCount="4">
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical">
-                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permStaffAttendance" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="#3F51B5" app:useMaterialThemeColors="false" />
+                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permStaffAttendance" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="@color/colorPrimary" app:useMaterialThemeColors="false" />
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="Attendance\nManagement" android:textColor="#9E9E9E" android:textSize="11sp" />
                         </LinearLayout>
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical">
-                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permStaffPayroll" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="#3F51B5" app:useMaterialThemeColors="false" />
+                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permStaffPayroll" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="@color/colorPrimary" app:useMaterialThemeColors="false" />
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="Payroll Manager" android:textColor="#9E9E9E" android:textSize="11sp" />
                         </LinearLayout>
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical">
-                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permStaffManagement" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="#3F51B5" app:useMaterialThemeColors="false" />
+                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permStaffManagement" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="@color/colorPrimary" app:useMaterialThemeColors="false" />
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="Manage Staff" android:textColor="#9E9E9E" android:textSize="11sp" />
                         </LinearLayout>
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical">
-                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permStaffAdmin" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="#3F51B5" app:useMaterialThemeColors="false" />
+                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permStaffAdmin" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="@color/colorPrimary" app:useMaterialThemeColors="false" />
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="Admin" android:textColor="#9E9E9E" android:textSize="11sp" />
                         </LinearLayout>
                     </GridLayout>
@@ -741,19 +741,19 @@
                     <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center" android:text="Customer Management" android:textColor="#64748B" android:textSize="15sp" android:textStyle="bold" />
                     <GridLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:columnCount="4">
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical">
-                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permCustViewOnly" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="#3F51B5" app:useMaterialThemeColors="false" />
+                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permCustViewOnly" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="@color/colorPrimary" app:useMaterialThemeColors="false" />
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="View Only" android:textColor="#9E9E9E" android:textSize="11sp" />
                         </LinearLayout>
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical">
-                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permCustCreate" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="#3F51B5" app:useMaterialThemeColors="false" />
+                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permCustCreate" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="@color/colorPrimary" app:useMaterialThemeColors="false" />
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="Create" android:textColor="#9E9E9E" android:textSize="11sp" />
                         </LinearLayout>
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical">
-                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permCustEdit" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="#3F51B5" app:useMaterialThemeColors="false" />
+                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permCustEdit" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="@color/colorPrimary" app:useMaterialThemeColors="false" />
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="Edit" android:textColor="#9E9E9E" android:textSize="11sp" />
                         </LinearLayout>
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical">
-                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permCustAdmin" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="#3F51B5" app:useMaterialThemeColors="false" />
+                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permCustAdmin" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="@color/colorPrimary" app:useMaterialThemeColors="false" />
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="Admin" android:textColor="#9E9E9E" android:textSize="11sp" />
                         </LinearLayout>
                     </GridLayout>
@@ -764,21 +764,21 @@
                     <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center" android:text="StoreFront Permission" android:textColor="#64748B" android:textSize="15sp" android:textStyle="bold" />
                     <GridLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:columnCount="2">
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical">
-                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permManageBanners" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="#3F51B5" app:useMaterialThemeColors="false" />
+                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permManageBanners" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="@color/colorPrimary" app:useMaterialThemeColors="false" />
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="Manage Banners" android:textColor="#9E9E9E" android:textSize="11sp" />
                         </LinearLayout>
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical">
-                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permStoreSettings" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="#3F51B5" app:useMaterialThemeColors="false" />
+                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permStoreSettings" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="@color/colorPrimary" app:useMaterialThemeColors="false" />
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="SF Settings" android:textColor="#9E9E9E" android:textSize="11sp" />
                         </LinearLayout>
                     </GridLayout>
                     <GridLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:columnCount="2">
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical">
-                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permPublishItems" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="#3F51B5" app:useMaterialThemeColors="false" />
+                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permPublishItems" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="@color/colorPrimary" app:useMaterialThemeColors="false" />
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="Publish SF Items" android:textColor="#9E9E9E" android:textSize="11sp" />
                         </LinearLayout>
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical">
-                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permManageOrders" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="#3F51B5" app:useMaterialThemeColors="false" />
+                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permManageOrders" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="@color/colorPrimary" app:useMaterialThemeColors="false" />
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="Manage SF Orders" android:textColor="#9E9E9E" android:textSize="11sp" />
                         </LinearLayout>
                     </GridLayout>
@@ -789,37 +789,37 @@
                     <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center" android:text="Reports and Analytics Management" android:textColor="#64748B" android:textSize="15sp" android:textStyle="bold" />
                     <GridLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:columnCount="4">
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical">
-                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permReportLowStocks" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="#3F51B5" app:useMaterialThemeColors="false" />
+                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permReportLowStocks" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="@color/colorPrimary" app:useMaterialThemeColors="false" />
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="Low Stocks" android:textColor="#9E9E9E" android:textSize="11sp" />
                         </LinearLayout>
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical">
-                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permReportExpiredStocks" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="#3F51B5" app:useMaterialThemeColors="false" />
+                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permReportExpiredStocks" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="@color/colorPrimary" app:useMaterialThemeColors="false" />
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="Expired Stocks" android:textColor="#9E9E9E" android:textSize="11sp" />
                         </LinearLayout>
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical">
-                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permReportProfits" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="#3F51B5" app:useMaterialThemeColors="false" />
+                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permReportProfits" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="@color/colorPrimary" app:useMaterialThemeColors="false" />
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="Profits" android:textColor="#9E9E9E" android:textSize="11sp" />
                         </LinearLayout>
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical">
-                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permReportSales" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="#3F51B5" app:useMaterialThemeColors="false" />
+                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permReportSales" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="@color/colorPrimary" app:useMaterialThemeColors="false" />
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="Sales" android:textColor="#9E9E9E" android:textSize="11sp" />
                         </LinearLayout>
                     </GridLayout>
                     <GridLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:columnCount="4">
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical">
-                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permReportPaymentModes" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="#3F51B5" app:useMaterialThemeColors="false" />
+                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permReportPaymentModes" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="@color/colorPrimary" app:useMaterialThemeColors="false" />
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="Payment\nModes" android:textColor="#9E9E9E" android:textSize="11sp" />
                         </LinearLayout>
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical">
-                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permReportSoldBy" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="#3F51B5" app:useMaterialThemeColors="false" />
+                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permReportSoldBy" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="@color/colorPrimary" app:useMaterialThemeColors="false" />
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="Sold By" android:textColor="#9E9E9E" android:textSize="11sp" />
                         </LinearLayout>
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical">
-                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permReportTopCustomers" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="#3F51B5" app:useMaterialThemeColors="false" />
+                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permReportTopCustomers" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="@color/colorPrimary" app:useMaterialThemeColors="false" />
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="Top Customers" android:textColor="#9E9E9E" android:textSize="11sp" />
                         </LinearLayout>
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical">
-                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permReportAdmin" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="#3F51B5" app:useMaterialThemeColors="false" />
+                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permReportAdmin" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="@color/colorPrimary" app:useMaterialThemeColors="false" />
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="Admin" android:textColor="#9E9E9E" android:textSize="11sp" />
                         </LinearLayout>
                     </GridLayout>
@@ -830,11 +830,11 @@
                     <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center" android:text="Expense and Income Management" android:textColor="#64748B" android:textSize="15sp" android:textStyle="bold" />
                     <GridLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:columnCount="2" android:paddingHorizontal="40dp">
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical">
-                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permAddExpense" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="#3F51B5" app:useMaterialThemeColors="false" />
+                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permAddExpense" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="@color/colorPrimary" app:useMaterialThemeColors="false" />
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="Add Expense" android:textColor="#9E9E9E" android:textSize="11sp" />
                         </LinearLayout>
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical">
-                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permModifyExpense" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="#3F51B5" app:useMaterialThemeColors="false" />
+                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permModifyExpense" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="@color/colorPrimary" app:useMaterialThemeColors="false" />
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="Modify Expense" android:textColor="#9E9E9E" android:textSize="11sp" />
                         </LinearLayout>
                     </GridLayout>
@@ -845,16 +845,16 @@
                     <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center" android:text="Business And Settings" android:textColor="#64748B" android:textSize="15sp" android:textStyle="bold" />
                     <GridLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:columnCount="2" android:paddingHorizontal="40dp">
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical">
-                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permManageBusiness" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="#3F51B5" app:useMaterialThemeColors="false" />
+                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permManageBusiness" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="@color/colorPrimary" app:useMaterialThemeColors="false" />
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="Manage Business" android:textColor="#9E9E9E" android:textSize="11sp" />
                         </LinearLayout>
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical">
-                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permManageSettings" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="#3F51B5" app:useMaterialThemeColors="false" />
+                            <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permManageSettings" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="@color/colorPrimary" app:useMaterialThemeColors="false" />
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="Manage Settings" android:textColor="#9E9E9E" android:textSize="11sp" />
                         </LinearLayout>
                     </GridLayout>
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:gravity="center" android:orientation="vertical">
-                        <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permCreateBusiness" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="#3F51B5" app:useMaterialThemeColors="false" />
+                        <com.google.android.material.checkbox.MaterialCheckBox android:id="@+id/permCreateBusiness" android:layout_width="wrap_content" android:layout_height="wrap_content" app:buttonTint="@color/colorPrimary" app:useMaterialThemeColors="false" />
                         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:text="Create Business" android:textColor="#9E9E9E" android:textSize="11sp" />
                     </LinearLayout>
 
