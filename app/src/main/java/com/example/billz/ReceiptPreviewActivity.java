@@ -127,7 +127,11 @@ public class ReceiptPreviewActivity extends AppCompatActivity {
                 Receipt receipt = db.receiptDao().getById(receiptId);
                 if (receipt != null && !receipt.isReturned()) {
                     receipt.setReturned(true);
+                    receipt.setUpdatedAt(System.currentTimeMillis());
+                    
+                    // Update locally and in cloud
                     db.receiptDao().update(receipt);
+                    new ReceiptCloudRepository(this).updateReceipt(receipt);
                     
                     int bId = BusinessHelper.getActiveBusinessId(this);
                     ItemCloudRepository itemCloudRepo = new ItemCloudRepository(this);

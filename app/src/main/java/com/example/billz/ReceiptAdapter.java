@@ -39,9 +39,9 @@ public class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ViewHold
         
         if (receipt.isReturned()) {
             holder.textReceiptDesc.setText(customer + "(RETURNED)");
-            holder.textReceiptAmount.setText("₹0");
+            holder.textReceiptAmount.setText(String.format(Locale.getDefault(), "-₹%,.0f", receipt.getTotalAmount()));
             holder.textReceiptAmount.setTextColor(0xFFEF4444); // Red
-            holder.imageReceiptIcon.setImageResource(R.drawable.ic_credit_calendar); // Calendar for returned
+            holder.imageReceiptIcon.setImageResource(R.drawable.ic_nav_reports); // Use a different icon for return if possible
         } else {
             holder.textReceiptDesc.setText(customer + "by " + receipt.getPaymentMode());
             holder.textReceiptAmount.setText(String.format(Locale.getDefault(), "₹%,.0f", receipt.getTotalAmount()));

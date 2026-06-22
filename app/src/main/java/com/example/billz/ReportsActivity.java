@@ -800,7 +800,6 @@ public class ReportsActivity extends AppCompatActivity {
         refreshProfileUI();
         updateCustomerCount();
         updateInventoryCount();
-        syncCloudData();
 
         // 2. Sync profile from Firestore (Source of Truth)
         // This ensures fresh installs or new logins populate local details

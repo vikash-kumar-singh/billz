@@ -94,6 +94,12 @@ public class ReceiptsActivity extends AppCompatActivity {
         cloudRepo.syncReceiptsFromCloud(this::loadReceipts);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadReceipts();
+    }
+
     private void updateDateLabels() {
         textDateFrom.setText(displayFormat.format(calendarFrom.getTime()));
         textDateTo.setText(displayFormat.format(calendarTo.getTime()));
