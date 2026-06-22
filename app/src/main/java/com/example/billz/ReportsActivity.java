@@ -1236,11 +1236,18 @@ public class ReportsActivity extends AppCompatActivity {
     private void loadItemGrid() {
         Executors.newSingleThreadExecutor().execute(() -> {
             int bId = getActiveBusinessId();
-            List<Item> dbItems = AppDatabase.getInstance(this).itemDao().getAllItems(bId);
+            List<Item> dbItems;
+            if (itemTileStyle == 0) {
+                // Style 0: Tap to add style - Show ONLY Categorized items
+                dbItems = AppDatabase.getInstance(this).itemDao().getCategorizedItems(bId);
+            } else {
+                // Style 1: Without Category style - Show ONLY Uncategorized items
+                dbItems = AppDatabase.getInstance(this).itemDao().getUncategorizedItems(bId);
+            }
 
             List<ItemGridAdapter.GridItem> gridItems = new ArrayList<>();
             if (itemTileStyle == 0) {
-                // Show all variants side by side
+                // Show all variants side by side for categorized items
                 for (Item item : dbItems) {
                     if (item.isAdvanceMode()) {
                         List<Variant> variants = AppDatabase.getInstance(this).variantDao().getVariantsForItem(item.getId());
@@ -1256,7 +1263,7 @@ public class ReportsActivity extends AppCompatActivity {
                     }
                 }
             } else {
-                // Standard mode (items only)
+                // Standard mode (items only) for uncategorized items
                 for (Item item : dbItems) {
                     gridItems.add(new ItemGridAdapter.GridItem(item, null));
                 }

@@ -143,8 +143,11 @@ public class ItemGridAdapter extends RecyclerView.Adapter<ItemGridAdapter.ViewHo
             holder.textVariantCenter.setVisibility(View.GONE);
             holder.textVariantBanner.setVisibility(View.VISIBLE);
             holder.indicatorDot.setVisibility(View.VISIBLE);
+            
             String bannerText = item.getCategory();
-            if (bannerText == null || bannerText.isEmpty()) bannerText = "UNCATEGORIZED";
+            if (bannerText == null || bannerText.isEmpty() || bannerText.equalsIgnoreCase("Uncategorized") || bannerText.equalsIgnoreCase("No Category")) {
+                bannerText = "UNCATEGORIZED";
+            }
             holder.textVariantBanner.setText(bannerText.toUpperCase());
         }
 
