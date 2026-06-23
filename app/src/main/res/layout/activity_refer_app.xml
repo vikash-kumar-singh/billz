@@ -18,9 +18,10 @@
             android:id="@+id/toolbarRefer"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:navigationIcon="@drawable/ic_reports_back"
+            app:navigationIcon="@drawable/ic_chevron_left"
+            app:navigationIconTint="@color/colorPrimary"
             app:title="@string/nav_refer"
-            app:titleTextColor="#1E293B" />
+            app:titleTextColor="@color/colorPrimary" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -114,7 +115,7 @@
                             android:layout_height="24dp"
                             android:layout_marginStart="12dp"
                             android:src="@drawable/ic_copy"
-                            app:tint="#3F51B5"
+                            app:tint="@color/colorPrimary"
                             android:clickable="true"
                             android:focusable="true"
                             android:background="?attr/selectableItemBackgroundBorderless"
@@ -138,7 +139,7 @@
                 app:cornerRadius="12dp"
                 app:icon="@drawable/ic_reports_share"
                 app:iconGravity="textStart"
-                android:backgroundTint="#3F51B5" />
+                android:backgroundTint="@color/colorPrimary" />
 
             <TextView
                 android:layout_width="wrap_content"

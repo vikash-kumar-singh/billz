@@ -32,7 +32,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:text="@string/bill_prefix_title"
-                android:textColor="#2563EB"
+                android:textColor="@color/colorPrimary"
                 android:textSize="18sp"
                 android:textStyle="bold" />
         </RelativeLayout>
@@ -115,7 +115,7 @@
                 android:layout_marginTop="40dp"
                 android:padding="12dp"
                 android:text="@string/generate_random"
-                android:textColor="#4CAF50"
+                android:textColor="@color/success"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -124,7 +124,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:layout_marginTop="24dp"
-                android:backgroundTint="#4CAF50"
+                android:backgroundTint="@color/success"
                 android:text="@string/save"
                 android:textAllCaps="true"
                 android:textSize="16sp"

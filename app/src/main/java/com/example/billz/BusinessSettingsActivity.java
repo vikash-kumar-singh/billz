@@ -75,6 +75,26 @@ public class BusinessSettingsActivity extends AppCompatActivity {
 
         findViewById(R.id.itemDeleteReset).setOnClickListener(v -> showDeleteResetDialog());
 
+        // Toggle switches when the row is clicked
+        findViewById(R.id.itemRoundOff).setOnClickListener(v -> {
+            androidx.appcompat.widget.SwitchCompat sw = findViewById(R.id.switchRoundOff);
+            sw.setChecked(!sw.isChecked());
+        });
+
+        findViewById(R.id.itemTableManagement).setOnClickListener(v -> {
+            androidx.appcompat.widget.SwitchCompat sw = findViewById(R.id.switchTableManagement);
+            sw.setChecked(!sw.isChecked());
+        });
+
+        findViewById(R.id.itemInventoryHealth).setOnClickListener(v -> {
+            androidx.appcompat.widget.SwitchCompat sw = findViewById(R.id.switchInventoryHealth);
+            sw.setChecked(!sw.isChecked());
+        });
+
+        findViewById(R.id.imageHelp).setOnClickListener(v -> {
+            Toast.makeText(this, "Help clicked", Toast.LENGTH_SHORT).show();
+        });
+
         View root = toolbar.getRootView();
         ViewCompat.setOnApplyWindowInsetsListener(root, (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());

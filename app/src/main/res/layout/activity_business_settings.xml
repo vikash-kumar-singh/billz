@@ -20,10 +20,15 @@
         app:titleTextColor="@color/colorPrimary">
 
         <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:id="@+id/imageHelp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_gravity="end"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="8dp"
+            android:padding="12dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@android:drawable/ic_menu_help"
             app:tint="@color/colorPrimary" />
     </com.google.android.material.appbar.MaterialToolbar>
@@ -129,8 +134,12 @@
 
             <!-- Round Off -->
             <RelativeLayout
+                android:id="@+id/itemRoundOff"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackground"
                 android:padding="16dp">
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -157,14 +166,20 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true" />
+                    android:layout_centerVertical="true"
+                    app:thumbTint="@color/colorPrimary"
+                    app:trackTint="@color/colorPrimaryLight" />
             </RelativeLayout>
             <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE" />
 
             <!-- Table Management -->
             <RelativeLayout
+                android:id="@+id/itemTableManagement"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackground"
                 android:padding="16dp">
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -191,14 +206,20 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true" />
+                    android:layout_centerVertical="true"
+                    app:thumbTint="@color/colorPrimary"
+                    app:trackTint="@color/colorPrimaryLight" />
             </RelativeLayout>
             <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE" />
 
             <!-- Inventory Health Score -->
             <RelativeLayout
+                android:id="@+id/itemInventoryHealth"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackground"
                 android:padding="16dp">
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -225,7 +246,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true" />
+                    android:layout_centerVertical="true"
+                    app:thumbTint="@color/colorPrimary"
+                    app:trackTint="@color/colorPrimaryLight" />
             </RelativeLayout>
             <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE" />
 

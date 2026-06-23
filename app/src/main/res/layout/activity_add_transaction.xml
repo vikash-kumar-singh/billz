@@ -29,8 +29,8 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:padding="16dp"
-                android:src="@drawable/ic_reports_back"
-                app:tint="#2563EB" />
+                android:src="@drawable/ic_chevron_left"
+                app:tint="@color/colorPrimary" />
 
             <View
                 android:layout_width="1dp"
@@ -43,11 +43,11 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@color/white"
-                app:tabIndicatorColor="#2563EB"
+                app:tabIndicatorColor="@color/colorPrimary"
                 app:tabIndicatorHeight="3dp"
                 app:tabIndicatorGravity="bottom"
-                app:tabSelectedTextColor="#000000"
-                app:tabTextColor="#000000"
+                app:tabSelectedTextColor="@color/colorPrimary"
+                app:tabTextColor="#64748B"
                 app:tabTextAppearance="@style/TransactionTabText"
                 app:tabRippleColor="@null"
                 app:tabMaxWidth="0dp"
@@ -79,7 +79,7 @@
                 android:focusable="true"
                 android:padding="16dp"
                 android:src="@android:drawable/ic_menu_search"
-                app:tint="#2563EB" />
+                app:tint="@color/colorPrimary" />
         </LinearLayout>
     </com.google.android.material.appbar.AppBarLayout>
 

@@ -10,6 +10,9 @@
         <item name="colorSecondaryVariant">@color/colorSecondaryDark</item>
         <item name="colorOnSecondary">@color/white</item>
 
+        <item name="colorControlActivated">@color/colorPrimary</item>
+        <item name="colorControlHighlight">@color/colorRipple</item>
+
         <item name="android:windowBackground">@color/backgroundColor</item>
 
         <!-- Status bar and activity transitions -->

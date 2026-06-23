@@ -19,9 +19,10 @@
             android:id="@+id/toolbarEditBusiness"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:navigationIcon="@drawable/ic_reports_back"
+            app:navigationIcon="@drawable/ic_chevron_left"
+            app:navigationIconTint="@color/colorPrimary"
             app:title="Edit Business"
-            app:titleTextColor="#3F51B5"
+            app:titleTextColor="@color/colorPrimary"
             app:titleTextAppearance="@style/TextAppearance.MaterialComponents.Headline6">
 
         </com.google.android.material.appbar.MaterialToolbar>
@@ -62,7 +63,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="16dp"
                         android:text="BASIC INFORMATION"
-                        android:textColor="#3F51B5"
+                        android:textColor="@color/colorPrimary"
                         android:textSize="12sp"
                         android:textStyle="bold" />
 
@@ -74,9 +75,9 @@
                         app:startIconTint="#64748B"
                         android:hint="Business Name*"
                         android:textColorHint="#94A3B8"
-                        app:hintTextColor="#3F51B5"
+                        app:hintTextColor="@color/colorPrimary"
                         app:boxBackgroundColor="#FFFFFF"
-                        app:boxStrokeColor="#3F51B5">
+                        app:boxStrokeColor="@color/colorPrimary">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/editBusinessName"
@@ -95,9 +96,9 @@
                         app:startIconTint="#64748B"
                         android:hint="Business Address"
                         android:textColorHint="#64748B"
-                        app:hintTextColor="#3F51B5"
+                        app:hintTextColor="@color/colorPrimary"
                         app:boxBackgroundColor="#FFFFFF"
-                        app:boxStrokeColor="#3F51B5">
+                        app:boxStrokeColor="@color/colorPrimary">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/editBusinessAddress"
@@ -116,9 +117,9 @@
                         app:startIconTint="#64748B"
                         android:hint="Business Category"
                         android:textColorHint="#64748B"
-                        app:hintTextColor="#3F51B5"
+                        app:hintTextColor="@color/colorPrimary"
                         app:boxBackgroundColor="#FFFFFF"
-                        app:boxStrokeColor="#3F51B5">
+                        app:boxStrokeColor="@color/colorPrimary">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/editBusinessCategory"
@@ -137,9 +138,9 @@
                         app:startIconTint="#64748B"
                         android:hint="Mobile Number"
                         android:textColorHint="#64748B"
-                        app:hintTextColor="#3F51B5"
+                        app:hintTextColor="@color/colorPrimary"
                         app:boxBackgroundColor="#FFFFFF"
-                        app:boxStrokeColor="#3F51B5">
+                        app:boxStrokeColor="@color/colorPrimary">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/editBusinessMobile"
@@ -158,9 +159,9 @@
                         app:startIconTint="#64748B"
                         android:hint="Email Address"
                         android:textColorHint="#64748B"
-                        app:hintTextColor="#3F51B5"
+                        app:hintTextColor="@color/colorPrimary"
                         app:boxBackgroundColor="#FFFFFF"
-                        app:boxStrokeColor="#3F51B5">
+                        app:boxStrokeColor="@color/colorPrimary">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/editBusinessEmail"
@@ -194,7 +195,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="16dp"
                         android:text="LOCATION &amp; TYPE"
-                        android:textColor="#3F51B5"
+                        android:textColor="@color/colorPrimary"
                         android:textSize="12sp"
                         android:textStyle="bold" />
 
@@ -206,9 +207,9 @@
                         app:startIconTint="#64748B"
                         android:hint="Country"
                         android:textColorHint="#64748B"
-                        app:hintTextColor="#3F51B5"
+                        app:hintTextColor="@color/colorPrimary"
                         app:boxBackgroundColor="#FFFFFF"
-                        app:boxStrokeColor="#3F51B5">
+                        app:boxStrokeColor="@color/colorPrimary">
 
                         <AutoCompleteTextView
                             android:id="@+id/autoCountry"
@@ -227,9 +228,9 @@
                         app:startIconTint="#64748B"
                         android:hint="Timezone"
                         android:textColorHint="#64748B"
-                        app:hintTextColor="#3F51B5"
+                        app:hintTextColor="@color/colorPrimary"
                         app:boxBackgroundColor="#FFFFFF"
-                        app:boxStrokeColor="#3F51B5">
+                        app:boxStrokeColor="@color/colorPrimary">
 
                         <AutoCompleteTextView
                             android:id="@+id/autoTimezone"
@@ -248,9 +249,9 @@
                         app:startIconTint="#64748B"
                         android:hint="Business Type"
                         android:textColorHint="#64748B"
-                        app:hintTextColor="#3F51B5"
+                        app:hintTextColor="@color/colorPrimary"
                         app:boxBackgroundColor="#FFFFFF"
-                        app:boxStrokeColor="#3F51B5">
+                        app:boxStrokeColor="@color/colorPrimary">
 
                         <AutoCompleteTextView
                             android:id="@+id/autoBusinessType"
@@ -284,7 +285,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="16dp"
                         android:text="CURRENCY &amp; FORMAT"
-                        android:textColor="#3F51B5"
+                        android:textColor="@color/colorPrimary"
                         android:textSize="12sp"
                         android:textStyle="bold" />
 
@@ -296,9 +297,9 @@
                         app:startIconTint="#64748B"
                         android:hint="Currency"
                         android:textColorHint="#64748B"
-                        app:hintTextColor="#3F51B5"
+                        app:hintTextColor="@color/colorPrimary"
                         app:boxBackgroundColor="#FFFFFF"
-                        app:boxStrokeColor="#3F51B5">
+                        app:boxStrokeColor="@color/colorPrimary">
 
                         <AutoCompleteTextView
                             android:id="@+id/autoCurrency"
@@ -317,9 +318,9 @@
                         app:startIconTint="#64748B"
                         android:hint="Number System"
                         android:textColorHint="#64748B"
-                        app:hintTextColor="#3F51B5"
+                        app:hintTextColor="@color/colorPrimary"
                         app:boxBackgroundColor="#FFFFFF"
-                        app:boxStrokeColor="#3F51B5">
+                        app:boxStrokeColor="@color/colorPrimary">
 
                         <AutoCompleteTextView
                             android:id="@+id/autoNumberSystem"
@@ -338,9 +339,9 @@
                         app:startIconTint="#64748B"
                         android:hint="Decimal Places"
                         android:textColorHint="#64748B"
-                        app:hintTextColor="#3F51B5"
+                        app:hintTextColor="@color/colorPrimary"
                         app:boxBackgroundColor="#FFFFFF"
-                        app:boxStrokeColor="#3F51B5">
+                        app:boxStrokeColor="@color/colorPrimary">
 
                         <AutoCompleteTextView
                             android:id="@+id/autoDecimalPlaces"
@@ -375,7 +376,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="12dp"
                         android:text="ACCOUNT STATUS"
-                        android:textColor="#3F51B5"
+                        android:textColor="@color/colorPrimary"
                         android:textSize="12sp"
                         android:textStyle="bold" />
 
@@ -455,7 +456,7 @@
                     android:text="UPDATE BUSINESS"
                     android:textStyle="bold"
                     app:cornerRadius="8dp"
-                    android:backgroundTint="#3F51B5" />
+                    android:backgroundTint="@color/colorPrimary" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnDeleteBusiness"

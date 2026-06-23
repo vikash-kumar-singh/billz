@@ -12,13 +12,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="?attr/actionBarSize"
-        android:background="#3F51B5"
+        android:background="@color/white"
         app:layout_constraintTop_toTopOf="parent"
-        app:navigationIcon="@android:drawable/ic_menu_close_clear_cancel"
-        app:navigationIconTint="@color/white"
+        app:navigationIcon="@drawable/ic_chevron_left"
+        app:navigationIconTint="@color/colorPrimary"
         app:title="@string/payment_settings_title"
         app:titleCentered="true"
-        app:titleTextColor="@color/white" />
+        app:titleTextColor="@color/colorPrimary" />
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -69,7 +69,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="24dp"
-        android:backgroundTint="#2563EB"
+        android:backgroundTint="@color/colorPrimary"
         android:paddingHorizontal="24dp"
         android:text="@string/add_new_payment_mode"
         android:textAllCaps="true"
