@@ -667,7 +667,50 @@ public class InventoryManagementActivity extends AppCompatActivity {
             Toast.makeText(this, "Bulk Edit clicked", Toast.LENGTH_SHORT).show();
         });
 
+        view.findViewById(R.id.menuWipeData).setOnClickListener(v -> {
+            dialog.dismiss();
+            showWipeConfirmationDialog();
+        });
+
         dialog.show();
+    }
+
+    private void showWipeConfirmationDialog() {
+        new androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("Wipe All Data?")
+                .setMessage("This will PERMANENTLY delete all items and categories from both this device and the cloud. This action cannot be undone.")
+                .setPositiveButton("Wipe Everything", (dialog, which) -> wipeAllData())
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    private void wipeAllData() {
+        Toast.makeText(this, "Wiping data...", Toast.LENGTH_SHORT).show();
+        
+        Business active = AppDatabase.getInstance(this).businessDao().getSelectedBusiness();
+        int bId = (active != null) ? active.getId() : -1;
+
+        // 1. Clear Cloud Products
+        new ItemCloudRepository(this).clearAllDataFromCloud(() -> {
+            // 2. Clear Cloud Categories
+            new CategoryCloudRepository(this).clearAllCategoriesFromCloud(() -> {
+                // 3. Clear Local Data
+                java.util.concurrent.Executors.newSingleThreadExecutor().execute(() -> {
+                    AppDatabase db = AppDatabase.getInstance(this);
+                    if (bId != -1) {
+                        db.itemDao().deleteItemsByBusiness(bId);
+                        db.categoryDao().deleteCategoriesByBusiness(bId);
+                        db.variantDao().deleteVariantsByBusiness(bId);
+                    }
+                    
+                    runOnUiThread(() -> {
+                        Toast.makeText(this, "All data cleared successfully", Toast.LENGTH_LONG).show();
+                        loadItemsFromDB();
+                        loadCategoriesFromDB();
+                    });
+                });
+            });
+        });
     }
 
     private void loadItemsFromDB() {

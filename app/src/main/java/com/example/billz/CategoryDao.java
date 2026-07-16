@@ -26,4 +26,7 @@ public interface CategoryDao {
 
     @Query("DELETE FROM categories WHERE id = :id")
     void deleteById(String id);
+
+    @Query("DELETE FROM categories WHERE businessId = :businessId")
+    void deleteCategoriesByBusiness(int businessId);
 }

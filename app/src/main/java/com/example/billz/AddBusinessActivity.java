@@ -278,6 +278,7 @@ public class AddBusinessActivity extends AppCompatActivity {
                 // Sync with Firestore
                 java.util.Map<String, Object> data = new java.util.HashMap<>();
                 data.put("businessName", name);
+                data.put("businessUuid", businessToSave.getUuid());
                 data.put("mobile", mobile);
                 new BusinessProfileRepository(this).saveBusinessProfile(data, null);
             }

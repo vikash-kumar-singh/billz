@@ -13,6 +13,9 @@ public class BusinessHelper {
                 String businessName = pm.getBusinessName();
                 if (businessName != null && !businessName.isEmpty()) {
                     Business local = new Business(businessName, pm.getBusinessMobile(), pm.getBusinessRole(), true);
+                    if (pm.getBusinessUuid() != null) {
+                        local.setUuid(pm.getBusinessUuid());
+                    }
                     local.setCategory(pm.getBusinessCategory());
                     local.setEmail(pm.getBusinessEmail());
                     db.businessDao().insert(local);

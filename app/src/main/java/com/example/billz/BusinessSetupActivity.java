@@ -51,8 +51,13 @@ public class BusinessSetupActivity extends AppCompatActivity {
 
         String currentUserEmail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
 
+        Business localBusiness = new Business(name, "", "OWNER", true);
+        localBusiness.setCategory(category);
+        localBusiness.setEmail(currentUserEmail);
+
         java.util.Map<String, Object> businessData = new java.util.HashMap<>();
         businessData.put("businessName", name);
+        businessData.put("businessUuid", localBusiness.getUuid());
         businessData.put("address", address);
         businessData.put("category", category);
         businessData.put("email", currentUserEmail);
@@ -69,9 +74,6 @@ public class BusinessSetupActivity extends AppCompatActivity {
                     AppDatabase db = AppDatabase.getInstance(BusinessSetupActivity.this);
                     db.businessDao().deselectAll();
                     
-                    Business localBusiness = new Business(name, "", "OWNER", true);
-                    localBusiness.setCategory(category);
-                    localBusiness.setEmail(currentUserEmail);
                     db.businessDao().insert(localBusiness);
 
                     runOnUiThread(() -> {

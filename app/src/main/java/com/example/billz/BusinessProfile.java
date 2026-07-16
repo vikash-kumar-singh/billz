@@ -16,9 +16,13 @@ public class BusinessProfile {
     private String currency;
     private String numberSystem;
     private int decimalPlaces;
+    private String businessUuid;
     private boolean setupCompleted;
 
     public BusinessProfile() {}
+
+    public String getBusinessUuid() { return businessUuid; }
+    public void setBusinessUuid(String businessUuid) { this.businessUuid = businessUuid; }
 
     public String getBusinessName() { return businessName; }
     public void setBusinessName(String businessName) { this.businessName = businessName; }

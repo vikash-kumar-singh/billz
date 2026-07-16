@@ -423,13 +423,8 @@ public class ReportsActivity extends AppCompatActivity {
         showEmptyState(true);
         updateSidebarLanguageText();
         setupCartManager();
-        ensureActiveBusiness();
-        updateCustomerCount();
-        syncCloudData();
-    }
-
-    private void ensureActiveBusiness() {
-        BusinessHelper.ensureActiveBusiness(this, null);
+        
+        loadBusinessData();
     }
 
     private int getActiveBusinessId() {
@@ -812,12 +807,17 @@ public class ReportsActivity extends AppCompatActivity {
                     refreshProfileUI();
                     Log.d("ReportsActivity", "BUSINESS_PROFILE_LOADED");
                     Log.d("ReportsActivity", "BUSINESS_NAME = " + profile.getBusinessName());
+                    
+                    // Now that business is restored to Room, sync other data
+                    syncCloudData();
                 });
             }
 
             @Override
             public void onError(String message) {
                 Log.e("ReportsActivity", "PROFILE_LOAD_FAILED: " + message);
+                // If profile failed but we have local data, sync anyway
+                syncCloudData();
             }
         });
 
@@ -1483,6 +1483,10 @@ public class ReportsActivity extends AppCompatActivity {
                     @Override
                     public void onPaymentClick(PaymentMode mode) {
                         String custName = editName.getText().toString().trim();
+                        String custMobile = editMobile.getText().toString().trim();
+                        String custEmail = editEmail.getText().toString().trim();
+                        String custAddress = editAddress.getText().toString().trim();
+
                         double subtotal = CartManager.getInstance().getSubtotal();
                         double tax = selectedTax != null ? subtotal * (selectedTax.getValue() / 100.0) : 0;
                         double disc = 0;
@@ -1510,6 +1514,29 @@ public class ReportsActivity extends AppCompatActivity {
                             Business activeBus = db.businessDao().getSelectedBusiness();
                             int bId = activeBus != null ? activeBus.getId() : 0;
 
+                            // 0. Handle Customer (Save or Update)
+                            Customer customer = null;
+                            if (!custMobile.isEmpty()) {
+                                customer = db.customerDao().getCustomerByMobile(custMobile, bId);
+                                if (customer == null) {
+                                    customer = new Customer(custMobile, custName, custEmail, "", "", "", "", custAddress, "");
+                                    customer.setBusinessId(bId);
+                                    customer.setOrdersCount(1);
+                                    customer.setLastOrderTime("JUST NOW");
+                                    customer.setCreatedAt(System.currentTimeMillis());
+                                    // Generate a temporary ID if not using Firestore ID yet
+                                    customer.setId(java.util.UUID.randomUUID().toString());
+                                } else {
+                                    customer.setName(custName); // Update name if provided
+                                    customer.setEmail(custEmail);
+                                    customer.setAddress(custAddress);
+                                    customer.setOrdersCount(customer.getOrdersCount() + 1);
+                                    customer.setLastOrderTime("JUST NOW");
+                                }
+                                db.customerDao().insert(customer);
+                                new CustomerSyncManager(ReportsActivity.this).syncCustomerToCloud(customer);
+                            }
+
                             ReceiptSettings settings = db.receiptSettingsDao().getSettingsByBusiness(bId);
                             if (settings == null) {
                                 settings = new ReceiptSettings();
@@ -1529,6 +1556,9 @@ public class ReportsActivity extends AppCompatActivity {
                             String receiptId = FirebaseFirestore.getInstance().collection("users").document(FirebaseHelper.getCurrentUid()).collection("invoices").document().getId();
                             
                             Receipt receipt = new Receipt(receiptId, rNo, custName, mode.getName(), totalToSave, itemsToSave, System.currentTimeMillis(), FirebaseHelper.getCurrentUid());
+                            if (customer != null) {
+                                receipt.setCustomerId(customer.getId());
+                            }
                             receipt.setSubtotal(finalSubtotal);
                             receipt.setTax(finalTax);
                             receipt.setDiscount(finalDisc);

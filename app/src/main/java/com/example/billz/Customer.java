@@ -20,6 +20,7 @@ public class Customer {
     private String notes;
     private int ordersCount = 1;
     private String lastOrderTime = "JUST NOW";
+    private long createdAt = System.currentTimeMillis();
 
     public Customer() {
         // Required for Firestore
@@ -63,4 +64,6 @@ public class Customer {
     public void setOrdersCount(int ordersCount) { this.ordersCount = ordersCount; }
     public String getLastOrderTime() { return lastOrderTime; }
     public void setLastOrderTime(String lastOrderTime) { this.lastOrderTime = lastOrderTime; }
+    public long getCreatedAt() { return createdAt; }
+    public void setCreatedAt(long createdAt) { this.createdAt = createdAt; }
 }

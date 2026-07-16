@@ -44,14 +44,16 @@ public class BusinessProfileRepository {
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
-                        BusinessProfile profile = documentSnapshot.toObject(BusinessProfile.class);
-                        if (profile != null) {
-                            cacheProfile(profile);
-                            syncToRoom(profile);
-                            Log.d(TAG, "BUSINESS_PROFILE_LOADED");
-                            Log.d(TAG, "BUSINESS_NAME = " + profile.getBusinessName());
-                            if (callback != null) callback.onProfileLoaded(profile);
-                        }
+                        java.util.concurrent.Executors.newSingleThreadExecutor().execute(() -> {
+                            BusinessProfile profile = documentSnapshot.toObject(BusinessProfile.class);
+                            if (profile != null) {
+                                cacheProfile(profile);
+                                syncToRoom(profile);
+                                Log.d(TAG, "BUSINESS_PROFILE_LOADED");
+                                Log.d(TAG, "BUSINESS_NAME = " + profile.getBusinessName());
+                                if (callback != null) callback.onProfileLoaded(profile);
+                            }
+                        });
                     } else {
                         Log.w(TAG, "PROFILE_LOAD_FAILED: Profile document does not exist");
                         if (callback != null) callback.onError("Profile not found");
@@ -103,48 +105,57 @@ public class BusinessProfileRepository {
         preferenceManager.setCurrency(profile.getCurrency());
         preferenceManager.setNumberSystem(profile.getNumberSystem());
         preferenceManager.setDecimalPlaces(profile.getDecimalPlaces());
+        preferenceManager.setBusinessUuid(profile.getBusinessUuid());
     }
 
     private void syncToRoom(BusinessProfile profile) {
-        java.util.concurrent.Executors.newSingleThreadExecutor().execute(() -> {
-            AppDatabase db = AppDatabase.getInstance(context);
-            
-            // Sync to local Room Business entity
-            Business b = db.businessDao().getSelectedBusiness();
-            if (b == null) {
-                // If nothing selected, create or find by name
-                List<Business> all = db.businessDao().getAllBusinesses();
-                if (all.isEmpty()) {
-                    b = new Business(profile.getBusinessName(), profile.getMobile(), profile.getRole(), true);
-                } else {
-                    b = all.get(0);
-                }
+        // Perform synchronously since we are already on a background thread if called from loadBusinessProfile
+        AppDatabase db = AppDatabase.getInstance(context);
+        
+        // Sync to local Room Business entity
+        Business b = db.businessDao().getSelectedBusiness();
+        if (b == null) {
+            // If nothing selected, create or find by name
+            List<Business> all = db.businessDao().getAllBusinesses();
+            if (all.isEmpty()) {
+                b = new Business(profile.getBusinessName(), profile.getMobile(), profile.getRole(), true);
+            } else {
+                b = all.get(0);
             }
-            
-            b.setName(profile.getBusinessName());
-            b.setPhoneNumber(profile.getMobile());
-            b.setEmail(profile.getEmail());
-            b.setCategory(profile.getCategory());
-            b.setRole(profile.getRole());
-            b.setPlan(profile.getPlan());
-            b.setStatus(profile.getStatus());
-            
-            db.businessDao().insert(b);
+        }
+        
+        if (profile.getBusinessUuid() != null) {
+            b.setUuid(profile.getBusinessUuid());
+        } else {
+            // If missing in cloud profile (legacy account), save the current local UUID to cloud
+            java.util.Map<String, Object> update = new java.util.HashMap<>();
+            update.put("businessUuid", b.getUuid());
+            saveBusinessProfile(update, null);
+        }
+        
+        b.setName(profile.getBusinessName());
+        b.setPhoneNumber(profile.getMobile());
+        b.setEmail(profile.getEmail());
+        b.setCategory(profile.getCategory());
+        b.setRole(profile.getRole());
+        b.setPlan(profile.getPlan());
+        b.setStatus(profile.getStatus());
+        
+        db.businessDao().insert(b);
 
-            // Sync to ReceiptSettings
-            ReceiptSettings rs = db.receiptSettingsDao().getSettingsByBusiness(b.getId());
-            if (rs == null) {
-                rs = new ReceiptSettings();
-                rs.setId(b.getId());
-            }
-            rs.setBusinessName(profile.getBusinessName());
-            rs.setBusinessAddress(profile.getAddress());
-            rs.setEmail(profile.getEmail());
-            rs.setPhoneNumber(profile.getMobile());
-            db.receiptSettingsDao().insert(rs);
+        // Sync to ReceiptSettings
+        ReceiptSettings rs = db.receiptSettingsDao().getSettingsByBusiness(b.getId());
+        if (rs == null) {
+            rs = new ReceiptSettings();
+            rs.setId(b.getId());
+        }
+        rs.setBusinessName(profile.getBusinessName());
+        rs.setBusinessAddress(profile.getAddress());
+        rs.setEmail(profile.getEmail());
+        rs.setPhoneNumber(profile.getMobile());
+        db.receiptSettingsDao().insert(rs);
 
-            Log.d(TAG, "SWITCH_BUSINESS_DATA_LOADED");
-        });
+        Log.d(TAG, "SWITCH_BUSINESS_DATA_LOADED");
     }
 
     public BusinessProfile getCachedProfile() {

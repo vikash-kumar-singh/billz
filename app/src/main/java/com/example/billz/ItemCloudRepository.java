@@ -41,6 +41,9 @@ public class ItemCloudRepository {
             return;
         }
 
+        Business active = AppDatabase.getInstance(context).businessDao().getSelectedBusiness();
+        String bUuid = (active != null) ? active.getUuid() : "legacy";
+        
         CollectionReference itemsRef = getItemsCollection();
         DocumentReference docRef;
         
@@ -64,6 +67,8 @@ public class ItemCloudRepository {
         // Save Item
         Map<String, Object> itemMap = new HashMap<>();
         itemMap.put("id", item.getId());
+        itemMap.put("businessId", item.getBusinessId());
+        itemMap.put("businessUuid", bUuid);
         itemMap.put("name", item.getName());
         itemMap.put("category", item.getCategory());
         itemMap.put("sellingPrice", item.getSellingPrice());
@@ -113,6 +118,41 @@ public class ItemCloudRepository {
         });
     }
 
+    public void clearAllDataFromCloud(Runnable onComplete) {
+        if (uid == null) return;
+        
+        CollectionReference itemsRef = getItemsCollection();
+        if (itemsRef == null) {
+            if (onComplete != null) onComplete.run();
+            return;
+        }
+
+        // Use a recursive-like approach to delete all products for the user
+        itemsRef.get().addOnSuccessListener(queryDocumentSnapshots -> {
+            if (queryDocumentSnapshots.isEmpty()) {
+                if (onComplete != null) onComplete.run();
+                return;
+            }
+
+            WriteBatch batch = db.batch();
+            for (com.google.firebase.firestore.DocumentSnapshot doc : queryDocumentSnapshots) {
+                // Delete the product document
+                batch.delete(doc.getReference());
+            }
+
+            batch.commit().addOnSuccessListener(aVoid -> {
+                Log.d(TAG, "ALL_PRODUCTS_DELETED_FROM_CLOUD_SUCCESS");
+                if (onComplete != null) onComplete.run();
+            }).addOnFailureListener(e -> {
+                Log.e(TAG, "ALL_PRODUCTS_DELETED_FROM_CLOUD_FAILED", e);
+                if (onComplete != null) onComplete.run();
+            });
+        }).addOnFailureListener(e -> {
+            Log.e(TAG, "GET_PRODUCTS_FOR_WIPE_FAILED", e);
+            if (onComplete != null) onComplete.run();
+        });
+    }
+
     public void deleteItem(Item item) {
         if (uid == null || item.getId() == null) return;
 
@@ -139,25 +179,42 @@ public class ItemCloudRepository {
     public void syncProductsFromCloud(SyncCallback callback) {
         if (uid == null) {
             Log.e(TAG, "SYNC_STARTED: FAILED (UID is null)");
+            if (callback != null) callback.onSyncComplete();
             return;
         }
         
-        int activeBusinessId = BusinessHelper.getActiveBusinessId(context);
-        if (activeBusinessId == -1) {
+        Business active = AppDatabase.getInstance(context).businessDao().getSelectedBusiness();
+        if (active == null) {
             Log.e(TAG, "SYNC_STARTED: FAILED (No active business)");
+            if (callback != null) callback.onSyncComplete();
+            return;
+        }
+        
+        int activeBusinessId = active.getId();
+        String bUuid = active.getUuid();
+
+        Log.d(TAG, "SYNC_STARTED for Business: " + activeBusinessId + " (UUID: " + bUuid + ")");
+
+        CollectionReference itemsRef = getItemsCollection();
+        if (itemsRef == null) {
+            if (callback != null) callback.onSyncComplete();
             return;
         }
 
-        Log.d(TAG, "SYNC_STARTED for Business: " + activeBusinessId);
-
-        getItemsCollection().get().addOnSuccessListener(queryDocumentSnapshots -> {
+        // ONLY SYNC PRODUCTS THAT BELONG TO THE CURRENT BUSINESS UUID
+        itemsRef.whereEqualTo("businessUuid", bUuid).get().addOnSuccessListener(queryDocumentSnapshots -> {
             int cloudCount = queryDocumentSnapshots.size();
-            Log.d(TAG, "FIRESTORE_RECORD_COUNT: " + cloudCount);
+            Log.d(TAG, "FIRESTORE_PRODUCT_COUNT_FOR_BUSINESS_" + bUuid + ": " + cloudCount);
             
+            if (cloudCount == 0) {
+                if (callback != null) callback.onSyncComplete();
+                return;
+            }
+
+            java.util.concurrent.atomic.AtomicInteger pendingItems = new java.util.concurrent.atomic.AtomicInteger(cloudCount);
+
             executor.execute(() -> {
                 AppDatabase localDb = AppDatabase.getInstance(context);
-                int localCountBefore = localDb.itemDao().getAllItems(activeBusinessId).size();
-                Log.d(TAG, "ROOM_RECORD_COUNT (Before): " + localCountBefore);
 
                 for (com.google.firebase.firestore.DocumentSnapshot doc : queryDocumentSnapshots) {
                     String fId = doc.getId();
@@ -172,11 +229,11 @@ public class ItemCloudRepository {
                         doc.getString("sellBy"),
                         doc.getBoolean("isAdvanceMode") != null ? doc.getBoolean("isAdvanceMode") : false
                     );
-                    cloudItem.setId(fId); // Primary Key is now Document ID
+                    cloudItem.setId(fId);
                     cloudItem.setBusinessId(activeBusinessId);
 
                     Log.d(TAG, "UPSERT_PRODUCT: " + cloudItem.getName() + " ID: " + fId);
-                    localDb.itemDao().insert(cloudItem); // This will REPLACE if conflict occurs
+                    localDb.itemDao().insert(cloudItem);
 
                     // Sync Variants
                     doc.getReference().collection("variants").get().addOnSuccessListener(vSnaps -> {
@@ -198,19 +255,22 @@ public class ItemCloudRepository {
                             if (!cloudVariants.isEmpty()) {
                                 localDb.variantDao().insertAll(cloudVariants);
                             }
+                            
+                            if (pendingItems.decrementAndGet() == 0) {
+                                if (callback != null) callback.onSyncComplete();
+                            }
                         });
+                    }).addOnFailureListener(e -> {
+                        if (pendingItems.decrementAndGet() == 0) {
+                            if (callback != null) callback.onSyncComplete();
+                        }
                     });
                 }
-                
-                int localCountAfter = localDb.itemDao().getAllItems(activeBusinessId).size();
-                Log.d(TAG, "ROOM_RECORD_COUNT (After): " + localCountAfter);
-                if (localCountAfter > cloudCount) {
-                    Log.w(TAG, "DUPLICATE_DETECTED: Local count " + localCountAfter + " exceeds Cloud count " + cloudCount);
-                }
-
-                if (callback != null) callback.onSyncComplete();
             });
-        }).addOnFailureListener(e -> Log.e(TAG, "SYNC_FAILED", e));
+        }).addOnFailureListener(e -> {
+            Log.e(TAG, "SYNC_FAILED", e);
+            if (callback != null) callback.onSyncComplete();
+        });
     }
 
     public interface SyncCallback {

@@ -24,7 +24,13 @@ import androidx.core.content.ContextCompat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
+import android.net.Uri;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.bumptech.glide.Glide;
 
 public class ManageItemActivity extends AppCompatActivity {
 
@@ -33,6 +39,7 @@ public class ManageItemActivity extends AppCompatActivity {
     private ImageView imgCategory;
     private View layoutCategorySelector, layoutSimpleMode, layoutAdvanceMode, layoutSellBySelector;
     private LinearLayout containerVariants;
+    private android.widget.ProgressBar progressSave;
     private View topBarManage;
     private String itemId;
     private AppDatabase db;
@@ -100,6 +107,7 @@ public class ManageItemActivity extends AppCompatActivity {
         btnAdvance.setOnClickListener(v -> setMode(false));
 
         findViewById(R.id.btnAddVariant).setOnClickListener(v -> addNewVariantView(null));
+        progressSave = findViewById(R.id.progressSave);
 
         loadItemData();
     }
@@ -130,32 +138,14 @@ public class ManageItemActivity extends AppCompatActivity {
 
     private void updateVariantImage(android.net.Uri uri) {
         if (activeVariantView != null && uri != null) {
-            try {
-                // Copy to internal storage to ensure persistent access
-                String fileName = "variant_" + System.currentTimeMillis() + ".jpg";
-                java.io.File internalFile = new java.io.File(getFilesDir(), fileName);
-                
-                try (java.io.InputStream is = getContentResolver().openInputStream(uri);
-                     java.io.OutputStream os = new java.io.FileOutputStream(internalFile)) {
-                    if (is == null) throw new java.io.IOException("Input stream is null");
-                    byte[] buffer = new byte[1024];
-                    int read;
-                    while ((read = is.read(buffer)) != -1) {
-                        os.write(buffer, 0, read);
-                    }
-                }
-
-                android.net.Uri internalUri = android.net.Uri.fromFile(internalFile);
-                ImageView imgVariant = activeVariantView.findViewById(R.id.imgVariant);
-                imgVariant.setImageURI(internalUri);
-                imgVariant.setImageTintList(null);
-                imgVariant.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                imgVariant.setPadding(0, 0, 0, 0);
-                activeVariantView.setTag(R.id.imgVariant, internalUri.toString());
-            } catch (Exception e) {
-                Log.e("ManageItem", "Failed to copy image to internal storage", e);
-                Toast.makeText(this, "Failed to load image", Toast.LENGTH_SHORT).show();
-            }
+            ImageView imgVariant = activeVariantView.findViewById(R.id.imgVariant);
+            Glide.with(this)
+                    .load(uri)
+                    .centerCrop()
+                    .into(imgVariant);
+            imgVariant.setImageTintList(null);
+            imgVariant.setPadding(0, 0, 0, 0);
+            activeVariantView.setTag(R.id.imgVariant, uri.toString());
         }
     }
 
@@ -354,9 +344,10 @@ public class ManageItemActivity extends AppCompatActivity {
             } catch (Exception ignored) {}
             currentItem.setSellingPrice(sellingPrice);
             // Default variant for simple mode
-            variantsToSave.add(new Variant(itemId, "Default", sellingPrice, 0, currentItem.getStockQuantity()));
+            Variant v = new Variant(itemId, "Default", sellingPrice, 0, currentItem.getStockQuantity());
+            v.setId(java.util.UUID.randomUUID().toString());
+            variantsToSave.add(v);
         } else {
-            double totalStock = 0;
             for (int i = 0; i < variantViews.size(); i++) {
                 View v = variantViews.get(i);
                 EditText editName = v.findViewById(R.id.editVariantName);
@@ -385,31 +376,78 @@ public class ManageItemActivity extends AppCompatActivity {
                     variant.setId(java.util.UUID.randomUUID().toString());
                 }
                 variantsToSave.add(variant);
-                totalStock += stock;
             }
+        }
+
+        uploadImagesAndSave(variantsToSave);
+    }
+
+    private void uploadImagesAndSave(List<Variant> variantsToSave) {
+        String uid = FirebaseHelper.getCurrentUid();
+        if (uid == null) return;
+
+        progressSave.setVisibility(View.VISIBLE);
+        findViewById(R.id.btnSave).setVisibility(View.GONE);
+
+        AtomicInteger pendingUploads = new AtomicInteger(0);
+        for (Variant v : variantsToSave) {
+            if (v.getImageUri() != null && Objects.equals(Uri.parse(v.getImageUri()).getScheme(), "content")) {
+                pendingUploads.incrementAndGet();
+            }
+        }
+
+        if (pendingUploads.get() == 0) {
+            finalizeSave(variantsToSave);
+            return;
+        }
+
+        for (Variant v : variantsToSave) {
+            if (v.getImageUri() != null && Objects.equals(Uri.parse(v.getImageUri()).getScheme(), "content")) {
+                StorageReference storageRef = FirebaseStorage.getInstance().getReference()
+                        .child("users").child(uid).child("products")
+                        .child(System.currentTimeMillis() + "_" + v.getName() + ".jpg");
+
+                storageRef.putFile(Uri.parse(v.getImageUri()))
+                        .addOnSuccessListener(taskSnapshot -> storageRef.getDownloadUrl().addOnSuccessListener(downloadUri -> {
+                            v.setImageUri(downloadUri.toString());
+                            if (pendingUploads.decrementAndGet() == 0) {
+                                finalizeSave(variantsToSave);
+                            }
+                        }))
+                        .addOnFailureListener(e -> {
+                            Log.e("ManageItem", "Image upload failed for variant " + v.getName(), e);
+                            if (pendingUploads.decrementAndGet() == 0) {
+                                finalizeSave(variantsToSave);
+                            }
+                        });
+            }
+        }
+    }
+
+    private void finalizeSave(List<Variant> variantsToSave) {
+        if (!isSimpleMode && !variantsToSave.isEmpty()) {
+            double totalStock = 0;
+            for (Variant v : variantsToSave) totalStock += v.getStockQuantity();
             
-            if (!variantsToSave.isEmpty()) {
-                Variant first = variantsToSave.get(0);
-                currentItem.setSellingPrice(first.getSellingPrice());
-                currentItem.setCostPrice(first.getCostPrice());
-                currentItem.setVariantName(first.getName());
-                currentItem.setStockQuantity((int)totalStock);
-            }
+            Variant first = variantsToSave.get(0);
+            currentItem.setSellingPrice(first.getSellingPrice());
+            currentItem.setCostPrice(first.getCostPrice());
+            currentItem.setVariantName(first.getName());
+            currentItem.setStockQuantity((int)totalStock);
         }
 
         Executors.newSingleThreadExecutor().execute(() -> {
             db.itemDao().update(currentItem);
             
-            // Delete old variants and insert new ones (or update)
             db.variantDao().deleteVariantsForItem(itemId);
             for (Variant v : variantsToSave) {
                 db.variantDao().insert(v);
             }
 
-            // Sync to Cloud
             new ItemCloudRepository(this).saveItem(currentItem, variantsToSave);
 
             runOnUiThread(() -> {
+                progressSave.setVisibility(View.GONE);
                 Toast.makeText(this, "Item updated successfully", Toast.LENGTH_SHORT).show();
                 setResult(RESULT_OK);
                 finish();

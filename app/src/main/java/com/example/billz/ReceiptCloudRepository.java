@@ -37,6 +37,11 @@ public class ReceiptCloudRepository {
             return;
         }
 
+        Business active = localDb.businessDao().getSelectedBusiness();
+        if (active != null) {
+            receipt.setBusinessUuid(active.getUuid());
+        }
+
         receipt.setBusinessId(uid);
         receipt.setSyncPending(false);
 
@@ -76,12 +81,20 @@ public class ReceiptCloudRepository {
 
     public void syncReceiptsFromCloud(Runnable onComplete) {
         String uid = FirebaseHelper.getCurrentUid();
-        Log.d(TAG, "RECEIPT_LOAD_STARTED for UID: " + uid);
+        
+        Business active = localDb.businessDao().getSelectedBusiness();
+        if (active == null) {
+            if (onComplete != null) onComplete.run();
+            return;
+        }
+        String bUuid = active.getUuid();
+
+        Log.d(TAG, "RECEIPT_LOAD_STARTED for UID: " + uid + " and Business UUID: " + bUuid);
         
         CollectionReference receiptsRef = FirebaseHelper.getInvoicesCollection();
         if (receiptsRef == null) return;
 
-        receiptsRef.get().addOnSuccessListener(queryDocumentSnapshots -> {
+        receiptsRef.whereEqualTo("businessUuid", bUuid).get().addOnSuccessListener(queryDocumentSnapshots -> {
             List<Receipt> cloudReceipts = new ArrayList<>();
             for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
                 Receipt r = doc.toObject(Receipt.class);

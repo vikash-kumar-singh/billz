@@ -22,7 +22,8 @@ public class Receipt {
     private long timestamp;
     private long createdAt;
     private long updatedAt;
-    private String businessId; // Changed to String to store Firebase UID
+    private String businessId; // store Firebase UID
+    private String businessUuid; // store stable business UUID
     private boolean isReturned;
     private boolean syncPending;
 
@@ -74,6 +75,8 @@ public class Receipt {
     public void setUpdatedAt(long updatedAt) { this.updatedAt = updatedAt; }
     public String getBusinessId() { return businessId; }
     public void setBusinessId(String businessId) { this.businessId = businessId; }
+    public String getBusinessUuid() { return businessUuid; }
+    public void setBusinessUuid(String businessUuid) { this.businessUuid = businessUuid; }
     public boolean isReturned() { return isReturned; }
     public void setReturned(boolean returned) { isReturned = returned; }
     public boolean isSyncPending() { return syncPending; }

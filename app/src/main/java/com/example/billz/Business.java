@@ -8,6 +8,8 @@ import androidx.room.PrimaryKey;
 public class Business {
     @PrimaryKey(autoGenerate = true)
     private int id;
+
+    private String uuid = java.util.UUID.randomUUID().toString();
     
     @NonNull
     private String name;
@@ -29,6 +31,9 @@ public class Business {
 
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
+
+    public String getUuid() { return uuid; }
+    public void setUuid(String uuid) { this.uuid = uuid; }
 
     @NonNull
     public String getName() { return name; }

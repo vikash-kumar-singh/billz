@@ -26,12 +26,46 @@ public class CategoryCloudRepository {
         return FirebaseHelper.getCategoriesCollection();
     }
 
+    public void clearAllCategoriesFromCloud(Runnable onComplete) {
+        CollectionReference categoriesRef = getCategoriesCollection();
+        if (categoriesRef == null) {
+            if (onComplete != null) onComplete.run();
+            return;
+        }
+
+        categoriesRef.get().addOnSuccessListener(queryDocumentSnapshots -> {
+            if (queryDocumentSnapshots.isEmpty()) {
+                if (onComplete != null) onComplete.run();
+                return;
+            }
+
+            com.google.firebase.firestore.WriteBatch batch = com.google.firebase.firestore.FirebaseFirestore.getInstance().batch();
+            for (com.google.firebase.firestore.DocumentSnapshot doc : queryDocumentSnapshots) {
+                batch.delete(doc.getReference());
+            }
+
+            batch.commit().addOnSuccessListener(aVoid -> {
+                Log.d(TAG, "ALL_CATEGORIES_DELETED_FROM_CLOUD_SUCCESS");
+                if (onComplete != null) onComplete.run();
+            }).addOnFailureListener(e -> {
+                Log.e(TAG, "ALL_CATEGORIES_DELETED_FROM_CLOUD_FAILED", e);
+                if (onComplete != null) onComplete.run();
+            });
+        }).addOnFailureListener(e -> {
+            Log.e(TAG, "GET_CATEGORIES_FOR_WIPE_FAILED", e);
+            if (onComplete != null) onComplete.run();
+        });
+    }
+
     public void saveCategory(Category category) {
         String uid = FirebaseHelper.getCurrentUid();
         if (uid == null) {
             Log.e(TAG, "UID is null, cannot save category to cloud");
             return;
         }
+
+        Business active = AppDatabase.getInstance(context).businessDao().getSelectedBusiness();
+        String bUuid = (active != null) ? active.getUuid() : "legacy";
 
         CollectionReference categoriesRef = getCategoriesCollection();
         if (categoriesRef == null) return;
@@ -58,6 +92,7 @@ public class CategoryCloudRepository {
         Map<String, Object> categoryMap = new HashMap<>();
         categoryMap.put("id", category.getId());
         categoryMap.put("businessId", category.getBusinessId());
+        categoryMap.put("businessUuid", bUuid);
         categoryMap.put("name", category.getName());
         categoryMap.put("imageUri", category.getImageUri());
         categoryMap.put("backgroundColor", category.getBackgroundColor());
@@ -88,12 +123,15 @@ public class CategoryCloudRepository {
             return;
         }
 
-        int activeBusinessId = BusinessHelper.getActiveBusinessId(context);
-        if (activeBusinessId == -1) {
+        Business active = AppDatabase.getInstance(context).businessDao().getSelectedBusiness();
+        if (active == null) {
             Log.e(TAG, "SYNC_FAILED: No active business");
             if (callback != null) callback.onSyncComplete();
             return;
         }
+
+        int activeBusinessId = active.getId();
+        String bUuid = active.getUuid();
 
         CollectionReference categoriesRef = getCategoriesCollection();
         if (categoriesRef == null) {
@@ -101,12 +139,18 @@ public class CategoryCloudRepository {
             return;
         }
 
-        Log.d(TAG, "SYNC_STARTED for Business: " + activeBusinessId);
+        Log.d(TAG, "SYNC_STARTED for Business: " + activeBusinessId + " (UUID: " + bUuid + ")");
 
-        categoriesRef.get().addOnSuccessListener(queryDocumentSnapshots -> {
+        // ONLY SYNC CATEGORIES THAT BELONG TO THE CURRENT BUSINESS UUID
+        categoriesRef.whereEqualTo("businessUuid", bUuid).get().addOnSuccessListener(queryDocumentSnapshots -> {
             int cloudCount = queryDocumentSnapshots.size();
-            Log.d(TAG, "FIRESTORE_CATEGORY_COUNT: " + cloudCount);
+            Log.d(TAG, "FIRESTORE_CATEGORY_COUNT_FOR_BUSINESS_" + bUuid + ": " + cloudCount);
             
+            if (cloudCount == 0) {
+                if (callback != null) callback.onSyncComplete();
+                return;
+            }
+
             executor.execute(() -> {
                 AppDatabase localDb = AppDatabase.getInstance(context);
                 for (com.google.firebase.firestore.DocumentSnapshot doc : queryDocumentSnapshots) {

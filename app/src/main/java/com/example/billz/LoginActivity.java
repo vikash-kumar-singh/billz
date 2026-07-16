@@ -142,9 +142,6 @@ public class LoginActivity extends AppCompatActivity {
                     runOnUiThread(() -> {
                         PreferenceManager preferenceManager = new PreferenceManager(LoginActivity.this);
                         
-                        // Local Database Sync
-                        saveToLocalDatabase(profile);
-
                         if (profile.isSetupCompleted()) {
                             preferenceManager.setBusinessSetupCompleted(true);
                             
@@ -159,7 +156,6 @@ public class LoginActivity extends AppCompatActivity {
                             preferenceManager.setBusinessSetupCompleted(false);
                             startActivity(new Intent(LoginActivity.this, BusinessSetupActivity.class));
                         }
-                        finishAffinity();
                     });
                 }
 
@@ -175,29 +171,4 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private void saveToLocalDatabase(BusinessProfile profile) {
-        java.util.concurrent.Executors.newSingleThreadExecutor().execute(() -> {
-            AppDatabase localDb = AppDatabase.getInstance(this);
-            Business b = localDb.businessDao().getSelectedBusiness();
-            if (b == null) {
-                b = new Business(profile.getBusinessName() != null ? profile.getBusinessName() : "My Business", 
-                        profile.getMobile(), "OWNER", true);
-            } else {
-                b.setName(profile.getBusinessName() != null ? profile.getBusinessName() : b.getName());
-                b.setPhoneNumber(profile.getMobile() != null ? profile.getMobile() : b.getPhoneNumber());
-                b.setEmail(profile.getEmail() != null ? profile.getEmail() : b.getEmail());
-            }
-            localDb.businessDao().insert(b);
-
-            ReceiptSettings rs = localDb.receiptSettingsDao().getSettingsByBusiness(b.getId());
-            if (rs == null) {
-                rs = new ReceiptSettings();
-                rs.setId(b.getId());
-                rs.setBusinessName(b.getName());
-                rs.setPhoneNumber(b.getPhoneNumber());
-                rs.setEmail(b.getEmail());
-                localDb.receiptSettingsDao().insert(rs);
-            }
-        });
-    }
 }

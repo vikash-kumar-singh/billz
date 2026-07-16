@@ -27,6 +27,12 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
+import android.net.Uri;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.bumptech.glide.Glide;
+import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class AddItemActivity extends AppCompatActivity {
 
@@ -34,6 +40,7 @@ public class AddItemActivity extends AppCompatActivity {
     private TextView btnSimple, btnAdvance, textCategory;
     private View layoutSimpleMode, layoutAdvanceMode;
     private LinearLayout containerVariants;
+    private android.widget.ProgressBar progressSave;
     private boolean isSimpleMode = true;
     private String selectedSellBy = "Unit";
     private List<View> variantViews = new ArrayList<>();
@@ -79,6 +86,7 @@ public class AddItemActivity extends AppCompatActivity {
 
         findViewById(R.id.btnAddVariant).setOnClickListener(v -> addNewVariantView());
         findViewById(R.id.btnSave).setOnClickListener(v -> saveItem());
+        progressSave = findViewById(R.id.progressSave);
 
         // Handle pre-selected category
         String preselectedCategory = getIntent().getStringExtra("category");
@@ -117,32 +125,14 @@ public class AddItemActivity extends AppCompatActivity {
 
     private void updateVariantImage(android.net.Uri uri) {
         if (activeVariantView != null && uri != null) {
-            try {
-                // Copy to internal storage to ensure persistent access
-                String fileName = "variant_" + System.currentTimeMillis() + ".jpg";
-                java.io.File internalFile = new java.io.File(getFilesDir(), fileName);
-
-                try (java.io.InputStream is = getContentResolver().openInputStream(uri);
-                     java.io.OutputStream os = new java.io.FileOutputStream(internalFile)) {
-                    if (is == null) throw new java.io.IOException("Input stream is null");
-                    byte[] buffer = new byte[1024];
-                    int read;
-                    while ((read = is.read(buffer)) != -1) {
-                        os.write(buffer, 0, read);
-                    }
-                }
-
-                android.net.Uri internalUri = android.net.Uri.fromFile(internalFile);
-                ImageView imgVariant = activeVariantView.findViewById(R.id.imgVariant);
-                imgVariant.setImageURI(internalUri);
-                imgVariant.setImageTintList(null);
-                imgVariant.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                imgVariant.setPadding(0, 0, 0, 0);
-                activeVariantView.setTag(R.id.imgVariant, internalUri.toString());
-            } catch (Exception e) {
-                Log.e("AddItem", "Failed to copy image to internal storage", e);
-                Toast.makeText(this, "Failed to load image", Toast.LENGTH_SHORT).show();
-            }
+            ImageView imgVariant = activeVariantView.findViewById(R.id.imgVariant);
+            Glide.with(this)
+                    .load(uri)
+                    .centerCrop()
+                    .into(imgVariant);
+            imgVariant.setImageTintList(null);
+            imgVariant.setPadding(0, 0, 0, 0);
+            activeVariantView.setTag(R.id.imgVariant, uri.toString());
         }
     }
 
@@ -254,8 +244,54 @@ public class AddItemActivity extends AppCompatActivity {
             return;
         }
 
-        // Use the first variant's prices for the base Item record
-        // But use the SUM of all variant stocks for the base Item stock
+        // Start upload process
+        uploadImagesAndSave(name, category, variantsToSave);
+    }
+
+    private void uploadImagesAndSave(String name, String category, List<VariantData> variantsToSave) {
+        String uid = FirebaseHelper.getCurrentUid();
+        if (uid == null) return;
+
+        progressSave.setVisibility(View.VISIBLE);
+        findViewById(R.id.btnSave).setVisibility(View.GONE);
+
+        AtomicInteger pendingUploads = new AtomicInteger(0);
+        for (VariantData vd : variantsToSave) {
+            if (vd.imageUri != null && Objects.equals(Uri.parse(vd.imageUri).getScheme(), "content")) {
+                pendingUploads.incrementAndGet();
+            }
+        }
+
+        if (pendingUploads.get() == 0) {
+            finalizeSave(name, category, variantsToSave);
+            return;
+        }
+
+        for (VariantData vd : variantsToSave) {
+            if (vd.imageUri != null && Objects.equals(Uri.parse(vd.imageUri).getScheme(), "content")) {
+                StorageReference storageRef = FirebaseStorage.getInstance().getReference()
+                        .child("users").child(uid).child("products")
+                        .child(System.currentTimeMillis() + "_" + vd.name + ".jpg");
+
+                storageRef.putFile(Uri.parse(vd.imageUri))
+                        .addOnSuccessListener(taskSnapshot -> storageRef.getDownloadUrl().addOnSuccessListener(downloadUri -> {
+                            vd.imageUri = downloadUri.toString();
+                            if (pendingUploads.decrementAndGet() == 0) {
+                                finalizeSave(name, category, variantsToSave);
+                            }
+                        }))
+                        .addOnFailureListener(e -> {
+                            Log.e("AddItem", "Image upload failed for variant " + vd.name, e);
+                            // Even if upload fails, continue with local URI as fallback or null
+                            if (pendingUploads.decrementAndGet() == 0) {
+                                finalizeSave(name, category, variantsToSave);
+                            }
+                        });
+            }
+        }
+    }
+
+    private void finalizeSave(String name, String category, List<VariantData> variantsToSave) {
         VariantData first = variantsToSave.get(0);
         int totalStock = 0;
         if (!isSimpleMode) {
@@ -266,29 +302,27 @@ public class AddItemActivity extends AppCompatActivity {
         
         Item item = new Item(name, category, first.sellingPrice, first.costPrice, totalStock, first.name, selectedSellBy, !isSimpleMode);
         item.setBusinessId(BusinessHelper.getActiveBusinessId(this));
-        item.setId(java.util.UUID.randomUUID().toString()); // Generate a unique ID before inserting
+        item.setId(java.util.UUID.randomUUID().toString());
 
         BusinessHelper.ensureActiveBusiness(this, () -> {
             AppDatabase db = AppDatabase.getInstance(this);
-            // item.setBusinessId(BusinessHelper.getActiveBusinessId(this)); // Already set above
-            
             db.itemDao().insert(item);
             
             List<Variant> savedVariants = new ArrayList<>();
             for (int i = 0; i < variantsToSave.size(); i++) {
                 VariantData vd = variantsToSave.get(i);
                 Variant variant = new Variant(item.getId(), vd.name, vd.sellingPrice, vd.costPrice, vd.stockQuantity);
-                variant.setId(java.util.UUID.randomUUID().toString()); // Generate unique ID for variants
+                variant.setId(java.util.UUID.randomUUID().toString());
                 variant.setSortOrder(i);
                 variant.setImageUri(vd.imageUri);
                 db.variantDao().insert(variant);
                 savedVariants.add(variant);
             }
 
-            // Sync to Cloud
             new ItemCloudRepository(this).saveItem(item, savedVariants);
 
             runOnUiThread(() -> {
+                progressSave.setVisibility(View.GONE);
                 Toast.makeText(this, "Item Saved Successfully", Toast.LENGTH_SHORT).show();
                 setResult(RESULT_OK);
                 finish();

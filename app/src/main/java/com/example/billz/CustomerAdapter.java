@@ -46,8 +46,9 @@ public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.ViewHo
         }
         holder.badgeTime.setText(lastOrder);
         
-        // Show NEW badge for first item as a demo
-        holder.badgeNew.setVisibility(position == 0 ? View.VISIBLE : View.GONE);
+        long oneDayMillis = 24 * 60 * 60 * 1000;
+        boolean isNew = (System.currentTimeMillis() - customer.getCreatedAt()) < oneDayMillis;
+        holder.badgeNew.setVisibility(isNew ? View.VISIBLE : View.GONE);
 
         // Set entry animation
         setAnimation(holder.itemView, position);

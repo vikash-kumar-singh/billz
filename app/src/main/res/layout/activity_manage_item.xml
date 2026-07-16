@@ -62,6 +62,14 @@
                 android:textColor="@color/white"
                 android:textStyle="bold"
                 app:cornerRadius="4dp" />
+
+            <ProgressBar
+                android:id="@+id/progressSave"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="end"
+                android:layout_marginEnd="8dp"
+                android:visibility="gone" />
         </LinearLayout>
     </FrameLayout>
 

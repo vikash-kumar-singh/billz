@@ -22,6 +22,7 @@ public class PreferenceManager {
     private static final String KEY_CURRENCY = "business_currency";
     private static final String KEY_NUMBER_SYSTEM = "business_number_system";
     private static final String KEY_DECIMAL_PLACES = "business_decimal_places";
+    private static final String KEY_BUSINESS_UUID = "business_uuid";
 
     private final SharedPreferences sharedPreferences;
     private final SharedPreferences.Editor editor;
@@ -182,6 +183,15 @@ public class PreferenceManager {
 
     public int getDecimalPlaces() {
         return sharedPreferences.getInt(KEY_DECIMAL_PLACES, 2);
+    }
+
+    public void setBusinessUuid(String uuid) {
+        editor.putString(KEY_BUSINESS_UUID, uuid);
+        editor.apply();
+    }
+
+    public String getBusinessUuid() {
+        return sharedPreferences.getString(KEY_BUSINESS_UUID, null);
     }
 
     public void clear() {
