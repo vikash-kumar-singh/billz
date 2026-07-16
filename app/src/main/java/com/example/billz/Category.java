@@ -5,8 +5,9 @@ import androidx.room.PrimaryKey;
 
 @Entity(tableName = "categories")
 public class Category {
-    @PrimaryKey(autoGenerate = true)
-    private int id;
+    @PrimaryKey
+    @androidx.annotation.NonNull
+    private String id = java.util.UUID.randomUUID().toString();
     private int businessId;
     private String name;
     private String imageUri;
@@ -34,8 +35,9 @@ public class Category {
         this.isCustom = isCustom;
     }
 
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
+    @androidx.annotation.NonNull
+    public String getId() { return id; }
+    public void setId(@androidx.annotation.NonNull String id) { this.id = id; }
     public int getBusinessId() { return businessId; }
     public void setBusinessId(int businessId) { this.businessId = businessId; }
     public String getName() { return name; }

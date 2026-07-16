@@ -9,7 +9,7 @@ import java.util.List;
 
 @Dao
 public interface CategoryDao {
-    @Query("SELECT * FROM categories WHERE businessId = :businessId ORDER BY id DESC")
+    @Query("SELECT * FROM categories WHERE businessId = :businessId ORDER BY name ASC")
     List<Category> getAllCategories(int businessId);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -20,4 +20,10 @@ public interface CategoryDao {
 
     @Query("SELECT * FROM categories WHERE name = :name AND businessId = :businessId LIMIT 1")
     Category getByName(String name, int businessId);
+
+    @Query("SELECT * FROM categories WHERE id = :id LIMIT 1")
+    Category getById(String id);
+
+    @Query("DELETE FROM categories WHERE id = :id")
+    void deleteById(String id);
 }

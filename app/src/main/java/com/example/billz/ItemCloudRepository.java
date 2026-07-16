@@ -40,7 +40,7 @@ public class ItemCloudRepository {
             Log.e(TAG, "CURRENT_UID: NULL - Cannot save to Firestore");
             return;
         }
-        
+
         CollectionReference itemsRef = getItemsCollection();
         DocumentReference docRef;
         

@@ -70,6 +70,10 @@ public class InventoryManagementActivity extends AppCompatActivity {
             Intent intent = new Intent(this, ManageItemActivity.class);
             intent.putExtra("item_id", item.getDatabaseId());
             addItemLauncher.launch(intent);
+        } else if (item.getType() == 1) { // Category
+            Intent intent = new Intent(this, AddCategoryActivity.class);
+            intent.putExtra("category_id", item.getDatabaseId());
+            addCategoryLauncher.launch(intent);
         } else if (item.getType() == 2) { // Modifier
             Intent intent = new Intent(this, CreateModifierActivity.class);
             try {
@@ -464,6 +468,7 @@ public class InventoryManagementActivity extends AppCompatActivity {
                 if (cat.getImageUri() != null) item.setImageUri(cat.getImageUri());
                 item.setBackgroundColor(cat.getBackgroundColor());
                 item.setType(1); // Category
+                item.setDatabaseId(cat.getId());
                 newCategoriesList.add(item);
             }
 

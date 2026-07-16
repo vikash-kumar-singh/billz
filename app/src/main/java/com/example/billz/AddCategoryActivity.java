@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -28,13 +29,21 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
 
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.bumptech.glide.Glide;
+import java.util.Objects;
+
 public class AddCategoryActivity extends AppCompatActivity {
 
     private EditText editCategoryName;
     private ImageView imgCategory;
+    private ProgressBar progressImage;
     private com.google.android.material.card.MaterialCardView cardCategoryImage;
     private Uri selectedImageUri;
     private int selectedColor = Color.parseColor("#3F51B5");
+    private String categoryId;
+    private Category existingCategory;
 
     private final ActivityResultLauncher<PickVisualMediaRequest> pickMedia =
             registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
@@ -69,10 +78,42 @@ public class AddCategoryActivity extends AppCompatActivity {
 
         editCategoryName = findViewById(R.id.editCategoryName);
         imgCategory = findViewById(R.id.imgCategory);
+        progressImage = findViewById(R.id.progressImage);
         cardCategoryImage = findViewById(R.id.cardCategoryImage);
+
+        categoryId = getIntent().getStringExtra("category_id");
+        if (categoryId != null) {
+            toolbar.setTitle("EDIT CATEGORY");
+            loadCategoryData();
+        }
 
         findViewById(R.id.btnSaveCategory).setOnClickListener(v -> saveCategory());
         cardCategoryImage.setOnClickListener(v -> showImagePickerBottomSheet());
+    }
+
+    private void loadCategoryData() {
+        java.util.concurrent.Executors.newSingleThreadExecutor().execute(() -> {
+            AppDatabase db = AppDatabase.getInstance(this);
+            existingCategory = db.categoryDao().getById(categoryId);
+            if (existingCategory != null) {
+                runOnUiThread(() -> {
+                    editCategoryName.setText(existingCategory.getName());
+                    selectedColor = existingCategory.getBackgroundColor();
+                    
+                    if (existingCategory.getImageUri() != null && !existingCategory.getImageUri().isEmpty()) {
+                        selectedImageUri = Uri.parse(existingCategory.getImageUri());
+                        Glide.with(this)
+                                .load(selectedImageUri)
+                                .centerCrop()
+                                .into(imgCategory);
+                        imgCategory.setImageTintList(null);
+                        imgCategory.setPadding(0, 0, 0, 0);
+                    } else {
+                        cardCategoryImage.setCardBackgroundColor(android.content.res.ColorStateList.valueOf(selectedColor));
+                    }
+                });
+            }
+        });
     }
 
     private void showImagePickerBottomSheet() {
@@ -137,21 +178,62 @@ public class AddCategoryActivity extends AppCompatActivity {
             return;
         }
 
-        String imageUriStr = selectedImageUri != null ? selectedImageUri.toString() : null;
-        Category category = new Category(name, imageUriStr, selectedColor);
+        if (selectedImageUri != null && Objects.equals(selectedImageUri.getScheme(), "content")) {
+            uploadImageToFirebase(selectedImageUri, name);
+        } else {
+            finalizeSave(name, selectedImageUri != null ? selectedImageUri.toString() : null);
+        }
+    }
+
+    private void uploadImageToFirebase(Uri uri, String categoryName) {
+        String uid = FirebaseHelper.getCurrentUid();
+        if (uid == null) return;
+
+        progressImage.setVisibility(View.VISIBLE);
+        findViewById(R.id.btnSaveCategory).setEnabled(false);
+
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference()
+                .child("users")
+                .child(uid)
+                .child("categories")
+                .child(System.currentTimeMillis() + ".jpg");
+
+        storageRef.putFile(uri)
+                .addOnSuccessListener(taskSnapshot -> {
+                    storageRef.getDownloadUrl().addOnSuccessListener(downloadUri -> {
+                        finalizeSave(categoryName, downloadUri.toString());
+                    });
+                })
+                .addOnFailureListener(e -> {
+                    progressImage.setVisibility(View.GONE);
+                    findViewById(R.id.btnSaveCategory).setEnabled(true);
+                    Toast.makeText(this, "Image upload failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    // Save anyway with local URI as fallback or null
+                    finalizeSave(categoryName, uri.toString());
+                });
+    }
+
+    private void finalizeSave(String name, String imageUriStr) {
+        Category category = (existingCategory != null) ? existingCategory : new Category(name, imageUriStr, selectedColor);
+        category.setName(name);
+        category.setImageUri(imageUriStr);
+        category.setBackgroundColor(selectedColor);
+        category.setCustom(true);
 
         BusinessHelper.ensureActiveBusiness(this, () -> {
             AppDatabase db = AppDatabase.getInstance(this);
             category.setBusinessId(BusinessHelper.getActiveBusinessId(this));
+            
+            // Save locally
             db.categoryDao().insert(category);
-            runOnUiThread(() -> {
-                Intent resultIntent = new Intent();
-                resultIntent.putExtra("category_name", name);
-                resultIntent.putExtra("category_image_uri", imageUriStr);
-                resultIntent.putExtra("category_color", selectedColor);
-                setResult(RESULT_OK, resultIntent);
+            
+            // Save to Cloud
+            new CategoryCloudRepository(this).saveCategory(category);
 
+            runOnUiThread(() -> {
+                progressImage.setVisibility(View.GONE);
                 Toast.makeText(this, "Category " + name + " saved", Toast.LENGTH_SHORT).show();
+                setResult(RESULT_OK);
                 finish();
             });
         });

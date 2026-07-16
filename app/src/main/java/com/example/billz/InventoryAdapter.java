@@ -17,6 +17,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+
 public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.ViewHolder> {
 
     private List<InventoryItem> items;
@@ -127,7 +130,11 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
             if (item.getImageUri() != null) {
                 holder.imgItem.setVisibility(View.VISIBLE);
                 holder.textInitial.setVisibility(View.GONE);
-                holder.imgItem.setImageURI(Uri.parse(item.getImageUri()));
+                Glide.with(context)
+                        .load(item.getImageUri())
+                        .centerCrop()
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(holder.imgItem);
             } else if (item.getBackgroundColor() != -1) {
                 holder.imgItem.setVisibility(View.GONE);
                 holder.textInitial.setVisibility(View.VISIBLE);

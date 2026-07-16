@@ -56,25 +56,37 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbarLayout">
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cardCategoryImage"
-            android:layout_width="140dp"
-            android:layout_height="140dp"
-            android:layout_marginTop="16dp"
-            app:cardBackgroundColor="#3F51B5"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="4dp"
-            app:strokeWidth="0dp">
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp">
 
-            <ImageView
-                android:id="@+id/imgCategory"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="24dp"
-                android:scaleType="centerInside"
-                android:src="@android:drawable/ic_menu_gallery"
-                app:tint="@color/white" />
-        </com.google.android.material.card.MaterialCardView>
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardCategoryImage"
+                android:layout_width="140dp"
+                android:layout_height="140dp"
+                app:cardBackgroundColor="#3F51B5"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp"
+                app:strokeWidth="0dp">
+
+                <ImageView
+                    android:id="@+id/imgCategory"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="24dp"
+                    android:scaleType="centerInside"
+                    android:src="@android:drawable/ic_menu_gallery"
+                    app:tint="@color/white" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <ProgressBar
+                android:id="@+id/progressImage"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerInParent="true"
+                android:visibility="gone" />
+        </RelativeLayout>
 
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"

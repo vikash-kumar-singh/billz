@@ -59,4 +59,9 @@ public class FirebaseHelper {
         DocumentReference userDoc = getUserDoc();
         return userDoc != null ? userDoc.collection("subscription") : null;
     }
+
+    public static CollectionReference getCategoriesCollection() {
+        DocumentReference userDoc = getUserDoc();
+        return userDoc != null ? userDoc.collection("categories") : null;
+    }
 }

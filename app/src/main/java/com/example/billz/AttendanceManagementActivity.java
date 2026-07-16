@@ -57,11 +57,11 @@ public class AttendanceManagementActivity extends AppCompatActivity {
         btnNextDate = findViewById(R.id.btnNextDate);
 
         updateDateDisplay();
-        
+
         btnPrevDate.setOnClickListener(v -> {
             Calendar prev = (Calendar) selectedDate.clone();
             prev.add(Calendar.DAY_OF_MONTH, -1);
-            
+
             Calendar joiningDate = parseJoiningDate(currentStaff != null ? currentStaff.joiningDate : null);
             if (joiningDate != null && prev.before(joiningDate)) {
                 Toast.makeText(this, "Cannot go before joining date", Toast.LENGTH_SHORT).show();
@@ -77,7 +77,7 @@ public class AttendanceManagementActivity extends AppCompatActivity {
         });
 
         findViewById(R.id.cardDateSelector).setOnClickListener(v -> showDatePicker());
-        
+
         // Find the image inside the cardDropdown
         if (cardDropdown instanceof android.view.ViewGroup) {
             imageDropdown = (ImageView) ((android.view.ViewGroup) cardDropdown).getChildAt(0);
@@ -106,7 +106,7 @@ public class AttendanceManagementActivity extends AppCompatActivity {
 
     private void showDatePicker() {
         Calendar joiningDate = parseJoiningDate(currentStaff != null ? currentStaff.joiningDate : null);
-        
+
         DatePickerDialog datePickerDialog = new DatePickerDialog(this,
                 android.R.style.Theme_Holo_Light_Dialog_MinWidth,
                 (view, year, month, dayOfMonth) -> {
@@ -124,11 +124,11 @@ public class AttendanceManagementActivity extends AppCompatActivity {
                 selectedDate.get(Calendar.YEAR),
                 selectedDate.get(Calendar.MONTH),
                 selectedDate.get(Calendar.DAY_OF_MONTH));
-        
+
         if (joiningDate != null) {
             datePickerDialog.getDatePicker().setMinDate(joiningDate.getTimeInMillis());
         }
-        
+
         if (datePickerDialog.getWindow() != null) {
             datePickerDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         }
@@ -154,7 +154,7 @@ public class AttendanceManagementActivity extends AppCompatActivity {
                     if (currentStaff.name != null && !currentStaff.name.isEmpty()) {
                         textStaffInitials.setText(String.valueOf(currentStaff.name.charAt(0)).toUpperCase());
                     }
-                    
+
                     Calendar joiningDate = parseJoiningDate(currentStaff.joiningDate);
                     if (joiningDate != null && selectedDate.before(joiningDate)) {
                         selectedDate = (Calendar) joiningDate.clone();

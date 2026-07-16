@@ -441,10 +441,12 @@ public class ReportsActivity extends AppCompatActivity {
         receiptRepo.syncReceiptsFromCloud(null);
         receiptRepo.retryPendingSync();
         
-        new ItemCloudRepository(this).syncProductsFromCloud(() -> {
-            runOnUiThread(() -> {
-                updateInventoryCount();
-                if (currentTab == TAB_ITEMS) refreshItemsView();
+        new CategoryCloudRepository(this).syncCategoriesFromCloud(() -> {
+            new ItemCloudRepository(this).syncProductsFromCloud(() -> {
+                runOnUiThread(() -> {
+                    updateInventoryCount();
+                    if (currentTab == TAB_ITEMS) refreshItemsView();
+                });
             });
         });
 
