@@ -118,6 +118,11 @@ public class CustomerManagementActivity extends AppCompatActivity {
         List<Customer> displayList;
         if (position == 1) { // DUE CUSTOMERS
             displayList = new ArrayList<>();
+            for (Customer c : allCustomersList) {
+                if (c.getDueAmount() > 0) {
+                    displayList.add(c);
+                }
+            }
         } else {
             displayList = allCustomersList;
         }

@@ -60,6 +60,13 @@ public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.ViewHo
         boolean isNew = (System.currentTimeMillis() - customer.getCreatedAt()) < oneDayMillis;
         holder.badgeNew.setVisibility(isNew ? View.VISIBLE : View.GONE);
 
+        if (customer.getDueAmount() > 0) {
+            holder.textDueAmount.setVisibility(View.VISIBLE);
+            holder.textDueAmount.setText(String.format(java.util.Locale.getDefault(), "₹-%,.0f", customer.getDueAmount()));
+        } else {
+            holder.textDueAmount.setVisibility(View.GONE);
+        }
+
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(v.getContext(), CustomerDetailsActivity.class);
             intent.putExtra("customer_id", customer.getId());
@@ -86,7 +93,7 @@ public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.ViewHo
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView textInitial, textName, textMobile, badgeOrders, badgeTime, badgeNew;
+        TextView textInitial, textName, textMobile, badgeOrders, badgeTime, badgeNew, textDueAmount;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -96,6 +103,7 @@ public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.ViewHo
             badgeOrders = itemView.findViewById(R.id.badgeOrders);
             badgeTime = itemView.findViewById(R.id.badgeTime);
             badgeNew = itemView.findViewById(R.id.badgeNew);
+            textDueAmount = itemView.findViewById(R.id.textDueAmount);
         }
     }
 }

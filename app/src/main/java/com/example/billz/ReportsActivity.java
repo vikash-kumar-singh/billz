@@ -1543,6 +1543,11 @@ public class ReportsActivity extends AppCompatActivity {
                                     customer.setLastPurchaseTimestamp(System.currentTimeMillis());
                                     customer.setLastOrderTime("JUST NOW");
                                 }
+
+                                if ("Credit".equalsIgnoreCase(mode.getName())) {
+                                    customer.setDueAmount(customer.getDueAmount() + totalToSave);
+                                }
+
                                 db.customerDao().insert(customer);
                                 new CustomerSyncManager(ReportsActivity.this).syncCustomerToCloud(customer);
                             }

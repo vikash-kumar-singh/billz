@@ -20,6 +20,7 @@ public class Customer {
     private String notes;
     private int ordersCount = 1;
     private String lastOrderTime = "JUST NOW";
+    private double dueAmount = 0.0;
     private long lastPurchaseTimestamp = System.currentTimeMillis();
     private long createdAt = System.currentTimeMillis();
 
@@ -65,6 +66,8 @@ public class Customer {
     public void setOrdersCount(int ordersCount) { this.ordersCount = ordersCount; }
     public String getLastOrderTime() { return lastOrderTime; }
     public void setLastOrderTime(String lastOrderTime) { this.lastOrderTime = lastOrderTime; }
+    public double getDueAmount() { return dueAmount; }
+    public void setDueAmount(double dueAmount) { this.dueAmount = dueAmount; }
     public long getLastPurchaseTimestamp() { return lastPurchaseTimestamp; }
     public void setLastPurchaseTimestamp(long lastPurchaseTimestamp) { this.lastPurchaseTimestamp = lastPurchaseTimestamp; }
     public long getCreatedAt() { return createdAt; }

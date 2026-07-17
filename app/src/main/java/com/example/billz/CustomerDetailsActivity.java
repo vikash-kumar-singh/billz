@@ -29,7 +29,7 @@ public class CustomerDetailsActivity extends AppCompatActivity {
     private String customerId;
     private Customer currentCustomer;
     private AppDatabase db;
-    private TextView textMemberSince, textLastVisit, textOrdersCount;
+    private TextView textMemberSince, textLastVisit, textOrdersCount, textBalance;
     private TextView textDetailName, textDetailNumber, textDetailEmail, textDetailGender;
     private View layoutMoreDetailsContent;
     private ImageView imageMoreDetailsToggle, imageOrdersToggle;
@@ -66,6 +66,7 @@ public class CustomerDetailsActivity extends AppCompatActivity {
         textMemberSince = findViewById(R.id.textMemberSince);
         textLastVisit = findViewById(R.id.textLastVisit);
         textOrdersCount = findViewById(R.id.textOrdersCount);
+        textBalance = findViewById(R.id.textCustomerBalance);
 
         textDetailName = findViewById(R.id.textDetailName);
         textDetailNumber = findViewById(R.id.textDetailNumber);
@@ -143,9 +144,28 @@ public class CustomerDetailsActivity extends AppCompatActivity {
                 return;
             }
             
-            String mode = textSelectedPaymentMode.getText().toString();
-            Toast.makeText(this, "Received ₹" + amountStr + " via " + mode, Toast.LENGTH_LONG).show();
-            bottomSheet.dismiss();
+            try {
+                double amountReceived = Double.parseDouble(amountStr);
+                String mode = textSelectedPaymentMode.getText().toString();
+                
+                if (currentCustomer != null) {
+                    double newDue = Math.max(0, currentCustomer.getDueAmount() - amountReceived);
+                    currentCustomer.setDueAmount(newDue);
+                    
+                    Executors.newSingleThreadExecutor().execute(() -> {
+                        db.customerDao().insert(currentCustomer);
+                        new CustomerSyncManager(this).syncCustomerToCloud(currentCustomer);
+                        
+                        runOnUiThread(() -> {
+                            Toast.makeText(this, "Received ₹" + amountStr + " via " + mode, Toast.LENGTH_LONG).show();
+                            loadCustomerData(); // Refresh UI
+                            bottomSheet.dismiss();
+                        });
+                    });
+                }
+            } catch (NumberFormatException e) {
+                Toast.makeText(this, "Invalid amount", Toast.LENGTH_SHORT).show();
+            }
         });
 
         bottomSheet.show();
@@ -167,6 +187,13 @@ public class CustomerDetailsActivity extends AppCompatActivity {
                         textLastVisit.setText(dateFormat.format(new Date(currentCustomer.getLastPurchaseTimestamp())));
                     } else {
                         textLastVisit.setText("-");
+                    }
+
+                    textBalance.setText(String.format(Locale.getDefault(), "₹%,.0f", currentCustomer.getDueAmount()));
+                    if (currentCustomer.getDueAmount() > 0) {
+                        textBalance.setTextColor(0xFFEF4444); // Red
+                    } else {
+                        textBalance.setTextColor(0xFF1E293B); // Dark Slate
                     }
 
                     textDetailName.setText(currentCustomer.getName());
