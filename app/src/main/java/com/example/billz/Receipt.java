@@ -25,6 +25,7 @@ public class Receipt {
     private String businessId; // store Firebase UID
     private String businessUuid; // store stable business UUID
     private boolean isReturned;
+    private boolean isPayment;
     private boolean syncPending;
 
     public Receipt() {
@@ -79,6 +80,8 @@ public class Receipt {
     public void setBusinessUuid(String businessUuid) { this.businessUuid = businessUuid; }
     public boolean isReturned() { return isReturned; }
     public void setReturned(boolean returned) { isReturned = returned; }
+    public boolean isPayment() { return isPayment; }
+    public void setPayment(boolean payment) { isPayment = payment; }
     public boolean isSyncPending() { return syncPending; }
     public void setSyncPending(boolean syncPending) { this.syncPending = syncPending; }
 }

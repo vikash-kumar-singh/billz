@@ -37,19 +37,31 @@ public class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ViewHold
         String customer = receipt.getCustomerName() != null && !receipt.getCustomerName().isEmpty() 
                 ? receipt.getCustomerName() + " " : "";
         
-        if (receipt.isReturned()) {
+        if (receipt.isPayment()) {
+            holder.textReceiptDesc.setText("Payment via " + receipt.getPaymentMode());
+            holder.textReceiptAmount.setText(String.format(Locale.getDefault(), "₹%,.0f", receipt.getTotalAmount()));
+            holder.textReceiptAmount.setTextColor(0xFF10B981); // Green for payment received
+            holder.imageReceiptIcon.setImageResource(R.drawable.ic_cash);
+        } else if (receipt.isReturned()) {
             holder.textReceiptDesc.setText(customer + "(RETURNED)");
             holder.textReceiptAmount.setText(String.format(Locale.getDefault(), "-₹%,.0f", receipt.getTotalAmount()));
             holder.textReceiptAmount.setTextColor(0xFFEF4444); // Red
-            holder.imageReceiptIcon.setImageResource(R.drawable.ic_nav_reports); // Use a different icon for return if possible
+            holder.imageReceiptIcon.setImageResource(R.drawable.ic_refresh); 
+        } else if ("Credit".equalsIgnoreCase(receipt.getPaymentMode())) {
+            holder.textReceiptDesc.setText("Due");
+            holder.textReceiptDesc.setTextColor(0xFFEF4444); // Red
+            holder.textReceiptAmount.setText(String.format(Locale.getDefault(), "₹-%,.0f", receipt.getTotalAmount()));
+            holder.textReceiptAmount.setTextColor(0xFFEF4444); // Red
+            holder.imageReceiptIcon.setImageResource(R.drawable.ic_credit_calendar);
         } else {
             holder.textReceiptDesc.setText(customer + "by " + receipt.getPaymentMode());
+            holder.textReceiptDesc.setTextColor(0xFF475569); // Default
             holder.textReceiptAmount.setText(String.format(Locale.getDefault(), "₹%,.0f", receipt.getTotalAmount()));
             holder.textReceiptAmount.setTextColor(0xFF2563EB); // Primary Blue
-            holder.imageReceiptIcon.setImageResource(R.drawable.ic_credit_calendar); // Or cash icon
+            holder.imageReceiptIcon.setImageResource(R.drawable.ic_credit_calendar);
         }
         
-        String itemsCountText = receipt.getItemCount() + (receipt.getItemCount() == 1 ? " Item " : " Items ");
+        String itemsCountText = receipt.getItemCount() > 0 ? receipt.getItemCount() + (receipt.getItemCount() == 1 ? " Item " : " Items ") : "";
         holder.textReceiptStats.setText(itemsCountText + getRelativeTime(receipt.getTimestamp()));
 
         View clickTarget = holder.layoutContent != null ? holder.layoutContent : holder.itemView;

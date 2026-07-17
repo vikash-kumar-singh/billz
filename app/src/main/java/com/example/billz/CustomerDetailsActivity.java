@@ -112,19 +112,16 @@ public class CustomerDetailsActivity extends AppCompatActivity {
         EditText editAmount = view.findViewById(R.id.editAmount);
         TextView textSelectedPaymentMode = view.findViewById(R.id.textSelectedPaymentMode);
         View layoutPaymentModeSelector = view.findViewById(R.id.layoutPaymentModeSelector);
-        View layoutSendSms = view.findViewById(R.id.layoutSendSms);
         com.google.android.material.button.MaterialButton btnSubmit = view.findViewById(R.id.btnSubmitAmount);
 
         if (isReceive) {
             textTitle.setText("RECEIVE AMOUNT");
             btnSubmit.setText("ADD AMOUNT");
             btnSubmit.setBackgroundTintList(android.content.res.ColorStateList.valueOf(0xFF4CAF50));
-            layoutSendSms.setVisibility(View.GONE);
         } else {
-            textTitle.setText("RETURN AMOUNT"); // Or keep as "RECEIVE AMOUNT" as per image? I'll use "RETURN AMOUNT"
+            textTitle.setText("RETURN AMOUNT");
             btnSubmit.setText("RETURN AMOUNT");
             btnSubmit.setBackgroundTintList(android.content.res.ColorStateList.valueOf(0xFFEF4444));
-            layoutSendSms.setVisibility(View.VISIBLE);
         }
 
         // Fetch Payment Modes
@@ -153,6 +150,8 @@ public class CustomerDetailsActivity extends AppCompatActivity {
 
         view.findViewById(R.id.btnCancel).setOnClickListener(v -> bottomSheet.dismiss());
         
+        android.widget.CheckBox checkSendSms = view.findViewById(R.id.checkSendSms);
+
         btnSubmit.setOnClickListener(v -> {
             String amountStr = editAmount.getText().toString().trim();
             if (amountStr.isEmpty()) {
@@ -163,6 +162,7 @@ public class CustomerDetailsActivity extends AppCompatActivity {
             try {
                 double amount = Double.parseDouble(amountStr);
                 String mode = textSelectedPaymentMode.getText().toString();
+                boolean shouldSendSms = checkSendSms.isChecked();
                 
                 if (currentCustomer != null) {
                     double newDue;
@@ -174,13 +174,31 @@ public class CustomerDetailsActivity extends AppCompatActivity {
                     currentCustomer.setDueAmount(newDue);
                     
                     Executors.newSingleThreadExecutor().execute(() -> {
+                        // 1. Update Customer
                         db.customerDao().insert(currentCustomer);
                         new CustomerSyncManager(this).syncCustomerToCloud(currentCustomer);
+                        
+                        // 2. Record Transaction as a Receipt
+                        String businessId = FirebaseHelper.getCurrentUid();
+                        String rId = java.util.UUID.randomUUID().toString();
+                        String rNo = "PY-" + (System.currentTimeMillis() % 10000);
+                        
+                        Receipt paymentReceipt = new Receipt(rId, rNo, currentCustomer.getName(), mode, amount, 0, System.currentTimeMillis(), businessId);
+                        paymentReceipt.setCustomerId(customerId);
+                        paymentReceipt.setPayment(true);
+                        if (!isReceive) paymentReceipt.setReturned(true); 
+                        
+                        db.receiptDao().insert(paymentReceipt);
                         
                         runOnUiThread(() -> {
                             String action = isReceive ? "Received" : "Returned";
                             Toast.makeText(this, action + " ₹" + amountStr + " via " + mode, Toast.LENGTH_LONG).show();
-                            loadCustomerData(); // Refresh UI
+                            
+                            if (shouldSendSms) {
+                                sendWhatsAppMessage(currentCustomer.getMobile(), action, amountStr, mode, currentCustomer.getDueAmount());
+                            }
+                            
+                            loadCustomerData(); 
                             bottomSheet.dismiss();
                         });
                     });
@@ -191,6 +209,42 @@ public class CustomerDetailsActivity extends AppCompatActivity {
         });
 
         bottomSheet.show();
+    }
+
+    private void sendWhatsAppMessage(String mobile, String action, String amount, String mode, double currentDue) {
+        if (mobile == null || mobile.isEmpty()) return;
+        
+        // Clean mobile number (remove non-digits, ensure country code)
+        String cleanMobile = mobile.replaceAll("[^\\d]", "");
+        if (cleanMobile.length() == 10) {
+            cleanMobile = "91" + cleanMobile; // Default to India if 10 digits
+        }
+
+        String businessName = "Our Store";
+        Business active = db.businessDao().getSelectedBusiness();
+        if (active != null) businessName = active.getName();
+
+        String message = String.format(Locale.getDefault(), 
+                "Hi, We have %s ₹%s from you via %s. Your current due balance is ₹%,.0f. Thank you! - %s",
+                action.toLowerCase(), amount, mode, currentDue, businessName);
+
+        try {
+            // Direct WhatsApp intent to minimize steps
+            android.content.Intent intent = new android.content.Intent(android.content.Intent.ACTION_VIEW);
+            String url = "whatsapp://send?phone=" + cleanMobile + "&text=" + android.net.Uri.encode(message);
+            intent.setData(android.net.Uri.parse(url));
+            startActivity(intent);
+        } catch (Exception e) {
+            // Fallback to web link if direct intent fails
+            try {
+                android.content.Intent intent = new android.content.Intent(android.content.Intent.ACTION_VIEW);
+                String url = "https://api.whatsapp.com/send?phone=" + cleanMobile + "&text=" + android.net.Uri.encode(message);
+                intent.setData(android.net.Uri.parse(url));
+                startActivity(intent);
+            } catch (Exception ex) {
+                Toast.makeText(this, "WhatsApp not installed", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     private void loadCustomerData() {
@@ -211,10 +265,11 @@ public class CustomerDetailsActivity extends AppCompatActivity {
                         textLastVisit.setText("-");
                     }
 
-                    textBalance.setText(String.format(Locale.getDefault(), "₹%,.0f", currentCustomer.getDueAmount()));
                     if (currentCustomer.getDueAmount() > 0) {
+                        textBalance.setText(String.format(Locale.getDefault(), "₹-%,.0f", currentCustomer.getDueAmount()));
                         textBalance.setTextColor(0xFFEF4444); // Red
                     } else {
+                        textBalance.setText(String.format(Locale.getDefault(), "₹%,.0f", currentCustomer.getDueAmount()));
                         textBalance.setTextColor(0xFF1E293B); // Dark Slate
                     }
 
