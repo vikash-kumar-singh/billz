@@ -68,13 +68,41 @@ public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.ViewHo
         }
 
         holder.itemView.setOnClickListener(v -> {
-            Intent intent = new Intent(v.getContext(), CustomerDetailsActivity.class);
-            intent.putExtra("customer_id", customer.getId());
-            v.getContext().startActivity(intent);
+            showCustomerActionDialog(v, customer);
         });
 
         // Set entry animation
         setAnimation(holder.itemView, position);
+    }
+
+    private void showCustomerActionDialog(View v, Customer customer) {
+        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(v.getContext());
+        View dialogView = LayoutInflater.from(v.getContext()).inflate(R.layout.dialog_customer_actions, null);
+        builder.setView(dialogView);
+        
+        TextView textTitle = dialogView.findViewById(R.id.textDialogTitle);
+        textTitle.setText(customer.getName());
+        
+        androidx.appcompat.app.AlertDialog dialog = builder.create();
+        
+        dialogView.findViewById(R.id.btnSelect).setOnClickListener(view -> {
+            dialog.dismiss();
+            android.widget.Toast.makeText(v.getContext(), "Customer Selected", android.widget.Toast.LENGTH_SHORT).show();
+        });
+        
+        dialogView.findViewById(R.id.btnAddAmount).setOnClickListener(view -> {
+            dialog.dismiss();
+            android.widget.Toast.makeText(v.getContext(), "Add Amount Clicked", android.widget.Toast.LENGTH_SHORT).show();
+        });
+        
+        dialogView.findViewById(R.id.btnViewProfile).setOnClickListener(view -> {
+            dialog.dismiss();
+            Intent intent = new Intent(v.getContext(), CustomerDetailsActivity.class);
+            intent.putExtra("customer_id", customer.getId());
+            v.getContext().startActivity(intent);
+        });
+        
+        dialog.show();
     }
 
     private int lastPosition = -1;

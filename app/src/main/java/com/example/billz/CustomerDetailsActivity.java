@@ -31,11 +31,12 @@ public class CustomerDetailsActivity extends AppCompatActivity {
     private AppDatabase db;
     private TextView textMemberSince, textLastVisit, textOrdersCount, textBalance;
     private TextView textDetailName, textDetailNumber, textDetailEmail, textDetailGender;
-    private View layoutMoreDetailsContent;
-    private ImageView imageMoreDetailsToggle, imageOrdersToggle;
-    private RecyclerView recyclerOrders;
+    private View layoutMoreDetailsContent, layoutTransactionHistoryContent;
+    private ImageView imageMoreDetailsToggle, imageOrdersToggle, imageTransactionHistoryToggle;
+    private RecyclerView recyclerOrders, recyclerTransactionHistory;
     private boolean isMoreDetailsExpanded = false;
     private boolean isOrdersExpanded = false;
+    private boolean isTransactionHistoryExpanded = false;
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
 
     @Override
@@ -80,28 +81,51 @@ public class CustomerDetailsActivity extends AppCompatActivity {
         recyclerOrders.setLayoutManager(new LinearLayoutManager(this));
         imageOrdersToggle = findViewById(R.id.imageOrdersToggle);
 
+        layoutTransactionHistoryContent = findViewById(R.id.layoutTransactionHistoryContent);
+        imageTransactionHistoryToggle = findViewById(R.id.imageTransactionHistoryToggle);
+        recyclerTransactionHistory = findViewById(R.id.recyclerTransactionHistory);
+        recyclerTransactionHistory.setLayoutManager(new LinearLayoutManager(this));
+
         findViewById(R.id.layoutMoreDetailsHeader).setOnClickListener(v -> toggleMoreDetails());
         findViewById(R.id.layoutOrdersHeader).setOnClickListener(v -> toggleOrders());
+        findViewById(R.id.layoutTransactionHistoryHeader).setOnClickListener(v -> toggleTransactionHistory());
 
         findViewById(R.id.btnEditCustomer).setOnClickListener(v -> 
                 Toast.makeText(this, "Edit feature coming soon", Toast.LENGTH_SHORT).show()
         );
 
-        findViewById(R.id.btnReceiveAmount).setOnClickListener(v -> showReceiveAmountBottomSheet());
+        findViewById(R.id.btnReceiveAmount).setOnClickListener(v -> showAmountBottomSheet(true));
 
-        findViewById(R.id.btnReturnAmount).setOnClickListener(v -> 
-                Toast.makeText(this, "Return Amount coming soon", Toast.LENGTH_SHORT).show()
+        findViewById(R.id.btnReturnAmount).setOnClickListener(v -> showAmountBottomSheet(false));
+
+        findViewById(R.id.btnLoadMore).setOnClickListener(v -> 
+                Toast.makeText(this, "No more transactions", Toast.LENGTH_SHORT).show()
         );
     }
 
-    private void showReceiveAmountBottomSheet() {
+    private void showAmountBottomSheet(boolean isReceive) {
         com.google.android.material.bottomsheet.BottomSheetDialog bottomSheet = new com.google.android.material.bottomsheet.BottomSheetDialog(this);
         View view = getLayoutInflater().inflate(R.layout.layout_receive_amount_bottom_sheet, null);
         bottomSheet.setContentView(view);
 
+        TextView textTitle = view.findViewById(R.id.textDialogTitle);
         EditText editAmount = view.findViewById(R.id.editAmount);
         TextView textSelectedPaymentMode = view.findViewById(R.id.textSelectedPaymentMode);
         View layoutPaymentModeSelector = view.findViewById(R.id.layoutPaymentModeSelector);
+        View layoutSendSms = view.findViewById(R.id.layoutSendSms);
+        com.google.android.material.button.MaterialButton btnSubmit = view.findViewById(R.id.btnSubmitAmount);
+
+        if (isReceive) {
+            textTitle.setText("RECEIVE AMOUNT");
+            btnSubmit.setText("ADD AMOUNT");
+            btnSubmit.setBackgroundTintList(android.content.res.ColorStateList.valueOf(0xFF4CAF50));
+            layoutSendSms.setVisibility(View.GONE);
+        } else {
+            textTitle.setText("RETURN AMOUNT"); // Or keep as "RECEIVE AMOUNT" as per image? I'll use "RETURN AMOUNT"
+            btnSubmit.setText("RETURN AMOUNT");
+            btnSubmit.setBackgroundTintList(android.content.res.ColorStateList.valueOf(0xFFEF4444));
+            layoutSendSms.setVisibility(View.VISIBLE);
+        }
 
         // Fetch Payment Modes
         Executors.newSingleThreadExecutor().execute(() -> {
@@ -111,16 +135,8 @@ public class CustomerDetailsActivity extends AppCompatActivity {
                 layoutPaymentModeSelector.setOnClickListener(v -> {
                     PopupMenu popup = new PopupMenu(this, layoutPaymentModeSelector);
                     if (modes.isEmpty()) {
-                        popup.getMenu().add("Cash");
-                        popup.getMenu().add("Debit Card");
-                        popup.getMenu().add("Credit Card");
-                        popup.getMenu().add("UPI");
-                        popup.getMenu().add("Store Credit");
-                        popup.getMenu().add("Online");
-                        popup.getMenu().add("Sample Rate");
-                        popup.getMenu().add("Exchange");
-                        popup.getMenu().add("Google Pay");
-                        popup.getMenu().add("Credit");
+                        String[] defaults = {"Cash", "Debit Card", "Credit Card", "UPI", "Store Credit", "Online", "Sample Rate", "Exchange", "Google Pay", "Credit"};
+                        for (String s : defaults) popup.getMenu().add(s);
                     } else {
                         for (PaymentMode mode : modes) {
                             popup.getMenu().add(mode.getName());
@@ -137,7 +153,7 @@ public class CustomerDetailsActivity extends AppCompatActivity {
 
         view.findViewById(R.id.btnCancel).setOnClickListener(v -> bottomSheet.dismiss());
         
-        view.findViewById(R.id.btnAddAmount).setOnClickListener(v -> {
+        btnSubmit.setOnClickListener(v -> {
             String amountStr = editAmount.getText().toString().trim();
             if (amountStr.isEmpty()) {
                 Toast.makeText(this, "Please enter amount", Toast.LENGTH_SHORT).show();
@@ -145,11 +161,16 @@ public class CustomerDetailsActivity extends AppCompatActivity {
             }
             
             try {
-                double amountReceived = Double.parseDouble(amountStr);
+                double amount = Double.parseDouble(amountStr);
                 String mode = textSelectedPaymentMode.getText().toString();
                 
                 if (currentCustomer != null) {
-                    double newDue = Math.max(0, currentCustomer.getDueAmount() - amountReceived);
+                    double newDue;
+                    if (isReceive) {
+                        newDue = Math.max(0, currentCustomer.getDueAmount() - amount);
+                    } else {
+                        newDue = currentCustomer.getDueAmount() + amount;
+                    }
                     currentCustomer.setDueAmount(newDue);
                     
                     Executors.newSingleThreadExecutor().execute(() -> {
@@ -157,7 +178,8 @@ public class CustomerDetailsActivity extends AppCompatActivity {
                         new CustomerSyncManager(this).syncCustomerToCloud(currentCustomer);
                         
                         runOnUiThread(() -> {
-                            Toast.makeText(this, "Received ₹" + amountStr + " via " + mode, Toast.LENGTH_LONG).show();
+                            String action = isReceive ? "Received" : "Returned";
+                            Toast.makeText(this, action + " ₹" + amountStr + " via " + mode, Toast.LENGTH_LONG).show();
                             loadCustomerData(); // Refresh UI
                             bottomSheet.dismiss();
                         });
@@ -205,6 +227,8 @@ public class CustomerDetailsActivity extends AppCompatActivity {
                     
                     if (!orders.isEmpty()) {
                         recyclerOrders.setAdapter(new ReceiptAdapter(orders));
+                        // For transaction history, we use the same orders but shown as due items
+                        recyclerTransactionHistory.setAdapter(new ReceiptAdapter(orders));
                     }
                 });
             }
@@ -221,5 +245,11 @@ public class CustomerDetailsActivity extends AppCompatActivity {
         isOrdersExpanded = !isOrdersExpanded;
         recyclerOrders.setVisibility(isOrdersExpanded ? View.VISIBLE : View.GONE);
         imageOrdersToggle.setImageResource(isOrdersExpanded ? R.drawable.ic_arrow_drop_up : R.drawable.ic_arrow_drop_down);
+    }
+
+    private void toggleTransactionHistory() {
+        isTransactionHistoryExpanded = !isTransactionHistoryExpanded;
+        layoutTransactionHistoryContent.setVisibility(isTransactionHistoryExpanded ? View.VISIBLE : View.GONE);
+        imageTransactionHistoryToggle.setImageResource(isTransactionHistoryExpanded ? R.drawable.ic_arrow_drop_up : R.drawable.ic_arrow_drop_down);
     }
 }

@@ -20,10 +20,10 @@
             android:layout_height="64dp"
             android:background="@color/white"
             app:navigationIcon="@drawable/ic_reports_back"
-            app:navigationIconTint="@color/colorPrimary"
+            app:navigationIconTint="#3F51B5"
             app:title="CUSTOMER NAME"
             app:titleCentered="false"
-            app:titleTextColor="@color/colorPrimary"
+            app:titleTextColor="#3F51B5"
             app:titleTextAppearance="@style/TextAppearance.MaterialComponents.Headline6">
 
             <com.google.android.material.button.MaterialButton
@@ -306,6 +306,81 @@
                         android:visibility="gone" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
+
+            <!-- Transaction History Section -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="12dp"
+                android:layout_marginTop="16dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="4dp"
+                app:cardElevation="2dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:id="@+id/layoutTransactionHistoryHeader"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:paddingHorizontal="16dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="?attr/selectableItemBackground">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:text="Transaction History"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+                        <ImageView
+                            android:id="@+id/imageTransactionHistoryToggle"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/ic_arrow_drop_down"
+                            app:tint="@color/colorPrimary" />
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layoutTransactionHistoryContent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/recyclerTransactionHistory"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnLoadMore"
+                            style="@style/Widget.MaterialComponents.Button.TextButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="LOAD MORE"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="24dp"
+                android:text="Note : Customer Due Balance Account is in Beta (public trial), Please contact us know if you find any issue or bugs."
+                android:textColor="#94A3B8"
+                android:textSize="12sp" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
