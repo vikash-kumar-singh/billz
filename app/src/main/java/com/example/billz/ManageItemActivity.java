@@ -241,31 +241,14 @@ public class ManageItemActivity extends AppCompatActivity {
             variantView.setTag(data.getId()); // Store ID for updates
             
             if (data.getImageUri() != null && !data.getImageUri().isEmpty()) {
-                try {
-                    android.net.Uri uri = android.net.Uri.parse(data.getImageUri());
-                    // Only load if it's a file URI or we have permission (internal files are file://)
-                    if ("file".equals(uri.getScheme())) {
-                        imgVariant.setImageURI(uri);
-                        imgVariant.setImageTintList(null);
-                        imgVariant.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                        imgVariant.setPadding(0, 0, 0, 0);
-                        variantView.setTag(R.id.imgVariant, data.getImageUri());
-                    } else {
-                        // If it's a content URI, it might crash during measure. 
-                        // Try to load bitmap safely to verify access
-                        try (java.io.InputStream is = getContentResolver().openInputStream(uri)) {
-                            if (is != null) {
-                                imgVariant.setImageURI(uri);
-                                imgVariant.setImageTintList(null);
-                                imgVariant.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                                imgVariant.setPadding(0, 0, 0, 0);
-                                variantView.setTag(R.id.imgVariant, data.getImageUri());
-                            }
-                        }
-                    }
-                } catch (Exception e) {
-                    Log.e("ManageItem", "Failed to load variant image: " + data.getImageUri(), e);
-                }
+                Glide.with(this)
+                        .load(data.getImageUri())
+                        .centerCrop()
+                        .placeholder(android.R.drawable.ic_menu_gallery)
+                        .into(imgVariant);
+                imgVariant.setImageTintList(null);
+                imgVariant.setPadding(0, 0, 0, 0);
+                variantView.setTag(R.id.imgVariant, data.getImageUri());
             }
         }
 
@@ -456,48 +439,73 @@ public class ManageItemActivity extends AppCompatActivity {
     }
 
     private void loadItemData() {
-        Executors.newSingleThreadExecutor().execute(() -> {
-            Business active = db.businessDao().getSelectedBusiness();
-            int bId = (active != null) ? active.getId() : -1;
-            
-            currentItem = db.itemDao().getById(itemId);
-            List<Variant> variants = db.variantDao().getVariantsForItem(itemId);
+        if (itemId == null || itemId.isEmpty()) {
+            Toast.makeText(this, "Invalid Item ID", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
 
-            if (currentItem != null) {
+        Executors.newSingleThreadExecutor().execute(() -> {
+            try {
+                Business active = db.businessDao().getSelectedBusiness();
+                int bId = (active != null) ? active.getId() : -1;
+                
+                currentItem = db.itemDao().getById(itemId);
+                List<Variant> variants = db.variantDao().getVariantsForItem(itemId);
+
+                if (currentItem == null) {
+                    runOnUiThread(() -> {
+                        Toast.makeText(this, "Item not found. Please wait for sync.", Toast.LENGTH_LONG).show();
+                        finish();
+                    });
+                    return;
+                }
+
                 String categoryName = currentItem.getCategory();
                 Category category = db.categoryDao().getByName(categoryName, bId);
 
                 runOnUiThread(() -> {
-                    editItemName.setText(currentItem.getName());
-                    textCategory.setText(categoryName != null ? categoryName : "No Category");
-                    
-                    selectedSellBy = currentItem.getSellBy() != null ? currentItem.getSellBy() : "Unit";
-                    textSellBy.setText("Sell by " + selectedSellBy);
-                    
-                    setMode(!currentItem.isAdvanceMode());
-                    
-                    if (isSimpleMode) {
-                        editSellingPriceSimple.setText(String.valueOf((int)currentItem.getSellingPrice()));
-                    }
-
-                    // Populate variants in container
-                    containerVariants.removeAllViews();
-                    variantViews.clear();
-                    if (currentItem.isAdvanceMode()) {
-                        for (Variant v : variants) {
-                            addNewVariantView(v);
+                    try {
+                        editItemName.setText(currentItem.getName());
+                        textCategory.setText(categoryName != null && !categoryName.isEmpty() ? categoryName : "Select Category");
+                        
+                        selectedSellBy = currentItem.getSellBy() != null ? currentItem.getSellBy() : "Unit";
+                        textSellBy.setText("Sell by " + selectedSellBy);
+                        
+                        setMode(!currentItem.isAdvanceMode());
+                        
+                        if (isSimpleMode) {
+                            editSellingPriceSimple.setText(String.valueOf((int)currentItem.getSellingPrice()));
                         }
-                    }
 
-                    if (category != null && category.getImageUri() != null) {
-                        imgCategory.setImageURI(android.net.Uri.parse(category.getImageUri()));
-                        imgCategory.setImageTintList(null);
-                    } else {
-                        imgCategory.setImageResource(R.drawable.ic_nav_reports);
-                        int color = ContextCompat.getColor(this, R.color.reports_tab_selected);
-                        imgCategory.setImageTintList(android.content.res.ColorStateList.valueOf(color));
+                        // Populate variants in container
+                        containerVariants.removeAllViews();
+                        variantViews.clear();
+                        if (currentItem.isAdvanceMode()) {
+                            for (Variant v : variants) {
+                                addNewVariantView(v);
+                            }
+                        }
+
+                        if (category != null && category.getImageUri() != null && !category.getImageUri().isEmpty()) {
+                            Glide.with(this)
+                                    .load(category.getImageUri())
+                                    .centerCrop()
+                                    .placeholder(R.drawable.ic_nav_reports)
+                                    .into(imgCategory);
+                            imgCategory.setImageTintList(null);
+                            imgCategory.setPadding(0, 0, 0, 0);
+                        } else {
+                            imgCategory.setImageResource(R.drawable.ic_nav_reports);
+                            int color = ContextCompat.getColor(this, R.color.reports_tab_selected);
+                            imgCategory.setImageTintList(android.content.res.ColorStateList.valueOf(color));
+                        }
+                    } catch (Exception e) {
+                        Log.e("ManageItem", "UI update failed", e);
                     }
                 });
+            } catch (Exception e) {
+                Log.e("ManageItem", "Data loading failed", e);
             }
         });
     }
@@ -524,11 +532,29 @@ public class ManageItemActivity extends AppCompatActivity {
     private void updateCategory(String newCategory) {
         if (currentItem != null) {
             currentItem.setCategory(newCategory);
-            Executors.newSingleThreadExecutor().execute(() -> {
-                db.itemDao().update(currentItem);
-                runOnUiThread(() -> {
-                    setResult(RESULT_OK);
-                    loadItemData();
+            runOnUiThread(() -> {
+                textCategory.setText(newCategory != null && !newCategory.isEmpty() ? newCategory : "Select Category");
+                
+                // Fetch category icon update
+                Executors.newSingleThreadExecutor().execute(() -> {
+                    Business active = db.businessDao().getSelectedBusiness();
+                    int bId = (active != null) ? active.getId() : -1;
+                    Category category = db.categoryDao().getByName(newCategory, bId);
+                    runOnUiThread(() -> {
+                        if (category != null && category.getImageUri() != null && !category.getImageUri().isEmpty()) {
+                            Glide.with(this)
+                                    .load(category.getImageUri())
+                                    .centerCrop()
+                                    .placeholder(R.drawable.ic_nav_reports)
+                                    .into(imgCategory);
+                            imgCategory.setImageTintList(null);
+                            imgCategory.setPadding(0, 0, 0, 0);
+                        } else {
+                            imgCategory.setImageResource(R.drawable.ic_nav_reports);
+                            int color = ContextCompat.getColor(this, R.color.reports_tab_selected);
+                            imgCategory.setImageTintList(android.content.res.ColorStateList.valueOf(color));
+                        }
+                    });
                 });
             });
         }
