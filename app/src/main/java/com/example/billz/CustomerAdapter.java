@@ -14,9 +14,27 @@ import java.util.List;
 public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.ViewHolder> {
 
     private List<Customer> customers;
+    private List<Customer> customersFull;
 
     public CustomerAdapter(List<Customer> customers) {
         this.customers = customers;
+        this.customersFull = new java.util.ArrayList<>(customers);
+    }
+
+    public void filter(String text) {
+        customers.clear();
+        if (text == null || text.isEmpty()) {
+            customers.addAll(customersFull);
+        } else {
+            text = text.toLowerCase();
+            for (Customer customer : customersFull) {
+                if (customer.getName().toLowerCase().contains(text) || 
+                    customer.getMobile().toLowerCase().contains(text)) {
+                    customers.add(customer);
+                }
+            }
+        }
+        notifyDataSetChanged();
     }
 
     @NonNull

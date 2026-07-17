@@ -47,7 +47,7 @@ import java.util.List;
 public class InventoryManagementActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
-    private View emptyStateView;
+    private View emptyStateView, noResultsView;
     private InventoryAdapter adapter;
     private List<InventoryItem> itemsList;
     private List<InventoryItem> categoriesList;
@@ -159,6 +159,7 @@ public class InventoryManagementActivity extends AppCompatActivity {
         View imageFilter = findViewById(R.id.imageFilter);
         TabLayout tabLayout = findViewById(R.id.tabLayoutInventory);
         emptyStateView = findViewById(R.id.emptyStateView);
+        noResultsView = findViewById(R.id.noResultsView);
         ViewGroup mainContainer = findViewById(android.R.id.content);
 
         editSearch = findViewById(R.id.editSearch);
@@ -414,9 +415,18 @@ public class InventoryManagementActivity extends AppCompatActivity {
 
     private void checkEmptyState() {
         if (adapter != null) {
-            boolean isEmpty = adapter.getItemCount() == 0;
-            emptyStateView.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
-            recyclerView.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
+            boolean isListEmpty = adapter.getItemCount() == 0;
+            boolean isSearching = editSearch != null && !editSearch.getText().toString().isEmpty();
+            
+            if (isSearching) {
+                noResultsView.setVisibility(isListEmpty ? View.VISIBLE : View.GONE);
+                emptyStateView.setVisibility(View.GONE);
+                recyclerView.setVisibility(isListEmpty ? View.GONE : View.VISIBLE);
+            } else {
+                noResultsView.setVisibility(View.GONE);
+                emptyStateView.setVisibility(isListEmpty ? View.VISIBLE : View.GONE);
+                recyclerView.setVisibility(isListEmpty ? View.GONE : View.VISIBLE);
+            }
         }
     }
 

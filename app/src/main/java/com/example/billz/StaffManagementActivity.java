@@ -3,8 +3,14 @@ package com.example.billz;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.transition.TransitionManager;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +41,9 @@ public class StaffManagementActivity extends AppCompatActivity {
     private ActivityResultLauncher<Intent> addStaffLauncher;
     private List<Staff> allStaffList;
     private TextView chipAll, chipAccess, chipAttendance;
+    private View searchBarContainer, noResultsView;
+    private EditText editSearch;
+    private boolean isSearchVisible = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,8 +69,55 @@ public class StaffManagementActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recyclerStaff);
         textNoStaff = findViewById(R.id.textNoStaff);
+        noResultsView = findViewById(R.id.noResultsView);
         
         chipAll = findViewById(R.id.chipAll);
+
+        searchBarContainer = findViewById(R.id.searchBarContainer);
+        editSearch = findViewById(R.id.editSearchStaff);
+        ImageView imageSearch = findViewById(R.id.imageSearchStaff);
+        ImageView imageClearSearch = findViewById(R.id.imageClearSearchStaff);
+        ViewGroup mainContainer = findViewById(android.R.id.content);
+
+        imageSearch.setOnClickListener(v -> {
+            TransitionManager.beginDelayedTransition(mainContainer);
+            if (isSearchVisible) {
+                searchBarContainer.setVisibility(View.GONE);
+                editSearch.setText("");
+                hideKeyboard();
+            } else {
+                searchBarContainer.setVisibility(View.VISIBLE);
+                editSearch.requestFocus();
+                showKeyboard();
+            }
+            isSearchVisible = !isSearchVisible;
+        });
+
+        imageClearSearch.setOnClickListener(v -> {
+            if (editSearch.getText().length() > 0) {
+                editSearch.setText("");
+            } else {
+                searchBarContainer.setVisibility(View.GONE);
+                isSearchVisible = false;
+                hideKeyboard();
+            }
+        });
+
+        editSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (adapter != null) {
+                    adapter.filter(s.toString());
+                    checkEmptyState();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
         
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -125,6 +181,33 @@ public class StaffManagementActivity extends AppCompatActivity {
         selected.setTextColor(selectedText);
     }
 
+    private void checkEmptyState() {
+        if (adapter != null) {
+            boolean isListEmpty = adapter.getItemCount() == 0;
+            boolean isSearching = editSearch != null && !editSearch.getText().toString().isEmpty();
+
+            if (isSearching) {
+                noResultsView.setVisibility(isListEmpty ? View.VISIBLE : View.GONE);
+                textNoStaff.setVisibility(View.GONE);
+                recyclerView.setVisibility(isListEmpty ? View.GONE : View.VISIBLE);
+            } else {
+                noResultsView.setVisibility(View.GONE);
+                textNoStaff.setVisibility(isListEmpty ? View.VISIBLE : View.GONE);
+                recyclerView.setVisibility(isListEmpty ? View.GONE : View.VISIBLE);
+            }
+        }
+    }
+
+    private void showKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        if (imm != null) imm.showSoftInput(editSearch, InputMethodManager.SHOW_IMPLICIT);
+    }
+
+    private void hideKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        if (imm != null) imm.hideSoftInputFromWindow(editSearch.getWindowToken(), 0);
+    }
+
     private void filterStaff() {
         if (allStaffList == null) return;
 
@@ -141,45 +224,39 @@ public class StaffManagementActivity extends AppCompatActivity {
     }
 
     private void updateRecyclerView(List<Staff> list) {
-        if (list == null || list.isEmpty()) {
-            textNoStaff.setVisibility(View.VISIBLE);
-            recyclerView.setVisibility(View.GONE);
-        } else {
-            textNoStaff.setVisibility(View.GONE);
-            recyclerView.setVisibility(View.VISIBLE);
-            adapter = new StaffAdapter(list, new StaffAdapter.OnStaffClickListener() {
-                @Override
-                public void onStaffClick(Staff staff) {
-                    // When card is clicked, open the Add/Update Staff page
-                    Intent intent = new Intent(StaffManagementActivity.this, AddStaffActivity.class);
-                    intent.putExtra("staff_id", staff.id);
-                    addStaffLauncher.launch(intent);
-                }
+        adapter = new StaffAdapter(list, new StaffAdapter.OnStaffClickListener() {
+            @Override
+            public void onStaffClick(Staff staff) {
+                // When card is clicked, open the Add/Update Staff page
+                Intent intent = new Intent(StaffManagementActivity.this, AddStaffActivity.class);
+                intent.putExtra("staff_id", staff.id);
+                addStaffLauncher.launch(intent);
+            }
 
-                @Override
-                public void onPermissionsClick(Staff staff) {
-                    // When the "Permissions" badge is clicked, open the Add/Update Staff page
-                    Intent intent = new Intent(StaffManagementActivity.this, AddStaffActivity.class);
-                    intent.putExtra("staff_id", staff.id);
-                    addStaffLauncher.launch(intent);
-                }
+            @Override
+            public void onPermissionsClick(Staff staff) {
+                // When the "Permissions" badge is clicked, open the Add/Update Staff page
+                Intent intent = new Intent(StaffManagementActivity.this, AddStaffActivity.class);
+                intent.putExtra("staff_id", staff.id);
+                addStaffLauncher.launch(intent);
+            }
 
-                @Override
-                public void onAttendanceClick(Staff staff) {
-                    Intent intent = new Intent(StaffManagementActivity.this, AttendanceManagementActivity.class);
-                    intent.putExtra("staff_id", staff.id);
-                    startActivity(intent);
-                }
+            @Override
+            public void onAttendanceClick(Staff staff) {
+                Intent intent = new Intent(StaffManagementActivity.this, AttendanceManagementActivity.class);
+                intent.putExtra("staff_id", staff.id);
+                startActivity(intent);
+            }
 
-                @Override
-                public void onPaySlipClick(Staff staff) {
-                    Intent intent = new Intent(StaffManagementActivity.this, SalarySlipActivity.class);
-                    intent.putExtra("staff_id", staff.id);
-                    startActivity(intent);
-                }
-            });
-            recyclerView.setAdapter(adapter);
-        }
+            @Override
+            public void onPaySlipClick(Staff staff) {
+                Intent intent = new Intent(StaffManagementActivity.this, SalarySlipActivity.class);
+                intent.putExtra("staff_id", staff.id);
+                startActivity(intent);
+            }
+        });
+        recyclerView.setAdapter(adapter);
+        checkEmptyState();
     }
 
     private void showShareStaffBottomSheet(String name, String email) {

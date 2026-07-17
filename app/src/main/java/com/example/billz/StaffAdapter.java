@@ -13,6 +13,7 @@ import java.util.List;
 public class StaffAdapter extends RecyclerView.Adapter<StaffAdapter.ViewHolder> {
 
     private final List<Staff> staffList;
+    private final List<Staff> staffListFull;
     private OnStaffClickListener listener;
 
     public interface OnStaffClickListener {
@@ -24,7 +25,26 @@ public class StaffAdapter extends RecyclerView.Adapter<StaffAdapter.ViewHolder> 
 
     public StaffAdapter(List<Staff> staffList, OnStaffClickListener listener) {
         this.staffList = staffList;
+        this.staffListFull = new java.util.ArrayList<>(staffList);
         this.listener = listener;
+    }
+
+    public void filter(String text) {
+        staffList.clear();
+        if (text == null || text.isEmpty()) {
+            staffList.addAll(staffListFull);
+        } else {
+            text = text.toLowerCase();
+            for (Staff staff : staffListFull) {
+                if ((staff.name != null && staff.name.toLowerCase().contains(text)) || 
+                    (staff.role != null && staff.role.toLowerCase().contains(text)) ||
+                    (staff.email != null && staff.email.toLowerCase().contains(text)) ||
+                    (staff.mobile != null && staff.mobile.toLowerCase().contains(text))) {
+                    staffList.add(staff);
+                }
+            }
+        }
+        notifyDataSetChanged();
     }
 
     @NonNull

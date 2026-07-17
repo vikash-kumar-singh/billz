@@ -51,7 +51,22 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
         } else {
             text = text.toLowerCase();
             for (InventoryItem item : itemsFull) {
-                if (item.getName().toLowerCase().contains(text)) {
+                boolean matches = item.getName().toLowerCase().contains(text);
+                
+                if (!matches && item.getPrice() != null) {
+                    matches = item.getPrice().toLowerCase().contains(text);
+                }
+                
+                if (!matches && item.getTags() != null) {
+                    for (String tag : item.getTags()) {
+                        if (tag.toLowerCase().contains(text)) {
+                            matches = true;
+                            break;
+                        }
+                    }
+                }
+                
+                if (matches) {
                     items.add(item);
                 }
             }

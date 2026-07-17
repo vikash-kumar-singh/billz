@@ -16,10 +16,29 @@ import java.util.Locale;
 public class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ViewHolder> {
 
     private final List<Receipt> receipts;
+    private final List<Receipt> receiptsFull;
     private final SimpleDateFormat dateTimeFormat = new SimpleDateFormat("dd MMM yyyy - h:mm a", Locale.getDefault());
 
     public ReceiptAdapter(List<Receipt> receipts) {
         this.receipts = receipts;
+        this.receiptsFull = new java.util.ArrayList<>(receipts);
+    }
+
+    public void filter(String text) {
+        receipts.clear();
+        if (text == null || text.isEmpty()) {
+            receipts.addAll(receiptsFull);
+        } else {
+            text = text.toLowerCase();
+            for (Receipt receipt : receiptsFull) {
+                if ((receipt.getCustomerName() != null && receipt.getCustomerName().toLowerCase().contains(text)) || 
+                    (receipt.getReceiptNo() != null && receipt.getReceiptNo().toLowerCase().contains(text)) ||
+                    (receipt.getPaymentMode() != null && receipt.getPaymentMode().toLowerCase().contains(text))) {
+                    receipts.add(receipt);
+                }
+            }
+        }
+        notifyDataSetChanged();
     }
 
     @NonNull

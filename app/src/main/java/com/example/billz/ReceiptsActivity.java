@@ -5,6 +5,12 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.transition.TransitionManager;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -36,6 +42,9 @@ public class ReceiptsActivity extends AppCompatActivity {
     private String currentFilter = "ALL";
     private com.google.android.material.button.MaterialButton btnFilterAll;
     private ReceiptCloudRepository cloudRepo;
+    private View searchBarContainer, noResultsView;
+    private EditText editSearch;
+    private boolean isSearchVisible = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +83,53 @@ public class ReceiptsActivity extends AppCompatActivity {
 
         recyclerReceipts = findViewById(R.id.recyclerReceipts);
         recyclerReceipts.setLayoutManager(new LinearLayoutManager(this));
+
+        searchBarContainer = findViewById(R.id.searchBarContainer);
+        editSearch = findViewById(R.id.editSearchReceipts);
+        noResultsView = findViewById(R.id.noResultsView);
+        ImageView imageSearch = findViewById(R.id.imageSearchReceipts);
+        ImageView imageClearSearch = findViewById(R.id.imageClearSearchReceipts);
+        ViewGroup mainContainer = findViewById(android.R.id.content);
+
+        imageSearch.setOnClickListener(v -> {
+            TransitionManager.beginDelayedTransition(mainContainer);
+            if (isSearchVisible) {
+                searchBarContainer.setVisibility(View.GONE);
+                editSearch.setText("");
+                hideKeyboard();
+            } else {
+                searchBarContainer.setVisibility(View.VISIBLE);
+                editSearch.requestFocus();
+                showKeyboard();
+            }
+            isSearchVisible = !isSearchVisible;
+        });
+
+        imageClearSearch.setOnClickListener(v -> {
+            if (editSearch.getText().length() > 0) {
+                editSearch.setText("");
+            } else {
+                searchBarContainer.setVisibility(View.GONE);
+                isSearchVisible = false;
+                hideKeyboard();
+            }
+        });
+
+        editSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (adapter != null) {
+                    adapter.filter(s.toString());
+                    checkEmptyState();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
 
         textDateFrom = findViewById(R.id.textDateFrom);
         textDateTo = findViewById(R.id.textDateTo);
@@ -174,6 +230,33 @@ public class ReceiptsActivity extends AppCompatActivity {
         dialog.show();
     }
 
+    private ReceiptAdapter adapter;
+
+    private void checkEmptyState() {
+        if (adapter != null) {
+            boolean isListEmpty = adapter.getItemCount() == 0;
+            boolean isSearching = editSearch != null && !editSearch.getText().toString().isEmpty();
+            
+            if (isSearching) {
+                noResultsView.setVisibility(isListEmpty ? View.VISIBLE : View.GONE);
+                recyclerReceipts.setVisibility(isListEmpty ? View.GONE : View.VISIBLE);
+            } else {
+                noResultsView.setVisibility(View.GONE);
+                recyclerReceipts.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
+    private void showKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        if (imm != null) imm.showSoftInput(editSearch, InputMethodManager.SHOW_IMPLICIT);
+    }
+
+    private void hideKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        if (imm != null) imm.hideSoftInputFromWindow(editSearch.getWindowToken(), 0);
+    }
+
     private void loadReceipts() {
         Executors.newSingleThreadExecutor().execute(() -> {
             Log.d("ReceiptsActivity", "RECEIPT_LOAD_STARTED for Business: " + currentUid);
@@ -200,7 +283,9 @@ public class ReceiptsActivity extends AppCompatActivity {
             }
 
             runOnUiThread(() -> {
-                recyclerReceipts.setAdapter(new ReceiptAdapter(list));
+                adapter = new ReceiptAdapter(list);
+                recyclerReceipts.setAdapter(adapter);
+                checkEmptyState();
                 Log.d("ReceiptsActivity", "RECEIPT_LOAD_SUCCESS: Count " + list.size());
             });
         });

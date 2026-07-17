@@ -27,7 +27,57 @@
                 app:navigationIcon="@drawable/ic_chevron_left"
                 app:navigationIconTint="@color/colorPrimary"
                 app:title="Receipts"
-                app:titleTextColor="@color/colorPrimary" />
+                app:titleTextColor="@color/colorPrimary">
+
+                <ImageView
+                    android:id="@+id/imageSearchReceipts"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="end"
+                    android:layout_marginEnd="16dp"
+                    android:src="@android:drawable/ic_menu_search"
+                    app:tint="@color/colorPrimary" />
+            </com.google.android.material.appbar.MaterialToolbar>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/searchBarContainer"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginVertical="8dp"
+            android:background="@drawable/bg_search_bar"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="16dp"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@android:drawable/ic_menu_search"
+                app:tint="@color/colorPrimary" />
+
+            <EditText
+                android:id="@+id/editSearchReceipts"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:hint="Search customer or ID..."
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:paddingHorizontal="12dp"
+                android:textColor="@color/textPrimary"
+                android:textColorHint="@color/textHint"
+                android:textSize="15sp" />
+
+            <ImageView
+                android:id="@+id/imageClearSearchReceipts"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@android:drawable/ic_menu_close_clear_cancel"
+                app:tint="@color/textSecondary" />
         </LinearLayout>
 
         <!-- Date Selectors -->
@@ -98,6 +148,41 @@
             android:paddingBottom="80dp"
             android:clipToPadding="false"
             tools:listitem="@layout/item_receipt" />
+
+        <LinearLayout
+            android:id="@+id/noResultsView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingHorizontal="32dp"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:alpha="0.5"
+                android:src="@android:drawable/ic_menu_search"
+                app:tint="@color/textHint" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="No matching receipts found"
+                android:textColor="@color/textPrimary"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:text="Try searching with a different name or bill ID"
+                android:textColor="@color/textSecondary"
+                android:textSize="15sp" />
+        </LinearLayout>
     </LinearLayout>
 
     <com.google.android.material.button.MaterialButton
