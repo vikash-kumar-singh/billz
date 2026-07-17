@@ -2,7 +2,9 @@ package com.example.billz;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -84,13 +86,69 @@ public class CustomerDetailsActivity extends AppCompatActivity {
                 Toast.makeText(this, "Edit feature coming soon", Toast.LENGTH_SHORT).show()
         );
 
-        findViewById(R.id.btnReceiveAmount).setOnClickListener(v -> 
-                Toast.makeText(this, "Receive Amount coming soon", Toast.LENGTH_SHORT).show()
-        );
+        findViewById(R.id.btnReceiveAmount).setOnClickListener(v -> showReceiveAmountBottomSheet());
 
         findViewById(R.id.btnReturnAmount).setOnClickListener(v -> 
                 Toast.makeText(this, "Return Amount coming soon", Toast.LENGTH_SHORT).show()
         );
+    }
+
+    private void showReceiveAmountBottomSheet() {
+        com.google.android.material.bottomsheet.BottomSheetDialog bottomSheet = new com.google.android.material.bottomsheet.BottomSheetDialog(this);
+        View view = getLayoutInflater().inflate(R.layout.layout_receive_amount_bottom_sheet, null);
+        bottomSheet.setContentView(view);
+
+        EditText editAmount = view.findViewById(R.id.editAmount);
+        TextView textSelectedPaymentMode = view.findViewById(R.id.textSelectedPaymentMode);
+        View layoutPaymentModeSelector = view.findViewById(R.id.layoutPaymentModeSelector);
+
+        // Fetch Payment Modes
+        Executors.newSingleThreadExecutor().execute(() -> {
+            int bId = BusinessHelper.getActiveBusinessId(this);
+            List<PaymentMode> modes = db.paymentModeDao().getAllPaymentModes(bId);
+            runOnUiThread(() -> {
+                layoutPaymentModeSelector.setOnClickListener(v -> {
+                    PopupMenu popup = new PopupMenu(this, layoutPaymentModeSelector);
+                    if (modes.isEmpty()) {
+                        popup.getMenu().add("Cash");
+                        popup.getMenu().add("Debit Card");
+                        popup.getMenu().add("Credit Card");
+                        popup.getMenu().add("UPI");
+                        popup.getMenu().add("Store Credit");
+                        popup.getMenu().add("Online");
+                        popup.getMenu().add("Sample Rate");
+                        popup.getMenu().add("Exchange");
+                        popup.getMenu().add("Google Pay");
+                        popup.getMenu().add("Credit");
+                    } else {
+                        for (PaymentMode mode : modes) {
+                            popup.getMenu().add(mode.getName());
+                        }
+                    }
+                    popup.setOnMenuItemClickListener(item -> {
+                        textSelectedPaymentMode.setText(item.getTitle());
+                        return true;
+                    });
+                    popup.show();
+                });
+            });
+        });
+
+        view.findViewById(R.id.btnCancel).setOnClickListener(v -> bottomSheet.dismiss());
+        
+        view.findViewById(R.id.btnAddAmount).setOnClickListener(v -> {
+            String amountStr = editAmount.getText().toString().trim();
+            if (amountStr.isEmpty()) {
+                Toast.makeText(this, "Please enter amount", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            
+            String mode = textSelectedPaymentMode.getText().toString();
+            Toast.makeText(this, "Received ₹" + amountStr + " via " + mode, Toast.LENGTH_LONG).show();
+            bottomSheet.dismiss();
+        });
+
+        bottomSheet.show();
     }
 
     private void loadCustomerData() {
