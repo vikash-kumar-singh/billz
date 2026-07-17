@@ -42,6 +42,9 @@ public interface ReceiptDao {
     @Query("SELECT * FROM receipts WHERE id = :id")
     Receipt getById(String id);
 
+    @Query("SELECT * FROM receipts WHERE customerId = :customerId ORDER BY timestamp DESC")
+    List<Receipt> getReceiptsByCustomer(String customerId);
+
     @Query("DELETE FROM receipts WHERE id = :id")
     void deleteById(String id);
 

@@ -83,6 +83,11 @@
             android:theme="@style/Theme.Billz">
         </activity>
         <activity
+            android:name=".CustomerDetailsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Billz">
+        </activity>
+        <activity
             android:name=".CashFlowActivity"
             android:exported="false"
             android:theme="@style/Theme.Billz">

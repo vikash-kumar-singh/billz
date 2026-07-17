@@ -1,5 +1,6 @@
 package com.example.billz;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,6 +59,12 @@ public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.ViewHo
         long oneDayMillis = 24 * 60 * 60 * 1000;
         boolean isNew = (System.currentTimeMillis() - customer.getCreatedAt()) < oneDayMillis;
         holder.badgeNew.setVisibility(isNew ? View.VISIBLE : View.GONE);
+
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(v.getContext(), CustomerDetailsActivity.class);
+            intent.putExtra("customer_id", customer.getId());
+            v.getContext().startActivity(intent);
+        });
 
         // Set entry animation
         setAnimation(holder.itemView, position);

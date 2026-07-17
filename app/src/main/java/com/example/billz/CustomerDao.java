@@ -18,6 +18,9 @@ public interface CustomerDao {
     @Query("SELECT * FROM customers WHERE businessId = :businessId ORDER BY lastPurchaseTimestamp DESC")
     List<Customer> getAllCustomers(int businessId);
 
+    @Query("SELECT * FROM customers WHERE id = :id LIMIT 1")
+    Customer getById(String id);
+
     @Query("SELECT * FROM customers WHERE mobile = :mobile AND businessId = :businessId LIMIT 1")
     Customer getCustomerByMobile(String mobile, int businessId);
 }
