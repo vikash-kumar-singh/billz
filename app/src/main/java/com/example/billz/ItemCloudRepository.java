@@ -35,9 +35,15 @@ public class ItemCloudRepository {
         return db.collection("users").document(uid).collection("products");
     }
 
-    public void saveItem(Item item, List<Variant> variants) {
+    public interface SaveCallback {
+        void onSuccess();
+        void onFailure(String error);
+    }
+
+    public void saveItem(Item item, List<Variant> variants, SaveCallback callback) {
         if (uid == null) {
             Log.e(TAG, "CURRENT_UID: NULL - Cannot save to Firestore");
+            if (callback != null) callback.onFailure("User not logged in");
             return;
         }
 
@@ -45,22 +51,18 @@ public class ItemCloudRepository {
         String bUuid = (active != null) ? active.getUuid() : "legacy";
         
         CollectionReference itemsRef = getItemsCollection();
+        if (itemsRef == null) {
+            if (callback != null) callback.onFailure("Failed to get items collection");
+            return;
+        }
+
         DocumentReference docRef;
-        
         if (item.getId() != null && !item.getId().isEmpty()) {
             docRef = itemsRef.document(item.getId());
         } else {
             docRef = itemsRef.document();
-            item.setId(docRef.getId()); // Use Document ID as Primary Key
-            // Update local Room database with the new ID
-            executor.execute(() -> {
-                AppDatabase dbLocal = AppDatabase.getInstance(context);
-                dbLocal.itemDao().insert(item);
-            });
+            item.setId(docRef.getId());
         }
-
-        Log.d(TAG, "PRODUCT_SAVE_STARTED: " + item.getName() + " ID: " + item.getId());
-        Log.d(TAG, "CURRENT_UID: " + uid);
 
         WriteBatch batch = db.batch();
 
@@ -90,13 +92,8 @@ public class ItemCloudRepository {
             } else {
                 vDocRef = variantsRef.document();
                 variant.setId(vDocRef.getId());
-                variant.setItemId(item.getId());
-                // Update local variant ID
-                executor.execute(() -> {
-                    AppDatabase dbLocal = AppDatabase.getInstance(context);
-                    dbLocal.variantDao().insert(variant);
-                });
             }
+            variant.setItemId(item.getId());
 
             Map<String, Object> vMap = new HashMap<>();
             vMap.put("id", variant.getId());
@@ -112,9 +109,17 @@ public class ItemCloudRepository {
         }
 
         batch.commit().addOnSuccessListener(aVoid -> {
-            Log.d(TAG, "PRODUCT_SAVE_SUCCESS: " + item.getName());
+            executor.execute(() -> {
+                AppDatabase dbLocal = AppDatabase.getInstance(context);
+                dbLocal.itemDao().insert(item);
+                dbLocal.variantDao().deleteVariantsForItem(item.getId());
+                dbLocal.variantDao().insertAll(variants);
+                Log.d(TAG, "PRODUCT_SAVE_SUCCESS: " + item.getName());
+                if (callback != null) callback.onSuccess();
+            });
         }).addOnFailureListener(e -> {
             Log.e(TAG, "PRODUCT_SAVE_FAILED: " + e.getMessage());
+            if (callback != null) callback.onFailure(e.getMessage());
         });
     }
 

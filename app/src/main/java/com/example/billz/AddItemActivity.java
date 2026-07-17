@@ -36,7 +36,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class AddItemActivity extends AppCompatActivity {
 
-    private EditText editItemName, editSellingPriceSimple;
+    private EditText editItemName, editSellingPriceSimple, editStockSimple;
     private TextView btnSimple, btnAdvance, textCategory;
     private View layoutSimpleMode, layoutAdvanceMode;
     private LinearLayout containerVariants;
@@ -47,6 +47,7 @@ public class AddItemActivity extends AppCompatActivity {
 
     private ActivityResultLauncher<Intent> galleryLauncher;
     private ActivityResultLauncher<Intent> cameraLauncher;
+    private ActivityResultLauncher<Intent> addCategoryLauncher;
     private View activeVariantView;
     private android.net.Uri cameraImageUri;
 
@@ -58,6 +59,7 @@ public class AddItemActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_item);
 
         setupImageLaunchers();
+        setupCategoryLauncher();
 
         MaterialToolbar toolbar = findViewById(R.id.toolbarItem);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.toolbarItemLayout), (v, insets) -> {
@@ -70,6 +72,7 @@ public class AddItemActivity extends AppCompatActivity {
         
         editItemName = findViewById(R.id.editItemName);
         editSellingPriceSimple = findViewById(R.id.editSellingPriceSimple);
+        editStockSimple = findViewById(R.id.editStockSimple);
         
         textCategory = findViewById(R.id.textCategory);
         btnSimple = findViewById(R.id.btnSimple);
@@ -97,6 +100,15 @@ public class AddItemActivity extends AppCompatActivity {
 
         // Initialize first variant for advance mode
         addNewVariantView();
+    }
+
+    private void setupCategoryLauncher() {
+        addCategoryLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            if (result.getResultCode() == RESULT_OK) {
+                // Refresh categories if needed, or if we want to auto-select
+                // For now, we'll just show the bottom sheet again or trust the user will see it
+            }
+        });
     }
 
     private void setupImageLaunchers() {
@@ -208,31 +220,66 @@ public class AddItemActivity extends AppCompatActivity {
         }
 
         String category = textCategory.getText().toString();
-        if (category.equals("Ex: Fruits")) category = "Uncategorized";
+        if (category.equals("Ex: Fruits") || category.equals("Select Category") || category.isEmpty()) {
+            Toast.makeText(this, "Please select a category", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         final List<VariantData> variantsToSave = new ArrayList<>();
 
         if (isSimpleMode) {
+            String priceStr = editSellingPriceSimple.getText().toString().trim();
+            if (priceStr.isEmpty()) {
+                Toast.makeText(this, "Please enter selling price", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             double sellingPrice = 0;
+            int stock = 0;
             try {
-                sellingPrice = Double.parseDouble(editSellingPriceSimple.getText().toString());
+                sellingPrice = Double.parseDouble(priceStr);
+            } catch (Exception e) {
+                Toast.makeText(this, "Invalid selling price", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            try {
+                String stockStr = editStockSimple.getText().toString().trim();
+                if (!stockStr.isEmpty()) {
+                    stock = Integer.parseInt(stockStr);
+                }
             } catch (Exception ignored) {}
-            variantsToSave.add(new VariantData("Default", sellingPrice, 0, 0, null));
+            variantsToSave.add(new VariantData("Default", sellingPrice, 0, stock, null));
         } else {
-            for (View v : variantViews) {
+            for (int i = 0; i < variantViews.size(); i++) {
+                View v = variantViews.get(i);
                 EditText editName = v.findViewById(R.id.editVariantName);
                 EditText editSelling = v.findViewById(R.id.editSellingPriceAdvance);
                 EditText editCost = v.findViewById(R.id.editCostPriceAdvance);
                 EditText editStock = v.findViewById(R.id.editStockAdvance);
 
                 String vName = editName.getText().toString().trim();
-                if (vName.isEmpty()) vName = "Default";
+                if (vName.isEmpty()) vName = "Variant " + (i + 1);
+
+                String sellingStr = editSelling.getText().toString().trim();
+                if (sellingStr.isEmpty()) {
+                    Toast.makeText(this, "Please enter selling price for " + vName, Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
                 double selling = 0, cost = 0;
                 int stock = 0;
-                try { selling = Double.parseDouble(editSelling.getText().toString()); } catch (Exception ignored) {}
-                try { cost = Double.parseDouble(editCost.getText().toString()); } catch (Exception ignored) {}
-                try { stock = Integer.parseInt(editStock.getText().toString()); } catch (Exception ignored) {}
+                try { selling = Double.parseDouble(sellingStr); } catch (Exception e) {
+                    Toast.makeText(this, "Invalid selling price for " + vName, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                try {
+                    String costStr = editCost.getText().toString().trim();
+                    if (!costStr.isEmpty()) cost = Double.parseDouble(costStr);
+                } catch (Exception ignored) {}
+                try {
+                    String stockStr = editStock.getText().toString().trim();
+                    if (!stockStr.isEmpty()) stock = Integer.parseInt(stockStr);
+                } catch (Exception ignored) {}
 
                 String vImageUri = (String) v.getTag(R.id.imgVariant);
                 variantsToSave.add(new VariantData(vName, selling, cost, stock, vImageUri));
@@ -250,7 +297,10 @@ public class AddItemActivity extends AppCompatActivity {
 
     private void uploadImagesAndSave(String name, String category, List<VariantData> variantsToSave) {
         String uid = FirebaseHelper.getCurrentUid();
-        if (uid == null) return;
+        if (uid == null) {
+            Toast.makeText(this, "User not logged in. Cannot save.", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         progressSave.setVisibility(View.VISIBLE);
         findViewById(R.id.btnSave).setVisibility(View.GONE);
@@ -300,33 +350,53 @@ public class AddItemActivity extends AppCompatActivity {
             totalStock = first.stockQuantity;
         }
         
-        Item item = new Item(name, category, first.sellingPrice, first.costPrice, totalStock, first.name, selectedSellBy, !isSimpleMode);
-        item.setBusinessId(BusinessHelper.getActiveBusinessId(this));
-        item.setId(java.util.UUID.randomUUID().toString());
-
-        BusinessHelper.ensureActiveBusiness(this, () -> {
-            AppDatabase db = AppDatabase.getInstance(this);
-            db.itemDao().insert(item);
-            
-            List<Variant> savedVariants = new ArrayList<>();
-            for (int i = 0; i < variantsToSave.size(); i++) {
-                VariantData vd = variantsToSave.get(i);
-                Variant variant = new Variant(item.getId(), vd.name, vd.sellingPrice, vd.costPrice, vd.stockQuantity);
-                variant.setId(java.util.UUID.randomUUID().toString());
-                variant.setSortOrder(i);
-                variant.setImageUri(vd.imageUri);
-                db.variantDao().insert(variant);
-                savedVariants.add(variant);
-            }
-
-            new ItemCloudRepository(this).saveItem(item, savedVariants);
-
+        int bId = BusinessHelper.getActiveBusinessId(this);
+        if (bId == -1) {
             runOnUiThread(() -> {
                 progressSave.setVisibility(View.GONE);
-                Toast.makeText(this, "Item Saved Successfully", Toast.LENGTH_SHORT).show();
-                setResult(RESULT_OK);
-                finish();
+                findViewById(R.id.btnSave).setVisibility(View.VISIBLE);
+                Toast.makeText(this, "No active business found. Please setup business first.", Toast.LENGTH_LONG).show();
             });
+            return;
+        }
+
+        final Item item = new Item(name, category, first.sellingPrice, first.costPrice, totalStock, first.name, selectedSellBy, !isSimpleMode);
+        item.setBusinessId(bId);
+        item.setId(java.util.UUID.randomUUID().toString());
+
+        final List<Variant> savedVariants = new ArrayList<>();
+        for (int i = 0; i < variantsToSave.size(); i++) {
+            VariantData vd = variantsToSave.get(i);
+            Variant variant = new Variant(item.getId(), vd.name, vd.sellingPrice, vd.costPrice, vd.stockQuantity);
+            variant.setId(java.util.UUID.randomUUID().toString());
+            variant.setSortOrder(i);
+            variant.setImageUri(vd.imageUri);
+            savedVariants.add(variant);
+        }
+
+        new ItemCloudRepository(this).saveItem(item, savedVariants, new ItemCloudRepository.SaveCallback() {
+            @Override
+            public void onSuccess() {
+                runOnUiThread(() -> {
+                    if (!isFinishing()) {
+                        progressSave.setVisibility(View.GONE);
+                        Toast.makeText(AddItemActivity.this, "Item Saved Successfully", Toast.LENGTH_SHORT).show();
+                        setResult(RESULT_OK);
+                        finish();
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(String error) {
+                runOnUiThread(() -> {
+                    if (!isFinishing()) {
+                        progressSave.setVisibility(View.GONE);
+                        findViewById(R.id.btnSave).setVisibility(View.VISIBLE);
+                        Toast.makeText(AddItemActivity.this, "Failed to save: " + error, Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
         });
     }
 
@@ -394,7 +464,7 @@ public class AddItemActivity extends AppCompatActivity {
         
         view.findViewById(R.id.btnAddNewCategory).setOnClickListener(v -> {
             dialog.dismiss();
-            startActivity(new Intent(this, AddCategoryActivity.class));
+            addCategoryLauncher.launch(new Intent(this, AddCategoryActivity.class));
         });
 
         RecyclerView recyclerView = view.findViewById(R.id.recyclerCategories);

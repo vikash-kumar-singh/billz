@@ -34,7 +34,7 @@ import com.bumptech.glide.Glide;
 
 public class ManageItemActivity extends AppCompatActivity {
 
-    private EditText editItemName, editSellingPriceSimple;
+    private EditText editItemName, editSellingPriceSimple, editStockSimple;
     private TextView textCategory, textSellBy, btnSimple, btnAdvance;
     private ImageView imgCategory;
     private View layoutCategorySelector, layoutSimpleMode, layoutAdvanceMode, layoutSellBySelector;
@@ -50,6 +50,7 @@ public class ManageItemActivity extends AppCompatActivity {
 
     private ActivityResultLauncher<Intent> galleryLauncher;
     private ActivityResultLauncher<Intent> cameraLauncher;
+    private ActivityResultLauncher<Intent> addCategoryLauncher;
     private View activeVariantView;
     private android.net.Uri cameraImageUri;
 
@@ -61,6 +62,7 @@ public class ManageItemActivity extends AppCompatActivity {
         setContentView(R.layout.activity_manage_item);
 
         setupImageLaunchers();
+        setupCategoryLauncher();
 
         View root = findViewById(R.id.manageItemRoot);
         topBarManage = findViewById(R.id.topBarManage);
@@ -78,6 +80,7 @@ public class ManageItemActivity extends AppCompatActivity {
 
         editItemName = findViewById(R.id.editItemName);
         editSellingPriceSimple = findViewById(R.id.editSellingPriceSimple);
+        editStockSimple = findViewById(R.id.editStockSimple);
         textCategory = findViewById(R.id.textCategory);
         textSellBy = findViewById(R.id.textSellBy);
         imgCategory = findViewById(R.id.imgCategory);
@@ -110,6 +113,14 @@ public class ManageItemActivity extends AppCompatActivity {
         progressSave = findViewById(R.id.progressSave);
 
         loadItemData();
+    }
+
+    private void setupCategoryLauncher() {
+        addCategoryLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            if (result.getResultCode() == RESULT_OK) {
+                // Refresh categories if needed
+            }
+        });
     }
 
     private void setupImageLaunchers() {
@@ -307,7 +318,10 @@ public class ManageItemActivity extends AppCompatActivity {
     }
 
     private void saveItem() {
-        if (currentItem == null) return;
+        if (currentItem == null) {
+            Toast.makeText(this, "Error: Item data not loaded", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         String name = editItemName.getText().toString().trim();
         if (name.isEmpty()) {
@@ -315,19 +329,46 @@ public class ManageItemActivity extends AppCompatActivity {
             return;
         }
 
+        String category = textCategory.getText().toString();
+        if (category.equals("Ex: Fruits") || category.equals("Select Category") || category.isEmpty()) {
+            Toast.makeText(this, "Please select a category", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         currentItem.setName(name);
+        currentItem.setCategory(category);
         currentItem.setSellBy(selectedSellBy);
         currentItem.setAdvanceMode(!isSimpleMode);
 
         final List<Variant> variantsToSave = new ArrayList<>();
         if (isSimpleMode) {
+            String priceStr = editSellingPriceSimple.getText().toString().trim();
+            if (priceStr.isEmpty()) {
+                Toast.makeText(this, "Please enter selling price", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             double sellingPrice = 0;
+            int stock = 0;
             try {
-                sellingPrice = Double.parseDouble(editSellingPriceSimple.getText().toString());
+                sellingPrice = Double.parseDouble(priceStr);
+            } catch (Exception e) {
+                Toast.makeText(this, "Invalid selling price", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            try {
+                String stockStr = editStockSimple.getText().toString().trim();
+                if (!stockStr.isEmpty()) {
+                    stock = Integer.parseInt(stockStr);
+                }
             } catch (Exception ignored) {}
+            
             currentItem.setSellingPrice(sellingPrice);
-            // Default variant for simple mode
-            Variant v = new Variant(itemId, "Default", sellingPrice, 0, currentItem.getStockQuantity());
+            currentItem.setStockQuantity(stock);
+            
+            // For simple mode, we use the first variant's ID if it exists, otherwise create new
+            // In ItemCloudRepository, we delete and re-insert anyway, but keeping ID is cleaner
+            Variant v = new Variant(itemId, "Default", sellingPrice, 0, stock);
             v.setId(java.util.UUID.randomUUID().toString());
             variantsToSave.add(v);
         } else {
@@ -339,13 +380,28 @@ public class ManageItemActivity extends AppCompatActivity {
                 EditText editStock = v.findViewById(R.id.editStockAdvance);
 
                 String vName = editName.getText().toString().trim();
-                if (vName.isEmpty()) vName = "Default";
+                if (vName.isEmpty()) vName = "Variant " + (i + 1);
+
+                String sellingStr = editSelling.getText().toString().trim();
+                if (sellingStr.isEmpty()) {
+                    Toast.makeText(this, "Please enter selling price for " + vName, Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
                 double selling = 0, cost = 0;
                 int stock = 0;
-                try { selling = Double.parseDouble(editSelling.getText().toString()); } catch (Exception ignored) {}
-                try { cost = Double.parseDouble(editCost.getText().toString()); } catch (Exception ignored) {}
-                try { stock = Integer.parseInt(editStock.getText().toString()); } catch (Exception ignored) {}
+                try { selling = Double.parseDouble(sellingStr); } catch (Exception e) {
+                    Toast.makeText(this, "Invalid selling price for " + vName, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                try {
+                    String costStr = editCost.getText().toString().trim();
+                    if (!costStr.isEmpty()) cost = Double.parseDouble(costStr);
+                } catch (Exception ignored) {}
+                try {
+                    String stockStr = editStock.getText().toString().trim();
+                    if (!stockStr.isEmpty()) stock = Integer.parseInt(stockStr);
+                } catch (Exception ignored) {}
 
                 Variant variant = new Variant(itemId, vName, selling, cost, stock);
                 variant.setSortOrder(i);
@@ -367,10 +423,14 @@ public class ManageItemActivity extends AppCompatActivity {
 
     private void uploadImagesAndSave(List<Variant> variantsToSave) {
         String uid = FirebaseHelper.getCurrentUid();
-        if (uid == null) return;
+        if (uid == null) {
+            Toast.makeText(this, "User not logged in. Cannot save.", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         progressSave.setVisibility(View.VISIBLE);
         findViewById(R.id.btnSave).setVisibility(View.GONE);
+        findViewById(R.id.btnDelete).setVisibility(View.GONE);
 
         AtomicInteger pendingUploads = new AtomicInteger(0);
         for (Variant v : variantsToSave) {
@@ -408,6 +468,8 @@ public class ManageItemActivity extends AppCompatActivity {
     }
 
     private void finalizeSave(List<Variant> variantsToSave) {
+        if (currentItem == null) return;
+
         if (!isSimpleMode && !variantsToSave.isEmpty()) {
             double totalStock = 0;
             for (Variant v : variantsToSave) totalStock += v.getStockQuantity();
@@ -419,22 +481,30 @@ public class ManageItemActivity extends AppCompatActivity {
             currentItem.setStockQuantity((int)totalStock);
         }
 
-        Executors.newSingleThreadExecutor().execute(() -> {
-            db.itemDao().update(currentItem);
-            
-            db.variantDao().deleteVariantsForItem(itemId);
-            for (Variant v : variantsToSave) {
-                db.variantDao().insert(v);
+        new ItemCloudRepository(this).saveItem(currentItem, variantsToSave, new ItemCloudRepository.SaveCallback() {
+            @Override
+            public void onSuccess() {
+                runOnUiThread(() -> {
+                    if (!isFinishing()) {
+                        progressSave.setVisibility(View.GONE);
+                        Toast.makeText(ManageItemActivity.this, "Item updated successfully", Toast.LENGTH_SHORT).show();
+                        setResult(RESULT_OK);
+                        finish();
+                    }
+                });
             }
 
-            new ItemCloudRepository(this).saveItem(currentItem, variantsToSave);
-
-            runOnUiThread(() -> {
-                progressSave.setVisibility(View.GONE);
-                Toast.makeText(this, "Item updated successfully", Toast.LENGTH_SHORT).show();
-                setResult(RESULT_OK);
-                finish();
-            });
+            @Override
+            public void onFailure(String error) {
+                runOnUiThread(() -> {
+                    if (!isFinishing()) {
+                        progressSave.setVisibility(View.GONE);
+                        findViewById(R.id.btnSave).setVisibility(View.VISIBLE);
+                        findViewById(R.id.btnDelete).setVisibility(View.VISIBLE);
+                        Toast.makeText(ManageItemActivity.this, "Update failed: " + error, Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
         });
     }
 
@@ -476,6 +546,7 @@ public class ManageItemActivity extends AppCompatActivity {
                         
                         if (isSimpleMode) {
                             editSellingPriceSimple.setText(String.valueOf((int)currentItem.getSellingPrice()));
+                            editStockSimple.setText(String.valueOf(currentItem.getStockQuantity()));
                         }
 
                         // Populate variants in container
@@ -511,22 +582,48 @@ public class ManageItemActivity extends AppCompatActivity {
     }
 
     private void showCategorySelectionDialog() {
-        Executors.newSingleThreadExecutor().execute(() -> {
-            Business active = db.businessDao().getSelectedBusiness();
-            int bId = (active != null) ? active.getId() : -1;
-            List<Category> categories = db.categoryDao().getAllCategories(bId);
-            runOnUiThread(() -> {
-                String[] names = new String[categories.size()];
-                for (int i = 0; i < categories.size(); i++) names[i] = categories.get(i).getName();
+        com.google.android.material.bottomsheet.BottomSheetDialog dialog = new com.google.android.material.bottomsheet.BottomSheetDialog(this);
+        View view = getLayoutInflater().inflate(R.layout.layout_select_category_bottom_sheet, null);
+        dialog.setContentView(view);
 
-                androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(this);
-                builder.setTitle("Select Category");
-                builder.setItems(names, (dialog, which) -> {
-                    updateCategory(names[which]);
+        view.findViewById(R.id.btnClose).setOnClickListener(v -> dialog.dismiss());
+        
+        view.findViewById(R.id.btnAddNewCategory).setOnClickListener(v -> {
+            dialog.dismiss();
+            addCategoryLauncher.launch(new Intent(this, AddCategoryActivity.class));
+        });
+
+        androidx.recyclerview.widget.RecyclerView recyclerView = view.findViewById(R.id.recyclerCategories);
+        recyclerView.setLayoutManager(new androidx.recyclerview.widget.GridLayoutManager(this, 2));
+
+        // Fetch categories from DB
+        java.util.concurrent.Executors.newSingleThreadExecutor().execute(() -> {
+            Business active = db.businessDao().getSelectedBusiness();
+            int bId = active != null ? active.getId() : -1;
+            List<Category> categories = db.categoryDao().getAllCategories(bId);
+            
+            // Add dummy data if empty to match image
+            if (categories.isEmpty()) {
+                categories.add(new Category("Brand All Item", false, true));
+                categories.add(new Category("Creatine", false, false));
+                categories.add(new Category("MASS GAINER", false, false));
+                categories.add(new Category("Sample", false, false));
+                categories.add(new Category("DAILY SUPPORT", false, false));
+                categories.add(new Category("PRE WORKOUT", false, false));
+                categories.add(new Category("Stack", false, false));
+                categories.add(new Category("Compression Tshirt", false, false));
+            }
+
+            runOnUiThread(() -> {
+                CategoryAdapter adapter = new CategoryAdapter(categories, category -> {
+                    updateCategory(category.getName());
+                    dialog.dismiss();
                 });
-                builder.show();
+                recyclerView.setAdapter(adapter);
             });
         });
+
+        dialog.show();
     }
 
     private void updateCategory(String newCategory) {
