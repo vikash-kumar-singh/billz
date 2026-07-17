@@ -40,11 +40,20 @@ public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.ViewHo
 
         holder.badgeOrders.setText(holder.itemView.getContext().getString(R.string.orders_suffix, customer.getOrdersCount()));
         
-        String lastOrder = customer.getLastOrderTime();
-        if ("JUST NOW".equals(lastOrder)) {
-            lastOrder = holder.itemView.getContext().getString(R.string.just_now);
+        String timeDisplay = "JUST NOW";
+        if (customer.getLastPurchaseTimestamp() > 0) {
+            long now = System.currentTimeMillis();
+            long diff = now - customer.getLastPurchaseTimestamp();
+            if (diff < 60000) { // Less than 1 minute
+                timeDisplay = holder.itemView.getContext().getString(R.string.just_now);
+            } else {
+                timeDisplay = android.text.format.DateUtils.getRelativeTimeSpanString(
+                        customer.getLastPurchaseTimestamp(),
+                        now,
+                        android.text.format.DateUtils.MINUTE_IN_MILLIS).toString().toUpperCase();
+            }
         }
-        holder.badgeTime.setText(lastOrder);
+        holder.badgeTime.setText(timeDisplay);
         
         long oneDayMillis = 24 * 60 * 60 * 1000;
         boolean isNew = (System.currentTimeMillis() - customer.getCreatedAt()) < oneDayMillis;

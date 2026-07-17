@@ -72,26 +72,43 @@ public class AddCustomerActivity extends AppCompatActivity {
             return;
         }
 
-        Customer customer = new Customer(mobile, name, email, gender, dob, anniversary, gstin, address, notes);
-        
-        // Use Firestore-style ID generation even for local save to ensure consistency
-        String uid = FirebaseHelper.getCurrentUid();
-        if (uid != null) {
-            String customerId = com.google.firebase.firestore.FirebaseFirestore.getInstance()
-                    .collection("users").document(uid).collection("customers").document().getId();
-            customer.setId(customerId);
-        } else {
-            customer.setId(java.util.UUID.randomUUID().toString());
-        }
-
         Executors.newSingleThreadExecutor().execute(() -> {
             AppDatabase db = AppDatabase.getInstance(this);
             int bId = BusinessHelper.getActiveBusinessId(this);
-            customer.setBusinessId(bId);
             
+            Customer existing = db.customerDao().getCustomerByMobile(mobile, bId);
+            Customer customer;
+            
+            if (existing != null) {
+                customer = existing;
+                customer.setName(name);
+                customer.setEmail(email);
+                customer.setDob(dob);
+                customer.setAnniversary(anniversary);
+                customer.setGstin(gstin);
+                customer.setAddress(address);
+                customer.setNotes(notes);
+                customer.setGender(gender);
+            } else {
+                customer = new Customer(mobile, name, email, gender, dob, anniversary, gstin, address, notes);
+                customer.setBusinessId(bId);
+                customer.setOrdersCount(0); // Explicitly 0 for manual add, will increment on purchase
+                customer.setCreatedAt(System.currentTimeMillis());
+                
+                // Use Firestore-style ID generation
+                String uid = FirebaseHelper.getCurrentUid();
+                if (uid != null) {
+                    String customerId = com.google.firebase.firestore.FirebaseFirestore.getInstance()
+                            .collection("users").document(uid).collection("customers").document().getId();
+                    customer.setId(customerId);
+                } else {
+                    customer.setId(java.util.UUID.randomUUID().toString());
+                }
+            }
+
             db.customerDao().insert(customer);
             
-            // Sync to Cloud after successful Room save
+            // Sync to Cloud
             new CustomerSyncManager(this).syncCustomerToCloud(customer);
 
             runOnUiThread(() -> {

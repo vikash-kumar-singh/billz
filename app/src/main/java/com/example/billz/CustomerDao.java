@@ -15,7 +15,7 @@ public interface CustomerDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(List<Customer> customers);
 
-    @Query("SELECT * FROM customers WHERE businessId = :businessId ORDER BY id DESC")
+    @Query("SELECT * FROM customers WHERE businessId = :businessId ORDER BY lastPurchaseTimestamp DESC")
     List<Customer> getAllCustomers(int businessId);
 
     @Query("SELECT * FROM customers WHERE mobile = :mobile AND businessId = :businessId LIMIT 1")

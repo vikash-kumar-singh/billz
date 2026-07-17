@@ -1522,15 +1522,25 @@ public class ReportsActivity extends AppCompatActivity {
                                     customer = new Customer(custMobile, custName, custEmail, "", "", "", "", custAddress, "");
                                     customer.setBusinessId(bId);
                                     customer.setOrdersCount(1);
+                                    customer.setLastPurchaseTimestamp(System.currentTimeMillis());
                                     customer.setLastOrderTime("JUST NOW");
                                     customer.setCreatedAt(System.currentTimeMillis());
-                                    // Generate a temporary ID if not using Firestore ID yet
-                                    customer.setId(java.util.UUID.randomUUID().toString());
+                                    
+                                    // Use Firestore-style ID generation
+                                    String uid = FirebaseHelper.getCurrentUid();
+                                    if (uid != null) {
+                                        String customerId = FirebaseFirestore.getInstance()
+                                                .collection("users").document(uid).collection("customers").document().getId();
+                                        customer.setId(customerId);
+                                    } else {
+                                        customer.setId(java.util.UUID.randomUUID().toString());
+                                    }
                                 } else {
                                     customer.setName(custName); // Update name if provided
                                     customer.setEmail(custEmail);
                                     customer.setAddress(custAddress);
                                     customer.setOrdersCount(customer.getOrdersCount() + 1);
+                                    customer.setLastPurchaseTimestamp(System.currentTimeMillis());
                                     customer.setLastOrderTime("JUST NOW");
                                 }
                                 db.customerDao().insert(customer);
