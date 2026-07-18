@@ -700,8 +700,42 @@ public class ReportsActivity extends AppCompatActivity {
                 } else {
                     showEditQuantityDialog(cartItem);
                 }
+            }, cartItem -> {
+                // Check if user is OWNER
+                PreferenceManager pm = new PreferenceManager(this);
+                if ("OWNER".equalsIgnoreCase(pm.getBusinessRole())) {
+                    showEditPriceDialog(cartItem);
+                } else {
+                    Toast.makeText(this, "Only Business Owner can edit prices", Toast.LENGTH_SHORT).show();
+                }
             }));
         }
+    }
+
+    private void showEditPriceDialog(CartItem cartItem) {
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_edit_price);
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        }
+
+        EditText editPrice = dialog.findViewById(R.id.editPrice);
+        editPrice.setText(String.valueOf((int)cartItem.getUnitPrice()));
+
+        dialog.findViewById(R.id.btnUpdatePrice).setOnClickListener(v -> {
+            try {
+                double newPrice = Double.parseDouble(editPrice.getText().toString());
+                String vId = (cartItem.getVariant() != null) ? cartItem.getVariant().getId() : null;
+                CartManager.getInstance().updatePrice(cartItem.getItem().getId(), vId, newPrice);
+                dialog.dismiss();
+            } catch (Exception e) {
+                Toast.makeText(this, "Invalid price", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        dialog.findViewById(R.id.btnDialogClose).setOnClickListener(v -> dialog.dismiss());
+        dialog.show();
     }
 
     private void showEditQuantityDialog(CartItem cartItem) {
@@ -1586,7 +1620,7 @@ public class ReportsActivity extends AppCompatActivity {
                             for (CartItem ci : cartItems) {
                                 String vName = ci.getVariant() != null ? ci.getVariant().getName() : "";
                                 ReceiptItem receiptItem = new ReceiptItem(receiptId, ci.getItem().getName(), vName,
-                                        ci.getVariant() != null ? ci.getVariant().getSellingPrice() : ci.getItem().getSellingPrice(), 
+                                        ci.getUnitPrice(),
                                         ci.getQuantity());
                                 receiptItem.setItemId(ci.getItem().getId());
                                 if (ci.getVariant() != null) receiptItem.setVariantId(ci.getVariant().getId());

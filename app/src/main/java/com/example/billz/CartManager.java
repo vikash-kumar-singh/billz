@@ -138,6 +138,21 @@ public class CartManager {
         return !capped;
     }
 
+    public boolean updatePrice(String itemId, String variantId, double newPrice) {
+        for (CartItem ci : cartItems) {
+            boolean sameItem = ci.getItem().getId() != null && ci.getItem().getId().equals(itemId);
+            boolean sameVariant = (variantId == null && ci.getVariant() == null) || 
+                                 (ci.getVariant() != null && ci.getVariant().getId().equals(variantId));
+
+            if (sameItem && sameVariant) {
+                ci.setCustomPrice(newPrice);
+                notifyChanged();
+                return true;
+            }
+        }
+        return false;
+    }
+
     public List<CartItem> getCartItems() {
         return new ArrayList<>(cartItems);
     }

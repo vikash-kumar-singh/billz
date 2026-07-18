@@ -14,12 +14,18 @@ public class CounterAdapter extends RecyclerView.Adapter<CounterAdapter.ViewHold
         void onEditItem(CartItem item);
     }
 
+    public interface OnPriceEditListener {
+        void onEditPrice(CartItem item);
+    }
+
     private List<CartItem> items;
     private OnItemEditListener editListener;
+    private OnPriceEditListener priceEditListener;
 
-    public CounterAdapter(List<CartItem> items, OnItemEditListener editListener) {
+    public CounterAdapter(List<CartItem> items, OnItemEditListener editListener, OnPriceEditListener priceEditListener) {
         this.items = items;
         this.editListener = editListener;
+        this.priceEditListener = priceEditListener;
     }
 
     @NonNull
@@ -44,13 +50,20 @@ public class CounterAdapter extends RecyclerView.Adapter<CounterAdapter.ViewHold
         }
         holder.textName.setText(variantPrefix + item.getName());
         
-        double price = (variant != null) ? variant.getSellingPrice() : item.getSellingPrice();
+        double price = cartItem.getUnitPrice();
         holder.textDetails.setText(cartItem.getQuantity() + " x " + (int)price);
         holder.textTotal.setText(String.valueOf((int)cartItem.getTotalPrice()));
 
         holder.btnEdit.setOnClickListener(v -> {
             if (editListener != null) editListener.onEditItem(cartItem);
         });
+
+        View.OnClickListener priceClickListener = v -> {
+            if (priceEditListener != null) priceEditListener.onEditPrice(cartItem);
+        };
+
+        holder.textTotal.setOnClickListener(priceClickListener);
+        holder.textDetails.setOnClickListener(priceClickListener);
     }
 
     @Override

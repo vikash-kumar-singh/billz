@@ -103,6 +103,10 @@ public class EditReceiptActivity extends AppCompatActivity {
         
         CounterAdapter adapter = new CounterAdapter(cartItems, item -> {
             showEditQuantityDialog(item);
+        }, item -> {
+            // Price editing disabled in Edit Receipt mode for now
+            // or we could implement showEditPriceDialog(item) here too
+            Toast.makeText(this, "Price editing is only available during checkout", Toast.LENGTH_SHORT).show();
         });
         recyclerItems.setAdapter(adapter);
     }

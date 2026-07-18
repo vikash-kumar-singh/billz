@@ -4,6 +4,7 @@ public class CartItem {
     private Item item;
     private Variant variant;
     private int quantity;
+    private double customPrice = -1; // -1 means use original price
 
     public CartItem(Item item, int quantity) {
         this.item = item;
@@ -23,9 +24,21 @@ public class CartItem {
     public int getQuantity() { return quantity; }
     public void setQuantity(int quantity) { this.quantity = quantity; }
     public void addQuantity(int delta) { this.quantity += delta; }
-    
+
+    public double getUnitPrice() {
+        if (customPrice >= 0) return customPrice;
+        return (variant != null) ? variant.getSellingPrice() : item.getSellingPrice();
+    }
+
+    public void setCustomPrice(double customPrice) {
+        this.customPrice = customPrice;
+    }
+
+    public boolean hasCustomPrice() {
+        return customPrice >= 0;
+    }
+
     public double getTotalPrice() {
-        double price = (variant != null) ? variant.getSellingPrice() : item.getSellingPrice();
-        return price * quantity;
+        return getUnitPrice() * quantity;
     }
 }
