@@ -436,6 +436,8 @@ public class ReportsActivity extends AppCompatActivity {
         receiptRepo.syncReceiptsFromCloud(null);
         receiptRepo.retryPendingSync();
         
+        new StaffCloudRepository().syncStaffFromCloud(this, null);
+        
         new CategoryCloudRepository(this).syncCategoriesFromCloud(() -> {
             new ItemCloudRepository(this).syncProductsFromCloud(() -> {
                 runOnUiThread(() -> {

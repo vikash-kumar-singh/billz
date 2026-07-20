@@ -8,8 +8,11 @@ import java.util.List;
 
 @Dao
 public interface StaffDao {
-    @Insert
+    @Insert(onConflict = androidx.room.OnConflictStrategy.REPLACE)
     long insert(Staff staff);
+
+    @Insert(onConflict = androidx.room.OnConflictStrategy.REPLACE)
+    void insertAll(List<Staff> staffList);
 
     @androidx.room.Update
     void update(Staff staff);

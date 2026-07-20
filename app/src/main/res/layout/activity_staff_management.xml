@@ -85,6 +85,7 @@
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/chipWithAccess"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"
@@ -96,6 +97,7 @@
                     android:textSize="14sp" />
 
                 <TextView
+                    android:id="@+id/chipAttendance"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"

@@ -792,6 +792,7 @@ public class AddStaffActivity extends AppCompatActivity {
             Business active = db.businessDao().getSelectedBusiness();
             if (active != null) {
                 staff.businessId = active.getId();
+                staff.businessUuid = active.getUuid();
             }
             
             if (staffId != -1) {

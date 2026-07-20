@@ -1,8 +1,11 @@
 package com.example.billz;
 
-import android.content.Intent;
+import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -12,6 +15,8 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +33,7 @@ public class EditReceiptActivity extends AppCompatActivity {
     private RecyclerView recyclerItems;
     private TextView textSubtotal, textGrandTotal, textItemCountSummary, textPaymentMode;
     private EditText editMobile, editName;
+    @SuppressWarnings("unused")
     private ImageView imgPaymentIcon;
 
     @Override
@@ -52,11 +58,13 @@ public class EditReceiptActivity extends AppCompatActivity {
 
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
         findViewById(R.id.btnSave).setOnClickListener(v -> saveReceipt());
-        findViewById(R.id.btnAddItem).setOnClickListener(v -> {
-            Toast.makeText(this, "Add Item coming soon", Toast.LENGTH_SHORT).show();
-        });
+        findViewById(R.id.btnAddItem).setOnClickListener(v -> showAddItemDialog());
         
         findViewById(R.id.cardPaymentMode).setOnClickListener(v -> showPaymentSelector());
+
+        findViewById(R.id.btnAddTax).setOnClickListener(v -> Toast.makeText(this, "Tax editing coming soon", Toast.LENGTH_SHORT).show());
+        findViewById(R.id.btnAddDiscount).setOnClickListener(v -> Toast.makeText(this, "Discount editing coming soon", Toast.LENGTH_SHORT).show());
+        findViewById(R.id.btnAddOtherCharges).setOnClickListener(v -> Toast.makeText(this, "Other charges editing coming soon", Toast.LENGTH_SHORT).show());
     }
 
     private void initViews() {
@@ -78,9 +86,18 @@ public class EditReceiptActivity extends AppCompatActivity {
             currentReceipt = db.receiptDao().getById(receiptId);
             receiptItems = db.receiptItemDao().getItemsForReceipt(receiptId);
             
+            Customer customer = null;
+            if (currentReceipt != null && currentReceipt.getCustomerId() != null) {
+                customer = db.customerDao().getById(currentReceipt.getCustomerId());
+            }
+            
+            final Customer finalCustomer = customer;
             if (currentReceipt != null) {
                 runOnUiThread(() -> {
                     editName.setText(currentReceipt.getCustomerName());
+                    if (finalCustomer != null) {
+                        editMobile.setText(finalCustomer.getMobile());
+                    }
                     textPaymentMode.setText(currentReceipt.getPaymentMode());
                     updateTotals();
                     setupAdapter();
@@ -91,32 +108,30 @@ public class EditReceiptActivity extends AppCompatActivity {
 
     private void setupAdapter() {
         List<CartItem> cartItems = new ArrayList<>();
-        for (ReceiptItem ri : receiptItems) {
+        for (int i = 0; i < receiptItems.size(); i++) {
+            ReceiptItem ri = receiptItems.get(i);
             Item dummyItem = new Item(ri.getItemName(), "", ri.getPrice(), 0, 100, ri.getVariantName(), "Unit", false);
-            dummyItem.setId(String.valueOf(ri.getId())); 
+            // Use index as dummy ID to link back
+            dummyItem.setId(String.valueOf(i)); 
             Variant dummyVariant = null;
-            if (ri.getVariantName() != null && !ri.getVariantName().isEmpty()) {
+            if (ri.getVariantName() != null && !ri.getVariantName().isEmpty() && !ri.getVariantName().equalsIgnoreCase("Default")) {
                 dummyVariant = new Variant("0", ri.getVariantName(), ri.getPrice(), 0, 100);
             }
             cartItems.add(new CartItem(dummyItem, dummyVariant, ri.getQuantity()));
         }
         
-        CounterAdapter adapter = new CounterAdapter(cartItems, item -> {
-            showEditQuantityDialog(item);
-        }, item -> {
-            // Price editing disabled in Edit Receipt mode for now
-            // or we could implement showEditPriceDialog(item) here too
-            Toast.makeText(this, "Price editing is only available during checkout", Toast.LENGTH_SHORT).show();
+        CounterAdapter adapter = new CounterAdapter(cartItems, this::showEditQuantityDialog, item -> {
+            Toast.makeText(this, "Price editing is not available in Edit Mode", Toast.LENGTH_SHORT).show();
         });
         recyclerItems.setAdapter(adapter);
     }
 
     private void showEditQuantityDialog(CartItem cartItem) {
-        android.app.Dialog dialog = new android.app.Dialog(this);
+        Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.dialog_edit_quantity);
         if (dialog.getWindow() != null) {
-            dialog.getWindow().setBackgroundDrawable(new android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT));
-            dialog.getWindow().setLayout(android.view.ViewGroup.LayoutParams.MATCH_PARENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         }
 
         EditText editQuantity = dialog.findViewById(R.id.editQuantity);
@@ -134,20 +149,16 @@ public class EditReceiptActivity extends AppCompatActivity {
 
         dialog.findViewById(R.id.btnUpdateQuantity).setOnClickListener(v -> {
             int newQty = Integer.parseInt(editQuantity.getText().toString());
-            cartItem.setQuantity(newQty);
+            int index = Integer.parseInt(cartItem.getItem().getId());
             
-            // Sync back to receiptItems
-            for (ReceiptItem ri : receiptItems) {
-                if (String.valueOf(ri.getId()).equals(cartItem.getItem().getId())) {
-                    ri.setQuantity(newQty);
-                    break;
-                }
+            if (newQty <= 0) {
+                receiptItems.remove(index);
+            } else {
+                receiptItems.get(index).setQuantity(newQty);
             }
             
             updateTotals();
-            if (recyclerItems.getAdapter() != null) {
-                recyclerItems.getAdapter().notifyDataSetChanged();
-            }
+            setupAdapter(); // Refresh entire list to keep indices in sync
             dialog.dismiss();
         });
 
@@ -172,7 +183,84 @@ public class EditReceiptActivity extends AppCompatActivity {
     }
 
     private void showPaymentSelector() {
-        Toast.makeText(this, "Change Payment Mode coming soon", Toast.LENGTH_SHORT).show();
+        BottomSheetDialog dialog = new BottomSheetDialog(this);
+        View view = getLayoutInflater().inflate(R.layout.layout_checkout_bottom_sheet, null);
+        dialog.setContentView(view);
+
+        // Hide customer fields in this selector as we only need payment mode
+        View cardCustomer = view.findViewById(R.id.cardCustomerDetails);
+        if (cardCustomer != null) cardCustomer.setVisibility(View.GONE);
+        
+        TextView title = view.findViewById(R.id.textPaymentTitle);
+        if (title != null) {
+            title.setVisibility(View.VISIBLE);
+            title.setText("SELECT NEW PAYMENT MODE");
+        }
+
+        RecyclerView rv = view.findViewById(R.id.recyclerPaymentModes);
+        if (rv != null) {
+            rv.setLayoutManager(new androidx.recyclerview.widget.GridLayoutManager(this, 2));
+
+            Executors.newSingleThreadExecutor().execute(() -> {
+                int bId = BusinessHelper.getActiveBusinessId(this);
+                List<PaymentMode> modes = db.paymentModeDao().getAllPaymentModes(bId);
+                runOnUiThread(() -> {
+                    rv.setAdapter(new CheckoutPaymentAdapter(modes, new CheckoutPaymentAdapter.OnPaymentModeClickListener() {
+                        @Override
+                        public void onPaymentClick(PaymentMode mode) {
+                            textPaymentMode.setText(mode.getName());
+                            dialog.dismiss();
+                        }
+
+                        @Override
+                        public void onAddNewClick() {
+                            Toast.makeText(EditReceiptActivity.this, "Add payment mode in Settings", Toast.LENGTH_SHORT).show();
+                        }
+                    }));
+                });
+            });
+        }
+
+        dialog.show();
+    }
+
+    private void showAddItemDialog() {
+        BottomSheetDialog dialog = new BottomSheetDialog(this);
+        // Use business selector layout as it has a title and a recycler view
+        dialog.setContentView(R.layout.dialog_business_selector);
+        
+        TextView title = dialog.findViewById(R.id.textTitle);
+        if (title != null) title.setText("SELECT ITEM TO ADD");
+        
+        RecyclerView rv = dialog.findViewById(R.id.recyclerBusinesses);
+        if (rv != null) {
+            rv.setLayoutManager(new LinearLayoutManager(this));
+
+            Executors.newSingleThreadExecutor().execute(() -> {
+                int bId = BusinessHelper.getActiveBusinessId(this);
+                List<Item> items = db.itemDao().getAllItems(bId);
+                runOnUiThread(() -> {
+                    ProductListAdapter adapter = new ProductListAdapter(items);
+                    adapter.setListener(new ProductListAdapter.OnProductActionListener() {
+                        @Override
+                        public void onPlusClick(Item item, int position) {
+                            ReceiptItem ri = new ReceiptItem(receiptId, item.getName(), item.getVariantName(), item.getSellingPrice(), 1);
+                            ri.setItemId(item.getId());
+                            receiptItems.add(ri);
+                            updateTotals();
+                            setupAdapter();
+                            dialog.dismiss();
+                        }
+
+                        @Override
+                        public void onMinusClick(Item item, int position) {}
+                    });
+                    rv.setAdapter(adapter);
+                });
+            });
+        }
+
+        dialog.show();
     }
 
     private void saveReceipt() {
@@ -188,15 +276,20 @@ public class EditReceiptActivity extends AppCompatActivity {
         currentReceipt.setPaymentMode(textPaymentMode.getText().toString());
         currentReceipt.setTotalAmount(finalTotal);
         currentReceipt.setItemCount(totalItems);
+        currentReceipt.setUpdatedAt(System.currentTimeMillis());
         
         Executors.newSingleThreadExecutor().execute(() -> {
             db.receiptDao().update(currentReceipt);
-            // Update individual receipt items
-            for (ReceiptItem ri : receiptItems) {
-                db.receiptItemDao().update(ri);
-            }
+            
+            // Sync Items: Delete all and re-insert to handle additions/deletions/updates simply
+            db.receiptItemDao().deleteByReceiptId(receiptId);
+            db.receiptItemDao().insertAll(receiptItems);
+            
+            // Also update cloud
+            new ReceiptCloudRepository(this).updateReceipt(currentReceipt);
+
             runOnUiThread(() -> {
-                Toast.makeText(this, "Receipt Updated", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Receipt Updated Successfully", Toast.LENGTH_SHORT).show();
                 setResult(RESULT_OK);
                 finish();
             });

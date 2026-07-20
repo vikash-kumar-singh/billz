@@ -135,6 +135,11 @@ public class StaffManagementActivity extends AppCompatActivity {
                 }
         );
 
+        findViewById(R.id.btnStaffSync).setOnClickListener(v -> {
+            Toast.makeText(this, "Syncing staff...", Toast.LENGTH_SHORT).show();
+            new StaffCloudRepository().syncStaffFromCloud(this, this::loadStaff);
+        });
+
         findViewById(R.id.fabAddStaff).setOnClickListener(v -> {
             addStaffLauncher.launch(new Intent(this, AddStaffActivity.class));
         });
@@ -148,9 +153,8 @@ public class StaffManagementActivity extends AppCompatActivity {
     }
 
     private void setupChips() {
-        ViewGroup chipContainer = (ViewGroup) chipAll.getParent();
-        chipAccess = (TextView) chipContainer.getChildAt(1);
-        chipAttendance = (TextView) chipContainer.getChildAt(2);
+        chipAccess = findViewById(R.id.chipWithAccess);
+        chipAttendance = findViewById(R.id.chipAttendance);
 
         View.OnClickListener listener = v -> {
             updateChipUI((TextView) v);
