@@ -455,7 +455,14 @@ public class ReceiptPreviewActivity extends AppCompatActivity {
 
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("application/pdf");
+        
+        String email = getCustomerEmail();
+        if (email != null && !email.isEmpty()) {
+            intent.putExtra(Intent.EXTRA_EMAIL, new String[]{email});
+        }
+        
         intent.putExtra(Intent.EXTRA_SUBJECT, "Receipt from " + textBusinessName.getText().toString());
+        intent.putExtra(Intent.EXTRA_TEXT, "Please find attached the receipt for your recent purchase.");
         intent.putExtra(Intent.EXTRA_STREAM, pdfUri);
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
@@ -549,6 +556,11 @@ public class ReceiptPreviewActivity extends AppCompatActivity {
 
     private String getCustomerMobile() {
         if (currentCustomer != null) return currentCustomer.getMobile();
+        return null;
+    }
+
+    private String getCustomerEmail() {
+        if (currentCustomer != null) return currentCustomer.getEmail();
         return null;
     }
 
