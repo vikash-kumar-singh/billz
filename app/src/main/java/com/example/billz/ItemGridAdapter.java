@@ -5,10 +5,14 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,6 +74,23 @@ public class ItemGridAdapter extends RecyclerView.Adapter<ItemGridAdapter.ViewHo
         Item item = gridItem.item;
         Variant variant = gridItem.variant;
 
+        // Image loading logic
+        String imageUri = (variant != null && variant.getImageUri() != null) ? variant.getImageUri() : item.getImageUri();
+        if (imageUri != null && !imageUri.isEmpty()) {
+            holder.imgProduct.setVisibility(View.VISIBLE);
+            holder.textInitial.setVisibility(View.GONE);
+            Glide.with(holder.itemView.getContext())
+                    .load(imageUri)
+                    .centerCrop()
+                    .into(holder.imgProduct);
+        } else {
+            holder.imgProduct.setVisibility(View.GONE);
+            holder.textInitial.setVisibility(View.VISIBLE);
+            if (item.getName() != null && !item.getName().isEmpty()) {
+                holder.textInitial.setText(item.getName().substring(0, 1).toUpperCase());
+            }
+        }
+
         // Display logic
         if (variant != null) {
             // It's a variant tile (only used in style 0)
@@ -77,15 +98,12 @@ public class ItemGridAdapter extends RecyclerView.Adapter<ItemGridAdapter.ViewHo
             holder.textPrice.setText("₹" + (int)variant.getSellingPrice());
             holder.textVariantCenter.setText(item.getName()); // Show product name above variant name
             
-            if (item.getName() != null && !item.getName().isEmpty()) {
-                holder.textInitial.setText(item.getName().substring(0, 1).toUpperCase());
-            }
-            
             // Out of stock logic
             boolean isOutOfStock = variant.getStockQuantity() <= 0;
             holder.textOutOfStock.setVisibility(isOutOfStock ? View.VISIBLE : View.GONE);
             holder.circleBackground.setAlpha(isOutOfStock ? 0.5f : 1.0f);
             holder.textInitial.setAlpha(isOutOfStock ? 0.3f : 1.0f);
+            holder.imgProduct.setAlpha(isOutOfStock ? 0.3f : 1.0f);
 
             // Selection / Quantity logic
             int qty = 0;
@@ -112,15 +130,12 @@ public class ItemGridAdapter extends RecyclerView.Adapter<ItemGridAdapter.ViewHo
             }
             holder.textVariantCenter.setText(vName);
 
-            if (item.getName() != null && !item.getName().isEmpty()) {
-                holder.textInitial.setText(item.getName().substring(0, 1).toUpperCase());
-            }
-
             // Out of stock logic
             boolean isOutOfStock = item.getStockQuantity() <= 0;
             holder.textOutOfStock.setVisibility(isOutOfStock ? View.VISIBLE : View.GONE);
             holder.circleBackground.setAlpha(isOutOfStock ? 0.5f : 1.0f);
             holder.textInitial.setAlpha(isOutOfStock ? 0.3f : 1.0f);
+            holder.imgProduct.setAlpha(isOutOfStock ? 0.3f : 1.0f);
 
             // Selection / Quantity logic
             int qty = 0;
@@ -230,6 +245,7 @@ public class ItemGridAdapter extends RecyclerView.Adapter<ItemGridAdapter.ViewHo
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView textName, textPrice, textInitial, textVariantCenter, textVariantBanner, textQuantityOverlay, textOutOfStock;
+        ImageView imgProduct;
         View circleBackground, viewSelectedOverlay, indicatorDot;
 
         public ViewHolder(@NonNull View itemView) {
@@ -237,6 +253,7 @@ public class ItemGridAdapter extends RecyclerView.Adapter<ItemGridAdapter.ViewHo
             textName = itemView.findViewById(R.id.textName);
             textPrice = itemView.findViewById(R.id.textPrice);
             textInitial = itemView.findViewById(R.id.textInitial);
+            imgProduct = itemView.findViewById(R.id.imgProduct);
             textVariantCenter = itemView.findViewById(R.id.textVariantCenter);
             textVariantBanner = itemView.findViewById(R.id.textVariantBanner);
             textQuantityOverlay = itemView.findViewById(R.id.textQuantityOverlay);

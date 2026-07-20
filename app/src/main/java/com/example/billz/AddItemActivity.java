@@ -87,6 +87,7 @@ public class AddItemActivity extends AppCompatActivity {
         findViewById(R.id.cardCategory).setOnClickListener(v -> showSelectCategoryBottomSheet());
         findViewById(R.id.cardSellByUnit).setOnClickListener(v -> showSellByBottomSheet());
 
+        findViewById(R.id.cardSimpleImage).setOnClickListener(v -> showImageSourceDialog(v));
         findViewById(R.id.btnAddVariant).setOnClickListener(v -> addNewVariantView());
         findViewById(R.id.btnSave).setOnClickListener(v -> saveItem());
         progressSave = findViewById(R.id.progressSave);
@@ -137,14 +138,18 @@ public class AddItemActivity extends AppCompatActivity {
 
     private void updateVariantImage(android.net.Uri uri) {
         if (activeVariantView != null && uri != null) {
-            ImageView imgVariant = activeVariantView.findViewById(R.id.imgVariant);
-            Glide.with(this)
-                    .load(uri)
-                    .centerCrop()
-                    .into(imgVariant);
-            imgVariant.setImageTintList(null);
-            imgVariant.setPadding(0, 0, 0, 0);
-            activeVariantView.setTag(R.id.imgVariant, uri.toString());
+            ImageView img = activeVariantView.findViewById(R.id.imgVariant);
+            if (img == null) img = activeVariantView.findViewById(R.id.imgSimple);
+            
+            if (img != null) {
+                Glide.with(this)
+                        .load(uri)
+                        .centerCrop()
+                        .into(img);
+                img.setImageTintList(null);
+                img.setPadding(0, 0, 0, 0);
+                activeVariantView.setTag(R.id.imgVariant, uri.toString());
+            }
         }
     }
 
@@ -248,7 +253,8 @@ public class AddItemActivity extends AppCompatActivity {
                     stock = Integer.parseInt(stockStr);
                 }
             } catch (Exception ignored) {}
-            variantsToSave.add(new VariantData("Default", sellingPrice, 0, stock, null));
+            String simpleImageUri = (String) findViewById(R.id.cardSimpleImage).getTag(R.id.imgVariant);
+            variantsToSave.add(new VariantData("Default", sellingPrice, 0, stock, simpleImageUri));
         } else {
             for (int i = 0; i < variantViews.size(); i++) {
                 View v = variantViews.get(i);
@@ -363,6 +369,7 @@ public class AddItemActivity extends AppCompatActivity {
         final Item item = new Item(name, category, first.sellingPrice, first.costPrice, totalStock, first.name, selectedSellBy, !isSimpleMode);
         item.setBusinessId(bId);
         item.setId(java.util.UUID.randomUUID().toString());
+        item.setImageUri(first.imageUri);
 
         final List<Variant> savedVariants = new ArrayList<>();
         for (int i = 0; i < variantsToSave.size(); i++) {

@@ -28,6 +28,13 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/bg_reports_empty_avatar" />
 
+            <ImageView
+                android:id="@+id/imgProduct"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:visibility="gone" />
+
             <TextView
                 android:id="@+id/textInitial"
                 android:layout_width="match_parent"

@@ -18,6 +18,7 @@ public class Item {
     private String variantName;
     private String sellBy; // Unit or Fraction
     private boolean isAdvanceMode;
+    private String imageUri;
 
     public Item(String name, String category, double sellingPrice, double costPrice, int stockQuantity, String variantName, String sellBy, boolean isAdvanceMode) {
         this.name = name;
@@ -52,4 +53,6 @@ public class Item {
     public void setSellBy(String sellBy) { this.sellBy = sellBy; }
     public boolean isAdvanceMode() { return isAdvanceMode; }
     public void setAdvanceMode(boolean advanceMode) { isAdvanceMode = advanceMode; }
+    public String getImageUri() { return imageUri; }
+    public void setImageUri(String imageUri) { this.imageUri = imageUri; }
 }

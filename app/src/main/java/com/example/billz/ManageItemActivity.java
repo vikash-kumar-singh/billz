@@ -105,6 +105,7 @@ public class ManageItemActivity extends AppCompatActivity {
         
         layoutCategorySelector.setOnClickListener(v -> showCategorySelectionDialog());
         layoutSellBySelector.setOnClickListener(v -> showSellByBottomSheet());
+        findViewById(R.id.cardSimpleImage).setOnClickListener(this::showImageSourceDialog);
 
         btnSimple.setOnClickListener(v -> setMode(true));
         btnAdvance.setOnClickListener(v -> setMode(false));
@@ -149,14 +150,18 @@ public class ManageItemActivity extends AppCompatActivity {
 
     private void updateVariantImage(android.net.Uri uri) {
         if (activeVariantView != null && uri != null) {
-            ImageView imgVariant = activeVariantView.findViewById(R.id.imgVariant);
-            Glide.with(this)
-                    .load(uri)
-                    .centerCrop()
-                    .into(imgVariant);
-            imgVariant.setImageTintList(null);
-            imgVariant.setPadding(0, 0, 0, 0);
-            activeVariantView.setTag(R.id.imgVariant, uri.toString());
+            ImageView img = activeVariantView.findViewById(R.id.imgVariant);
+            if (img == null) img = activeVariantView.findViewById(R.id.imgSimple);
+
+            if (img != null) {
+                Glide.with(this)
+                        .load(uri)
+                        .centerCrop()
+                        .into(img);
+                img.setImageTintList(null);
+                img.setPadding(0, 0, 0, 0);
+                activeVariantView.setTag(R.id.imgVariant, uri.toString());
+            }
         }
     }
 
@@ -365,11 +370,14 @@ public class ManageItemActivity extends AppCompatActivity {
             
             currentItem.setSellingPrice(sellingPrice);
             currentItem.setStockQuantity(stock);
+
+            String simpleImageUri = (String) findViewById(R.id.cardSimpleImage).getTag(R.id.imgVariant);
             
             // For simple mode, we use the first variant's ID if it exists, otherwise create new
             // In ItemCloudRepository, we delete and re-insert anyway, but keeping ID is cleaner
             Variant v = new Variant(itemId, "Default", sellingPrice, 0, stock);
             v.setId(java.util.UUID.randomUUID().toString());
+            v.setImageUri(simpleImageUri);
             variantsToSave.add(v);
         } else {
             for (int i = 0; i < variantViews.size(); i++) {
@@ -479,6 +487,9 @@ public class ManageItemActivity extends AppCompatActivity {
             currentItem.setCostPrice(first.getCostPrice());
             currentItem.setVariantName(first.getName());
             currentItem.setStockQuantity((int)totalStock);
+            currentItem.setImageUri(first.getImageUri());
+        } else if (isSimpleMode && !variantsToSave.isEmpty()) {
+            currentItem.setImageUri(variantsToSave.get(0).getImageUri());
         }
 
         new ItemCloudRepository(this).saveItem(currentItem, variantsToSave, new ItemCloudRepository.SaveCallback() {
@@ -547,6 +558,18 @@ public class ManageItemActivity extends AppCompatActivity {
                         if (isSimpleMode) {
                             editSellingPriceSimple.setText(String.valueOf((int)currentItem.getSellingPrice()));
                             editStockSimple.setText(String.valueOf(currentItem.getStockQuantity()));
+                            
+                            // Load image into simple mode card
+                            if (currentItem.getImageUri() != null && !currentItem.getImageUri().isEmpty()) {
+                                ImageView imgSimple = findViewById(R.id.imgSimple);
+                                Glide.with(this)
+                                        .load(currentItem.getImageUri())
+                                        .centerCrop()
+                                        .into(imgSimple);
+                                imgSimple.setImageTintList(null);
+                                imgSimple.setPadding(0, 0, 0, 0);
+                                findViewById(R.id.cardSimpleImage).setTag(R.id.imgVariant, currentItem.getImageUri());
+                            }
                         }
 
                         // Populate variants in container
