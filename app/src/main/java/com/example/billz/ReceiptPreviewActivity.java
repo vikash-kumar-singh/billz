@@ -32,6 +32,9 @@ public class ReceiptPreviewActivity extends AppCompatActivity {
     private TableLayout tableItems;
     private AppDatabase db;
     private String receiptId;
+    private Receipt currentReceipt;
+    private List<ReceiptItem> currentItems;
+    private Customer currentCustomer;
     private SimpleDateFormat dateTimeFormat = new SimpleDateFormat("dd MMM yyyy - h:mm a", Locale.getDefault());
 
     @Override
@@ -72,6 +75,9 @@ public class ReceiptPreviewActivity extends AppCompatActivity {
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
         });
+
+        findViewById(R.id.imgActionShare).setOnClickListener(v -> showShareBottomSheet());
+        findViewById(R.id.imgActionMessage).setOnClickListener(v -> showShareBottomSheet());
     }
 
     private void downloadInvoice() {
@@ -232,12 +238,16 @@ public class ReceiptPreviewActivity extends AppCompatActivity {
 
     private void loadReceiptData() {
         Executors.newSingleThreadExecutor().execute(() -> {
-            Receipt receipt = db.receiptDao().getById(receiptId);
-            if (receipt == null) return;
+            currentReceipt = db.receiptDao().getById(receiptId);
+            if (currentReceipt == null) return;
             
             int bId = BusinessHelper.getActiveBusinessId(this);
             
-            List<ReceiptItem> items = db.receiptItemDao().getItemsForReceipt(receiptId);
+            currentItems = db.receiptItemDao().getItemsForReceipt(receiptId);
+            if (currentReceipt.getCustomerId() != null) {
+                currentCustomer = db.customerDao().getById(currentReceipt.getCustomerId());
+            }
+            
             ReceiptSettings settings = db.receiptSettingsDao().getSettingsByBusiness(bId);
             Business business = db.businessDao().getById(bId);
 
@@ -314,14 +324,14 @@ public class ReceiptPreviewActivity extends AppCompatActivity {
                     textThankYou.setText("Thank You! Visit again!");
                 }
 
-                textCustomerName.setText(receipt.getCustomerName() != null && !receipt.getCustomerName().isEmpty() ? receipt.getCustomerName() : "Cash Customer");
-                textReceiptNo.setText("Receipt# " + receipt.getReceiptNo());
-                textDate.setText("Date : " + dateTimeFormat.format(new Date(receipt.getTimestamp())));
+                textCustomerName.setText(currentReceipt.getCustomerName() != null && !currentReceipt.getCustomerName().isEmpty() ? currentReceipt.getCustomerName() : "Cash Customer");
+                textReceiptNo.setText("Receipt# " + currentReceipt.getReceiptNo());
+                textDate.setText("Date : " + dateTimeFormat.format(new Date(currentReceipt.getTimestamp())));
                 
-                textPMode.setText(receipt.getPaymentMode());
-                textICount.setText(String.valueOf(receipt.getItemCount()));
+                textPMode.setText(currentReceipt.getPaymentMode());
+                textICount.setText(String.valueOf(currentReceipt.getItemCount()));
 
-                if (receipt.isReturned()) {
+                if (currentReceipt.isReturned()) {
                     if (textReturnedBy != null) {
                         textReturnedBy.setVisibility(View.VISIBLE);
                         String bName = (settings != null && settings.getBusinessName() != null) ? settings.getBusinessName() : 
@@ -354,18 +364,135 @@ public class ReceiptPreviewActivity extends AppCompatActivity {
                 
                 int totalUnits = 0;
                 tableItems.removeAllViews();
-                for (ReceiptItem item : items) {
+                for (ReceiptItem item : currentItems) {
                     totalUnits += item.getQuantity();
                     addTableRow(item);
                 }
                 textUCount.setText(String.valueOf(totalUnits));
                 
-                String totalStr = String.format(Locale.getDefault(), "₹%,.2f", receipt.getTotalAmount());
+                String totalStr = String.format(Locale.getDefault(), "₹%,.2f", currentReceipt.getTotalAmount());
                 textTotalTable.setText(totalStr);
                 textSubtotal.setText(totalStr);
                 textGrandTotal.setText(totalStr);
             });
         });
+    }
+
+    private void showShareBottomSheet() {
+        if (currentReceipt == null) return;
+
+        com.google.android.material.bottomsheet.BottomSheetDialog bottomSheet = new com.google.android.material.bottomsheet.BottomSheetDialog(this);
+        View view = getLayoutInflater().inflate(R.layout.layout_receipt_share_bottom_sheet, null);
+        bottomSheet.setContentView(view);
+
+        view.findViewById(R.id.optionWhatsApp).setOnClickListener(v -> {
+            bottomSheet.dismiss();
+            shareToWhatsApp();
+        });
+
+        view.findViewById(R.id.optionEmail).setOnClickListener(v -> {
+            bottomSheet.dismiss();
+            shareToEmail();
+        });
+
+        view.findViewById(R.id.optionSMS).setOnClickListener(v -> {
+            bottomSheet.dismiss();
+            shareToSMS();
+        });
+
+        bottomSheet.show();
+    }
+
+    private void shareToWhatsApp() {
+        String message = generateShareText();
+        try {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            String url = "whatsapp://send?text=" + Uri.encode(message);
+            // If we have customer mobile, we can pre-fill it
+            String mobile = getCustomerMobile();
+            if (mobile != null && !mobile.isEmpty()) {
+                String cleanMobile = mobile.replaceAll("[^\\d]", "");
+                if (cleanMobile.length() == 10) cleanMobile = "91" + cleanMobile;
+                url = "whatsapp://send?phone=" + cleanMobile + "&text=" + Uri.encode(message);
+            }
+            intent.setData(Uri.parse(url));
+            startActivity(intent);
+        } catch (Exception e) {
+            // Fallback to general share
+            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+            shareIntent.setType("text/plain");
+            shareIntent.putExtra(Intent.EXTRA_TEXT, message);
+            shareIntent.setPackage("com.whatsapp");
+            try {
+                startActivity(shareIntent);
+            } catch (Exception ex) {
+                Toast.makeText(this, "WhatsApp not installed", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void shareToEmail() {
+        String message = generateShareText();
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("mailto:"));
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Receipt from " + textBusinessName.getText().toString());
+        intent.putExtra(Intent.EXTRA_TEXT, message);
+        try {
+            startActivity(Intent.createChooser(intent, "Send Email"));
+        } catch (Exception e) {
+            Toast.makeText(this, "No email app found", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void shareToSMS() {
+        String message = generateShareText();
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        String mobile = getCustomerMobile();
+        if (mobile != null && !mobile.isEmpty()) {
+            intent.setData(Uri.parse("smsto:" + mobile));
+        } else {
+            intent.setData(Uri.parse("smsto:"));
+        }
+        intent.putExtra("sms_body", message);
+        try {
+            startActivity(intent);
+        } catch (Exception e) {
+            Toast.makeText(this, "Failed to open SMS app", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private String generateShareText() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("--- ").append(textBusinessName.getText().toString()).append(" ---\n");
+        String address = textBusinessAddress.getText().toString();
+        if (!address.equals("Business Address") && !address.isEmpty()) sb.append(address).append("\n");
+        sb.append("Receipt#: ").append(currentReceipt.getReceiptNo()).append("\n");
+        sb.append("Date: ").append(dateTimeFormat.format(new Date(currentReceipt.getTimestamp()))).append("\n");
+        sb.append("Customer: ").append(textCustomerName.getText().toString()).append("\n\n");
+        
+        sb.append("Items:\n");
+        for (ReceiptItem item : currentItems) {
+            sb.append("- ").append(item.getItemName());
+            if (item.getVariantName() != null && !item.getVariantName().isEmpty() && !item.getVariantName().equalsIgnoreCase("Default")) {
+                sb.append(" (").append(item.getVariantName()).append(")");
+            }
+            sb.append(": ").append(item.getQuantity()).append(" x ").append(String.format(Locale.getDefault(), "₹%,.2f", item.getPrice())).append("\n");
+        }
+        
+        sb.append("\nSubtotal: ").append(String.format(Locale.getDefault(), "₹%,.2f", currentReceipt.getSubtotal())).append("\n");
+        if (currentReceipt.getTax() > 0) sb.append("Tax: ").append(String.format(Locale.getDefault(), "₹%,.2f", currentReceipt.getTax())).append("\n");
+        if (currentReceipt.getDiscount() > 0) sb.append("Discount: ").append(String.format(Locale.getDefault(), "₹%,.2f", currentReceipt.getDiscount())).append("\n");
+        sb.append("Grand Total: ").append(String.format(Locale.getDefault(), "₹%,.2f", currentReceipt.getTotalAmount())).append("\n\n");
+        
+        sb.append(textThankYou.getText().toString()).append("\n");
+        sb.append("Powered by Billz");
+        
+        return sb.toString();
+    }
+
+    private String getCustomerMobile() {
+        if (currentCustomer != null) return currentCustomer.getMobile();
+        return null;
     }
 
     private void addTableRow(ReceiptItem item) {
