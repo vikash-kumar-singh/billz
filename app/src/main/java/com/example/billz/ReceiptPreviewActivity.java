@@ -404,39 +404,61 @@ public class ReceiptPreviewActivity extends AppCompatActivity {
     }
 
     private void shareToWhatsApp() {
-        String message = generateShareText();
+        View invoiceView = findViewById(R.id.invoiceCard);
+        if (invoiceView == null) return;
+
+        Uri pdfUri = createPdfFromView(invoiceView);
+        if (pdfUri == null) {
+            Toast.makeText(this, "Failed to generate PDF", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("application/pdf");
+        intent.putExtra(Intent.EXTRA_STREAM, pdfUri);
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+        String mobile = getCustomerMobile();
+        if (mobile != null && !mobile.isEmpty()) {
+            String cleanMobile = mobile.replaceAll("[^\\d]", "");
+            if (cleanMobile.length() == 10) cleanMobile = "91" + cleanMobile;
+            intent.putExtra("jid", cleanMobile + "@s.whatsapp.net");
+        }
+
+        intent.setPackage("com.whatsapp");
         try {
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            String url = "whatsapp://send?text=" + Uri.encode(message);
-            // If we have customer mobile, we can pre-fill it
-            String mobile = getCustomerMobile();
-            if (mobile != null && !mobile.isEmpty()) {
-                String cleanMobile = mobile.replaceAll("[^\\d]", "");
-                if (cleanMobile.length() == 10) cleanMobile = "91" + cleanMobile;
-                url = "whatsapp://send?phone=" + cleanMobile + "&text=" + Uri.encode(message);
-            }
-            intent.setData(Uri.parse(url));
             startActivity(intent);
         } catch (Exception e) {
-            // Fallback to general share
-            Intent shareIntent = new Intent(Intent.ACTION_SEND);
-            shareIntent.setType("text/plain");
-            shareIntent.putExtra(Intent.EXTRA_TEXT, message);
-            shareIntent.setPackage("com.whatsapp");
+            // Try WhatsApp Business
+            intent.setPackage("com.whatsapp.w4b");
             try {
-                startActivity(shareIntent);
+                startActivity(intent);
             } catch (Exception ex) {
-                Toast.makeText(this, "WhatsApp not installed", Toast.LENGTH_SHORT).show();
+                // Fallback to chooser without package
+                intent.setPackage(null);
+                // Remove jid if using generic chooser as it might confuse other apps
+                intent.removeExtra("jid");
+                startActivity(Intent.createChooser(intent, "Share Receipt"));
             }
         }
     }
 
     private void shareToEmail() {
-        String message = generateShareText();
-        Intent intent = new Intent(Intent.ACTION_SENDTO);
-        intent.setData(Uri.parse("mailto:"));
+        View invoiceView = findViewById(R.id.invoiceCard);
+        if (invoiceView == null) return;
+
+        Uri pdfUri = createPdfFromView(invoiceView);
+        if (pdfUri == null) {
+            Toast.makeText(this, "Failed to generate PDF", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("application/pdf");
         intent.putExtra(Intent.EXTRA_SUBJECT, "Receipt from " + textBusinessName.getText().toString());
-        intent.putExtra(Intent.EXTRA_TEXT, message);
+        intent.putExtra(Intent.EXTRA_STREAM, pdfUri);
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
         try {
             startActivity(Intent.createChooser(intent, "Send Email"));
         } catch (Exception e) {
@@ -445,6 +467,7 @@ public class ReceiptPreviewActivity extends AppCompatActivity {
     }
 
     private void shareToSMS() {
+        // SMS doesn't support PDF well, keep it as text
         String message = generateShareText();
         Intent intent = new Intent(Intent.ACTION_SENDTO);
         String mobile = getCustomerMobile();
@@ -459,6 +482,40 @@ public class ReceiptPreviewActivity extends AppCompatActivity {
         } catch (Exception e) {
             Toast.makeText(this, "Failed to open SMS app", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private Uri createPdfFromView(View view) {
+        android.graphics.pdf.PdfDocument document = new android.graphics.pdf.PdfDocument();
+        
+        // Use a standard A4 size or the view size
+        int width = view.getWidth();
+        int height = view.getHeight();
+        
+        if (width <= 0 || height <= 0) {
+            // Fallback for non-measured views
+            width = 595; // A4 width in points
+            height = 842; // A4 height in points
+        }
+
+        android.graphics.pdf.PdfDocument.PageInfo pageInfo = new android.graphics.pdf.PdfDocument.PageInfo.Builder(width, height, 1).create();
+        android.graphics.pdf.PdfDocument.Page page = document.startPage(pageInfo);
+        
+        view.draw(page.getCanvas());
+        document.finishPage(page);
+
+        String fileName = "Receipt_" + (currentReceipt != null ? currentReceipt.getReceiptNo() : System.currentTimeMillis()) + ".pdf";
+        java.io.File file = new java.io.File(getCacheDir(), fileName);
+        
+        try {
+            document.writeTo(new java.io.FileOutputStream(file));
+        } catch (java.io.IOException e) {
+            Log.e("ReceiptPreview", "PDF generation failed", e);
+            return null;
+        } finally {
+            document.close();
+        }
+
+        return androidx.core.content.FileProvider.getUriForFile(this, getPackageName() + ".provider", file);
     }
 
     private String generateShareText() {
