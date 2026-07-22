@@ -444,19 +444,16 @@ public class ReceiptPreviewActivity extends AppCompatActivity {
         View view = getLayoutInflater().inflate(R.layout.layout_receipt_share_bottom_sheet, null);
         bottomSheet.setContentView(view);
 
-        view.findViewById(R.id.optionWhatsApp).setOnClickListener(v -> {
-            bottomSheet.dismiss();
-            shareToWhatsApp();
-        });
+        // User request: Only show Email option in Share functionality
+        View optionWhatsApp = view.findViewById(R.id.optionWhatsApp);
+        View optionSMS = view.findViewById(R.id.optionSMS);
+        
+        if (optionWhatsApp != null) optionWhatsApp.setVisibility(View.GONE);
+        if (optionSMS != null) optionSMS.setVisibility(View.GONE);
 
         view.findViewById(R.id.optionEmail).setOnClickListener(v -> {
             bottomSheet.dismiss();
-            shareToEmail();
-        });
-
-        view.findViewById(R.id.optionSMS).setOnClickListener(v -> {
-            bottomSheet.dismiss();
-            shareToSMS();
+            handleEmailAction();
         });
 
         bottomSheet.show();
@@ -523,9 +520,6 @@ public class ReceiptPreviewActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    private void shareToWhatsApp() {
-        shareToWhatsApp(getCustomerMobile(), true);
-    }
 
     private void shareToWhatsApp(String mobile, boolean sendPdf) {
         if (sendPdf) {
@@ -583,7 +577,8 @@ public class ReceiptPreviewActivity extends AppCompatActivity {
         }
     }
 
-    private void shareToEmail() {
+
+    private void shareToEmail(String email) {
         View invoiceView = findViewById(R.id.invoiceCard);
         if (invoiceView == null) return;
 
@@ -596,7 +591,6 @@ public class ReceiptPreviewActivity extends AppCompatActivity {
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("application/pdf");
         
-        String email = getCustomerEmail();
         if (email != null && !email.isEmpty()) {
             intent.putExtra(Intent.EXTRA_EMAIL, new String[]{email});
         }
@@ -611,6 +605,62 @@ public class ReceiptPreviewActivity extends AppCompatActivity {
         } catch (Exception e) {
             Toast.makeText(this, "No email app found", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void handleEmailAction() {
+        String email = getCustomerEmail();
+        if (email != null && !email.isEmpty()) {
+            showEmailChoiceDialog(email);
+        } else {
+            showCustomEmailDialog();
+        }
+    }
+
+    private void showEmailChoiceDialog(String email) {
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_email_choice);
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        }
+
+        TextView textOption1 = dialog.findViewById(R.id.optionReceiptEmail);
+        textOption1.setText("Send to Receipt Email (" + email + ")");
+        textOption1.setOnClickListener(v -> {
+            dialog.dismiss();
+            shareToEmail(email);
+        });
+
+        dialog.findViewById(R.id.optionAnotherEmail).setOnClickListener(v -> {
+            dialog.dismiss();
+            showCustomEmailDialog();
+        });
+
+        dialog.show();
+    }
+
+    private void showCustomEmailDialog() {
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_send_email_to);
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        }
+
+        EditText editEmail = dialog.findViewById(R.id.editEmail);
+
+        dialog.findViewById(R.id.btnClose).setOnClickListener(v -> dialog.dismiss());
+        dialog.findViewById(R.id.btnSend).setOnClickListener(v -> {
+            String customEmail = editEmail.getText().toString().trim();
+            if (customEmail.isEmpty()) {
+                Toast.makeText(this, "Please enter email address", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            dialog.dismiss();
+            shareToEmail(customEmail);
+        });
+
+        dialog.show();
     }
 
     private void handleSmsAction() {
@@ -688,9 +738,7 @@ public class ReceiptPreviewActivity extends AppCompatActivity {
         }
     }
 
-    private void shareToSMS() {
-        shareToSMS(getCustomerMobile());
-    }
+
 
     private Uri createPdfFromView(View view) {
         android.graphics.pdf.PdfDocument document = new android.graphics.pdf.PdfDocument();

@@ -56,9 +56,9 @@
         <ImageView
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:src="@android:drawable/ic_dialog_email"
+            android:src="@drawable/ic_email_receipt"
             android:layout_marginEnd="16dp"
-            app:tint="#3F51B5" />
+            app:tint="@color/colorPrimary" />
 
         <TextView
             android:layout_width="wrap_content"
