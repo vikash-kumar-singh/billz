@@ -19,6 +19,10 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.material.appbar.MaterialToolbar;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -84,7 +88,7 @@ public class ReceiptPreviewActivity extends AppCompatActivity {
         findViewById(R.id.imgActionShare).setOnClickListener(v -> showShareBottomSheet());
         findViewById(R.id.imgActionSMS).setOnClickListener(v -> handleSmsAction());
         findViewById(R.id.imgActionWhatsApp).setOnClickListener(v -> handleWhatsAppAction());
-        findViewById(R.id.imgActionPrint).setOnClickListener(v -> Toast.makeText(this, "Printing coming soon", Toast.LENGTH_SHORT).show());
+        findViewById(R.id.imgActionPrint).setOnClickListener(v -> showPrinterSelectionDialog());
         findViewById(R.id.imgActionMore).setOnClickListener(v -> showShareBottomSheet());
     }
 
@@ -200,10 +204,10 @@ public class ReceiptPreviewActivity extends AppCompatActivity {
     }
 
     private void showDeleteDialog() {
-        android.app.Dialog dialog = new android.app.Dialog(this);
+        Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.dialog_confirm_delete);
         if (dialog.getWindow() != null) {
-            dialog.getWindow().setBackgroundDrawable(new android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT));
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         }
 
@@ -219,6 +223,51 @@ public class ReceiptPreviewActivity extends AppCompatActivity {
                 });
             });
         });
+        dialog.show();
+    }
+
+    private void showPrinterSelectionDialog() {
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_select_printer);
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        }
+
+        RecyclerView rv = dialog.findViewById(R.id.recyclerPrinters);
+        rv.setLayoutManager(new LinearLayoutManager(this));
+
+        Executors.newSingleThreadExecutor().execute(() -> {
+            int bId = BusinessHelper.getActiveBusinessId(this);
+            List<Printer> list = db.printerDao().getAllPrinters(bId);
+            
+            // Add a default A4 printer if list is empty to match sample images
+            if (list.isEmpty()) {
+                list.add(new Printer("Any A4/A3/A5 Etc.", "android default", "", "", "Text", false, R.drawable.ic_printer));
+                list.add(new Printer("Thermal Printer", "bluetooth", "Thermal Printer", "58mm", "Text", true, R.drawable.ic_bluetooth));
+                list.add(new Printer("MPT-II", "bluetooth", "MPT-II", "58mm", "Text", true, R.drawable.ic_bluetooth));
+            }
+
+            runOnUiThread(() -> {
+                rv.setAdapter(new PrinterAdapter(list));
+            });
+        });
+
+        dialog.findViewById(R.id.btnClose).setOnClickListener(v -> dialog.dismiss());
+        dialog.findViewById(R.id.btnHelp).setOnClickListener(v -> {
+            Toast.makeText(this, "Printer Help coming soon", Toast.LENGTH_SHORT).show();
+        });
+
+        dialog.findViewById(R.id.btnViewAll).setOnClickListener(v -> {
+            dialog.dismiss();
+            startActivity(new Intent(this, PrinterSetupActivity.class));
+        });
+
+        dialog.findViewById(R.id.btnAddNew).setOnClickListener(v -> {
+            dialog.dismiss();
+            startActivity(new Intent(this, AddPrinterActivity.class));
+        });
+
         dialog.show();
     }
 
