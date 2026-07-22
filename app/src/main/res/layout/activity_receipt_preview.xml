@@ -32,40 +32,48 @@
                     android:id="@+id/imgActionShare"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:layout_marginHorizontal="12dp"
+                    android:layout_marginHorizontal="10dp"
                     android:src="@drawable/ic_reports_share"
                     app:tint="@color/colorPrimary" />
 
                 <ImageView
-                    android:id="@+id/imgActionMessage"
+                    android:id="@+id/imgActionSMS"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:layout_marginHorizontal="12dp"
-                    android:src="@drawable/ic_reports_message"
+                    android:layout_marginHorizontal="10dp"
+                    android:src="@drawable/ic_sms_receipt"
                     app:tint="@color/colorPrimary" />
 
                 <ImageView
-                    android:id="@+id/imgActionUpload"
+                    android:id="@+id/imgActionWhatsApp"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:layout_marginHorizontal="12dp"
-                    android:src="@android:drawable/ic_menu_upload"
+                    android:layout_marginHorizontal="10dp"
+                    android:src="@drawable/ic_whatsapp_receipt"
                     app:tint="@color/colorPrimary" />
 
                 <ImageView
                     android:id="@+id/btnDownload"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:layout_marginHorizontal="12dp"
-                    android:src="@android:drawable/ic_menu_save"
+                    android:layout_marginHorizontal="10dp"
+                    android:src="@drawable/ic_download_receipt"
                     app:tint="@color/colorPrimary" />
 
                 <ImageView
                     android:id="@+id/imgActionPrint"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:layout_marginHorizontal="12dp"
-                    android:src="@android:drawable/ic_menu_camera"
+                    android:layout_marginHorizontal="10dp"
+                    android:src="@drawable/ic_printer"
+                    app:tint="@color/colorPrimary" />
+
+                <ImageView
+                    android:id="@+id/imgActionMore"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginHorizontal="10dp"
+                    android:src="@drawable/ic_more_vert_receipt"
                     app:tint="@color/colorPrimary" />
 
             </LinearLayout>

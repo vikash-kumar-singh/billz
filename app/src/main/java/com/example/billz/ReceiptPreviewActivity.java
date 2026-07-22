@@ -77,7 +77,10 @@ public class ReceiptPreviewActivity extends AppCompatActivity {
         });
 
         findViewById(R.id.imgActionShare).setOnClickListener(v -> showShareBottomSheet());
-        findViewById(R.id.imgActionMessage).setOnClickListener(v -> showShareBottomSheet());
+        findViewById(R.id.imgActionSMS).setOnClickListener(v -> shareToSMS());
+        findViewById(R.id.imgActionWhatsApp).setOnClickListener(v -> shareToWhatsApp());
+        findViewById(R.id.imgActionPrint).setOnClickListener(v -> Toast.makeText(this, "Printing coming soon", Toast.LENGTH_SHORT).show());
+        findViewById(R.id.imgActionMore).setOnClickListener(v -> showShareBottomSheet());
     }
 
     private void downloadInvoice() {
@@ -341,9 +344,10 @@ public class ReceiptPreviewActivity extends AppCompatActivity {
                     
                     // Simplify header as per image (Only back and download)
                     findViewById(R.id.imgActionShare).setVisibility(View.GONE);
-                    findViewById(R.id.imgActionMessage).setVisibility(View.GONE);
-                    findViewById(R.id.imgActionUpload).setVisibility(View.GONE);
+                    findViewById(R.id.imgActionSMS).setVisibility(View.GONE);
+                    findViewById(R.id.imgActionWhatsApp).setVisibility(View.GONE);
                     findViewById(R.id.imgActionPrint).setVisibility(View.GONE);
+                    findViewById(R.id.imgActionMore).setVisibility(View.GONE);
 
                     // Remove all action buttons for returned receipts
                     View actionLayout = findViewById(R.id.layoutActionButtons);
@@ -351,9 +355,10 @@ public class ReceiptPreviewActivity extends AppCompatActivity {
                 } else {
                     if (textReturnedBy != null) textReturnedBy.setVisibility(View.GONE);
                     findViewById(R.id.imgActionShare).setVisibility(View.VISIBLE);
-                    findViewById(R.id.imgActionMessage).setVisibility(View.VISIBLE);
-                    findViewById(R.id.imgActionUpload).setVisibility(View.VISIBLE);
+                    findViewById(R.id.imgActionSMS).setVisibility(View.VISIBLE);
+                    findViewById(R.id.imgActionWhatsApp).setVisibility(View.VISIBLE);
                     findViewById(R.id.imgActionPrint).setVisibility(View.VISIBLE);
+                    findViewById(R.id.imgActionMore).setVisibility(View.VISIBLE);
 
                     View actionLayout = findViewById(R.id.layoutActionButtons);
                     if (actionLayout != null) actionLayout.setVisibility(View.VISIBLE);
