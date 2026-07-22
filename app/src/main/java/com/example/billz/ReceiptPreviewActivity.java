@@ -83,7 +83,7 @@ public class ReceiptPreviewActivity extends AppCompatActivity {
 
         findViewById(R.id.imgActionShare).setOnClickListener(v -> showShareBottomSheet());
         findViewById(R.id.imgActionSMS).setOnClickListener(v -> handleSmsAction());
-        findViewById(R.id.imgActionWhatsApp).setOnClickListener(v -> shareToWhatsApp());
+        findViewById(R.id.imgActionWhatsApp).setOnClickListener(v -> handleWhatsAppAction());
         findViewById(R.id.imgActionPrint).setOnClickListener(v -> Toast.makeText(this, "Printing coming soon", Toast.LENGTH_SHORT).show());
         findViewById(R.id.imgActionMore).setOnClickListener(v -> showShareBottomSheet());
     }
@@ -413,42 +413,123 @@ public class ReceiptPreviewActivity extends AppCompatActivity {
         bottomSheet.show();
     }
 
-    private void shareToWhatsApp() {
-        View invoiceView = findViewById(R.id.invoiceCard);
-        if (invoiceView == null) return;
-
-        Uri pdfUri = createPdfFromView(invoiceView);
-        if (pdfUri == null) {
-            Toast.makeText(this, "Failed to generate PDF", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.setType("application/pdf");
-        intent.putExtra(Intent.EXTRA_STREAM, pdfUri);
-        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-
+    private void handleWhatsAppAction() {
         String mobile = getCustomerMobile();
         if (mobile != null && !mobile.isEmpty()) {
-            String cleanMobile = mobile.replaceAll("[^\\d]", "");
-            if (cleanMobile.length() == 10) cleanMobile = "91" + cleanMobile;
-            intent.putExtra("jid", cleanMobile + "@s.whatsapp.net");
+            showWhatsAppChoiceDialog(mobile);
+        } else {
+            showCustomWhatsAppDialog();
+        }
+    }
+
+    private void showWhatsAppChoiceDialog(String mobile) {
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_sms_choice);
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         }
 
-        intent.setPackage("com.whatsapp");
-        try {
-            startActivity(intent);
-        } catch (Exception e) {
-            // Try WhatsApp Business
-            intent.setPackage("com.whatsapp.w4b");
+        ((TextView)dialog.findViewById(R.id.dialogTitle)).setText("SEND WHATSAPP TO");
+        TextView textOption1 = dialog.findViewById(R.id.optionReceiptNumber);
+        textOption1.setText("Send to Receipt Number (" + mobile + ")");
+        textOption1.setOnClickListener(v -> {
+            dialog.dismiss();
+            shareToWhatsApp(mobile, true);
+        });
+
+        dialog.findViewById(R.id.optionAnotherNumber).setOnClickListener(v -> {
+            dialog.dismiss();
+            showCustomWhatsAppDialog();
+        });
+
+        dialog.show();
+    }
+
+    private void showCustomWhatsAppDialog() {
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_send_message_to);
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        }
+
+        ((TextView)dialog.findViewById(R.id.dialogTitle)).setText("SEND WHATSAPP TO");
+        EditText editMobile = dialog.findViewById(R.id.editMobile);
+        CheckBox checkSendPdf = dialog.findViewById(R.id.checkSendPdf);
+        checkSendPdf.setVisibility(View.VISIBLE);
+        checkSendPdf.setChecked(true);
+
+        dialog.findViewById(R.id.btnClose).setOnClickListener(v -> dialog.dismiss());
+        dialog.findViewById(R.id.btnSend).setOnClickListener(v -> {
+            String customMobile = editMobile.getText().toString().trim();
+            if (customMobile.isEmpty()) {
+                Toast.makeText(this, "Please enter mobile number", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            dialog.dismiss();
+            shareToWhatsApp(customMobile, checkSendPdf.isChecked());
+        });
+
+        dialog.show();
+    }
+
+    private void shareToWhatsApp() {
+        shareToWhatsApp(getCustomerMobile(), true);
+    }
+
+    private void shareToWhatsApp(String mobile, boolean sendPdf) {
+        if (sendPdf) {
+            View invoiceView = findViewById(R.id.invoiceCard);
+            if (invoiceView == null) return;
+
+            Uri pdfUri = createPdfFromView(invoiceView);
+            if (pdfUri == null) {
+                Toast.makeText(this, "Failed to generate PDF", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType("application/pdf");
+            intent.putExtra(Intent.EXTRA_STREAM, pdfUri);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+            if (mobile != null && !mobile.isEmpty()) {
+                String cleanMobile = mobile.replaceAll("[^\\d]", "");
+                if (cleanMobile.length() == 10) cleanMobile = "91" + cleanMobile;
+                intent.putExtra("jid", cleanMobile + "@s.whatsapp.net");
+            }
+
+            intent.setPackage("com.whatsapp");
             try {
                 startActivity(intent);
-            } catch (Exception ex) {
-                // Fallback to chooser without package
-                intent.setPackage(null);
-                // Remove jid if using generic chooser as it might confuse other apps
-                intent.removeExtra("jid");
-                startActivity(Intent.createChooser(intent, "Share Receipt"));
+            } catch (Exception e) {
+                // Try WhatsApp Business
+                intent.setPackage("com.whatsapp.w4b");
+                try {
+                    startActivity(intent);
+                } catch (Exception ex) {
+                    // Fallback to chooser without package
+                    intent.setPackage(null);
+                    // Remove jid if using generic chooser as it might confuse other apps
+                    intent.removeExtra("jid");
+                    startActivity(Intent.createChooser(intent, "Share Receipt"));
+                }
+            }
+        } else {
+            // Send as Text only
+            String message = generateShareText();
+            String url = "https://api.whatsapp.com/send?phone=" + (mobile != null ? mobile.replaceAll("[^\\d]", "") : "") + "&text=" + Uri.encode(message);
+            if (mobile != null && mobile.length() == 10) {
+                url = "https://api.whatsapp.com/send?phone=91" + mobile + "&text=" + Uri.encode(message);
+            }
+            
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setData(Uri.parse(url));
+            try {
+                startActivity(i);
+            } catch (Exception e) {
+                Toast.makeText(this, "WhatsApp not installed", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -500,6 +581,7 @@ public class ReceiptPreviewActivity extends AppCompatActivity {
             dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         }
 
+        ((TextView)dialog.findViewById(R.id.dialogTitle)).setText("SEND MESSAGE TO");
         TextView textOption1 = dialog.findViewById(R.id.optionReceiptNumber);
         textOption1.setText("Send to Receipt Number (" + mobile + ")");
         textOption1.setOnClickListener(v -> {
@@ -523,6 +605,7 @@ public class ReceiptPreviewActivity extends AppCompatActivity {
             dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         }
 
+        ((TextView)dialog.findViewById(R.id.dialogTitle)).setText("SEND MESSAGE TO");
         EditText editMobile = dialog.findViewById(R.id.editMobile);
 
         dialog.findViewById(R.id.btnClose).setOnClickListener(v -> dialog.dismiss());
