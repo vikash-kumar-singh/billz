@@ -4,10 +4,15 @@ import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 import android.graphics.Typeface;
+import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
@@ -77,7 +82,7 @@ public class ReceiptPreviewActivity extends AppCompatActivity {
         });
 
         findViewById(R.id.imgActionShare).setOnClickListener(v -> showShareBottomSheet());
-        findViewById(R.id.imgActionSMS).setOnClickListener(v -> shareToSMS());
+        findViewById(R.id.imgActionSMS).setOnClickListener(v -> handleSmsAction());
         findViewById(R.id.imgActionWhatsApp).setOnClickListener(v -> shareToWhatsApp());
         findViewById(R.id.imgActionPrint).setOnClickListener(v -> Toast.makeText(this, "Printing coming soon", Toast.LENGTH_SHORT).show());
         findViewById(R.id.imgActionMore).setOnClickListener(v -> showShareBottomSheet());
@@ -478,11 +483,66 @@ public class ReceiptPreviewActivity extends AppCompatActivity {
         }
     }
 
-    private void shareToSMS() {
+    private void handleSmsAction() {
+        String mobile = getCustomerMobile();
+        if (mobile != null && !mobile.isEmpty()) {
+            showSmsChoiceDialog(mobile);
+        } else {
+            showCustomSmsDialog();
+        }
+    }
+
+    private void showSmsChoiceDialog(String mobile) {
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_sms_choice);
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        }
+
+        TextView textOption1 = dialog.findViewById(R.id.optionReceiptNumber);
+        textOption1.setText("Send to Receipt Number (" + mobile + ")");
+        textOption1.setOnClickListener(v -> {
+            dialog.dismiss();
+            shareToSMS(mobile);
+        });
+
+        dialog.findViewById(R.id.optionAnotherNumber).setOnClickListener(v -> {
+            dialog.dismiss();
+            showCustomSmsDialog();
+        });
+
+        dialog.show();
+    }
+
+    private void showCustomSmsDialog() {
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_send_message_to);
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        }
+
+        EditText editMobile = dialog.findViewById(R.id.editMobile);
+
+        dialog.findViewById(R.id.btnClose).setOnClickListener(v -> dialog.dismiss());
+        dialog.findViewById(R.id.btnSend).setOnClickListener(v -> {
+            String customMobile = editMobile.getText().toString().trim();
+            if (customMobile.isEmpty()) {
+                Toast.makeText(this, "Please enter mobile number", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            dialog.dismiss();
+            shareToSMS(customMobile);
+        });
+
+        dialog.show();
+    }
+
+    private void shareToSMS(String mobile) {
         // SMS doesn't support PDF well, keep it as text
         String message = generateShareText();
         Intent intent = new Intent(Intent.ACTION_SENDTO);
-        String mobile = getCustomerMobile();
         if (mobile != null && !mobile.isEmpty()) {
             intent.setData(Uri.parse("smsto:" + mobile));
         } else {
@@ -494,6 +554,10 @@ public class ReceiptPreviewActivity extends AppCompatActivity {
         } catch (Exception e) {
             Toast.makeText(this, "Failed to open SMS app", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void shareToSMS() {
+        shareToSMS(getCustomerMobile());
     }
 
     private Uri createPdfFromView(View view) {
