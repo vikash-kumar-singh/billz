@@ -214,7 +214,7 @@ public class AddCategoryActivity extends AppCompatActivity {
     }
 
     private void finalizeSave(String name, String imageUriStr) {
-        Category category = (existingCategory != null) ? existingCategory : new Category(name, imageUriStr, selectedColor);
+        Category category = (existingCategory != null) ? existingCategory : new Category();
         category.setName(name);
         category.setImageUri(imageUriStr);
         category.setBackgroundColor(selectedColor);
@@ -222,13 +222,14 @@ public class AddCategoryActivity extends AppCompatActivity {
 
         BusinessHelper.ensureActiveBusiness(this, () -> {
             AppDatabase db = AppDatabase.getInstance(this);
-            category.setBusinessId(BusinessHelper.getActiveBusinessId(this));
+            int businessId = BusinessHelper.getActiveBusinessId(this);
+            category.setBusinessId(businessId);
             
-            // Save locally
-            db.categoryDao().insert(category);
-            
-            // Save to Cloud
+            // Save to Cloud first to get/confirm Firestore ID
             new CategoryCloudRepository(this).saveCategory(category);
+            
+            // Note: CategoryCloudRepository.saveCategory already inserts/updates locally
+            // We just need to notify UI or handle finish
 
             runOnUiThread(() -> {
                 progressImage.setVisibility(View.GONE);

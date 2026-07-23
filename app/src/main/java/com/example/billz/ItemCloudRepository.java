@@ -79,6 +79,7 @@ public class ItemCloudRepository {
         itemMap.put("variantName", item.getVariantName());
         itemMap.put("sellBy", item.getSellBy());
         itemMap.put("isAdvanceMode", item.isAdvanceMode());
+        itemMap.put("imageUri", item.getImageUri());
         itemMap.put("updatedAt", com.google.firebase.Timestamp.now());
 
         batch.set(docRef, itemMap);
@@ -236,6 +237,7 @@ public class ItemCloudRepository {
                     );
                     cloudItem.setId(fId);
                     cloudItem.setBusinessId(activeBusinessId);
+                    cloudItem.setImageUri(doc.getString("imageUri"));
 
                     Log.d(TAG, "UPSERT_PRODUCT: " + cloudItem.getName() + " ID: " + fId);
                     localDb.itemDao().insert(cloudItem);
